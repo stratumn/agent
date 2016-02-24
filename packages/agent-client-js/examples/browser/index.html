@@ -2,9 +2,37 @@
 <html>
 <head>
 	<title>Stratumn SDK for Javascript browser example</title>
-	<script type="text/javascript" src="../../dist/stratumn-sdk.min.js"></script>
+	<script type="text/javascript" src="../../dist/stratumn-sdk.js"></script>
 </head>
 <body>
+
+<script type="text/javascript">
+
+StratumnSDK
+	.getApplication('quickstart')
+	.then(function(app) {
+		return app.createChain('A conversation on the blockchain');
+	})
+	.then(function(res) {
+		console.log(res);
+		return res.addMessage('It works!', 'stephan');
+	})
+	.then(function(res) {
+		console.log(res);
+		return res.addMessage('Another message', 'stephan');
+	})
+	.then(function(res) {
+		console.log(res);
+		return res.getPrev();
+	})
+	.then(function(res) {
+		console.log(res);
+	})
+	.catch(function(err) {
+		console.error(err);
+	});
+
+</script>
 
 </body>
 </html>

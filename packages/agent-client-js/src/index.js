@@ -1,7 +1,5 @@
+import getApplication from './getApplication';
+
 module.exports = {
-
-  test() {
-    console.log('Hello, World!');
-  }
-
+  getApplication
 };
