@@ -135,7 +135,7 @@ $ npm install
 Build:
 
 ```
-$ npm run build
+$ npm run build:all
 ```
 
 Test:
