@@ -5,7 +5,7 @@
 ### Browser
 
 ```html
-<script src="https://s3-eu-west-1.amazonaws.com/stratumn-libs/stratumn-sdk.min.js"></script>
+<script src="https://d3tl9uzqhxq1a1.cloudfront.net/stratumn-sdk.min.js"></script>
 ```
 
 ### Node.js
