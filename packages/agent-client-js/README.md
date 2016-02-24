@@ -1,78 +1,176 @@
 # Stratumn SDK for Javascript
 
+## Installation
+
+### Browser
+
+```html
+<script src="https://s3-eu-west-1.amazonaws.com/stratumn-libs/stratumn-sdk.min.js"></script>
+```
+
+### Node.js
+
+```
+$ npm install stratumn-sdk
+```
+
+```javascript
+var StratumnSDK = require('stratumn-sdk');
+```
+
 ## Quickstart
 
 ```javascript
-var Stratumn = require('stratumn');
-
-// Create a client for application named 'demo'
-Stratumn.getApplication('demo')
+StratumnSDK.getApplication('quickstart')
   .then(function(app) {
+    console.log(app);
+    // Create a new chain, you can pass arguments to init
+    return app.createChain('My message chain');
+  })
+  .then(function(res) {
+    // You can call a transition function like a regular function
+    return res.addMessage('Hello, World');
+  })
+  .then(function(res) {
+    console.log(res.link);
+    console.log(res.meta);
+  })
+  .catch(console.err);
+```
 
-    /**
-     * Ex: Show application information
-     */
-    console.log(app.getInfo());
+## Reference
 
-    /**
-     * Ex: Create a chain and call transition functions
-     */
-    app
-      // Create a new chain, you can pass arguments to init
-      .createChain('An argument if needed')
-      // It resolves with the first link
-      .then(function(link) {
-        // You can call a transition function like a regular function
-        return link.sendMessage('Hello, World');
-      })
-      .then(function(link) {
-        // Append another link
-        return link.sendMessage('Hello, World, Again');
-      })
-      .then(function() {
-        console.log('All done!');
-      })
-      // Catch any errors
-      .catch(console.error);
+### StratumnSDK#getApplication(appName)
 
-    /**
-     * Ex: Load an existing link and call transition functions
-     */
-    app
-      // Load the link
-      .getLink('a43234eccd')
-      // It resolves with the link
-      .then(function(link) {
-        // You can call a transition function like a regular function
-        return link.sendMessage('Hello, World');
-      })
-      .then(function() {
-        console.log('All done!');
-      })
-      // Catch any errors
-      .catch(console.error);
+Returns a promise that resolves with an application.
 
-    /**
-     * Ex: Get the previous link of a link
-     */
-    app
-      // Load the link
-      .getLink('a43234eccd')
-      // It resolves with the link
-      .then(function(link) {
-        // Get the previous link
-        return link.getPrevious();
-      })
-      // It resolves with the previous link
-      .then(function(link) {
-        // You can call a transition function like a regular function
-        return link.sendMessage('Hello, World');
-      })
-      .then(function() {
-        console.log('All done!');
-      })
-      // Catch any errors
-      .catch(console.error);
+```javascript
+StratumnSDK
+  .getApplication('quickstart')
+  .then(function(app) {
+    console.log(app.id);
+  })
+  .catch(console.error);
+```
 
-  });
+### Application#createChain(...args)
+
+Returns a promise that resolves with a new chain.
+
+```javascript
+StratumnSDK
+  .getApplication('quickstart')
+  .then(function(app) {
+    return app.createChain('A new chain');
+  })
+  .then(function(res) {
+    console.log(res);
+  })
+  .catch(console.error);
+```
+
+### Application#getLink(hash)
+
+Returns a promise that resolves with an existing link.
+
+```javascript
+StratumnSDK
+  .getApplication('quickstart')
+  .then(function(app) {
+    return app.getLink('aee5427');
+  })
+  .then(function(res) {
+    console.log(res);
+  })
+  .catch(console.error);
+```tch(console.error);
+```
+
+### Link#getPrev()
+
+Returns a promise that resolves with the previous link of a link.
+
+```javascript
+StratumnSDK
+  .getApplication('quickstart')
+  .then(function(app) {
+    return app.getLink('aee5427');
+  })
+  .then(function(res) {
+    return res.getPrev();
+  })
+  .then(function(res) {
+    console.log(res);
+  })
+  .catch(console.error);
+```
+
+### Link#:transitionFunction(...args)
+
+Executes a transition function and returns a promise that resolves with a new link.
+
+```javascript
+StratumnSDK
+  .getApplication('quickstart')
+  .then(function(app) {
+    return app.getLink('aee5427');
+  })
+  .then(function(res) {
+    return res.addMessage('Hello, World!');
+  })
+  .then(function(res) {
+    console.log(res);
+  })
+  .catch(console.error);
+```
+
+## Development
+
+Install dependencies:
+
+```
+$ npm install
+```
+
+Build:
+
+```
+$ npm run build
+```
+
+Test:
+
+```
+$ npm test
+```
+
+Test coverage:
+
+```
+$ npm run test:coverage
+$ open coverage/lcov-report/index.html
+```
+
+Lint:
+
+```
+$ npm run lint
+```
+
+Lint and test:
+
+```
+$ npm run check
+```
+
+Bump version:
+
+```
+$ npm version major|minor|patch
+```
+
+Publish:
+
+```
+$ npm publish
 ```
