@@ -1,0 +1,18 @@
+{
+  "extends": "airbnb/base",
+  "env": {
+    "browser": true,
+    "mocha": true,
+    "node": true
+  },
+  "rules": {
+    "comma-dangle": 0,
+    "no-console": 0,
+    // Decorators :(
+    "new-cap": 0,
+    //Temporarirly disabled due to a possible bug in babel-eslint (todomvc example)
+    "block-scoped-var": 0,
+    // Temporarily disabled for test/* until babel/babel-eslint#33 is resolved
+    "padded-blocks": 0
+  }
+}

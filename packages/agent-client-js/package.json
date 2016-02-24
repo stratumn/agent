@@ -1,0 +1,41 @@
+{
+  "name": "stratumn-sdk",
+  "version": "0.1.0",
+  "description": "Stratumn SDK for Javascript",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha --compilers js:babel-core/register --recursive --require babel-polyfill --require should 2> /dev/null"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stratumn/stratumn-sdk-js.git"
+  },
+  "keywords": [
+    "stratumn",
+    "sdk",
+    "blockchain",
+    "client"
+  ],
+  "author": "Stratumn Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stratumn/stratumn-sdk-js/issues"
+  },
+  "homepage": "https://github.com/stratumn/stratumn-sdk-js",
+  "devDependencies": {
+    "babel-cli": "^6.5.1",
+    "babel-core": "^6.5.2",
+    "babel-eslint": "^5.0.0",
+    "babel-polyfill": "^6.5.0",
+    "babel-preset-es2015": "^6.5.0",
+    "eslint": "^2.2.0",
+    "eslint-config-airbnb": "^6.0.2",
+    "eslint-plugin-react": "^4.1.0",
+    "isparta": "^4.0.0",
+    "mocha": "^2.4.5",
+    "should": "^8.2.2"
+  },
+  "dependencies": {
+    "superagent": "^1.7.2"
+  }
+}
