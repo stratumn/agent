@@ -4,7 +4,19 @@
   "description": "Stratumn SDK for Javascript",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register --recursive --require babel-polyfill --require should 2> /dev/null"
+    "test": "mocha --compilers js:babel-core/register --recursive --require babel-polyfill --require should 2> /dev/null",
+    "test:cov": "babel-node ./node_modules/isparta/bin/isparta cover ./node_modules/mocha/bin/_mocha -- --recursive --require should --require should 2> /dev/null",
+    "lint": "eslint src test",
+    "check": "npm run lint && npm run test",
+    "build:lib": "babel src --out-dir lib",
+    "build:umd": "webpack src/index.js dist/stratumn-sdk.js --config webpack.config.js",
+    "build:umd:min": "webpack src/index.js dist/stratumn-sdk.min.js --config webpack.min.config.js",
+    "build:all": "npm run build:lib && npm run build:umd && npm run build:umd:min",
+    "clean": "rimraf lib dist coverage",
+    "preversion": "npm run clean && npm run check",
+    "version": "npm run build:all",
+    "postversion": "git push && git push --tags && npm run clean",
+    "prepublish": "npm run clean && npm run build:all"
   },
   "repository": {
     "type": "git",
@@ -26,6 +38,7 @@
     "babel-cli": "^6.5.1",
     "babel-core": "^6.5.2",
     "babel-eslint": "^5.0.0",
+    "babel-loader": "^6.2.3",
     "babel-polyfill": "^6.5.0",
     "babel-preset-es2015": "^6.5.0",
     "eslint": "^2.2.0",
@@ -33,7 +46,9 @@
     "eslint-plugin-react": "^4.1.0",
     "isparta": "^4.0.0",
     "mocha": "^2.4.5",
-    "should": "^8.2.2"
+    "rimraf": "^2.5.2",
+    "should": "^8.2.2",
+    "webpack": "^1.12.14"
   },
   "dependencies": {
     "superagent": "^1.7.2"
