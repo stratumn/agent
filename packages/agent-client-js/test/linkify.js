@@ -23,22 +23,22 @@ describe('#linkify', () => {
 
   describe('it adds a function to get the previous link', () => {
 
-    it('resolves with null if first link', () => {
+    it('resolves with null if first link', () =>
       first
         .getPrev()
         .then(res => {
-          res.should.be.exactly(null);
-        });
-    });
+          (res === null).should.be.exactly(true);
+        })
+    );
 
-    it('resolves with the previous link if not the first link', () => {
+    it('resolves with the previous link if not the first link', () =>
       first
         .addMessage('Hello, World!')
         .then(res => res.getPrev())
         .then(res => {
           res.link.state.messages.length.should.be.exactly(0);
-        });
-    });
+        })
+    );
 
   });
 
