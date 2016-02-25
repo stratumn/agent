@@ -35,7 +35,9 @@ StratumnSDK.getApplication('quickstart')
     console.log(res.link);
     console.log(res.meta);
   })
-  .catch(console.err);
+  .catch(function(err) {
+    // Handle errors
+  });
 ```
 
 ## Reference
@@ -50,7 +52,9 @@ StratumnSDK
   .then(function(app) {
     console.log(app.id);
   })
-  .catch(console.error);
+  .catch(function(err) {
+    // Handle errors
+  });
 ```
 
 ### Application#createChain(...args)
@@ -66,7 +70,9 @@ StratumnSDK
   .then(function(res) {
     console.log(res);
   })
-  .catch(console.error);
+  .catch(function(err) {
+    // Handle errors
+  });
 ```
 
 ### Application#getLink(hash)
@@ -82,8 +88,9 @@ StratumnSDK
   .then(function(res) {
     console.log(res);
   })
-  .catch(console.error);
-```tch(console.error);
+  .catch(function(err) {
+    // Handle errors
+  });
 ```
 
 ### Link#getPrev()
@@ -102,7 +109,9 @@ StratumnSDK
   .then(function(res) {
     console.log(res);
   })
-  .catch(console.error);
+  .catch(function(err) {
+    // Handle errors
+  });
 ```
 
 ### Link#:transitionFunction(...args)
@@ -121,7 +130,9 @@ StratumnSDK
   .then(function(res) {
     console.log(res);
   })
-  .catch(console.error);
+  .catch(function(err) {
+    // Handle errors
+  });
 ```
 
 ## Development
