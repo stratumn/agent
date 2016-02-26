@@ -6,9 +6,9 @@
 
 ```html
 <!-- Polyfill for browser compatibility -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.5.0/polyfill.min.js"></script>
+<script src="https://libs.stratumn.com/babel-polyfill.min.js"></script>
 <!-- Actual Stratumn SDK -->
-<script src="https://d3tl9uzqhxq1a1.cloudfront.net/stratumn-sdk.min.js"></script>
+<script src="https://libs.stratumn.com/stratumn-sdk.min.js"></script>
 ```
 
 ### Node.js
