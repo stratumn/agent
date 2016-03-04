@@ -243,7 +243,7 @@ $ npm test
 Test coverage:
 
 ```
-$ npm run test:coverage
+$ npm run test:cov
 $ open coverage/lcov-report/index.html
 ```
 
