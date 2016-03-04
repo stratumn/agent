@@ -188,8 +188,8 @@ StratumnSDK
   .then(function(app) {
     return app.getLink('aee5427');
   })
-  .then(function(app) {
-    return app.getBranches(['tag1']);
+  .then(function(res) {
+    return res.getBranches(['tag1']);
   })
   .then(function(res) {
     console.log(res);
