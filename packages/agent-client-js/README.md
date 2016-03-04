@@ -96,6 +96,25 @@ StratumnSDK
   });
 ```
 
+### Application#getChain(chainId, tags)
+
+Returns a promise that resolves with the meta data of the links in a chain,
+optionally filters by tags.
+
+```javascript
+StratumnSDK
+  .getApplication('quickstart')
+  .then(function(app) {
+    return app.getChain('56ef33', ['tag1', 'tag2']);
+  })
+  .then(function(res) {
+    console.log(res);
+  })
+  .catch(function(err) {
+    // Handle errors
+  });
+```
+
 ### Link#getPrev()
 
 Returns a promise that resolves with the previous link of a link.
@@ -108,6 +127,28 @@ StratumnSDK
   })
   .then(function(res) {
     return res.getPrev();
+  })
+  .then(function(res) {
+    console.log(res);
+  })
+  .catch(function(err) {
+    // Handle errors
+  });
+```
+
+### Link#load()
+
+Returns a promise that resolves with the full link.
+Can be useful when you only have the meta data of links.
+
+```javascript
+StratumnSDK
+  .getApplication('quickstart')
+  .then(function(app) {
+    return app.getBranches('aee5427');
+  })
+  .then(function(res) {
+    return Promise.all(res.map(function() { return res.load(); }));
   })
   .then(function(res) {
     console.log(res);

@@ -2,6 +2,7 @@ import request from 'superagent';
 import config from './config';
 import createChain from './createChain';
 import getLink from './getLink';
+import getChain from './getChain';
 
 export default function getApplication(appName) {
   return new Promise((resolve, reject) => {
@@ -20,6 +21,7 @@ export default function getApplication(appName) {
         app.url = url;
         app.createChain = createChain.bind(null, app);
         app.getLink = getLink.bind(null, app);
+        app.getChain = getChain.bind(null, app);
 
         resolve(app);
       });

@@ -36,5 +36,11 @@ export default function linkify(app, obj) {
     return Promise.resolve(null);
   };
 
+  /*eslint-disable*/
+  obj.load = () => {
+    /*eslint-enable*/
+    return app.getLink(obj.meta.linkHash);
+  };
+
   return obj;
 }
