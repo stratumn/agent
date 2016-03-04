@@ -115,6 +115,25 @@ StratumnSDK
   });
 ```
 
+### Application#getBranches(linkHash, tags)
+
+Returns a promise that resolves with the meta data of the links whose previous hashes
+are the given hash, optionally filters by tags.
+
+```javascript
+StratumnSDK
+  .getApplication('quickstart')
+  .then(function(app) {
+    return app.getBranches('abcdef', ['tag1', 'tag2']);
+  })
+  .then(function(res) {
+    console.log(res);
+  })
+  .catch(function(err) {
+    // Handle errors
+  });
+```
+
 ### Link#getPrev()
 
 Returns a promise that resolves with the previous link of a link.
@@ -149,6 +168,28 @@ StratumnSDK
   })
   .then(function(res) {
     return Promise.all(res.map(function() { return res.load(); }));
+  })
+  .then(function(res) {
+    console.log(res);
+  })
+  .catch(function(err) {
+    // Handle errors
+  });
+```
+
+### Link#getBranches(tags)
+
+Returns a promise that resolves with the meta data of the links whose previous hashes
+are the hash of the link, optionally filters by tags.
+
+```javascript
+StratumnSDK
+  .getApplication('quickstart')
+  .then(function(app) {
+    return app.getLink('aee5427');
+  })
+  .then(function(app) {
+    return app.getBranches(['tag1']);
   })
   .then(function(res) {
     console.log(res);

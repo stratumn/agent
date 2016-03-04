@@ -3,6 +3,7 @@ import config from './config';
 import createChain from './createChain';
 import getLink from './getLink';
 import getChain from './getChain';
+import getBranches from './getBranches';
 
 export default function getApplication(appName) {
   return new Promise((resolve, reject) => {
@@ -22,6 +23,7 @@ export default function getApplication(appName) {
         app.createChain = createChain.bind(null, app);
         app.getLink = getLink.bind(null, app);
         app.getChain = getChain.bind(null, app);
+        app.getBranches = getBranches.bind(null, app);
 
         resolve(app);
       });

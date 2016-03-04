@@ -42,4 +42,28 @@ describe('#linkify', () => {
 
   });
 
+  describe('it adds a function to load the full link', () => {
+
+    it('resolve with a full link', () =>
+      first
+        .load()
+        .then(res => {
+          res.link.state.title.should.be.exactly('Test');
+        })
+    );
+
+  });
+
+  describe('it adds a function to get the branches', () => {
+
+    it('resolve with a full link', () =>
+      first
+        .getBranches(['test'])
+        .then(res => {
+          res.length.should.be.exactly(1);
+        })
+    );
+
+  });
+
 });
