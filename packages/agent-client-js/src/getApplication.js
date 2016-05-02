@@ -1,8 +1,8 @@
 import request from 'superagent';
 import config from './config';
-import createChain from './createChain';
+import createMap from './createMap';
 import getLink from './getLink';
-import getChain from './getChain';
+import getMap from './getMap';
 import getBranches from './getBranches';
 
 export default function getApplication(appName) {
@@ -20,9 +20,9 @@ export default function getApplication(appName) {
         const app = res.body;
 
         app.url = url;
-        app.createChain = createChain.bind(null, app);
+        app.createMap = createMap.bind(null, app);
         app.getLink = getLink.bind(null, app);
-        app.getChain = getChain.bind(null, app);
+        app.getMap = getMap.bind(null, app);
         app.getBranches = getBranches.bind(null, app);
 
         resolve(app);

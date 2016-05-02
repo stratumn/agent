@@ -1,6 +1,6 @@
 import getApplication from '../src/getApplication';
 
-describe('#getBranches', () => {
+describe('#getMap', () => {
 
   let app;
 
@@ -8,9 +8,9 @@ describe('#getBranches', () => {
     getApplication('sdk-test').then(res => { app = res; })
   );
 
-  it('gets the branches', () =>
+  it('gets a map', () =>
     app
-      .getBranches('9f0dec64d62e946ff8')
+      .getMap('57277b34b25789323e1099fc')
       .then(res => {
         res.length.should.be.exactly(3);
       })
@@ -18,7 +18,7 @@ describe('#getBranches', () => {
 
   it('can filter by tag', () =>
     app
-      .getBranches('1fb63515f8e', ['random', 'test'])
+      .getMap('57277b34b25789323e1099fc', ['random', 'test'])
       .then(res => {
         res.length.should.be.exactly(1);
       })

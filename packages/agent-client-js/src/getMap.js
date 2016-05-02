@@ -2,7 +2,7 @@ import request from 'superagent';
 import config from './config';
 import linkify from './linkify';
 
-export default function getChain(app, chainId, tags = []) {
+export default function getMap(app, mapId, tags = []) {
   return new Promise((resolve, reject) => {
     let query = '';
 
@@ -10,7 +10,7 @@ export default function getChain(app, chainId, tags = []) {
       query = `?tags=${tags.join('&tags=')}`;
     }
 
-    const url = `${config.applicationUrl.replace('%s', app.name)}/chains/${chainId}${query}`;
+    const url = `${config.applicationUrl.replace('%s', app.name)}/maps/${mapId}${query}`;
 
     return request
       .get(url)

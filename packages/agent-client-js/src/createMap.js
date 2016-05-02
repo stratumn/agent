@@ -2,9 +2,9 @@ import request from 'superagent';
 import config from './config';
 import linkify from './linkify';
 
-export default function createChain(app, ...args) {
+export default function createMap(app, ...args) {
   return new Promise((resolve, reject) => {
-    const url = `${config.applicationUrl.replace('%s', app.name)}/chains`;
+    const url = `${config.applicationUrl.replace('%s', app.name)}/maps`;
 
     return request
       .post(url)

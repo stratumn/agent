@@ -1,16 +1,16 @@
 import getApplication from '../src/getApplication';
 
-describe('#createChain', () => {
+describe('#createMap', () => {
 
   let app;
 
   beforeEach(() =>
-    getApplication('quickstart').then(res => { app = res; })
+    getApplication('sdk-test').then(res => { app = res; })
   );
 
-  it('creates a chain', () =>
+  it('creates a map', () =>
     app
-      .createChain('Test')
+      .createMap('Test')
       .then(res => {
         res.link.state.title.should.be.exactly('Test');
       })

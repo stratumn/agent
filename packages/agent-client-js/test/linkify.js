@@ -5,9 +5,9 @@ describe('#linkify', () => {
   let first;
 
   beforeEach(() =>
-    getApplication('quickstart')
+    getApplication('sdk-test')
       .then(app =>
-        app.getLink('338183e36e024b0f0370e93a1e54d424a584599cac8b08d7abd758eaabd8bcf7')
+        app.getLink('9e16cda1745402d887ba89ccad3dc4bf9aafa86427aab2ca19bf42beb9d108ff')
       )
       .then(r => { first = r; })
   );
@@ -48,7 +48,7 @@ describe('#linkify', () => {
       first
         .load()
         .then(res => {
-          res.link.state.title.should.be.exactly('Test');
+          res.link.state.title.should.be.exactly('test');
         })
     );
 

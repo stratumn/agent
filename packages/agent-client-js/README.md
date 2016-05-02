@@ -27,8 +27,8 @@ var StratumnSDK = require('stratumn-sdk');
 StratumnSDK.getApplication('quickstart')
   .then(function(app) {
     console.log(app);
-    // Create a new chain, you can pass arguments to init
-    return app.createChain('My message chain');
+    // Create a new map, you can pass arguments to init
+    return app.createMap('My message map');
   })
   .then(function(res) {
     // You can call a transition function like a regular function
@@ -60,15 +60,15 @@ StratumnSDK
   });
 ```
 
-### Application#createChain(...args)
+### Application#createMap(...args)
 
-Returns a promise that resolves with a new chain.
+Returns a promise that resolves with a new map.
 
 ```javascript
 StratumnSDK
   .getApplication('quickstart')
   .then(function(app) {
-    return app.createChain('A new chain');
+    return app.createMap('A new map');
   })
   .then(function(res) {
     console.log(res);
@@ -96,16 +96,16 @@ StratumnSDK
   });
 ```
 
-### Application#getChain(chainId, tags)
+### Application#getMap(mapId, tags)
 
-Returns a promise that resolves with the meta data of the links in a chain,
+Returns a promise that resolves with the meta data of the links in a map,
 optionally filters by tags.
 
 ```javascript
 StratumnSDK
   .getApplication('quickstart')
   .then(function(app) {
-    return app.getChain('56ef33', ['tag1', 'tag2']);
+    return app.getMap('56ef33', ['tag1', 'tag2']);
   })
   .then(function(res) {
     console.log(res);
