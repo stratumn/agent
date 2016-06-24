@@ -1,0 +1,26 @@
+{
+  "name": "stratumn-sdk",
+  "description": "Stratumn SDK for Javascript",
+  "main": "lib/index.js",
+  "authors": [
+    "Stratumn Team"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "stratumn",
+    "sdk",
+    "blockchain",
+    "client"
+  ],
+  "homepage": "https://github.com/stratumn/stratumn-sdk-js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "babel-polyfill": "babel/babel/tree/master/packages/babel-polyfill#^0.0.1"
+  }
+}
