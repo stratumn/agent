@@ -1,7 +1,7 @@
 {
   "name": "stratumn-sdk",
   "description": "Stratumn SDK for Javascript",
-  "main": "src/index.js",
+  "main": "dist/stratumn-sdk.js",
   "authors": [
     "Stratumn Team"
   ],

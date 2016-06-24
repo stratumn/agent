@@ -12,7 +12,7 @@
     "build:umd": "webpack src/index.js dist/stratumn-sdk.js --config webpack.config.js",
     "build:umd:min": "webpack src/index.js dist/stratumn-sdk.min.js --config webpack.min.config.js",
     "build:all": "npm run build:lib && npm run build:umd && npm run build:umd:min",
-    "clean": "rimraf dist coverage",
+    "clean": "rimraf lib coverage",
     "preversion": "npm run clean && npm run check",
     "version": "npm run build:all",
     "postversion": "git push && git push --tags && npm run clean",
