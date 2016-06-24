@@ -2,9 +2,8 @@
 *.log
 *.pdf
 node_modules
-lib
 dist
 coverage
 _book
-.idea/*
-bower_components/*
+.idea/
+bower_components/
