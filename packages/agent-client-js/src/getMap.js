@@ -20,7 +20,7 @@ export default function getMap(app, mapId, tags = []) {
           return;
         }
 
-        resolve(linkify(app, res.body));
+        resolve(res.body.map((link) => linkify(app, link)));
       });
   });
 }

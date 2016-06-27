@@ -1856,7 +1856,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	      }
 
-	      resolve((0, _linkify2.default)(app, res.body));
+	      resolve(res.body.map(function (link) {
+	        return (0, _linkify2.default)(app, link);
+	      }));
 	    });
 	  });
 	}
@@ -1904,7 +1906,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	      }
 
-	      resolve((0, _linkify2.default)(app, res.body));
+	      resolve(res.body.map(function (link) {
+	        return (0, _linkify2.default)(app, link);
+	      }));
 	    });
 	  });
 	}

@@ -24,4 +24,12 @@ describe('#getMap', () => {
       })
   );
 
+  it('returns loadable links', () =>
+    app
+      .getMap('57277b34b25789323e1099fc')
+      .then(res => {
+        res.forEach(link => link.load.should.be.a.Function());
+      })
+  );
+
 });

@@ -24,4 +24,12 @@ describe('#getBranches', () => {
       })
   );
 
+  it('returns loadable links', () =>
+    app
+      .getBranches('9f0dec64d62e946ff8')
+      .then(res => {
+        res.forEach(link => link.load.should.be.a.Function());
+      })
+  );
+
 });

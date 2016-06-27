@@ -20,7 +20,7 @@ export default function getBranches(app, linkHash, tags = []) {
           return;
         }
 
-        resolve(linkify(app, res.body));
+        resolve(res.body.map((link) => linkify(app, link)));
       });
   });
 }
