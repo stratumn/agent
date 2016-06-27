@@ -60,10 +60,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _getApplication2 = _interopRequireDefault(_getApplication);
 
+	var _config = __webpack_require__(8);
+
+	var _config2 = _interopRequireDefault(_config);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = {
-	  getApplication: _getApplication2.default
+	  getApplication: _getApplication2.default,
+	  config: _config2.default
 	};
 
 /***/ },
