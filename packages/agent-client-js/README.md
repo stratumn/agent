@@ -11,6 +11,8 @@
 <script src="https://libs.stratumn.com/stratumn-sdk.min.js"></script>
 ```
 
+If you want a specific version, include `https://libs.stratumn.com/stratumn-sdk-{version}.min.js` instead (for instance `https://libs.stratumn.com/stratumn-sdk-0.4.1.min.js`).
+
 ### Node.js
 
 ```

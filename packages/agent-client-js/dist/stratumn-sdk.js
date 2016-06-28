@@ -60,7 +60,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _getApplication2 = _interopRequireDefault(_getApplication);
 
-	var _config = __webpack_require__(8);
+	var _config = __webpack_require__(5);
 
 	var _config2 = _interopRequireDefault(_config);
 
@@ -86,23 +86,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _config = __webpack_require__(8);
+	var _config = __webpack_require__(5);
 
 	var _config2 = _interopRequireDefault(_config);
 
-	var _createMap = __webpack_require__(9);
+	var _createMap = __webpack_require__(6);
 
 	var _createMap2 = _interopRequireDefault(_createMap);
 
-	var _getLink = __webpack_require__(11);
+	var _getLink = __webpack_require__(8);
 
 	var _getLink2 = _interopRequireDefault(_getLink);
 
-	var _getMap = __webpack_require__(12);
+	var _getMap = __webpack_require__(9);
 
 	var _getMap2 = _interopRequireDefault(_getMap);
 
-	var _getBranches = __webpack_require__(13);
+	var _getBranches = __webpack_require__(10);
 
 	var _getBranches2 = _interopRequireDefault(_getBranches);
 
@@ -141,8 +141,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Emitter = __webpack_require__(3);
 	var reduce = __webpack_require__(4);
-	var requestBase = __webpack_require__(5);
-	var isObject = __webpack_require__(6);
 
 	/**
 	 * Root reference for iframes.
@@ -188,12 +186,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	/**
-	 * Expose `request`.
-	 */
-
-	var request = module.exports = __webpack_require__(7).bind(null, Request);
-
-	/**
 	 * Determine XHR.
 	 */
 
@@ -222,6 +214,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	var trim = ''.trim
 	  ? function(s) { return s.trim(); }
 	  : function(s) { return s.replace(/(^\s*|\s*$)/g, ''); };
+
+	/**
+	 * Check if `obj` is an object.
+	 *
+	 * @param {Object} obj
+	 * @return {Boolean}
+	 * @api private
+	 */
+
+	function isObject(obj) {
+	  return obj === Object(obj);
+	}
 
 	/**
 	 * Serialize the given `obj`.
@@ -527,9 +531,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	Response.prototype.parseBody = function(str){
 	  var parse = request.parse[this.type];
-	  if (!parse && isJSON(this.type)) {
-	    parse = request.parse['application/json'];
-	  }
 	  return parse && str && (str.length || str instanceof Object)
 	    ? parse(str)
 	    : null;
@@ -624,11 +625,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function Request(method, url) {
 	  var self = this;
+	  Emitter.call(this);
 	  this._query = this._query || [];
 	  this.method = method;
 	  this.url = url;
-	  this.header = {}; // preserves header name case
-	  this._header = {}; // coerces header names to lowercase
+	  this.header = {};
+	  this._header = {};
 	  this.on('end', function(){
 	    var err = null;
 	    var res = null;
@@ -641,8 +643,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      err.original = e;
 	      // issue #675: return the raw response if the response parsing fails
 	      err.rawResponse = self.xhr && self.xhr.responseText ? self.xhr.responseText : null;
-	      // issue #876: return the http status code if the response parsing fails
-	      err.statusCode = self.xhr && self.xhr.status ? self.xhr.status : null;
 	      return self.callback(err);
 	    }
 
@@ -666,13 +666,45 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	/**
-	 * Mixin `Emitter` and `requestBase`.
+	 * Mixin `Emitter`.
 	 */
 
 	Emitter(Request.prototype);
-	for (var key in requestBase) {
-	  Request.prototype[key] = requestBase[key];
+
+	/**
+	 * Allow for extension
+	 */
+
+	Request.prototype.use = function(fn) {
+	  fn(this);
+	  return this;
 	}
+
+	/**
+	 * Set timeout to `ms`.
+	 *
+	 * @param {Number} ms
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.timeout = function(ms){
+	  this._timeout = ms;
+	  return this;
+	};
+
+	/**
+	 * Clear previous timeout.
+	 *
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.clearTimeout = function(){
+	  this._timeout = 0;
+	  clearTimeout(this._timer);
+	  return this;
+	};
 
 	/**
 	 * Abort the request, and clear potential timeout.
@@ -688,6 +720,70 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this.clearTimeout();
 	  this.emit('abort');
 	  return this;
+	};
+
+	/**
+	 * Set header `field` to `val`, or multiple fields with one object.
+	 *
+	 * Examples:
+	 *
+	 *      req.get('/')
+	 *        .set('Accept', 'application/json')
+	 *        .set('X-API-Key', 'foobar')
+	 *        .end(callback);
+	 *
+	 *      req.get('/')
+	 *        .set({ Accept: 'application/json', 'X-API-Key': 'foobar' })
+	 *        .end(callback);
+	 *
+	 * @param {String|Object} field
+	 * @param {String} val
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.set = function(field, val){
+	  if (isObject(field)) {
+	    for (var key in field) {
+	      this.set(key, field[key]);
+	    }
+	    return this;
+	  }
+	  this._header[field.toLowerCase()] = val;
+	  this.header[field] = val;
+	  return this;
+	};
+
+	/**
+	 * Remove header `field`.
+	 *
+	 * Example:
+	 *
+	 *      req.get('/')
+	 *        .unset('User-Agent')
+	 *        .end(callback);
+	 *
+	 * @param {String} field
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.unset = function(field){
+	  delete this._header[field.toLowerCase()];
+	  delete this.header[field];
+	  return this;
+	};
+
+	/**
+	 * Get case-insensitive header `field` value.
+	 *
+	 * @param {String} field
+	 * @return {String}
+	 * @api private
+	 */
+
+	Request.prototype.getHeader = function(field){
+	  return this._header[field.toLowerCase()];
 	};
 
 	/**
@@ -718,22 +814,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Set responseType to `val`. Presently valid responseTypes are 'blob' and 
-	 * 'arraybuffer'.
+	 * Force given parser
 	 *
-	 * Examples:
+	 * Sets the body parser no matter type.
 	 *
-	 *      req.get('/')
-	 *        .responseType('blob')
-	 *        .end(callback);
-	 *
-	 * @param {String} val
-	 * @return {Request} for chaining
+	 * @param {Function}
 	 * @api public
 	 */
 
-	Request.prototype.responseType = function(val){
-	  this._responseType = val;
+	Request.prototype.parse = function(fn){
+	  this._parser = fn;
 	  return this;
 	};
 
@@ -767,29 +857,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @param {String} user
 	 * @param {String} pass
-	 * @param {Object} options with 'type' property 'auto' or 'basic' (default 'basic')
 	 * @return {Request} for chaining
 	 * @api public
 	 */
 
-	Request.prototype.auth = function(user, pass, options){
-	  if (!options) {
-	    options = {
-	      type: 'basic'
-	    }
-	  }
-
-	  switch (options.type) {
-	    case 'basic':
-	      var str = btoa(user + ':' + pass);
-	      this.set('Authorization', 'Basic ' + str);
-	    break;
-
-	    case 'auto':
-	      this.username = user;
-	      this.password = pass;
-	    break;
-	  }
+	Request.prototype.auth = function(user, pass){
+	  var str = btoa(user + ':' + pass);
+	  this.set('Authorization', 'Basic ' + str);
 	  return this;
 	};
 
@@ -814,6 +888,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
+	 * Write the field `name` and `val` for "multipart/form-data"
+	 * request bodies.
+	 *
+	 * ``` js
+	 * request.post('/upload')
+	 *   .field('foo', 'bar')
+	 *   .end(callback);
+	 * ```
+	 *
+	 * @param {String} name
+	 * @param {String|Blob|File} val
+	 * @return {Request} for chaining
+	 * @api public
+	 */
+
+	Request.prototype.field = function(name, val){
+	  if (!this._formData) this._formData = new root.FormData();
+	  this._formData.append(name, val);
+	  return this;
+	};
+
+	/**
 	 * Queue the given `file` as an attachment to the specified `field`,
 	 * with optional `filename`.
 	 *
@@ -831,15 +927,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	Request.prototype.attach = function(field, file, filename){
-	  this._getFormData().append(field, file, filename || file.name);
+	  if (!this._formData) this._formData = new root.FormData();
+	  this._formData.append(field, file, filename || file.name);
 	  return this;
-	};
-
-	Request.prototype._getFormData = function(){
-	  if (!this._formData) {
-	    this._formData = new root.FormData();
-	  }
-	  return this._formData;
 	};
 
 	/**
@@ -884,7 +974,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	Request.prototype.send = function(data){
 	  var obj = isObject(data);
-	  var type = this._header['content-type'];
+	  var type = this.getHeader('Content-Type');
 
 	  // merge
 	  if (obj && isObject(this._data)) {
@@ -893,7 +983,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  } else if ('string' == typeof data) {
 	    if (!type) this.type('form');
-	    type = this._header['content-type'];
+	    type = this.getHeader('Content-Type');
 	    if ('application/x-www-form-urlencoded' == type) {
 	      this._data = this._data
 	        ? this._data + '&' + data
@@ -907,22 +997,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  if (!obj || isHost(data)) return this;
 	  if (!type) this.type('json');
-	  return this;
-	};
-
-	/**
-	 * @deprecated
-	 */
-	Response.prototype.parse = function serialize(fn){
-	  if (root.console) {
-	    console.warn("Client-side parse() method has been renamed to serialize(). This method is not compatible with superagent v2.0");
-	  }
-	  this.serialize(fn);
-	  return this;
-	};
-
-	Response.prototype.serialize = function serialize(fn){
-	  this._parser = fn;
 	  return this;
 	};
 
@@ -1061,11 +1135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  // initiate request
-	  if (this.username && this.password) {
-	    xhr.open(this.method, this.url, true, this.username, this.password);
-	  } else {
-	    xhr.open(this.method, this.url, true);
-	  }
+	  xhr.open(this.method, this.url, true);
 
 	  // CORS
 	  if (this._withCredentials) xhr.withCredentials = true;
@@ -1073,7 +1143,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // body
 	  if ('GET' != this.method && 'HEAD' != this.method && 'string' != typeof data && !isHost(data)) {
 	    // serialize stuff
-	    var contentType = this._header['content-type'];
+	    var contentType = this.getHeader('Content-Type');
 	    var serialize = this._parser || request.serialize[contentType ? contentType.split(';')[0] : ''];
 	    if (!serialize && isJSON(contentType)) serialize = request.serialize['application/json'];
 	    if (serialize) data = serialize(data);
@@ -1085,10 +1155,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    xhr.setRequestHeader(field, this.header[field]);
 	  }
 
-	  if (this._responseType) {
-	    xhr.responseType = this._responseType;
-	  }
-
 	  // send stuff
 	  this.emit('request', this);
 
@@ -1098,12 +1164,54 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return this;
 	};
 
+	/**
+	 * Faux promise support
+	 *
+	 * @param {Function} fulfill
+	 * @param {Function} reject
+	 * @return {Request}
+	 */
+
+	Request.prototype.then = function (fulfill, reject) {
+	  return this.end(function(err, res) {
+	    err ? reject(err) : fulfill(res);
+	  });
+	}
 
 	/**
 	 * Expose `Request`.
 	 */
 
 	request.Request = Request;
+
+	/**
+	 * Issue a request:
+	 *
+	 * Examples:
+	 *
+	 *    request('GET', '/users').end(callback)
+	 *    request('/users').end(callback)
+	 *    request('/users', callback)
+	 *
+	 * @param {String} method
+	 * @param {String|Function} url or callback
+	 * @return {Request}
+	 * @api public
+	 */
+
+	function request(method, url) {
+	  // callback
+	  if ('function' == typeof url) {
+	    return new Request('GET', method).end(url);
+	  }
+
+	  // url first
+	  if (1 == arguments.length) {
+	    return new Request('GET', method);
+	  }
+
+	  return new Request(method, url);
+	}
 
 	/**
 	 * GET `url` with optional callback `fn(res)`.
@@ -1213,19 +1321,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return req;
 	};
 
+	/**
+	 * Expose `request`.
+	 */
+
+	module.exports = request;
+
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	
 	/**
 	 * Expose `Emitter`.
 	 */
 
-	if (true) {
-	  module.exports = Emitter;
-	}
+	module.exports = Emitter;
 
 	/**
 	 * Initialize a new `Emitter`.
@@ -1414,235 +1526,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Module of mixed-in functions shared between node and client code
-	 */
-	var isObject = __webpack_require__(6);
-
-	/**
-	 * Clear previous timeout.
-	 *
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	exports.clearTimeout = function _clearTimeout(){
-	  this._timeout = 0;
-	  clearTimeout(this._timer);
-	  return this;
-	};
-
-	/**
-	 * Force given parser
-	 *
-	 * Sets the body parser no matter type.
-	 *
-	 * @param {Function}
-	 * @api public
-	 */
-
-	exports.parse = function parse(fn){
-	  this._parser = fn;
-	  return this;
-	};
-
-	/**
-	 * Set timeout to `ms`.
-	 *
-	 * @param {Number} ms
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	exports.timeout = function timeout(ms){
-	  this._timeout = ms;
-	  return this;
-	};
-
-	/**
-	 * Faux promise support
-	 *
-	 * @param {Function} fulfill
-	 * @param {Function} reject
-	 * @return {Request}
-	 */
-
-	exports.then = function then(fulfill, reject) {
-	  return this.end(function(err, res) {
-	    err ? reject(err) : fulfill(res);
-	  });
-	}
-
-	/**
-	 * Allow for extension
-	 */
-
-	exports.use = function use(fn) {
-	  fn(this);
-	  return this;
-	}
-
-
-	/**
-	 * Get request header `field`.
-	 * Case-insensitive.
-	 *
-	 * @param {String} field
-	 * @return {String}
-	 * @api public
-	 */
-
-	exports.get = function(field){
-	  return this._header[field.toLowerCase()];
-	};
-
-	/**
-	 * Get case-insensitive header `field` value.
-	 * This is a deprecated internal API. Use `.get(field)` instead.
-	 *
-	 * (getHeader is no longer used internally by the superagent code base)
-	 *
-	 * @param {String} field
-	 * @return {String}
-	 * @api private
-	 * @deprecated
-	 */
-
-	exports.getHeader = exports.get;
-
-	/**
-	 * Set header `field` to `val`, or multiple fields with one object.
-	 * Case-insensitive.
-	 *
-	 * Examples:
-	 *
-	 *      req.get('/')
-	 *        .set('Accept', 'application/json')
-	 *        .set('X-API-Key', 'foobar')
-	 *        .end(callback);
-	 *
-	 *      req.get('/')
-	 *        .set({ Accept: 'application/json', 'X-API-Key': 'foobar' })
-	 *        .end(callback);
-	 *
-	 * @param {String|Object} field
-	 * @param {String} val
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-
-	exports.set = function(field, val){
-	  if (isObject(field)) {
-	    for (var key in field) {
-	      this.set(key, field[key]);
-	    }
-	    return this;
-	  }
-	  this._header[field.toLowerCase()] = val;
-	  this.header[field] = val;
-	  return this;
-	};
-
-	/**
-	 * Remove header `field`.
-	 * Case-insensitive.
-	 *
-	 * Example:
-	 *
-	 *      req.get('/')
-	 *        .unset('User-Agent')
-	 *        .end(callback);
-	 *
-	 * @param {String} field
-	 */
-	exports.unset = function(field){
-	  delete this._header[field.toLowerCase()];
-	  delete this.header[field];
-	  return this;
-	};
-
-	/**
-	 * Write the field `name` and `val` for "multipart/form-data"
-	 * request bodies.
-	 *
-	 * ``` js
-	 * request.post('/upload')
-	 *   .field('foo', 'bar')
-	 *   .end(callback);
-	 * ```
-	 *
-	 * @param {String} name
-	 * @param {String|Blob|File|Buffer|fs.ReadStream} val
-	 * @return {Request} for chaining
-	 * @api public
-	 */
-	exports.field = function(name, val) {
-	  this._getFormData().append(name, val);
-	  return this;
-	};
-
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	/**
-	 * Check if `obj` is an object.
-	 *
-	 * @param {Object} obj
-	 * @return {Boolean}
-	 * @api private
-	 */
-
-	function isObject(obj) {
-	  return null != obj && 'object' == typeof obj;
-	}
-
-	module.exports = isObject;
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	// The node and browser modules expose versions of this with the
-	// appropriate constructor function bound as first argument
-	/**
-	 * Issue a request:
-	 *
-	 * Examples:
-	 *
-	 *    request('GET', '/users').end(callback)
-	 *    request('/users').end(callback)
-	 *    request('/users', callback)
-	 *
-	 * @param {String} method
-	 * @param {String|Function} url or callback
-	 * @return {Request}
-	 * @api public
-	 */
-
-	function request(RequestConstructor, method, url) {
-	  // callback
-	  if ('function' == typeof url) {
-	    return new RequestConstructor('GET', method).end(url);
-	  }
-
-	  // url first
-	  if (2 == arguments.length) {
-	    return new RequestConstructor('GET', method);
-	  }
-
-	  return new RequestConstructor(method, url);
-	}
-
-	module.exports = request;
-
-
-/***/ },
-/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1658,7 +1541,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = config;
 
 /***/ },
-/* 9 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1672,11 +1555,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _config = __webpack_require__(8);
+	var _config = __webpack_require__(5);
 
 	var _config2 = _interopRequireDefault(_config);
 
-	var _linkify = __webpack_require__(10);
+	var _linkify = __webpack_require__(7);
 
 	var _linkify2 = _interopRequireDefault(_linkify);
 
@@ -1702,7 +1585,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 10 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1716,7 +1599,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _config = __webpack_require__(8);
+	var _config = __webpack_require__(5);
 
 	var _config2 = _interopRequireDefault(_config);
 
@@ -1774,7 +1657,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 11 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1788,11 +1671,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _config = __webpack_require__(8);
+	var _config = __webpack_require__(5);
 
 	var _config2 = _interopRequireDefault(_config);
 
-	var _linkify = __webpack_require__(10);
+	var _linkify = __webpack_require__(7);
 
 	var _linkify2 = _interopRequireDefault(_linkify);
 
@@ -1814,7 +1697,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 12 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1828,11 +1711,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _config = __webpack_require__(8);
+	var _config = __webpack_require__(5);
 
 	var _config2 = _interopRequireDefault(_config);
 
-	var _linkify = __webpack_require__(10);
+	var _linkify = __webpack_require__(7);
 
 	var _linkify2 = _interopRequireDefault(_linkify);
 
@@ -1864,7 +1747,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 13 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1878,11 +1761,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _config = __webpack_require__(8);
+	var _config = __webpack_require__(5);
 
 	var _config2 = _interopRequireDefault(_config);
 
-	var _linkify = __webpack_require__(10);
+	var _linkify = __webpack_require__(7);
 
 	var _linkify2 = _interopRequireDefault(_linkify);
 
