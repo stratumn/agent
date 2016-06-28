@@ -107,7 +107,7 @@ function stMapExplorer(debounce) {
 	function update(scope, source) {
 
 		// Compute the new tree layout.
-		var nodes = scope.tree.nodes(source).reverse(),
+		var nodes = scope.tree.nodes(scope.root).reverse(),
 			links = scope.tree.links(nodes);
 
 		// Normalize for fixed-depth.
@@ -200,19 +200,20 @@ function stMapExplorer(debounce) {
 			d.x0 = d.x;
 			d.y0 = d.y;
 		});
+
+		function click(d) {
+			if (d.children) {
+				d._children = d.children;
+				d.children = null;
+			} else {
+				d.children = d._children;
+				d._children = null;
+			}
+			update(scope, d);
+		}
 	}
 
 	// Toggle children on click.
-	function click(d) {
-		if (d.children) {
-			d._children = d.children;
-			d.children = null;
-		} else {
-			d.children = d._children;
-			d._children = null;
-		}
-		update(d);
-	}
 
 	return {
 		restrict: 'E',
@@ -220,10 +221,14 @@ function stMapExplorer(debounce) {
 			application: '=',
 			mapId: '=',
 			refresh: '=',
-			options: '='
+			options: '=?'
 		},
 		template: '<svg></svg>',
 		link: function(scope, element) {
+
+			console.log(scope);
+
+			scope.options = angular.isDefined(scope.options) ? scope.options : {};
 
 			scope.options = Object.assign({}, defaultOptions, scope.options);
 			scope.i = 0;
