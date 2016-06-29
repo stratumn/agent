@@ -24,9 +24,9 @@ TODO
 
 angular.module('stratumn.angular-mapexplorer', ['rt.debounce']).directive('stMapExplorer', stMapExplorer);
 
-stMapExplorer.$inject = ['debounce'];
+stMapExplorer.$inject = ['$q', 'debounce'];
 
-function stMapExplorer(debounce) {
+function stMapExplorer($q, debounce) {
 
 	var margin = {top: 20, right: 120, bottom: 20, left: 120},
 		width = 1680 - margin.right - margin.left,
@@ -46,10 +46,10 @@ function stMapExplorer(debounce) {
 	function load(scope) {
 		StratumnSDK.getApplication(scope.application)
 			.then(function(app) {
-				return app.getMap(scope.mapId)
+				return app.getMap(scope.mapId);
 			})
 			.then(function(res) {
-				return Promise.all(res.map(function(link) { return link.load(); }));
+				return $q.all(res.map(function(link) { return link.load(); }));
 			})
 			.then(function(res) {
 				var root = parse(scope, res);
@@ -104,6 +104,25 @@ function stMapExplorer(debounce) {
 		return "translate(" + y + "," + x + ")";
 	}
 
+	function syntaxHighlight(json) {
+		json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+			var cls = 'number';
+			if (/^"/.test(match)) {
+				if (/:$/.test(match)) {
+					cls = 'key';
+				} else {
+					cls = 'string';
+				}
+			} else if (/true|false/.test(match)) {
+				cls = 'boolean';
+			} else if (/null/.test(match)) {
+				cls = 'null';
+			}
+			return '<span class="' + cls + '">' + match + '</span>';
+		});
+	}
+
 	function update(scope, source) {
 
 		// Compute the new tree layout.
@@ -126,7 +145,19 @@ function stMapExplorer(debounce) {
 				var origin = d.parent && d.parent.x0 ? d.parent : source;
 				return translate(origin.x0, origin.y0);
 			})
-			.on("click", click);
+			.on("click", click)
+			.on("mouseover", function(d) {
+				var g = d3.select(this);
+				var info = g.append("foreignObject")
+					.append("xhtml:body")
+					.classed('info', true)
+					.attr('x', 20)
+					.attr('y', 20)
+					.html("<pre><p>" + syntaxHighlight(JSON.stringify(d.link, undefined, 2)) + "</p></pre>");
+			})
+			.on("mouseout", function() {
+				d3.select(this).select('foreignObject').remove();
+			});
 
 		nodeEnter.append("circle")
 			.attr("r", 1e-6);
@@ -166,8 +197,8 @@ function stMapExplorer(debounce) {
 			.data(links, function(d) { return d.target.id; });
 
 		link.enter().insert("text")
-			.attr("x", 40)
-			.attr("dy", "-0.5em")
+			.attr("dx", "2em")
+			.attr("dy", "-0.3em")
 			.append("textPath")
 			.attr("class", "textpath")
 			.attr("xlink:href",  function(d) { return "#" + d.target.id; } )
@@ -181,6 +212,7 @@ function stMapExplorer(debounce) {
 				var o = d.source && d.source.x0 ? {x: d.source.x0, y: d.source.y0} : {x: source.x0, y: source.y0};
 				return scope.diagonal({source: o, target: o});
 			});
+
 		// Transition links to their new position.
 		link.transition()
 			.duration(scope.options.duration)
@@ -213,8 +245,6 @@ function stMapExplorer(debounce) {
 		}
 	}
 
-	// Toggle children on click.
-
 	return {
 		restrict: 'E',
 		scope: {
@@ -225,8 +255,6 @@ function stMapExplorer(debounce) {
 		},
 		template: '<svg></svg>',
 		link: function(scope, element) {
-
-			console.log(scope);
 
 			scope.options = angular.isDefined(scope.options) ? scope.options : {};
 
