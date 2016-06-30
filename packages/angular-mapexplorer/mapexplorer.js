@@ -58,6 +58,9 @@ function stMapExplorer($q, debounce) {
 				root.y0 = 0;
 
 				update(scope, root);
+			})
+			.catch(function(res) {
+				console.log(res);
 			});
 	}
 
