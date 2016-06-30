@@ -3,7 +3,7 @@
 [TODO - brief summary]
 
 ## Demo
-http://Stratumn.github.io/angular-mapexplorer/
+http://stratumn.github.io/angular-mapexplorer/
 
 ## Dependencies
 - required:
