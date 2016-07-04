@@ -169,7 +169,7 @@ StratumnSDK
     return app.getBranches('aee5427');
   })
   .then(function(res) {
-    return Promise.all(res.map(function() { return res.load(); }));
+    return Promise.all(res.map(function(link) { return link.load(); }));
   })
   .then(function(res) {
     console.log(res);
