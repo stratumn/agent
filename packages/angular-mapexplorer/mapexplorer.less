@@ -1,7 +1,13 @@
 /* jrg-mapexplorer */
 
-.node {
-  cursor: pointer;
+.ace_editor {
+  height: 400px;
+}
+
+.node polygon {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
 }
 
 .node circle {
@@ -20,15 +26,8 @@
   stroke-width: 1.5px;
 }
 
-.win circle {
-  fill: red;
-}
-
-pre {
-  outline: 1px solid #ccc;
-  padding: 5px;
-  margin: 5px;
-  //overflow: scroll;
+.win polygon {
+  stroke: red;
 }
 
 .string {
@@ -51,9 +50,31 @@ pre {
   color: red;
 }
 
-foreignObject {
-  body.info {
-    display: inline-block;
-    background-color: white;
+md-tabs, md-tab-content.md-no-scroll {
+  overflow: visible;
+}
+
+md-dialog.info {
+  opacity: 0.9;
+}
+
+//.info {
+//  position: absolute;
+//  display: inline-block;
+//  padding: 2px;
+//  background: lightsteelblue;
+//  border: 0;
+//  z-index: 100;
+//}
+
+table {
+  &.link, &.evidence {
+    td {
+      font-family: monospace;
+    }
   }
+}
+
+st-map-explorer {
+  display: block;
 }
