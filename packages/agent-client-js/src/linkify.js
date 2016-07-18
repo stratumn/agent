@@ -16,8 +16,9 @@ export default function linkify(app, obj) {
             .post(url)
             .send(args)
             .end((err, res) => {
-              if (err) {
-                reject(err);
+              const error = err || (res.body.meta && res.body.meta.errorMessage);
+              if (error) {
+                reject(error);
                 return;
               }
 
