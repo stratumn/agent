@@ -5,9 +5,9 @@ import getLink from './getLink';
 import getMap from './getMap';
 import getBranches from './getBranches';
 
-export default function getApplication(appName) {
+export default function getApplication(appName, appLocation) {
   return new Promise((resolve, reject) => {
-    const url = config.applicationUrl.replace('%s', appName);
+    const url = appLocation || config.applicationUrl.replace('%s', appName);
 
     return request
       .get(url)
