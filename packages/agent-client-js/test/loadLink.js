@@ -4,7 +4,7 @@ import loadLink from '../src/loadLink';
 
 describe('#loadLink', () => {
 
-  const segment = JSON.parse(fs.readFileSync(join(__dirname, `./fixtures/segment.json`)));
+  const segment = JSON.parse(fs.readFileSync(join(__dirname, './fixtures/segment.json')));
 
   it('loads a link', () =>
     loadLink(segment)

@@ -4,8 +4,8 @@ import getApplication from './getApplication';
 
 export default function loadLink(segment) {
   return getApplication(segment.meta.application, segment.meta.applicationLocation)
-    .then((app) => {
-      return new Promise((resolve, reject) => {
+    .then(app =>
+      new Promise((resolve, reject) => {
         const url = segment.meta.linkLocation;
 
         return request
@@ -18,6 +18,6 @@ export default function loadLink(segment) {
 
             resolve(linkify(app, res.body));
           });
-      });
-    });
+      })
+    );
 }
