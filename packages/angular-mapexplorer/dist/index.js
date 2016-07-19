@@ -76,7 +76,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	angular.module('stratumn.angular-mapexplorer', ['rt.debounce']).directive('stMapExplorer', _stMapExplorer2.default).directive('stMerklePathTree', _stMerklePathTree2.default).directive('stMapValidator', _stMapValidator2.default).directive('stPromiseLoader', _stPromiseLoader2.default).service('AceConfigurationService', _AceConfiguration2.default);
+	angular.module('stratumn.angular-mapexplorer', ['mgcrea.jquery']).directive('stMapExplorer', _stMapExplorer2.default).directive('stMerklePathTree', _stMerklePathTree2.default).directive('stMapValidator', _stMapValidator2.default).directive('stPromiseLoader', _stPromiseLoader2.default).service('AceConfigurationService', _AceConfiguration2.default);
 
 /***/ },
 /* 2 */
@@ -333,13 +333,13 @@
 	      };
 	      var builder = new _ChainMapBuilder2.default(element, options);
 
-	      var fn = debounce(100, function () {
+	      var fn = debounce(function () {
 	        builder.build({
 	          id: scope.mapId,
 	          application: scope.application,
 	          chainscript: scope.chainscript
 	        });
-	      }, true);
+	      }, 100);
 
 	      scope.$watchGroup(['application', 'mapId', 'refresh', 'chainscript'], fn);
 	    }
@@ -797,7 +797,7 @@
 	    templateUrl: 'views/mapvalidator.html',
 	    link: function link(scope) {
 
-	      var fn = debounce(100, function () {
+	      var fn = debounce(function () {
 	        if (angular.isDefined(scope.chainscript)) {
 	          try {
 	            scope.loading = true;
@@ -809,7 +809,7 @@
 	            console.log(e);
 	          }
 	        }
-	      }, true);
+	      }, 100);
 
 	      scope.$watch('chainscript', fn);
 	    }
