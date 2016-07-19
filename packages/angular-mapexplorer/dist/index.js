@@ -390,12 +390,6 @@
 	      this.$scope.$parent.onSegmentShow(this.$scope.name);
 	    }
 	  }, {
-	    key: 'hide',
-	    value: function hide() {
-	      this.segment = null;
-	      this.$scope.$parent.onSegmentHide(this.$scope.name);
-	    }
-	  }, {
 	    key: 'display',
 	    value: function display(tab) {
 	      this.displayed = tab;
@@ -404,6 +398,7 @@
 	    key: 'close',
 	    value: function close() {
 	      this.segment = null;
+	      this.$scope.$parent.onSegmentHide(this.$scope.name);
 	      d3.selectAll('g.node.selected').classed('selected', false);
 	    }
 	  }]);
