@@ -50,6 +50,12 @@ export default function agent(transitions, storeClient) {
           };
 
           return storeClient.saveSegment(segment);
+        })
+        .catch(err => {
+          /*eslint-disable*/
+          err.status = 400;
+          /*eslint-enable*/
+          return err;
         });
     },
 
@@ -92,6 +98,12 @@ export default function agent(transitions, storeClient) {
           };
 
           return storeClient.saveSegment(segment);
+        })
+        .catch(err => {
+          /*eslint-disable*/
+          err.status = 400;
+          /*eslint-enable*/
+          return err;
         });
     },
 
