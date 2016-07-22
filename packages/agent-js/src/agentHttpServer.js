@@ -73,7 +73,7 @@ export default function agentHttpServer(transitions, storeClient) {
       .catch(next);
   });
 
-  app.use(error);
+  app.use(error());
 
   return app;
 }
