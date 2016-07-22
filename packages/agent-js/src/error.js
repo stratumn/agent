@@ -23,7 +23,7 @@ export default function error() {
     if (res.locals.renderErrorAsLink) {
       res.status(500).json({ link: {}, meta: { errorMessage: 'internal server error' } });
     } else {
-      res.status(err.status).end('internal server error');
+      res.status(500).end('internal server error');
     }
   };
 }

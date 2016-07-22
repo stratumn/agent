@@ -142,7 +142,9 @@ export default function agentHttpServer(transitions, storeClient) {
   });
 
   app.use((req, res, next) => {
-    next(new Error('not found'));
+    const err = new Error('not found');
+    err.status = 404;
+    next(err);
   });
 
   app.use(error());
