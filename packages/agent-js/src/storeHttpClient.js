@@ -10,7 +10,7 @@ function handleResponse(resolve, reject, err, res) {
 
   if (err) {
     /*eslint-disable*/
-    err.status = req ? res.statusCode : 500;
+    err.status = res ? res.statusCode : 500;
     /*eslint-enable*/
     reject(err);
     return;
