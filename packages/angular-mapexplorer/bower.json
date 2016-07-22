@@ -1,38 +1,39 @@
 {
-	"name": "angular-mapexplorer",
-	"version": "1.0.0",
-	"authors": [
-		"Stratumn Team"
-	],
-	"description": "AngularJS directive to display a chainscript map",
-	"keywords": [
-		"angular",
-		"stratumn",
-		"chainscript",
-		"map",
-		"explorer",
-		"tree"
-	],
-	"license": "MIT",
-	"ignore": [
-		"**/.*",
-		"node_modules",
-		"bower_components",
-		"test",
-		"tests"
-	],
-	"dependencies": {
+  "name": "angular-mapexplorer",
+  "version": "1.0.0",
+  "authors": [
+    "Stratumn Team"
+  ],
+  "description": "AngularJS directive to display a chainscript map",
+  "keywords": [
+    "angular",
+    "stratumn",
+    "chainscript",
+    "map",
+    "explorer",
+    "tree"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
     "angular": "~1.5.0",
     "angular-animate": "~1.5.0",
     "angular-sanitize": "~1.5.0",
     "angular-touch": "~1.5.0",
-    "angular-debounce": "^1.1.0",
     "angular-material": "^1.0.9",
     "stratumn-sdk": "^0.5.0",
     "d3": "^4.1.0",
-    "angular-ui-ace": "^0.2.3"
-	},
-	"devDependencies": {
-	},
-  "main": ["dist/index.js"]
+    "angular-ui-ace": "^0.2.3",
+    "angular-query": "^0.1.1"
+  },
+  "devDependencies": {},
+  "main": [
+    "dist/index.js"
+  ]
 }
