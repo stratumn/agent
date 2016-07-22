@@ -22,6 +22,58 @@ export default function agentHttpServer(transitions, storeClient) {
       .catch(next);
   });
 
+  app.post('/segments', (req, res, next) => {
+    /*eslint-disable*/
+    const args = req.body
+      ? Array.isArray(req.body)
+      ? req.body
+      : [req.body]
+      : [];
+    /*eslint-enable*/
+
+    instance
+      .createMap(args)
+      .then(res.json.bind(res))
+      .catch(next);
+  });
+
+  app.post('/segments/:hash/:action', (req, res, next) => {
+    /*eslint-disable*/
+    const args = req.body
+      ? Array.isArray(req.body)
+      ? req.body
+      : [req.body]
+      : [];
+    /*eslint-enable*/
+
+    instance
+      .createLink(req.params.hash, req.params.action, ...args)
+      .then(res.json.bind(res))
+      .catch(next);
+  });
+
+  app.get('/segments/:hash', (req, res, next) => {
+    instance
+      .getSegment(req.params.hash)
+      .then(res.json.bind(res))
+      .catch(next);
+  });
+
+  app.get('/segments', (req, res, next) => {
+    instance
+      .findSegments(req.query)
+      .then(res.json.bind(res))
+      .catch(next);
+  });
+
+  app.get('/maps', (req, res, next) => {
+    instance
+      .getMapIds(req.query)
+      .then(res.json.bind(res))
+      .catch(next);
+  });
+
+  // Legacy
   app.post('/maps', (req, res, next) => {
     /*eslint-disable*/
     const args = req.body
@@ -37,13 +89,7 @@ export default function agentHttpServer(transitions, storeClient) {
       .catch(next);
   });
 
-  app.get('/links/:hash', (req, res, next) => {
-    instance
-      .getSegment(req.params.hash)
-      .then(res.json.bind(res))
-      .catch(next);
-  });
-
+  // Legacy
   app.post('/links/:hash/:action', (req, res, next) => {
     /*eslint-disable*/
     const args = req.body
@@ -59,6 +105,15 @@ export default function agentHttpServer(transitions, storeClient) {
       .catch(next);
   });
 
+  // Legacy
+  app.get('/links/:hash', (req, res, next) => {
+    instance
+      .getSegment(req.params.hash)
+      .then(res.json.bind(res))
+      .catch(next);
+  });
+
+  // Legacy
   app.get('/links', (req, res, next) => {
     instance
       .findSegments(req.query)
@@ -66,9 +121,14 @@ export default function agentHttpServer(transitions, storeClient) {
       .catch(next);
   });
 
-  app.get('/maps', (req, res, next) => {
+  // Legacy
+  app.get('/branches/:hash', (req, res, next) => {
+    /*eslint-disable*/
+    req.query.prevLinkHash = req.params.hash;
+    /*eslint-enable*/
+
     instance
-      .getMapIds(req.query)
+      .findSegments(req.query)
       .then(res.json.bind(res))
       .catch(next);
   });
