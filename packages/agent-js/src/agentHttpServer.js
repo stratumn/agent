@@ -44,7 +44,7 @@ export default function agentHttpServer(transitions, storeClient) {
     /*eslint-enable*/
 
     instance
-      .createMap(parseArgs(req.body))
+      .createMap(...parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
   });
@@ -55,7 +55,7 @@ export default function agentHttpServer(transitions, storeClient) {
     /*eslint-enable*/
 
     instance
-      .createLink(req.params.hash, req.params.action, ...parseArgs(req.body))
+      .createLink(req.params.hash, req.params.action, ......parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
   });
@@ -88,7 +88,7 @@ export default function agentHttpServer(transitions, storeClient) {
     /*eslint-enable*/
 
     instance
-      .createMap(parseArgs(req.body))
+      .createMap(...parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
   });
@@ -100,7 +100,7 @@ export default function agentHttpServer(transitions, storeClient) {
     /*eslint-enable*/
 
     instance
-      .createLink(req.params.hash, req.params.action, ...parseArgs(req.body))
+      .createLink(req.params.hash, req.params.action, ......parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
   });
