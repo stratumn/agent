@@ -3,6 +3,22 @@ import bodyParser from 'body-parser';
 import agent from './agent';
 import error from './error';
 
+function parseArgs(body) {
+  if (!body) {
+    return [];
+  }
+
+  if (Array.isArray(body)) {
+    return body;
+  }
+
+  if (typeof body !== 'object' || Object.keys(body).length > 0) {
+    return [body];
+  }
+
+  return [];
+}
+
 /**
  * Creates an HTTP server for an agent.
  * @param {object} transitions - the transition function
@@ -25,16 +41,10 @@ export default function agentHttpServer(transitions, storeClient) {
   app.post('/segments', (req, res, next) => {
     /*eslint-disable*/
     res.locals.renderErrorAsLink = true;
-
-    const args = req.body
-      ? Array.isArray(req.body)
-      ? req.body && (typeof req.body !== 'object' || Object.keys(req.body).length > 0)
-      : [req.body]
-      : [];
     /*eslint-enable*/
 
     instance
-      .createMap(args)
+      .createMap(parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
   });
@@ -42,16 +52,10 @@ export default function agentHttpServer(transitions, storeClient) {
   app.post('/segments/:hash/:action', (req, res, next) => {
     /*eslint-disable*/
     res.locals.renderErrorAsLink = true;
-
-    const args = req.body
-      ? Array.isArray(req.body)
-      ? req.body && (typeof req.body !== 'object' || Object.keys(req.body).length > 0)
-      : [req.body]
-      : [];
     /*eslint-enable*/
 
     instance
-      .createLink(req.params.hash, req.params.action, ...args)
+      .createLink(req.params.hash, req.params.action, ...parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
   });
@@ -81,16 +85,10 @@ export default function agentHttpServer(transitions, storeClient) {
   app.post('/maps', (req, res, next) => {
     /*eslint-disable*/
     res.locals.renderErrorAsLink = true;
-
-    const args = req.body
-      ? Array.isArray(req.body)
-      ? req.body && (typeof req.body !== 'object' || Object.keys(req.body).length > 0)
-      : [req.body]
-      : [];
     /*eslint-enable*/
 
     instance
-      .createMap(args)
+      .createMap(parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
   });
@@ -99,16 +97,10 @@ export default function agentHttpServer(transitions, storeClient) {
   app.post('/links/:hash/:action', (req, res, next) => {
     /*eslint-disable*/
     res.locals.renderErrorAsLink = true;
-
-    const args = req.body
-      ? Array.isArray(req.body)
-      ? req.body && (typeof req.body !== 'object' || Object.keys(req.body).length > 0)
-      : [req.body]
-      : [];
     /*eslint-enable*/
 
     instance
-      .createLink(req.params.hash, req.params.action, ...args)
+      .createLink(req.params.hash, req.params.action, ...parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
   });
