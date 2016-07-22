@@ -55,7 +55,7 @@ export default function agent(transitions, storeClient) {
           /*eslint-disable*/
           err.status = 400;
           /*eslint-enable*/
-          return err;
+          throw err;
         });
     },
 
@@ -103,7 +103,7 @@ export default function agent(transitions, storeClient) {
           /*eslint-disable*/
           err.status = 400;
           /*eslint-enable*/
-          return err;
+          throw err;
         });
     },
 
