@@ -28,7 +28,7 @@ export default function agentHttpServer(transitions, storeClient) {
 
     const args = req.body
       ? Array.isArray(req.body)
-      ? req.body && req.body != {}
+      ? req.body && (typeof req.body !== 'object' || Object.keys(req.body).length > 0)
       : [req.body]
       : [];
     /*eslint-enable*/
@@ -45,7 +45,7 @@ export default function agentHttpServer(transitions, storeClient) {
 
     const args = req.body
       ? Array.isArray(req.body)
-      ? req.body && req.body != {}
+      ? req.body && (typeof req.body !== 'object' || Object.keys(req.body).length > 0)
       : [req.body]
       : [];
     /*eslint-enable*/
@@ -84,7 +84,7 @@ export default function agentHttpServer(transitions, storeClient) {
 
     const args = req.body
       ? Array.isArray(req.body)
-      ? req.body && req.body != {}
+      ? req.body && (typeof req.body !== 'object' || Object.keys(req.body).length > 0)
       : [req.body]
       : [];
     /*eslint-enable*/
@@ -102,7 +102,7 @@ export default function agentHttpServer(transitions, storeClient) {
 
     const args = req.body
       ? Array.isArray(req.body)
-      ? req.body && req.body != {}
+      ? req.body && (typeof req.body !== 'object' || Object.keys(req.body).length > 0)
       : [req.body]
       : [];
     /*eslint-enable*/
