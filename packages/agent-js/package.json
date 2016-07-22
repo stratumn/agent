@@ -32,8 +32,11 @@
   },
   "dependencies": {
     "body-parser": "^1.15.2",
+    "canonical-json": "0.0.4",
     "express": "^4.14.0",
+    "node-uuid": "^1.4.7",
     "request": "^2.73.0",
+    "stratumn-mock-agent": "^1.0.2",
     "superagent": "^2.1.0"
   },
   "devDependencies": {

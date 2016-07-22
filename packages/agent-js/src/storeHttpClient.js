@@ -2,13 +2,17 @@ import superagent from 'superagent';
 import makeQueryString from './makeQueryString';
 
 function handleResponse(resolve, reject, err, res) {
-  if (err) {
-    reject(err);
-    return;
+  if (res.body.error) {
+    /*eslint-disable*/
+    err = new Error(res.body.error)
+    /*eslint-enable*/
   }
 
-  if (res.body.error) {
-    reject(new Error(res.body.error));
+  if (err) {
+    /*eslint-disable*/
+    err.status = res.statusCode;
+    /*eslint-enable*/
+    reject(err);
     return;
   }
 
