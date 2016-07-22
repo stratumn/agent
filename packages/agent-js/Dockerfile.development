@@ -1,0 +1,10 @@
+FROM node:6
+
+RUN mkdir /agent
+
+ONBUILD ADD package.json /agent/package.json
+ONBUILD RUN cd /agent; npm install
+
+ONBUILD WORKDIR /agent/server
+
+ONBUILD CMD npm start
