@@ -24,9 +24,11 @@ export default function agentHttpServer(transitions, storeClient) {
 
   app.post('/segments', (req, res, next) => {
     /*eslint-disable*/
+    res.locals.renderErrorAsLink = true;
+
     const args = req.body
       ? Array.isArray(req.body)
-      ? req.body
+      ? req.body && req.body != {}
       : [req.body]
       : [];
     /*eslint-enable*/
@@ -39,9 +41,11 @@ export default function agentHttpServer(transitions, storeClient) {
 
   app.post('/segments/:hash/:action', (req, res, next) => {
     /*eslint-disable*/
+    res.locals.renderErrorAsLink = true;
+
     const args = req.body
       ? Array.isArray(req.body)
-      ? req.body
+      ? req.body && req.body != {}
       : [req.body]
       : [];
     /*eslint-enable*/
@@ -76,9 +80,11 @@ export default function agentHttpServer(transitions, storeClient) {
   // Legacy
   app.post('/maps', (req, res, next) => {
     /*eslint-disable*/
+    res.locals.renderErrorAsLink = true;
+
     const args = req.body
       ? Array.isArray(req.body)
-      ? req.body
+      ? req.body && req.body != {}
       : [req.body]
       : [];
     /*eslint-enable*/
@@ -92,9 +98,11 @@ export default function agentHttpServer(transitions, storeClient) {
   // Legacy
   app.post('/links/:hash/:action', (req, res, next) => {
     /*eslint-disable*/
+    res.locals.renderErrorAsLink = true;
+
     const args = req.body
       ? Array.isArray(req.body)
-      ? req.body
+      ? req.body && req.body != {}
       : [req.body]
       : [];
     /*eslint-enable*/
@@ -131,6 +139,10 @@ export default function agentHttpServer(transitions, storeClient) {
       .findSegments(req.query)
       .then(res.json.bind(res))
       .catch(next);
+  });
+
+  app.use((req, res, next) => {
+    next(new Error('not found'));
   });
 
   app.use(error());

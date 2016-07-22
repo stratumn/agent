@@ -8,12 +8,22 @@ export default function error() {
   /*eslint-enable*/
     if (err.status && err.status !== 500) {
       console.error(`${req.originalUrl}: ${err.stack}`);
-      res.status(err.status).json({ link: {}, meta: { errorMessage: err.message } });
+
+      if (res.locals.renderErrorAsLink) {
+        res.status(err.status).json({ link: {}, meta: { errorMessage: err.message } });
+      } else {
+        res.status(err.status).end(err.message);
+      }
+
       return;
     }
 
     console.error(`${req.originalUrl}: ${err.stack}`);
 
-    res.status(500).json({ link: {}, meta: { errorMessage: 'internal server error' } });
+    if (res.locals.renderErrorAsLink) {
+      res.status(500).json({ link: {}, meta: { errorMessage: 'internal server error' } });
+    } else {
+      res.status(err.status).end('internal server error');
+    }
   };
 }
