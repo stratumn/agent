@@ -2,22 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import agent from './agent';
 import error from './error';
-
-function parseArgs(body) {
-  if (!body) {
-    return [];
-  }
-
-  if (Array.isArray(body)) {
-    return body;
-  }
-
-  if (typeof body !== 'object' || Object.keys(body).length > 0) {
-    return [body];
-  }
-
-  return [];
-}
+import parseArgs from './parseArgs';
 
 /**
  * Creates an HTTP server for an agent.
@@ -25,7 +10,7 @@ function parseArgs(body) {
  * @param {StoreClient} storeClient - the store client
  * @returns {express.Server} an express server
  */
-export default function agentHttpServer(transitions, storeClient) {
+export default function httpServer(transitions, storeClient) {
   const app = express();
   const instance = agent(transitions, storeClient);
 
