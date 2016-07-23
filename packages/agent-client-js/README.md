@@ -98,6 +98,24 @@ StratumnSDK
   });
 ```
 
+### Agent#loadSegment(raw)
+
+Returns a promise that resolves with the segment from a given raw object.
+
+```javascript
+StratumnSDK
+  .getAgent('quickstart')
+  .then(function(agent) {
+    return app.loadSegment(rawSegment);
+  })
+  .then(function(segment) {
+    console.log(segment);
+  })
+  .catch(function(err) {
+    // Handle errors
+  });
+```
+
 ### Agent#findSegments(opts)
 
 Returns a promise that resolves with existing segments.
