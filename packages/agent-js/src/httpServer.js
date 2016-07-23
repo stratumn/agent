@@ -118,6 +118,24 @@ export default function httpServer(transitions, storeClient, opts = {}) {
   });
 
   // Legacy
+  app.get('/maps/:id', (req, res, next) => {
+    /*eslint-disable*/
+    req.query.mapId = req.params.id;
+    /*eslint-enable*/
+
+    instance
+      .findSegments(req.query)
+      .then(res.json.bind(res))
+      .catch(next);
+  });
+
+  app.use((req, res, next) => {
+    const err = new Error('not found');
+    err.status = 404;
+    next(err);
+  });
+
+  // Legacy
   app.get('/branches/:hash', (req, res, next) => {
     /*eslint-disable*/
     req.query.prevLinkHash = req.params.hash;
