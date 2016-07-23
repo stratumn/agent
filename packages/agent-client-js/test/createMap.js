@@ -1,18 +1,18 @@
-import getApplication from '../src/getApplication';
+import getAgent from '../src/getAgent';
 
 describe('#createMap', () => {
 
-  let app;
+  let agent;
 
   beforeEach(() =>
-    getApplication('sdk-test').then(res => { app = res; })
+    getAgent('http://localhost:3000').then(res => { agent = res; })
   );
 
   it('creates a map', () =>
-    app
+    agent
       .createMap('Test')
-      .then(res => {
-        res.link.state.title.should.be.exactly('Test');
+      .then(segment => {
+        segment.link.state.title.should.be.exactly('Test');
       })
   );
 

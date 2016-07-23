@@ -1681,7 +1681,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 	  return new Promise(function (resolve, reject) {
-	    var url = agent.url + '/segemnts' + (0, _makeQueryString2.default)(opts);
+	    var url = agent.url + '/segments' + (0, _makeQueryString2.default)(opts);
 
 	    return _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {

@@ -4,7 +4,7 @@ import makeQueryString from './makeQueryString';
 
 export default function findSegments(agent, opts = {}) {
   return new Promise((resolve, reject) => {
-    const url = `${agent.url}/segemnts${makeQueryString(opts)}`;
+    const url = `${agent.url}/segments${makeQueryString(opts)}`;
 
     return request
       .get(url)
