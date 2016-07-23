@@ -48,7 +48,7 @@ export default function httpServer(agent, opts = {}) {
     /*eslint-enable*/
 
     agent
-      .createLink(req.params.hash, req.params.action, ...parseArgs(req.body))
+      .createSegment(req.params.hash, req.params.action, ...parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
   });
@@ -93,7 +93,7 @@ export default function httpServer(agent, opts = {}) {
     /*eslint-enable*/
 
     agent
-      .createLink(req.params.hash, req.params.action, ...parseArgs(req.body))
+      .createSegment(req.params.hash, req.params.action, ...parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
   });

@@ -60,13 +60,13 @@ export default function create(transitions, storeClient) {
     },
 
     /**
-     * Appends a link to a map.
+     * Appends a segment to a map.
      * @param {string} prevLinkHash - the previous link hash
      * @param {string} action - the name of the transition function to call
      * @param {...} args - the arguments to pass to the transition function
      * @returns {Promise} a promise that resolve with the segment
      */
-    createLink(prevLinkHash, action, ...args) {
+    createSegment(prevLinkHash, action, ...args) {
       return storeClient
         .getSegment(prevLinkHash)
         .then(segment => {
