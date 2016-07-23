@@ -1,9 +1,7 @@
-import getApplication from './getApplication';
-import loadLink from './loadLink';
-import config from './config';
+import getAgent from './getAgent';
+import fromSegment from './fromSegment';
 
 module.exports = {
-  getApplication,
-  loadLink,
-  config
+  getAgent,
+  fromSegment
 };

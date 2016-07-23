@@ -1,17 +1,15 @@
 import request from 'superagent';
 import segmentify from './segmentify';
 
-export default function createMap(agent, ...args) {
+export default function getSegment(agent, linkHash) {
   return new Promise((resolve, reject) => {
-    const url = `${agent.url}/segments`;
+    const url = `${agent.url}/segments/${linkHash}`;
 
     return request
-      .post(url)
-      .send(args)
+      .get(url)
       .end((err, res) => {
-        const error = err || (res.body.meta && res.body.meta.errorMessage);
-        if (error) {
-          reject(error);
+        if (err) {
+          reject(err);
           return;
         }
 

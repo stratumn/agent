@@ -56,24 +56,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _getApplication = __webpack_require__(1);
+	var _getAgent = __webpack_require__(1);
 
-	var _getApplication2 = _interopRequireDefault(_getApplication);
+	var _getAgent2 = _interopRequireDefault(_getAgent);
 
-	var _loadLink = __webpack_require__(11);
+	var _fromSegment = __webpack_require__(11);
 
-	var _loadLink2 = _interopRequireDefault(_loadLink);
-
-	var _config = __webpack_require__(5);
-
-	var _config2 = _interopRequireDefault(_config);
+	var _fromSegment2 = _interopRequireDefault(_fromSegment);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = {
-	  getApplication: _getApplication2.default,
-	  loadLink: _loadLink2.default,
-	  config: _config2.default
+	  getAgent: _getAgent2.default,
+	  fromSegment: _fromSegment2.default
 	};
 
 /***/ },
@@ -85,53 +80,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = getApplication;
+	exports.default = getAgent;
 
 	var _superagent = __webpack_require__(2);
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _config = __webpack_require__(5);
-
-	var _config2 = _interopRequireDefault(_config);
-
-	var _createMap = __webpack_require__(6);
+	var _createMap = __webpack_require__(5);
 
 	var _createMap2 = _interopRequireDefault(_createMap);
 
-	var _getLink = __webpack_require__(8);
+	var _getSegment = __webpack_require__(7);
 
-	var _getLink2 = _interopRequireDefault(_getLink);
+	var _getSegment2 = _interopRequireDefault(_getSegment);
 
-	var _getMap = __webpack_require__(9);
+	var _findSegments = __webpack_require__(8);
 
-	var _getMap2 = _interopRequireDefault(_getMap);
+	var _findSegments2 = _interopRequireDefault(_findSegments);
 
-	var _getBranches = __webpack_require__(10);
+	var _getMapIds = __webpack_require__(10);
 
-	var _getBranches2 = _interopRequireDefault(_getBranches);
+	var _getMapIds2 = _interopRequireDefault(_getMapIds);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function getApplication(appName, appLocation) {
+	function getAgent(url) {
 	  return new Promise(function (resolve, reject) {
-	    var url = appLocation || _config2.default.applicationUrl.replace('%s', appName);
-
 	    return _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
 	        reject(err);
 	        return;
 	      }
 
-	      var app = res.body;
+	      var agent = res.body;
 
-	      app.url = url;
-	      app.createMap = _createMap2.default.bind(null, app);
-	      app.getLink = _getLink2.default.bind(null, app);
-	      app.getMap = _getMap2.default.bind(null, app);
-	      app.getBranches = _getBranches2.default.bind(null, app);
+	      agent.url = url;
+	      agent.createMap = _createMap2.default.bind(null, agent);
+	      agent.getSegment = _getSegment2.default.bind(null, agent);
+	      agent.findSegments = _findSegments2.default.bind(null, agent);
+	      agent.getMapIds = _getMapIds2.default.bind(null, agent);
 
-	      resolve(app);
+	      resolve(agent);
 	    });
 	  });
 	}
@@ -1531,22 +1520,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 5 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var config = {
-	  baseUrl: 'https://stratumn.rocks',
-	  applicationUrl: 'https://%s.stratumn.rocks'
-	};
-
-	exports.default = config;
-
-/***/ },
-/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1560,23 +1533,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _config = __webpack_require__(5);
+	var _segmentify = __webpack_require__(6);
 
-	var _config2 = _interopRequireDefault(_config);
-
-	var _linkify = __webpack_require__(7);
-
-	var _linkify2 = _interopRequireDefault(_linkify);
+	var _segmentify2 = _interopRequireDefault(_segmentify);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function createMap(app) {
+	function createMap(agent) {
 	  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 	    args[_key - 1] = arguments[_key];
 	  }
 
 	  return new Promise(function (resolve, reject) {
-	    var url = _config2.default.applicationUrl.replace('%s', app.name) + '/maps';
+	    var url = agent.url + '/segments';
 
 	    return _superagent2.default.post(url).send(args).end(function (err, res) {
 	      var error = err || res.body.meta && res.body.meta.errorMessage;
@@ -1585,9 +1554,66 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	      }
 
-	      resolve((0, _linkify2.default)(app, res.body));
+	      resolve((0, _segmentify2.default)(agent, res.body));
 	    });
 	  });
+	}
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = segmentify;
+
+	var _superagent = __webpack_require__(2);
+
+	var _superagent2 = _interopRequireDefault(_superagent);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function segmentify(agent, obj) {
+	  Object.keys(agent.agentInfo.functions).filter(function (key) {
+	    return ['init', 'catchAll'].indexOf(key) < 0;
+	  }).forEach(function (key) {
+	    /*eslint-disable*/
+	    obj[key] = function () {
+	      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	        args[_key] = arguments[_key];
+	      }
+
+	      return new Promise(function (resolve, reject) {
+	        var url = agent.url + '/segments/' + obj.meta.linkHash + '/' + key;
+	        /*eslint-enable*/
+
+	        return _superagent2.default.post(url).send(args).end(function (err, res) {
+	          var error = err || res.body.meta && res.body.meta.errorMessage;
+	          if (error) {
+	            reject(error);
+	            return;
+	          }
+
+	          resolve(segmentify(agent, res.body));
+	        });
+	      });
+	    };
+	  });
+
+	  /*eslint-disable*/
+	  obj.getPrev = function () {
+	    /*eslint-enable*/
+	    if (obj.link.meta.prevLinkHash) {
+	      return agent.getSegment(obj.link.meta.prevLinkHash);
+	    }
+
+	    return Promise.resolve(null);
+	  };
+
+	  return obj;
 	}
 
 /***/ },
@@ -1599,68 +1625,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = linkify;
+	exports.default = getSegment;
 
 	var _superagent = __webpack_require__(2);
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _config = __webpack_require__(5);
+	var _segmentify = __webpack_require__(6);
 
-	var _config2 = _interopRequireDefault(_config);
+	var _segmentify2 = _interopRequireDefault(_segmentify);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function linkify(app, obj) {
-	  Object.keys(app.agentInfo.functions).filter(function (key) {
-	    return ['init', 'catchAll'].indexOf(key) < 0;
-	  }).forEach(function (key) {
-	    /*eslint-disable*/
-	    obj[key] = function () {
-	      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	        args[_key] = arguments[_key];
+	function getSegment(agent, linkHash) {
+	  return new Promise(function (resolve, reject) {
+	    var url = agent.url + '/segments/' + linkHash;
+
+	    return _superagent2.default.get(url).end(function (err, res) {
+	      if (err) {
+	        reject(err);
+	        return;
 	      }
 
-	      return new Promise(function (resolve, reject) {
-	        var url = _config2.default.applicationUrl.replace('%s', app.name) + '/links/' + obj.meta.linkHash + '/' + key;
-	        /*eslint-enable*/
-
-	        return _superagent2.default.post(url).send(args).end(function (err, res) {
-	          var error = err || res.body.meta && res.body.meta.errorMessage;
-	          if (error) {
-	            reject(error);
-	            return;
-	          }
-
-	          resolve(linkify(app, res.body));
-	        });
-	      });
-	    };
+	      resolve((0, _segmentify2.default)(agent, res.body));
+	    });
 	  });
-
-	  /*eslint-disable*/
-	  obj.getPrev = function () {
-	    /*eslint-enable*/
-	    if (obj.link.meta.prevLinkHash) {
-	      return app.getLink(obj.link.meta.prevLinkHash);
-	    }
-
-	    return Promise.resolve(null);
-	  };
-
-	  /*eslint-disable*/
-	  obj.getBranches = function (tags) {
-	    /*eslint-enable*/
-	    return app.getBranches(obj.meta.linkHash, tags);
-	  };
-
-	  /*eslint-disable*/
-	  obj.load = function () {
-	    /*eslint-enable*/
-	    return app.getLink(obj.meta.linkHash);
-	  };
-
-	  return obj;
 	}
 
 /***/ },
@@ -1672,25 +1661,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = getLink;
+	exports.default = findSegments;
 
 	var _superagent = __webpack_require__(2);
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _config = __webpack_require__(5);
+	var _segmentify = __webpack_require__(6);
 
-	var _config2 = _interopRequireDefault(_config);
+	var _segmentify2 = _interopRequireDefault(_segmentify);
 
-	var _linkify = __webpack_require__(7);
+	var _makeQueryString = __webpack_require__(9);
 
-	var _linkify2 = _interopRequireDefault(_linkify);
+	var _makeQueryString2 = _interopRequireDefault(_makeQueryString);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function getLink(app, linkHash) {
+	function findSegments(agent) {
+	  var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
 	  return new Promise(function (resolve, reject) {
-	    var url = _config2.default.applicationUrl.replace('%s', app.name) + '/links/' + linkHash;
+	    var url = agent.url + '/segemnts' + (0, _makeQueryString2.default)(opts);
 
 	    return _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
@@ -1698,59 +1689,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	      }
 
-	      resolve((0, _linkify2.default)(app, res.body));
+	      resolve(res.body.map(function (obj) {
+	        return (0, _segmentify2.default)(agent, obj);
+	      }));
 	    });
 	  });
 	}
 
 /***/ },
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = getMap;
+	exports.default = makeQueryString;
+	/**
+	 * Makes a query string.
+	 * @param {object} obj - an object of keys
+	 * @returns {string} a query string
+	 */
+	function makeQueryString(obj) {
+	  var parts = Object.keys(obj).reduce(function (curr, key) {
+	    var val = Array.isArray(obj[key]) ? obj[key].join(',') : obj[key];
+	    curr.push(encodeURIComponent(key) + '=' + encodeURIComponent(val));
+	    return curr;
+	  }, []);
 
-	var _superagent = __webpack_require__(2);
+	  if (parts.length) {
+	    return '?' + parts.join('&');
+	  }
 
-	var _superagent2 = _interopRequireDefault(_superagent);
-
-	var _config = __webpack_require__(5);
-
-	var _config2 = _interopRequireDefault(_config);
-
-	var _linkify = __webpack_require__(7);
-
-	var _linkify2 = _interopRequireDefault(_linkify);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function getMap(app, mapId) {
-	  var tags = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
-
-	  return new Promise(function (resolve, reject) {
-	    var query = '';
-
-	    if (tags && tags.length) {
-	      query = '?tags=' + tags.join('&tags=');
-	    }
-
-	    var url = _config2.default.applicationUrl.replace('%s', app.name) + '/maps/' + mapId + query;
-
-	    return _superagent2.default.get(url).end(function (err, res) {
-	      if (err) {
-	        reject(err);
-	        return;
-	      }
-
-	      resolve(res.body.map(function (link) {
-	        return (0, _linkify2.default)(app, link);
-	      }));
-	    });
-	  });
+	  return '';
 	}
 
 /***/ },
@@ -1762,33 +1734,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = getBranches;
+	exports.default = getMapIds;
 
 	var _superagent = __webpack_require__(2);
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _config = __webpack_require__(5);
+	var _makeQueryString = __webpack_require__(9);
 
-	var _config2 = _interopRequireDefault(_config);
-
-	var _linkify = __webpack_require__(7);
-
-	var _linkify2 = _interopRequireDefault(_linkify);
+	var _makeQueryString2 = _interopRequireDefault(_makeQueryString);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function getBranches(app, linkHash) {
-	  var tags = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
+	function getMapIds(agent) {
+	  var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 	  return new Promise(function (resolve, reject) {
-	    var query = '';
-
-	    if (tags && tags.length) {
-	      query = '?tags=' + tags.join('&tags=');
-	    }
-
-	    var url = _config2.default.applicationUrl.replace('%s', app.name) + '/branches/' + linkHash + query;
+	    var url = agent.url + '/maps?' + (0, _makeQueryString2.default)(opts);
 
 	    return _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
@@ -1796,9 +1758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	      }
 
-	      resolve(res.body.map(function (link) {
-	        return (0, _linkify2.default)(app, link);
-	      }));
+	      resolve(res.body);
 	    });
 	  });
 	}
@@ -1812,36 +1772,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = loadLink;
+	exports.default = fromSegment;
 
-	var _superagent = __webpack_require__(2);
+	var _getAgent = __webpack_require__(1);
 
-	var _superagent2 = _interopRequireDefault(_superagent);
+	var _getAgent2 = _interopRequireDefault(_getAgent);
 
-	var _linkify = __webpack_require__(7);
+	var _segmentify = __webpack_require__(6);
 
-	var _linkify2 = _interopRequireDefault(_linkify);
-
-	var _getApplication = __webpack_require__(1);
-
-	var _getApplication2 = _interopRequireDefault(_getApplication);
+	var _segmentify2 = _interopRequireDefault(_segmentify);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function loadLink(segment) {
-	  return (0, _getApplication2.default)(segment.meta.application, segment.meta.applicationLocation).then(function (app) {
-	    return new Promise(function (resolve, reject) {
-	      var url = segment.meta.linkLocation;
-
-	      return _superagent2.default.get(url).end(function (err, res) {
-	        if (err) {
-	          reject(err);
-	          return;
-	        }
-
-	        resolve((0, _linkify2.default)(app, res.body));
-	      });
-	    });
+	function fromSegment(obj) {
+	  return (0, _getAgent2.default)(obj.meta.agentUrl).then(function (agent) {
+	    var segment = (0, _segmentify2.default)(agent, obj);
+	    return { agent: agent, segment: segment };
 	  });
 	}
 

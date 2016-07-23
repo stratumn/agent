@@ -26,7 +26,7 @@ var StratumnSDK = require('stratumn-sdk');
 ## Quickstart
 
 ```javascript
-StratumnSDK.getAgent('http://localhost:5000')
+StratumnSDK.getAgent('http://localhost:3000')
   .then(function(agent) {
     console.log(agent);
     // Create a new map, you can pass arguments to init
@@ -53,9 +53,25 @@ Returns a promise that resolves with an agent client.
 
 ```javascript
 StratumnSDK
-  .getAgent('http://localhost:5000')
+  .getAgent('http://localhost:3000')
   .then(function(agent) {
     console.log(agent);
+  })
+  .catch(function(err) {
+    // Handle errors
+  });
+```
+
+### StratumnSDK#fromSegment(rawSegment)
+
+Returns a promise that resolves with the agent and segment from a given raw object.
+
+```javascript
+StratumnSDK
+  .fromSegment(someRawSegment)
+  .then(function(res) {
+    console.log(res.agent);
+    console.log(res.segment);
   })
   .catch(function(err) {
     // Handle errors
@@ -68,7 +84,7 @@ Returns a promise that resolves with a the first segment of a map.
 
 ```javascript
 StratumnSDK
-  .getAgent('quickstart')
+  .getAgent('http://localhost:3000')
   .then(function(agent) {
     return agent.createMap('A new map');
   })
@@ -86,27 +102,9 @@ Returns a promise that resolves with an existing segment.
 
 ```javascript
 StratumnSDK
-  .getAgent('quickstart')
+  .getAgent('http://localhost:3000')
   .then(function(agent) {
-    return app.getSegment('aee5427');
-  })
-  .then(function(segment) {
-    console.log(segment);
-  })
-  .catch(function(err) {
-    // Handle errors
-  });
-```
-
-### Agent#loadSegment(raw)
-
-Returns a promise that resolves with the segment from a given raw object.
-
-```javascript
-StratumnSDK
-  .getAgent('quickstart')
-  .then(function(agent) {
-    return app.loadSegment(rawSegment);
+    return agent.getSegment('aee5427');
   })
   .then(function(segment) {
     console.log(segment);
@@ -130,7 +128,7 @@ Available options are:
 
 ```javascript
 StratumnSDK
-  .getAgent('quickstart')
+  .getAgent('http://localhost:3000')
   .then(function(agent) {
     return agent.findSegments({ tags: ['tag1', 'tag2'], offset: 20, limit: 10 });
   })
@@ -153,7 +151,7 @@ Available options are:
 
 ```javascript
 StratumnSDK
-  .getAgent('quickstart')
+  .getAgent('http://localhost:3000')
   .then(function(agent) {
     return agent.findSegments({ offset: 20, limit: 10 });
   })
@@ -171,7 +169,7 @@ Returns a promise that resolves with the previous segment.
 
 ```javascript
 StratumnSDK
-  .getAgent('quickstart')
+  .getAgent('http://localhost:3000')
   .then(function(agent) {
     return agent.getSegment('aee5427');
   })
@@ -192,7 +190,7 @@ Executes a transition function and returns a promise that resolves with a new se
 
 ```javascript
 StratumnSDK
-  .getAgent('quickstart')
+  .getAgent('http://localhost:3000')
   .then(function(agent) {
     return agent.getSegment('aee5427');
   })

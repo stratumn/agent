@@ -9,24 +9,20 @@
 <script type="text/javascript">
 
 StratumnSDK
-	.getApplication('sdk-test')
-	.then(function(app) {
-		return app.createMap('A conversation on the blockchain');
+	.getAgent('http://localhost:3000')
+	.then(function(agent) {
+		return agent.createMap('Hello');
 	})
-	.then(function(res) {
-		console.log(res);
-		return res.addMessage('It works!', 'stephan');
+	.then(function(segment) {
+		console.log(segment);
+		return segment.updateTitle('Hi');
 	})
-	.then(function(res) {
-		console.log(res);
-		return res.addMessage('Another message', 'stephan');
+	.then(function(segment) {
+		console.log(segment);
+		return segment.getPrev();
 	})
-	.then(function(res) {
-		console.log(res);
-		return res.getPrev();
-	})
-	.then(function(res) {
-		console.log(res);
+	.then(function(segment) {
+		console.log(segment);
 	})
 	.catch(function(err) {
 		console.error(err);
