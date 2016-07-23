@@ -1,5 +1,5 @@
 {
-  "name": "stratumn-agent-js",
+  "name": "stratumn-agent",
   "version": "0.2.1",
   "description": "",
   "main": "lib/index.js",

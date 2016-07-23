@@ -6,7 +6,7 @@ This NodeJS module exposes functions to create Stratumn agents using Javascript.
 
 ```javascript
 var express = require('express');
-var agent = require('stratumn-agent-js');
+var agent = require('stratumn-agent');
 
 // Assumes your transition functions are in ./lib/transitions.
 var transitions = require('./lib/transitions');
