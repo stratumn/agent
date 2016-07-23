@@ -17,6 +17,8 @@ export default function httpServer(transitions, storeClient, opts = {}) {
   const app = express();
   const instance = agent(transitions, storeClient);
 
+  app.disable('x-powered-by');
+
   app.use(bodyParser.json({ type: () => true, strict: false }));
 
   if (opts.cors) {
