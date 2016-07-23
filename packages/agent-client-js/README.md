@@ -26,19 +26,19 @@ var StratumnSDK = require('stratumn-sdk');
 ## Quickstart
 
 ```javascript
-StratumnSDK.getApplication('quickstart')
-  .then(function(app) {
-    console.log(app);
+StratumnSDK.getAgent('http://localhost:5000')
+  .then(function(agent) {
+    console.log(agent);
     // Create a new map, you can pass arguments to init
-    return app.createMap('My message map');
+    return agent.createMap('My conversation');
   })
-  .then(function(res) {
+  .then(function(segment) {
     // You can call a transition function like a regular function
-    return res.addMessage('Hello, World');
+    return segment.addMessage('Hello, World');
   })
-  .then(function(res) {
-    console.log(res.link);
-    console.log(res.meta);
+  .then(function(segment) {
+    console.log(segment.link);
+    console.log(segment.meta);
   })
   .catch(function(err) {
     // Handle errors
@@ -47,175 +47,142 @@ StratumnSDK.getApplication('quickstart')
 
 ## Reference
 
-### StratumnSDK#getApplication(appName)
+### StratumnSDK#getAgent(url)
 
-Returns a promise that resolves with an application.
+Returns a promise that resolves with an agent client.
 
 ```javascript
 StratumnSDK
-  .getApplication('quickstart')
-  .then(function(app) {
-    console.log(app.id);
+  .getAgent('http://localhost:5000')
+  .then(function(agent) {
+    console.log(agent);
   })
   .catch(function(err) {
     // Handle errors
   });
 ```
 
-### Application#createMap(...args)
+### Agent#createMap(...args)
 
-Returns a promise that resolves with a new map.
+Returns a promise that resolves with a the first segment of a map.
 
 ```javascript
 StratumnSDK
-  .getApplication('quickstart')
-  .then(function(app) {
-    return app.createMap('A new map');
+  .getAgent('quickstart')
+  .then(function(agent) {
+    return agent.createMap('A new map');
   })
-  .then(function(res) {
-    console.log(res);
+  .then(function(segment) {
+    console.log(segment);
   })
   .catch(function(err) {
     // Handle errors
   });
 ```
 
-### Application#getLink(hash)
+### Agent#getSegment(linkHash)
 
-Returns a promise that resolves with an existing link.
+Returns a promise that resolves with an existing segment.
 
 ```javascript
 StratumnSDK
-  .getApplication('quickstart')
-  .then(function(app) {
-    return app.getLink('aee5427');
+  .getAgent('quickstart')
+  .then(function(agent) {
+    return app.getSegment('aee5427');
   })
-  .then(function(res) {
-    console.log(res);
+  .then(function(segment) {
+    console.log(segment);
   })
   .catch(function(err) {
     // Handle errors
   });
 ```
 
-### Application#getMap(mapId, tags)
+### Agent#findSegments(opts)
 
-Returns a promise that resolves with the meta data of the links in a map,
-optionally filters by tags.
+Returns a promise that resolves with existing segments.
+
+Available options are:
+
+- `offset`: offset of first returned segments
+- `limit`: limit number of returned segments
+- `mapId`: return segments with specified map ID
+- `prevLinkHash`: return segments with specified previous link hash
+- `tags`: return segments that contains all the tags (array)
 
 ```javascript
 StratumnSDK
-  .getApplication('quickstart')
-  .then(function(app) {
-    return app.getMap('56ef33', ['tag1', 'tag2']);
+  .getAgent('quickstart')
+  .then(function(agent) {
+    return agent.findSegments({ tags: ['tag1', 'tag2'], offset: 20, limit: 10 });
   })
-  .then(function(res) {
-    console.log(res);
+  .then(function(segments) {
+    console.log(segments);
   })
   .catch(function(err) {
     // Handle errors
   });
 ```
 
-### Application#getBranches(linkHash, tags)
+### Agent#getMapIds(opts)
 
-Returns a promise that resolves with the meta data of the links whose previous hashes
-are the given hash, optionally filters by tags.
+Returns a promise that resolves with existing map IDs.
+
+Available options are:
+
+- `offset`: offset of first returned map ID
+- `limit`: limit number of returned map ID
 
 ```javascript
 StratumnSDK
-  .getApplication('quickstart')
-  .then(function(app) {
-    return app.getBranches('abcdef', ['tag1', 'tag2']);
+  .getAgent('quickstart')
+  .then(function(agent) {
+    return agent.findSegments({ offset: 20, limit: 10 });
   })
-  .then(function(res) {
-    console.log(res);
+  .then(function(mapIDs) {
+    console.log(mapIDs);
   })
   .catch(function(err) {
     // Handle errors
   });
 ```
 
-### Link#getPrev()
+### Segment#getPrev()
 
-Returns a promise that resolves with the previous link of a link.
+Returns a promise that resolves with the previous segment.
 
 ```javascript
 StratumnSDK
-  .getApplication('quickstart')
-  .then(function(app) {
-    return app.getLink('aee5427');
+  .getAgent('quickstart')
+  .then(function(agent) {
+    return agent.getSegment('aee5427');
   })
-  .then(function(res) {
-    return res.getPrev();
+  .then(function(segment) {
+    return segment.getPrev();
   })
-  .then(function(res) {
-    console.log(res);
+  .then(function(segment) {
+    console.log(segment);
   })
   .catch(function(err) {
     // Handle errors
   });
 ```
 
-### Link#load()
+### Segment#:transitionFunction(...args)
 
-Returns a promise that resolves with the full link.
-Can be useful when you only have the meta data of links.
-
-```javascript
-StratumnSDK
-  .getApplication('quickstart')
-  .then(function(app) {
-    return app.getBranches('aee5427');
-  })
-  .then(function(res) {
-    return Promise.all(res.map(function(link) { return link.load(); }));
-  })
-  .then(function(res) {
-    console.log(res);
-  })
-  .catch(function(err) {
-    // Handle errors
-  });
-```
-
-### Link#getBranches(tags)
-
-Returns a promise that resolves with the meta data of the links whose previous hashes
-are the hash of the link, optionally filters by tags.
+Executes a transition function and returns a promise that resolves with a new segment.
 
 ```javascript
 StratumnSDK
-  .getApplication('quickstart')
-  .then(function(app) {
-    return app.getLink('aee5427');
+  .getAgent('quickstart')
+  .then(function(agent) {
+    return agent.getSegment('aee5427');
   })
-  .then(function(res) {
-    return res.getBranches(['tag1']);
+  .then(function(segment) {
+    return segment.addMessage('Hello, World!');
   })
-  .then(function(res) {
-    console.log(res);
-  })
-  .catch(function(err) {
-    // Handle errors
-  });
-```
-
-### Link#:transitionFunction(...args)
-
-Executes a transition function and returns a promise that resolves with a new link.
-
-```javascript
-StratumnSDK
-  .getApplication('quickstart')
-  .then(function(app) {
-    return app.getLink('aee5427');
-  })
-  .then(function(res) {
-    return res.addMessage('Hello, World!');
-  })
-  .then(function(res) {
-    console.log(res);
+  .then(function(segment) {
+    console.log(segment);
   })
   .catch(function(err) {
     // Handle errors
