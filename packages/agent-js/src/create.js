@@ -10,7 +10,7 @@ import hashJson from './hashJson';
  * @returns {Client} a store HTTP client
  */
 export default function create(transitions, storeClient) {
-  const agentInfo = getAgentInfo(mockAgent(transitions));
+  const agentInfo = getAgentInfo(transitions);
 
   return {
     /**

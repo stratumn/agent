@@ -16,5 +16,9 @@ export default function getAgentInfo(transitions) {
     functions[name] = { args: getFunctionArgNames(transitions[name]) };
   });
 
+  if (!functions.init) {
+    functions.init = { args: [] };
+  }
+
   return { functions };
 }
