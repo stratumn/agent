@@ -1,21 +1,18 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import agent from './agent';
 import error from './error';
 import parseArgs from './parseArgs';
 
 /**
  * Creates an HTTP server for an agent.
- * @param {object} transitions - the transition function
- * @param {StoreClient} storeClient - the store client
+ * @param {Agent} agent - the agent instance
  * @param {object} [opts] - options
  * @param {object} [opts.cors] - CORS options
  * @returns {express.Server} an express server
  */
-export default function httpServer(transitions, storeClient, opts = {}) {
+export default function httpServer(agent, opts = {}) {
   const app = express();
-  const instance = agent(transitions, storeClient);
 
   app.disable('x-powered-by');
 
@@ -28,7 +25,7 @@ export default function httpServer(transitions, storeClient, opts = {}) {
   }
 
   app.get('/', (req, res, next) => {
-    instance
+    agent
       .getInfo(req.params.hash)
       .then(res.json.bind(res))
       .catch(next);
@@ -39,7 +36,7 @@ export default function httpServer(transitions, storeClient, opts = {}) {
     res.locals.renderErrorAsLink = true;
     /*eslint-enable*/
 
-    instance
+    agent
       .createMap(...parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
@@ -50,28 +47,28 @@ export default function httpServer(transitions, storeClient, opts = {}) {
     res.locals.renderErrorAsLink = true;
     /*eslint-enable*/
 
-    instance
+    agent
       .createLink(req.params.hash, req.params.action, ...parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
   });
 
   app.get('/segments/:hash', (req, res, next) => {
-    instance
+    agent
       .getSegment(req.params.hash)
       .then(res.json.bind(res))
       .catch(next);
   });
 
   app.get('/segments', (req, res, next) => {
-    instance
+    agent
       .findSegments(req.query)
       .then(res.json.bind(res))
       .catch(next);
   });
 
   app.get('/maps', (req, res, next) => {
-    instance
+    agent
       .getMapIds(req.query)
       .then(res.json.bind(res))
       .catch(next);
@@ -83,7 +80,7 @@ export default function httpServer(transitions, storeClient, opts = {}) {
     res.locals.renderErrorAsLink = true;
     /*eslint-enable*/
 
-    instance
+    agent
       .createMap(...parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
@@ -95,7 +92,7 @@ export default function httpServer(transitions, storeClient, opts = {}) {
     res.locals.renderErrorAsLink = true;
     /*eslint-enable*/
 
-    instance
+    agent
       .createLink(req.params.hash, req.params.action, ...parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
@@ -103,7 +100,7 @@ export default function httpServer(transitions, storeClient, opts = {}) {
 
   // Legacy
   app.get('/links/:hash', (req, res, next) => {
-    instance
+    agent
       .getSegment(req.params.hash)
       .then(res.json.bind(res))
       .catch(next);
@@ -111,7 +108,7 @@ export default function httpServer(transitions, storeClient, opts = {}) {
 
   // Legacy
   app.get('/links', (req, res, next) => {
-    instance
+    agent
       .findSegments(req.query)
       .then(res.json.bind(res))
       .catch(next);
@@ -123,7 +120,7 @@ export default function httpServer(transitions, storeClient, opts = {}) {
     req.query.mapId = req.params.id;
     /*eslint-enable*/
 
-    instance
+    agent
       .findSegments(req.query)
       .then(res.json.bind(res))
       .catch(next);
@@ -141,7 +138,7 @@ export default function httpServer(transitions, storeClient, opts = {}) {
     req.query.prevLinkHash = req.params.hash;
     /*eslint-enable*/
 
-    instance
+    agent
       .findSegments(req.query)
       .then(res.json.bind(res))
       .catch(next);

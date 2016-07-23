@@ -1,9 +1,9 @@
-import agent from './agent';
+import create from './create';
 import httpServer from './httpServer';
 import storeHttpClient from './storeHttpClient';
 
 module.exports = {
-  agent,
+  create,
   httpServer,
   storeHttpClient
 };
