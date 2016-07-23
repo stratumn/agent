@@ -1,6 +1,6 @@
 {
   "name": "stratumn-agent-js",
-  "version": "0.1.13",
+  "version": "0.2.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
