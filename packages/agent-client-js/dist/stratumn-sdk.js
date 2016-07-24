@@ -108,6 +108,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new Promise(function (resolve, reject) {
 	    return _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
+	        /*eslint-disable*/
+	        err.status = res.statusCode;
+	        /*eslint-enable*/
 	        reject(err);
 	        return;
 	      }
@@ -1548,8 +1551,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var url = agent.url + '/segments';
 
 	    return _superagent2.default.post(url).send(args).end(function (err, res) {
-	      var error = err || res.body.meta && res.body.meta.errorMessage;
+	      var error = res.body.meta && res.body.meta.errorMessage ? new Error(res.body.meta.errorMessage) : err;
+
 	      if (error) {
+	        error.status = res.statusCode;
 	        reject(error);
 	        return;
 	      }
@@ -1591,8 +1596,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /*eslint-enable*/
 
 	        return _superagent2.default.post(url).send(args).end(function (err, res) {
-	          var error = err || res.body.meta && res.body.meta.errorMessage;
+	          var error = res.body.meta && res.body.meta.errorMessage ? new Error(res.body.meta.errorMessage) : err;
+
 	          if (error) {
+	            error.status = res.statusCode;
 	            reject(error);
 	            return;
 	          }
@@ -1643,6 +1650,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
+	        /*eslint-disable*/
+	        err.status = res.statusCode;
+	        /*eslint-enable*/
 	        reject(err);
 	        return;
 	      }
@@ -1685,6 +1695,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
+	        /*eslint-disable*/
+	        err.status = res.statusCode;
+	        /*eslint-enable*/
 	        reject(err);
 	        return;
 	      }
@@ -1754,6 +1767,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
+	        /*eslint-disable*/
+	        err.status = res.statusCode;
+	        /*eslint-enable*/
 	        reject(err);
 	        return;
 	      }
