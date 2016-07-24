@@ -16,4 +16,16 @@ describe('#createMap', () => {
       })
   );
 
+  it('handle error', () =>
+    agent
+      .createMap()
+      .then(() => {
+        throw new Error('it should have failed');
+      })
+      .catch(err => {
+        err.message.should.be.exactly('a title is required');
+        err.status.should.be.exactly(400);
+      })
+  );
+
 });

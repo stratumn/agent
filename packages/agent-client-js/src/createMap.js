@@ -9,8 +9,12 @@ export default function createMap(agent, ...args) {
       .post(url)
       .send(args)
       .end((err, res) => {
-        const error = err || (res.body.meta && res.body.meta.errorMessage);
+        const error = (res.body.meta && res.body.meta.errorMessage)
+          ? new Error(res.body.meta.errorMessage)
+          : err;
+
         if (error) {
+          error.status = res.statusCode;
           reject(error);
           return;
         }

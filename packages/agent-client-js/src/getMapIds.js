@@ -9,6 +9,9 @@ export default function getMapIds(agent, opts = {}) {
       .get(url)
       .end((err, res) => {
         if (err) {
+          /*eslint-disable*/
+          err.status = res.statusCode;
+          /*eslint-enable*/
           reject(err);
           return;
         }
