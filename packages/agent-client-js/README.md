@@ -1,4 +1,4 @@
-# Stratumn SDK for Javascript
+# Stratumn SDK for Javascript [ALPHA - incompatible with production]
 
 ## Installation
 
@@ -11,12 +11,18 @@
 <script src="https://libs.stratumn.com/stratumn-sdk.min.js"></script>
 ```
 
-If you want a specific version, include `https://libs.stratumn.com/stratumn-sdk-{version}.min.js` instead (for instance `https://libs.stratumn.com/stratumn-sdk-0.4.1.min.js`).
+If you want a specific version, include `https://libs.stratumn.com/stratumn-sdk-{version}.min.js` instead (for instance `https://libs.stratumn.com/stratumn-sdk-1.0.2.min.js`).
+
+### Bower
+
+```
+$ bower install stratumn-sdk
+```
 
 ### Node.js
 
 ```
-$ npm install stratumn-sdk
+$ npm install stratumn-sdk@alpha
 ```
 
 ```javascript
