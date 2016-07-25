@@ -791,13 +791,12 @@
 	    },
 	    templateUrl: 'views/mapvalidator.html',
 	    link: function link(scope) {
-
 	      var fn = debounce(function () {
 	        if (angular.isDefined(scope.chainscript)) {
 	          try {
 	            scope.loading = true;
-	            $q.when(new _ChainValidator2.default(JSON.parse(scope.chainscript)).validate()).then(function (res) {
-	              scope.validation = res;
+	            $q.when(new _ChainValidator2.default(JSON.parse(scope.chainscript)).validate()).then(function (errors) {
+	              scope.errors = errors;
 	              scope.loading = false;
 	            });
 	          } catch (e) {
@@ -840,26 +839,24 @@
 	    _classCallCheck(this, ChainValidator);
 
 	    this.segments = chainscript;
+	    this.errors = {
+	      linkHash: [],
+	      stateHash: [],
+	      merklePath: [],
+	      fossil: []
+	    };
 	  }
 
 	  _createClass(ChainValidator, [{
 	    key: 'validate',
 	    value: function validate() {
+	      var _this = this;
+
 	      return (0, _resolveLinks2.default)(this.segments).then(function (segments) {
-	        var validations = {};
 	        segments.forEach(function (segment) {
-	          var validation = new _SegmentValidator2.default(segment).validate();
-	          Object.keys(validation).forEach(function (key) {
-	            validations[key] = validations[key] || [];
-	            validations[key].push(validation[key]);
-	          });
+	          return new _SegmentValidator2.default(segment).validate(_this.errors);
 	        });
-
-	        Object.keys(validations).forEach(function (key) {
-	          validations[key] = Promise.all(validations[key]);
-	        });
-
-	        return validations;
+	        return _this.errors;
 	      });
 	    }
 	  }]);
@@ -878,6 +875,8 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -908,13 +907,11 @@
 
 	  _createClass(SegmentValidator, [{
 	    key: 'validate',
-	    value: function validate() {
-	      return {
-	        linkHash: this._validateLinkHash(),
-	        stateHash: this._validateStateHash(),
-	        merklePath: this._validateMerklePath(),
-	        fossil: this._validateFossil()
-	      };
+	    value: function validate(errors) {
+	      errors.linkHash.push(this._validateLinkHash());
+	      errors.stateHash.push(this._validateStateHash());
+	      errors.merklePath.push(this._validateMerklePath());
+	      errors.fossil.push(this._validateFossil());
 	    }
 	  }, {
 	    key: '_validateLinkHash',
@@ -922,9 +919,8 @@
 	      var computed = (0, _hashJson2.default)(this.segment.link);
 	      var actual = this.segment.meta.linkHash;
 	      if (computed !== actual) {
-	        return Promise.reject('LinkHash computed: ' + computed + ', Found: ' + actual);
+	        return 'LinkHash computed: ' + computed + ', Found: ' + actual;
 	      }
-	      return Promise.resolve();
 	    }
 	  }, {
 	    key: '_validateStateHash',
@@ -933,9 +929,8 @@
 	        var computed = (0, _hashJson2.default)(this.segment.link.state);
 	        var actual = this.segment.link.meta.stateHash;
 	        if (computed !== actual) {
-	          return Promise.reject('StateHash computed: ' + computed + ', Found: ' + actual);
+	          return 'StateHash computed: ' + computed + ', Found: ' + actual;
 	        }
-	        return Promise.resolve();
 	      }
 	    }
 	  }, {
@@ -943,66 +938,74 @@
 	    value: function _validateMerklePath() {
 	      var _this = this;
 
-	      return new Promise(function (resolve, reject) {
-	        var evidence = _this.segment.meta.evidence;
-	        if (evidence) {
-	          if (evidence.state === 'COMPLETE') {
-	            (function () {
-	              var previous = _this.segment.meta.linkHash;
+	      var evidence = this.segment.meta.evidence;
+	      if (evidence) {
+	        if (evidence.state === 'COMPLETE') {
+	          var _ret = function () {
+	            var previous = _this.segment.meta.linkHash;
 
-	              evidence.merklePath.every(function (merkleNode) {
-	                if (merkleNode.left === previous || merkleNode.right === previous) {
-	                  var computedParent = (0, _computeMerkleParent2.default)(merkleNode.left, merkleNode.right);
+	            var error = void 0;
+	            evidence.merklePath.every(function (merkleNode) {
+	              if (merkleNode.left === previous || merkleNode.right === previous) {
+	                var computedParent = (0, _computeMerkleParent2.default)(merkleNode.left, merkleNode.right);
 
-	                  if (computedParent !== merkleNode.parent) {
-	                    reject('Invalid Merkle Node ' + JSON.stringify(merkleNode) + ': ' + ('computed parent: ' + computedParent));
-	                    return false;
-	                  }
-	                  previous = merkleNode.parent;
-	                  return true;
+	                if (computedParent !== merkleNode.parent) {
+	                  error = 'Invalid Merkle Node ' + JSON.stringify(merkleNode) + ': ' + ('computed parent: ' + computedParent);
+	                  return false;
 	                }
-	                reject('Invalid Merkle Node ' + JSON.stringify(merkleNode) + ': ' + ('previous hash (' + previous + ') not found'));
-	                return false;
-	              });
-
-	              var lastMerkleNode = evidence.merklePath[evidence.merklePath.length - 1];
-	              if (lastMerkleNode.parent !== evidence.merkleRoot) {
-	                reject('Invalid Merkle Root ' + evidence.merkleRoot + ': not found in Merkle Path');
+	                previous = merkleNode.parent;
+	                return true;
 	              }
-	              resolve();
-	            })();
-	          }
+	              error = 'Invalid Merkle Node ' + JSON.stringify(merkleNode) + ': ' + ('previous hash (' + previous + ') not found');
+	              return false;
+	            });
+
+	            if (error) {
+	              return {
+	                v: error
+	              };
+	            }
+
+	            var lastMerkleNode = evidence.merklePath[evidence.merklePath.length - 1];
+	            if (lastMerkleNode.parent !== evidence.merkleRoot) {
+	              return {
+	                v: 'Invalid Merkle Root ' + evidence.merkleRoot + ': not found in Merkle Path'
+	              };
+	            }
+	          }();
+
+	          if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 	        }
-	      });
+	      }
 	    }
 	  }, {
 	    key: '_validateFossil',
 	    value: function _validateFossil() {
 	      var _this2 = this;
 
-	      var txid = this.segment.meta.evidence.transactions['bitcoin:main'];
-	      return this._getFossil(txid).then(function (res) {
-	        if (res.body.outputs.find(function (output) {
+	      var txId = this.segment.meta.evidence.transactions['bitcoin:main'];
+	      return this._getFossil(txId).then(function (res) {
+	        if (!res.body.outputs.find(function (output) {
 	          return output.data_hex === _this2.segment.meta.evidence.merkleRoot;
 	        })) {
-	          return Promise.resolve();
+	          return 'Merkle root not found in transaction data';
 	        }
-	        return Promise.reject('Merkle root not found in transaction data');
+	        return null;
 	      });
 	    }
 	  }, {
 	    key: '_getFossil',
-	    value: function _getFossil(txid) {
-	      if (blockCypherCache[txid]) {
-	        return Promise.resolve(blockCypherCache[txid]);
+	    value: function _getFossil(txId) {
+	      if (blockCypherCache[txId]) {
+	        return Promise.resolve(blockCypherCache[txId]);
 	      }
 
 	      var p = new Promise(function (resolve, reject) {
-	        return (0, _superagent2.default)('https://api.blockcypher.com/v1/btc/main/txs/' + txid).end(function (err, res) {
+	        return (0, _superagent2.default)('https://api.blockcypher.com/v1/btc/main/txs/' + txId).end(function (err, res) {
 	          return err ? reject(err) : resolve(res);
 	        });
 	      });
-	      blockCypherCache[txid] = p;
+	      blockCypherCache[txId] = p;
 	      return p;
 	    }
 	  }]);
@@ -46768,23 +46771,30 @@
 	  return {
 	    restrict: 'E',
 	    scope: {
-	      promise: '=',
+	      errors: '=',
 	      loading: '=',
 	      title: '='
 	    },
 	    templateUrl: 'views/promiseloader.html',
 	    link: function link(scope) {
 	      scope.class = '';
-	      scope.$watch('promise', function () {
-	        if (scope.promise) {
+	      scope.errorMessages = [];
+	      scope.toggleErrors = function () {
+	        scope.errorsShowed = !scope.errorsShowed;
+	      };
+	      scope.$watch('errors', function () {
+	        if (scope.errors) {
 	          scope.class = '';
-	          scope.error = null;
-	          $q.when(scope.promise).then(function () {
-	            console.log('success');
-	            scope.class = 'success';
+	          scope.errorMessages = [];
+	          $q.all(scope.errors).then(function (errs) {
+	            scope.errorMessages = errs.filter(Boolean);
+	            if (scope.errorMessages.length > 0) {
+	              scope.class = 'error';
+	            } else {
+	              scope.class = 'success';
+	            }
 	          }).catch(function (err) {
-	            scope.class = 'error';
-	            scope.error = err;
+	            return console.log(err);
 	          });
 	        }
 	      });
@@ -46839,9 +46849,9 @@
 
 	  $templateCache.put('views/mapexplorer.html', "<div class=\"segment-container\" ng-show=\"me.segment\" ng-include=\" 'views/segment.html' \" flex></div>\n" + "<svg></svg>\n");
 
-	  $templateCache.put('views/mapvalidator.html', "<h2>Validations</h2>\n" + "<ul>\n" + "    <st-promise-loader title=\" 'Link Hashes' \" loading=\"loading\" promise=\"validation.linkHash\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'State Hashes' \" loading=\"loading\" promise=\"validation.stateHash\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'Merkle Path' \" loading=\"loading\" promise=\"validation.merklePath\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'Fossils' \" loading=\"loading\" promise=\"validation.fossil\"></st-promise-loader>\n" + "</ul>\n");
+	  $templateCache.put('views/mapvalidator.html', "<h2>Validations</h2>\n" + "<ul>\n" + "    <st-promise-loader title=\" 'Link Hashes' \" loading=\"loading\" errors=\"errors.linkHash\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'State Hashes' \" loading=\"loading\" errors=\"errors.stateHash\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'Merkle Path' \" loading=\"loading\" errors=\"errors.merklePath\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'Fossils' \" loading=\"loading\" errors=\"errors.fossil\"></st-promise-loader>\n" + "</ul>\n");
 
-	  $templateCache.put('views/promiseloader.html', "<!--\n" + "<div ng-show=\"loading || promise\">\n" + "    <md-progress-circular ng-hide=\"!loading && (success || error)\" md-mode=\"indeterminate\"></md-progress-circular>\n" + "    <md-icon ng-show=\"success && !loading\" md-font-library=\"material-icons\">done</md-icon>\n" + "    <md-icon ng-show=\"error && !loading\" md-font-library=\"material-icons\">error</md-icon>\n" + "</div>\n" + "\n" + "-->\n" + "\n" + "<li ng-class=\"[class, loading ? 'loading' : '']\">\n" + "    <h3>{{title}}</h3>\n" + "    <p class=\"error\" ng-show=\"error && !loading\">{{error}}</p>\n" + "</li>\n");
+	  $templateCache.put('views/promiseloader.html', "<!--\n" + "<div ng-show=\"loading || promise\">\n" + "    <md-progress-circular ng-hide=\"!loading && (success || error)\" md-mode=\"indeterminate\"></md-progress-circular>\n" + "    <md-icon ng-show=\"success && !loading\" md-font-library=\"material-icons\">done</md-icon>\n" + "    <md-icon ng-show=\"error && !loading\" md-font-library=\"material-icons\">error</md-icon>\n" + "</div>\n" + "\n" + "-->\n" + "\n" + "<li ng-class=\"[class, loading ? 'loading' : '']\">\n" + "    <div layout=\"row\">\n" + "        <h3>{{title}}</h3>\n" + "        <span flex-grow></span>\n" + "        <div class=\"errorCount\" ng-show=\"errorMessages.length > 0 && !loading\" ng-click=\"toggleErrors()\" flex-grow>\n" + "            <ng-pluralize count=\"errorMessages.length\"\n" + "                          when=\"{'0': 'No errors',\n" + "                         'one': '1 error',\n" + "                         'other': '{} errors'}\">\n" + "            </ng-pluralize>\n" + "        </div>\n" + "    </div>\n" + "    <div ng-show=\"errorsShowed\" class=\"errors\">\n" + "        <ul>\n" + "            <li ng-repeat=\"err in errorMessages\">{{ err }}</li>\n" + "        </ul>\n" + "    </div>\n" + "</li>\n");
 
 	  $templateCache.put('views/segment.html', "<div class=\"title\" layout=\"row\">\n" + "    <div>\n" + "        <h1>Segment</h1>\n" + "        <h2>{{me.segment.meta.linkHash}}</h2>\n" + "    </div>\n" + "    <span flex></span>\n" + "    <md-button class=\"md-icon-button\" aria-label=\"Close\" ng-click=\"me.close()\">\n" + "        <md-icon md-font-library=\"material-icons\">close</md-icon>\n" + "    </md-button>\n" + "</div>\n" + "<div layout=\"row\" class=\"body\">\n" + "    <div class=\"menu\">\n" + "        <ul>\n" + "            <li ng-class=\"{ active: me.displayed == 'state'}\" ng-click=\"me.display('state')\">State</li>\n" + "            <li ng-class=\"{ active: me.displayed == 'link' }\" ng-click=\"me.display('link')\">Link</li>\n" + "            <li ng-class=\"{ active: me.displayed == 'evidence' }\" ng-click=\"me.display('evidence')\">Evidence</li>\n" + "            <li ng-class=\"{ active: me.displayed == 'json' }\" ng-click=\"me.display('json')\">JSON</li>\n" + "        </ul>\n" + "    </div>\n" + "    <div class=\"content\" flex-grow>\n" + "        <div ng-show=\"me.displayed == 'state'\" flex-grow>\n" + "            <div ui-ace=\"{\n" + "                            useWrapMode: true,\n" + "                            onLoad: me.aceLoaded\n" + "                        }\" ng-model=\"me.state\" readonly></div>\n" + "        </div>\n" + "        <div ng-show=\"me.displayed == 'link'\" class=\"link\">\n" + "            <h4>Map ID</h4>\n" + "            <p>{{me.segment.link.meta.mapId}}</p>\n" + "\n" + "            <h4>Agent Hash</h4>\n" + "            <p>{{me.segment.link.meta.agentHash}}</p>\n" + "\n" + "            <h4>State Hash</h4>\n" + "            <p>{{me.segment.link.meta.stateHash}}</p>\n" + "\n" + "            <h4>Previous Link hash</h4>\n" + "            <p>{{me.segment.link.meta.prevLinkHash}}</p>\n" + "\n" + "            <h4>Action</h4>\n" + "            <p>{{me.segment.link.meta.action}}({{me.segment.link.meta.arguments.join(', ')}})</p>\n" + "        </div>\n" + "        <div ng-show=\"me.displayed == 'evidence'\" layout=\"row\">\n" + "            <div class=\"info\">\n" + "                <h4>State</h4>\n" + "                <p>{{me.segment.meta.evidence.state}}</p>\n" + "                <div ng-show=\"me.segment.meta.evidence.state === 'COMPLETE'\">\n" + "                    <h4>Bitcoin Transaction</h4>\n" + "                    <p>\n" + "                        {{me.segment.meta.evidence.transactions['bitcoin:main']}}\n" + "                        <a target=\"_blank\" ng-href=\"https://blockchain.info/tx/{{me.segment.meta.evidence.transactions['bitcoin:main']}}\">View transaction on Blockchain.info</a>\n" + "                    </p>\n" + "\n" + "                    <h4>Merkle root</h4>\n" + "                    <p>{{me.segment.meta.evidence.merkleRoot}}</p>\n" + "                </div>\n" + "            </div>\n" + "            <div class=\"merkle-path\" ng-show=\"me.segment.meta.evidence.state === 'COMPLETE'\">\n" + "                <h4>Merkle Path</h4>\n" + "                <st-merkle-path-tree merkle-path=\"me.segment.meta.evidence.merklePath\"></st-merkle-path-tree>\n" + "            </div>\n" + "        </div>\n" + "        <div ng-show=\"me.displayed == 'json'\">\n" + "            <div ui-ace=\"{\n" + "                            useWrapMode: true,\n" + "                            onLoad: me.aceLoaded\n" + "                        }\" ng-model=\"me.segmentJSON\" readonly></div>\n" + "        </div>\n" + "    </div>\n" + "</div>\n");
 	}]);
