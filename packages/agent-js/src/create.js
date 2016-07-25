@@ -5,12 +5,12 @@ import hashJson from './hashJson';
 
 /**
  * Creates an agent.
- * @param {object} transitions - the transition function
+ * @param {object} actions - the action functions
  * @param {StoreClient} storeClient - the store client
  * @returns {Client} a store HTTP client
  */
-export default function create(transitions, storeClient) {
-  const agentInfo = getAgentInfo(transitions);
+export default function create(actions, storeClient) {
+  const agentInfo = getAgentInfo(actions);
 
   return {
     /**
@@ -31,7 +31,7 @@ export default function create(transitions, storeClient) {
     createMap(...args) {
       const initialLink = { meta: { mapId: uuid.v4() } };
 
-      return mockAgent(transitions, initialLink)
+      return mockAgent(actions, initialLink)
         .init(...args)
         .then(l => {
           const link = l;
@@ -79,7 +79,7 @@ export default function create(transitions, storeClient) {
 
           initialLink.meta.prevLinkHash = prevLinkHash;
 
-          return mockAgent(transitions, initialLink)[action](...args);
+          return mockAgent(actions, initialLink)[action](...args);
         })
         .then(l => {
           const link = l;
