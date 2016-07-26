@@ -1,7 +1,7 @@
 {
   "name": "ember-mapexplorer",
   "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "Ember addon that displays a Chain Map",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -41,10 +41,13 @@
     "loader.js": "^4.0.1"
   },
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "stratumn",
+    "chainscript"
   ],
   "dependencies": {
-    "ember-cli-babel": "^5.1.6"
+    "ember-cli-babel": "^5.1.6",
+    "ember-cli-htmlbars": "^1.0.9"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"

@@ -1,0 +1,1 @@
+export { default } from 'ember-mapexplorer/components/map-explorer';
