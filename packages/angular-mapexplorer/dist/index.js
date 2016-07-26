@@ -800,6 +800,7 @@
 	              scope.loading = false;
 	            });
 	          } catch (e) {
+	            scope.loading = false;
 	            console.log(e);
 	          }
 	        }
@@ -46777,24 +46778,27 @@
 	    },
 	    templateUrl: 'views/promiseloader.html',
 	    link: function link(scope) {
-	      scope.class = '';
 	      scope.errorMessages = [];
+	      scope.loadingErrors = false;
+	      scope.success = false;
+	      scope.error = false;
 	      scope.toggleErrors = function () {
 	        scope.errorsShowed = !scope.errorsShowed;
 	      };
 	      scope.$watch('errors', function () {
+	        scope.errorMessages = [];
+	        scope.success = false;
+	        scope.error = false;
 	        if (scope.errors) {
-	          scope.class = '';
-	          scope.errorMessages = [];
+	          scope.loadingErrors = true;
 	          $q.all(scope.errors).then(function (errs) {
 	            scope.errorMessages = errs.filter(Boolean);
-	            if (scope.errorMessages.length > 0) {
-	              scope.class = 'error';
-	            } else {
-	              scope.class = 'success';
-	            }
+	            scope.loadingErrors = false;
+	            scope.success = scope.errorMessages.length === 0;
+	            scope.error = !scope.success;
 	          }).catch(function (err) {
-	            return console.log(err);
+	            console.log(err);
+	            scope.loadingErrors = false;
 	          });
 	        }
 	      });
@@ -46851,7 +46855,7 @@
 
 	  $templateCache.put('views/mapvalidator.html', "<h2>Validations</h2>\n" + "<ul>\n" + "    <st-promise-loader title=\" 'Link Hashes' \" loading=\"loading\" errors=\"errors.linkHash\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'State Hashes' \" loading=\"loading\" errors=\"errors.stateHash\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'Merkle Path' \" loading=\"loading\" errors=\"errors.merklePath\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'Fossils' \" loading=\"loading\" errors=\"errors.fossil\"></st-promise-loader>\n" + "</ul>\n");
 
-	  $templateCache.put('views/promiseloader.html', "<!--\n" + "<div ng-show=\"loading || promise\">\n" + "    <md-progress-circular ng-hide=\"!loading && (success || error)\" md-mode=\"indeterminate\"></md-progress-circular>\n" + "    <md-icon ng-show=\"success && !loading\" md-font-library=\"material-icons\">done</md-icon>\n" + "    <md-icon ng-show=\"error && !loading\" md-font-library=\"material-icons\">error</md-icon>\n" + "</div>\n" + "\n" + "-->\n" + "\n" + "<li ng-class=\"[class, loading ? 'loading' : '']\">\n" + "    <div layout=\"row\">\n" + "        <h3>{{title}}</h3>\n" + "        <span flex-grow></span>\n" + "        <div class=\"errorCount\" ng-show=\"errorMessages.length > 0 && !loading\" ng-click=\"toggleErrors()\" flex-grow>\n" + "            <ng-pluralize count=\"errorMessages.length\"\n" + "                          when=\"{'0': 'No errors',\n" + "                         'one': '1 error',\n" + "                         'other': '{} errors'}\">\n" + "            </ng-pluralize>\n" + "        </div>\n" + "    </div>\n" + "    <div ng-show=\"errorsShowed\" class=\"errors\">\n" + "        <ul>\n" + "            <li ng-repeat=\"err in errorMessages\">{{ err }}</li>\n" + "        </ul>\n" + "    </div>\n" + "</li>\n");
+	  $templateCache.put('views/promiseloader.html', "<!--\n" + "<div ng-show=\"loading || promise\">\n" + "    <md-progress-circular ng-hide=\"!loading && (success || error)\" md-mode=\"indeterminate\"></md-progress-circular>\n" + "    <md-icon ng-show=\"success && !loading\" md-font-library=\"material-icons\">done</md-icon>\n" + "    <md-icon ng-show=\"error && !loading\" md-font-library=\"material-icons\">error</md-icon>\n" + "</div>\n" + "\n" + "-->\n" + "\n" + "\n" + "<li class=\"category\" ng-class=\"[{ error: error, success: success }, (loading || loadingErrors) ? 'loading' : '']\">\n" + "    <div layout=\"row\">\n" + "        <md-progress-circular ng-show=\"loading || loadingErrors\" md-mode=\"indeterminate\"></md-progress-circular>\n" + "        <h3 flex-grow>{{title}}</h3>\n" + "        <span flex-grow></span>\n" + "        <div class=\"errorCount\" ng-show=\"error && !(loading || loadingErrors)\" ng-click=\"toggleErrors()\" flex-grow>\n" + "            <ng-pluralize count=\"errorMessages.length\"\n" + "                          when=\"{'0': 'No errors',\n" + "                         'one': '1 error',\n" + "                         'other': '{} errors'}\">\n" + "            </ng-pluralize>\n" + "        </div>\n" + "    </div>\n" + "    <div ng-show=\"errorsShowed\" class=\"errors\">\n" + "        <ul>\n" + "            <li ng-repeat=\"err in errorMessages\">{{ err }}</li>\n" + "        </ul>\n" + "    </div>\n" + "</li>\n");
 
 	  $templateCache.put('views/segment.html', "<div class=\"title\" layout=\"row\">\n" + "    <div>\n" + "        <h1>Segment</h1>\n" + "        <h2>{{me.segment.meta.linkHash}}</h2>\n" + "    </div>\n" + "    <span flex></span>\n" + "    <md-button class=\"md-icon-button\" aria-label=\"Close\" ng-click=\"me.close()\">\n" + "        <md-icon md-font-library=\"material-icons\">close</md-icon>\n" + "    </md-button>\n" + "</div>\n" + "<div layout=\"row\" class=\"body\">\n" + "    <div class=\"menu\">\n" + "        <ul>\n" + "            <li ng-class=\"{ active: me.displayed == 'state'}\" ng-click=\"me.display('state')\">State</li>\n" + "            <li ng-class=\"{ active: me.displayed == 'link' }\" ng-click=\"me.display('link')\">Link</li>\n" + "            <li ng-class=\"{ active: me.displayed == 'evidence' }\" ng-click=\"me.display('evidence')\">Evidence</li>\n" + "            <li ng-class=\"{ active: me.displayed == 'json' }\" ng-click=\"me.display('json')\">JSON</li>\n" + "        </ul>\n" + "    </div>\n" + "    <div class=\"content\" flex-grow>\n" + "        <div ng-show=\"me.displayed == 'state'\" flex-grow>\n" + "            <div ui-ace=\"{\n" + "                            useWrapMode: true,\n" + "                            onLoad: me.aceLoaded\n" + "                        }\" ng-model=\"me.state\" readonly></div>\n" + "        </div>\n" + "        <div ng-show=\"me.displayed == 'link'\" class=\"link\">\n" + "            <h4>Map ID</h4>\n" + "            <p>{{me.segment.link.meta.mapId}}</p>\n" + "\n" + "            <h4>Agent Hash</h4>\n" + "            <p>{{me.segment.link.meta.agentHash}}</p>\n" + "\n" + "            <h4>State Hash</h4>\n" + "            <p>{{me.segment.link.meta.stateHash}}</p>\n" + "\n" + "            <h4>Previous Link hash</h4>\n" + "            <p>{{me.segment.link.meta.prevLinkHash}}</p>\n" + "\n" + "            <h4>Action</h4>\n" + "            <p>{{me.segment.link.meta.action}}({{me.segment.link.meta.arguments.join(', ')}})</p>\n" + "        </div>\n" + "        <div ng-show=\"me.displayed == 'evidence'\" layout=\"row\">\n" + "            <div class=\"info\">\n" + "                <h4>State</h4>\n" + "                <p>{{me.segment.meta.evidence.state}}</p>\n" + "                <div ng-show=\"me.segment.meta.evidence.state === 'COMPLETE'\">\n" + "                    <h4>Bitcoin Transaction</h4>\n" + "                    <p>\n" + "                        {{me.segment.meta.evidence.transactions['bitcoin:main']}}\n" + "                        <a target=\"_blank\" ng-href=\"https://blockchain.info/tx/{{me.segment.meta.evidence.transactions['bitcoin:main']}}\">View transaction on Blockchain.info</a>\n" + "                    </p>\n" + "\n" + "                    <h4>Merkle root</h4>\n" + "                    <p>{{me.segment.meta.evidence.merkleRoot}}</p>\n" + "                </div>\n" + "            </div>\n" + "            <div class=\"merkle-path\" ng-show=\"me.segment.meta.evidence.state === 'COMPLETE'\">\n" + "                <h4>Merkle Path</h4>\n" + "                <st-merkle-path-tree merkle-path=\"me.segment.meta.evidence.merklePath\"></st-merkle-path-tree>\n" + "            </div>\n" + "        </div>\n" + "        <div ng-show=\"me.displayed == 'json'\">\n" + "            <div ui-ace=\"{\n" + "                            useWrapMode: true,\n" + "                            onLoad: me.aceLoaded\n" + "                        }\" ng-model=\"me.segmentJSON\" readonly></div>\n" + "        </div>\n" + "    </div>\n" + "</div>\n");
 	}]);
