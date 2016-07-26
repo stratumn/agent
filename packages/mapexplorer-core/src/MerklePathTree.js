@@ -1,6 +1,5 @@
 import { makeLink, translate } from './treeUtils';
 import compactHash from './compactHash';
-import d3 from 'd3';
 
 const margin = { top: 10, right: 5, bottom: 20, left: 5 };
 const height = 350 - margin.top - margin.bottom;

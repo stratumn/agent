@@ -59,7 +59,8 @@
   "dependencies": {
     "canonical-json": "0.0.4",
     "crypto-browserify": "^3.11.0",
-    "d3": "^4.1.0",
+    "d3-hierarchy": "^1.0.0",
+    "d3-selection": "^1.0.0",
     "deepmerge": "^0.2.10",
     "stratumn-sdk": "^0.5.0"
   }

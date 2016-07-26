@@ -14,16 +14,14 @@ module.exports = {
         }
       },
       { loader: 'json', test: /\.json$/ }
-    ],
+    ]
   },
   output: {
     library: 'MapexplorerCore',
     libraryTarget: 'umd'
   },
   externals: {
-    'angular': 'angular',
-    'd3': 'd3',
-    'stratumn-sdk': 'stratumn-sdk'
+    d3: 'd3'
   },
   resolve: {
     extensions: ['', '.js']

@@ -1,6 +1,5 @@
 import { makeLink, finalLink, translate } from './treeUtils';
 import parseChainscript from './parseChainscript';
-import d3 from 'd3';
 
 const margin = { top: 20, right: 120, bottom: 20, left: 120 };
 const height = 800 - margin.top - margin.bottom;

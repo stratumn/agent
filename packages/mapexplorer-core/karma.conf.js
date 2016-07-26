@@ -1,14 +1,10 @@
-// Karma configuration
-// Generated on Mon Jul 11 2016 14:12:38 GMT+0200 (CEST)
 var path = require('path');
 var webpack = require('webpack');
 
-module.exports = config => {
-  config.set({
-
+module.exports =
+  config => config.set({
     // base path, that will be used to resolve files and exclude
     basePath: '',
-
 
     // frameworks to use
     frameworks: ['mocha', 'should'],
@@ -92,4 +88,3 @@ module.exports = config => {
     // if true, it capture browsers, run tests and exit
     singleRun: false
   });
-};
