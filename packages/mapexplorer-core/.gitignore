@@ -1,0 +1,9 @@
+.DS_Store
+*.log
+*.pdf
+node_modules
+lib
+coverage
+_book
+.idea/
+bower_components/

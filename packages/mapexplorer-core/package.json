@@ -1,0 +1,66 @@
+{
+  "name": "mapexplorer-core",
+  "version": "0.0.1",
+  "description": "Core library for building Map Explorer components",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "karma start karma.conf.js",
+    "lint": "eslint src test",
+    "check": "npm run lint && npm run test",
+    "build:lib": "babel src --out-dir lib",
+    "build:umd": "webpack src/index.js dist/mapexplorer-core.js --config webpack.config.js",
+    "build:umd:min": "webpack src/index.js dist/mapexplorer-core.min.js --config webpack.min.config.js",
+    "build:all": "npm run build:lib && npm run build:umd && npm run build:umd:min",
+    "clean": "rimraf lib",
+    "preversion": "npm run clean && npm run check",
+    "version": "npm run build:all",
+    "postversion": "git push && git push --tags && npm run clean",
+    "prepublish": "npm run clean && npm run build:all",
+    "postpublish": "aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core.js --region 'eu-west-1' && aws s3 cp dist/mapexplorer-core.min.js s3://stratumn-libs/mapexplorer-core.min.js --region 'eu-west-1' && aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/mapexplorer-core.min.js s3://stratumn-libs/mapexplorer-core-${npm_package_version}.min.js --region 'eu-west-1'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stratumn/mapexplorer-core.git"
+  },
+  "keywords": [
+    "stratumn",
+    "blockchain",
+    "mapexplorer",
+    "chainscript"
+  ],
+  "author": "Stratumn Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stratumn/mapexplorer-core/issues"
+  },
+  "homepage": "https://github.com/stratumn/mapexplorer-core",
+  "devDependencies": {
+    "babel-cli": "^6.5.1",
+    "babel-core": "^6.5.2",
+    "babel-eslint": "^6.0.0",
+    "babel-loader": "^6.2.3",
+    "babel-polyfill": "^6.5.0",
+    "babel-preset-es2015": "^6.5.0",
+    "eslint": "^2.3.0",
+    "eslint-config-airbnb": "^6.0.2",
+    "eslint-plugin-react": "^4.1.0",
+    "isparta": "^4.0.0",
+    "karma": "^1.1.1",
+    "karma-mocha": "^1.1.1",
+    "karma-phantomjs-launcher": "^1.0.1",
+    "karma-should": "^1.0.0",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^1.7.0",
+    "mocha": "^2.4.5",
+    "rimraf": "^2.5.2",
+    "should": "^8.2.2",
+    "webpack": "^1.12.14"
+  },
+  "dependencies": {
+    "canonical-json": "0.0.4",
+    "crypto-browserify": "^3.11.0",
+    "d3": "^4.1.0",
+    "deepmerge": "^0.2.10",
+    "stratumn-sdk": "^0.5.0"
+  }
+}
