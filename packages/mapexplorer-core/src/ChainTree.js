@@ -35,6 +35,7 @@ export default class ChainTree {
   }
 
   _update(root, nodes, links) {
+    const options = this.options;
     const maxDepth = d3.max(nodes, x => x.depth) || 0;
     const computedWidth = Math.max(maxDepth * (polygon.width + arrowLength), 500);
 
@@ -62,7 +63,13 @@ export default class ChainTree {
         const origin = d.parent && d.parent.x0 ? d.parent : root;
         return translate(origin.x0, origin.y0);
       })
-      .on('click', this.options.onclick);
+      .on('click', function onClick(d) {
+        d3.selectAll('g.node')
+          .classed('selected', false);
+        d3.select(this)
+          .classed('selected', true);
+        options.onclick(d);
+      });
 
     nodeEnter.append('polygon').attr('points',
       `0,${polygon.height / 4} ${polygon.width / 2},${polygon.height / 2} ` +

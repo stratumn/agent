@@ -252,6 +252,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_update',
 	    value: function _update(root, nodes, links) {
+	      var options = this.options;
 	      var maxDepth = d3.max(nodes, function (x) {
 	        return x.depth;
 	      }) || 0;
@@ -282,7 +283,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }).attr('transform', function (d) {
 	        var origin = d.parent && d.parent.x0 ? d.parent : root;
 	        return (0, _treeUtils.translate)(origin.x0, origin.y0);
-	      }).on('click', this.options.onclick);
+	      }).on('click', function onClick(d) {
+	        d3.selectAll('g.node').classed('selected', false);
+	        d3.select(this).classed('selected', true);
+	        options.onclick(d);
+	      });
 
 	      nodeEnter.append('polygon').attr('points', '0,' + polygon.height / 4 + ' ' + polygon.width / 2 + ',' + polygon.height / 2 + ' ' + (polygon.width + ',' + polygon.height / 4 + ' ' + polygon.width + ',' + -polygon.height / 4 + ' ') + (polygon.width / 2 + ',' + -polygon.height / 2 + ' 0,' + -polygon.height / 4));
 
