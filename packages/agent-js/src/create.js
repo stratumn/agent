@@ -11,7 +11,7 @@ import hashJson from './hashJson';
  * @param {object} [opts.agentUrl] - agent root url
  * @returns {Client} a store HTTP client
  */
-export default function create(actions, storeClient, opts) {
+export default function create(actions, storeClient, opts = {}) {
   const agentInfo = getAgentInfo(actions);
 
   return {
