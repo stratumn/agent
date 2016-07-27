@@ -47,5 +47,17 @@ export default Ember.Component.extend({
       },
       onTag: (tag) => {}
     });
+  },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
+
+    // Temporary solution.
+    const chainscript = this.get('chainscript');
+
+    if (chainscript) {
+      this.get('builder').chainTree.display(chainscript);
+    }
   }
+
 });
