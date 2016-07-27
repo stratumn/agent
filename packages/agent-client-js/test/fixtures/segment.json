@@ -1,21 +1,71 @@
 {
   "link": {
     "state": {
-      "title": "hi",
-      "updatedAt": 1.469291516597e+12
+      "digest": "7a35a6ee2011082f43af4a480d22f8a6",
+      "signature": "H2IAqJbsjiCMNRvjUVyoYyC+C3sz+RVMLbzgTgfcu6MsdUqw9hRGLQQHbYaiWStODsLIPhwWelchAfNPqR9uaCU=",
+      "createdAt": 1467977965947,
+      "headline": "Ola",
+      "subheadline": "que%21%21",
+      "body": "tal",
+      "releasedate": "2016-07-08T09:40:44.000Z",
+      "recipients": "adrien@stratumn.com",
+      "updatedAt": 1467978069721,
+      "approvedAt": 1467978403519
     },
     "meta": {
-      "action": "init",
-      "arguments": [
-        "hi"
-        
+      "tags": [
+        "approve"
       ],
-      "mapId": "eb9bc768-e4d2-4ae8-a6fd-fa40294b32a0",
-      "stateHash": "6ede4a2c2c940d632730e6e8f6c2f0fba0663c06c5934e56d48c576187d403b5"
+      "mapId": "577f914e6e27683c12a0aea0",
+      "agentHash": "6a4d829053812be817de85a9b614c932da27f5ca2fe603ca46397dc6b590307e",
+      "stateHash": "19b4016841ceefc193844479e338319911e219d81697e8f08257eb5064297af0",
+      "prevLinkHash": "fa6aacbc22b1884f4290b9803432654b2d2af3b39546a6a615d493101d7f7817",
+      "action": "approve",
+      "arguments": [
+        {
+          "headline": "Ola",
+          "subheadline": "que%21%21",
+          "body": "tal",
+          "releasedate": "2016-07-08T09:40:44.000Z",
+          "recipients": "adrien@stratumn.com",
+          "digest": "7a35a6ee2011082f43af4a480d22f8a6",
+          "signature": "H2IAqJbsjiCMNRvjUVyoYyC+C3sz+RVMLbzgTgfcu6MsdUqw9hRGLQQHbYaiWStODsLIPhwWelchAfNPqR9uaCU=",
+          "address": {
+            "hash": "9674e6948e8b0fa815f97fe041c2528ee26e9c45",
+            "type": "pubkeyhash",
+            "network": "livenet"
+          }
+        }
+      ]
     }
   },
   "meta": {
-    "linkHash": "03893f1e05e30c85dc2c12850785e2ae35bb9207e5c67898eb7c6a18545979d4",
-    "agentUrl": "http://localhost:3000"
+    "linkHash": "9b7bc4147e7114c3098083f6f35a683bcdf730fe3bccdfa5f1f7b06d6fc17152",
+    "evidence": {
+      "state": "COMPLETE",
+      "merkleRoot": "49683c0e59564b409c0efe36969ffef41f5f713f6153b583c60d1fc32c890b5d",
+      "merklePath": [
+        {
+          "left": "9b7bc4147e7114c3098083f6f35a683bcdf730fe3bccdfa5f1f7b06d6fc17152",
+          "right": "4e251f9737247a55a1be355f4c2e3d266ba950c332e64489ad526d7cd3a12a95",
+          "parent": "49683c0e59564b409c0efe36969ffef41f5f713f6153b583c60d1fc32c890b5d"
+        }
+      ],
+      "transactions": {
+        "bitcoin:main": "99ca8189e0e82346fef078815df3e680ef19b9a5e1b74160258754fe5d04f0e4"
+      }
+    },
+    "application": "dvault",
+    "applicationLocation": "https://dvault.stratumn.net",
+    "linkLocation": "https://dvault.stratumn.net/links/9b7bc4147e7114c3098083f6f35a683bcdf730fe3bccdfa5f1f7b06d6fc17152",
+    "xStratumn": {
+      "totalTimeMs": 5.476801,
+      "loadApplicationCache": "miss",
+      "loadApplicationTimeMs": 1.762629,
+      "loadOwnerIdCache": "miss",
+      "loadOwnerIdTimeMs": 0.893639,
+      "loadInputLinkCache": "miss",
+      "loadInputLinkTimeMs": 2.7136929999999997
+    }
   }
 }

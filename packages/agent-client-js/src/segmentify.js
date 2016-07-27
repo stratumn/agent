@@ -1,4 +1,5 @@
 import request from 'superagent';
+import deprecated from './deprecated';
 
 export default function segmentify(agent, obj) {
   Object
@@ -38,6 +39,14 @@ export default function segmentify(agent, obj) {
     }
 
     return Promise.resolve(null);
+  };
+
+  // Deprecated.
+  /*eslint-disable*/
+  obj.load = () => {
+    /*eslint-enable*/
+    deprecated('segment#load()');
+    return obj;
   };
 
   return obj;
