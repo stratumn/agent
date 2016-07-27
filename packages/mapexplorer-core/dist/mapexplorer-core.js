@@ -1380,250 +1380,24 @@ module.exports = stringify
 
 var stringify = interopDefault(index$4);
 
-var global$1 = typeof global !== "undefined" ? global :
-            typeof self !== "undefined" ? self :
-            typeof window !== "undefined" ? window : {}
-
-// shim for using process in browser
-// based off https://github.com/defunctzombie/node-process/blob/master/browser.js
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-var cachedSetTimeout = defaultSetTimout;
-var cachedClearTimeout = defaultClearTimeout;
-if (typeof global$1.setTimeout === 'function') {
-    cachedSetTimeout = setTimeout;
-}
-if (typeof global$1.clearTimeout === 'function') {
-    cachedClearTimeout = clearTimeout;
-}
-
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-function nextTick(fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-}
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-var title = 'browser';
-var platform = 'browser';
-var browser = true;
-var env = {};
-var argv = [];
-var version = ''; // empty string to avoid regexp issues
-var versions = {};
-var release = {};
-var config$1 = {};
-
-function noop() {}
-
-var on = noop;
-var addListener = noop;
-var once$2 = noop;
-var off = noop;
-var removeListener = noop;
-var removeAllListeners = noop;
-var emit = noop;
-
-function binding(name) {
-    throw new Error('process.binding is not supported');
-}
-
-function cwd () { return '/' }
-function chdir (dir) {
-    throw new Error('process.chdir is not supported');
-};
-function umask() { return 0; }
-
-// from https://github.com/kumavis/browser-process-hrtime/blob/master/index.js
-var performance = global$1.performance || {}
-var performanceNow =
-  performance.now        ||
-  performance.mozNow     ||
-  performance.msNow      ||
-  performance.oNow       ||
-  performance.webkitNow  ||
-  function(){ return (new Date()).getTime() }
-
-// generate timestamp or delta
-// see http://nodejs.org/api/process.html#process_process_hrtime
-function hrtime(previousTimestamp){
-  var clocktime = performanceNow.call(performance)*1e-3
-  var seconds = Math.floor(clocktime)
-  var nanoseconds = Math.floor((clocktime%1)*1e9)
-  if (previousTimestamp) {
-    seconds = seconds - previousTimestamp[0]
-    nanoseconds = nanoseconds - previousTimestamp[1]
-    if (nanoseconds<0) {
-      seconds--
-      nanoseconds += 1e9
-    }
-  }
-  return [seconds,nanoseconds]
-}
-
-var startTime = new Date();
-function uptime() {
-  var currentTime = new Date();
-  var dif = currentTime - startTime;
-  return dif / 1000;
-}
-
-var process = {
-  nextTick: nextTick,
-  title: title,
-  browser: browser,
-  env: env,
-  argv: argv,
-  version: version,
-  versions: versions,
-  on: on,
-  addListener: addListener,
-  once: once$2,
-  off: off,
-  removeListener: removeListener,
-  removeAllListeners: removeAllListeners,
-  emit: emit,
-  binding: binding,
-  cwd: cwd,
-  chdir: chdir,
-  umask: umask,
-  hrtime: hrtime,
-  platform: platform,
-  release: release,
-  config: config$1,
-  uptime: uptime
-};
-
 var sha256 = createCommonjsModule(function (module) {
-/**
- * [js-sha256]{@link https://github.com/emn178/js-sha256}
+/*
+ * js-sha256 v0.3.0
+ * https://github.com/emn178/js-sha256
  *
- * @version 0.3.2
- * @author Chen, Yi-Cyuan [emn178@gmail.com]
- * @copyright Chen, Yi-Cyuan 2014-2016
- * @license MIT
+ * Copyright 2014-2015, emn178@gmail.com
+ *
+ * Licensed under the MIT license:
+ * http://www.opensource.org/licenses/MIT
  */
-(function (root) {
+;(function(root, undefined) {
   'use strict';
 
-  var NODE_JS = typeof process == 'object' && process.versions && process.versions.node;
-  if (NODE_JS) {
+  var NODE_JS = typeof(module) != 'undefined';
+  if(NODE_JS) {
     root = commonjsGlobal;
   }
-  var COMMON_JS = !root.JS_SHA256_TEST && typeof module == 'object' && module.exports;
+  var TYPED_ARRAY = typeof(Uint8Array) != 'undefined';
   var HEX_CHARS = '0123456789abcdef'.split('');
   var EXTRA = [-2147483648, 8388608, 32768, 128];
   var SHIFT = [24, 16, 8, 0];
@@ -1638,13 +1412,13 @@ var sha256 = createCommonjsModule(function (module) {
 
   var blocks = [];
 
-  var sha224 = function (message) {
+  var sha224 = function(message) {
     return sha256(message, true);
   };
 
-  var sha256 = function (message, is224) {
-    var notString = typeof message != 'string';
-    if (notString && message.constructor == root.ArrayBuffer) {
+  var sha256 = function(message, is224) {
+    var notString = typeof(message) != 'string';
+    if(notString && message.constructor == root.ArrayBuffer) {
       message = new Uint8Array(message);
     }
 
@@ -1652,7 +1426,7 @@ var sha256 = createCommonjsModule(function (module) {
         i, j, index = 0, start = 0, bytes = 0, length = message.length,
         s0, s1, maj, t1, t2, ch, ab, da, cd, bc;
 
-    if (is224) {
+    if(is224) {
       h0 = 0xc1059ed8;
       h1 = 0x367cd507;
       h2 = 0x3070dd17;
@@ -1678,12 +1452,12 @@ var sha256 = createCommonjsModule(function (module) {
       blocks[4] = blocks[5] = blocks[6] = blocks[7] =
       blocks[8] = blocks[9] = blocks[10] = blocks[11] =
       blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
-      if (notString) {
-        for (i = start;index < length && i < 64;++index) {
+      if(notString) {
+        for (i = start;index < length && i < 64; ++index) {
           blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
         }
       } else {
-        for (i = start;index < length && i < 64;++index) {
+        for (i = start;index < length && i < 64; ++index) {
           code = message.charCodeAt(index);
           if (code < 0x80) {
             blocks[i >> 2] |= code << SHIFT[i++ & 3];
@@ -1705,18 +1479,18 @@ var sha256 = createCommonjsModule(function (module) {
       }
       bytes += i - start;
       start = i - 64;
-      if (index == length) {
+      if(index == length) {
         blocks[i >> 2] |= EXTRA[i & 3];
         ++index;
       }
       block = blocks[16];
-      if (index > length && i < 56) {
+      if(index > length && i < 56) {
         blocks[15] = bytes << 3;
         end = true;
       }
 
       var a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
-      for (j = 16;j < 64;++j) {
+      for(j = 16;j < 64;++j) {
         // rightrotate
         t1 = blocks[j - 15];
         s0 = ((t1 >>> 7) | (t1 << 25)) ^ ((t1 >>> 18) | (t1 << 14)) ^ (t1 >>> 3);
@@ -1726,9 +1500,9 @@ var sha256 = createCommonjsModule(function (module) {
       }
 
       bc = b & c;
-      for (j = 0;j < 64;j += 4) {
-        if (first) {
-          if (is224) {
+      for(j = 0;j < 64;j += 4) {
+        if(first) {
+          if(is224) {
             ab = 300032;
             t1 = blocks[0] - 1413257819;
             h = t1 - 150054599 << 0;
@@ -1788,7 +1562,7 @@ var sha256 = createCommonjsModule(function (module) {
       h5 = h5 + f << 0;
       h6 = h6 + g << 0;
       h7 = h7 + h << 0;
-    } while (!end);
+    } while(!end);
 
     var hex = HEX_CHARS[(h0 >> 28) & 0x0F] + HEX_CHARS[(h0 >> 24) & 0x0F] +
               HEX_CHARS[(h0 >> 20) & 0x0F] + HEX_CHARS[(h0 >> 16) & 0x0F] +
@@ -1818,7 +1592,7 @@ var sha256 = createCommonjsModule(function (module) {
               HEX_CHARS[(h6 >> 20) & 0x0F] + HEX_CHARS[(h6 >> 16) & 0x0F] +
               HEX_CHARS[(h6 >> 12) & 0x0F] + HEX_CHARS[(h6 >> 8) & 0x0F] +
               HEX_CHARS[(h6 >> 4) & 0x0F] + HEX_CHARS[h6 & 0x0F];
-    if (!is224) {
+    if(!is224) {
       hex += HEX_CHARS[(h7 >> 28) & 0x0F] + HEX_CHARS[(h7 >> 24) & 0x0F] +
              HEX_CHARS[(h7 >> 20) & 0x0F] + HEX_CHARS[(h7 >> 16) & 0x0F] +
              HEX_CHARS[(h7 >> 12) & 0x0F] + HEX_CHARS[(h7 >> 8) & 0x0F] +
@@ -1827,11 +1601,11 @@ var sha256 = createCommonjsModule(function (module) {
     return hex;
   };
   
-  if (COMMON_JS) {
+  if(!root.JS_SHA256_TEST && NODE_JS) {
     sha256.sha256 = sha256;
     sha256.sha224 = sha224;
     module.exports = sha256;
-  } else if (root) {
+  } else if(root) {
     root.sha256 = sha256;
     root.sha224 = sha224;
   }
@@ -1848,12 +1622,20 @@ function hashJson(obj) {
   return sha256$1(stringify(obj));
 }
 
+var _buffer;
+var _slowbuffer;
+var _INSPECT_MAX_BYTES;
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,___mod,_expor_){
+'use strict'
+
+_expor_.toByteArray = toByteArray
+_expor_.fromByteArray = fromByteArray
+
 var lookup = []
 var revLookup = []
 var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
-var inited = false;
+
 function init () {
-  inited = true;
   var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
   for (var i = 0, len = code.length; i < len; ++i) {
     lookup[i] = code[i]
@@ -1864,10 +1646,9 @@ function init () {
   revLookup['_'.charCodeAt(0)] = 63
 }
 
+init()
+
 function toByteArray (b64) {
-  if (!inited) {
-    init();
-  }
   var i, j, l, tmp, placeHolders, arr
   var len = b64.length
 
@@ -1924,9 +1705,6 @@ function encodeChunk (uint8, start, end) {
 }
 
 function fromByteArray (uint8) {
-  if (!inited) {
-    init();
-  }
   var tmp
   var len = uint8.length
   var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
@@ -1958,97 +1736,8 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-function read (buffer, offset, isLE, mLen, nBytes) {
-  var e, m
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var nBits = -7
-  var i = isLE ? (nBytes - 1) : 0
-  var d = isLE ? -1 : 1
-  var s = buffer[offset + i]
-
-  i += d
-
-  e = s & ((1 << (-nBits)) - 1)
-  s >>= (-nBits)
-  nBits += eLen
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  m = e & ((1 << (-nBits)) - 1)
-  e >>= (-nBits)
-  nBits += mLen
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  if (e === 0) {
-    e = 1 - eBias
-  } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
-  } else {
-    m = m + Math.pow(2, mLen)
-    e = e - eBias
-  }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
-
-function write (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
-  var i = isLE ? 0 : (nBytes - 1)
-  var d = isLE ? 1 : -1
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
-
-  value = Math.abs(value)
-
-  if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0
-    e = eMax
-  } else {
-    e = Math.floor(Math.log(value) / Math.LN2)
-    if (value * (c = Math.pow(2, -e)) < 1) {
-      e--
-      c *= 2
-    }
-    if (e + eBias >= 1) {
-      value += rt / c
-    } else {
-      value += rt * Math.pow(2, 1 - eBias)
-    }
-    if (value * c >= 2) {
-      e++
-      c /= 2
-    }
-
-    if (e + eBias >= eMax) {
-      m = 0
-      e = eMax
-    } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen)
-      e = e + eBias
-    } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
-      e = 0
-    }
-  }
-
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
-
-  e = (e << mLen) | m
-  eLen += mLen
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
-
-  buffer[offset + i - d] |= s * 128
-}
-
-var toString = {}.toString;
-
-var isArray = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
+},{}],2:[function(_dereq_,___mod,_expor_){
+(function (global){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -2057,8 +1746,15 @@ var isArray = Array.isArray || function (arr) {
  */
 /* eslint-disable no-proto */
 
+'use strict'
 
-var INSPECT_MAX_BYTES = 50
+var base64 = _dereq_('base64-js')
+var ieee754 = _dereq_('ieee754')
+var isArray = _dereq_('isarray')
+
+_expor_.Buffer = Buffer
+_expor_.SlowBuffer = SlowBuffer
+_expor_.INSPECT_MAX_BYTES = 50
 
 /**
  * If `Buffer.TYPED_ARRAY_SUPPORT`:
@@ -2084,14 +1780,27 @@ var INSPECT_MAX_BYTES = 50
  * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
  * get the Object implementation, which is slower but behaves correctly.
  */
-Buffer.TYPED_ARRAY_SUPPORT = global$1.TYPED_ARRAY_SUPPORT !== undefined
-  ? global$1.TYPED_ARRAY_SUPPORT
-  : true
+Buffer.TYPED_ARRAY_SUPPORT = global.TYPED_ARRAY_SUPPORT !== undefined
+  ? global.TYPED_ARRAY_SUPPORT
+  : typedArraySupport()
 
 /*
  * Export kMaxLength after typed array support is determined.
  */
-var _kMaxLength = kMaxLength()
+_expor_.kMaxLength = kMaxLength()
+
+function typedArraySupport () {
+  try {
+    var arr = new Uint8Array(1)
+    arr.__proto__ = {__proto__: Uint8Array.prototype, foo: function () { return 42 }}
+    return arr.foo() === 42 && // typed array instances can be augmented
+        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
+        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
+  } catch (e) {
+    return false
+  }
+}
+
 function kMaxLength () {
   return Buffer.TYPED_ARRAY_SUPPORT
     ? 0x7fffffff
@@ -2186,18 +1895,16 @@ if (Buffer.TYPED_ARRAY_SUPPORT) {
   if (typeof Symbol !== 'undefined' && Symbol.species &&
       Buffer[Symbol.species] === Buffer) {
     // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
-    // Object.defineProperty(Buffer, Symbol.species, {
-    //   value: null,
-    //   configurable: true
-    // })
+    Object.defineProperty(Buffer, Symbol.species, {
+      value: null,
+      configurable: true
+    })
   }
 }
 
 function assertSize (size) {
   if (typeof size !== 'number') {
     throw new TypeError('"size" argument must be a number')
-  } else if (size < 0) {
-    throw new RangeError('"size" argument must not be negative')
   }
 }
 
@@ -2261,20 +1968,12 @@ function fromString (that, string, encoding) {
   var length = byteLength(string, encoding) | 0
   that = createBuffer(that, length)
 
-  var actual = that.write(string, encoding)
-
-  if (actual !== length) {
-    // Writing a hex string, for example, that contains invalid characters will
-    // cause everything after the first invalid character to be ignored. (e.g.
-    // 'abxxcd' will be treated as 'ab')
-    that = that.slice(0, actual)
-  }
-
+  that.write(string, encoding)
   return that
 }
 
 function fromArrayLike (that, array) {
-  var length = array.length < 0 ? 0 : checked(array.length) | 0
+  var length = checked(array.length) | 0
   that = createBuffer(that, length)
   for (var i = 0; i < length; i += 1) {
     that[i] = array[i] & 255
@@ -2313,7 +2012,7 @@ function fromArrayBuffer (that, array, byteOffset, length) {
 }
 
 function fromObject (that, obj) {
-  if (internalIsBuffer(obj)) {
+  if (Buffer.isBuffer(obj)) {
     var len = checked(obj.length) | 0
     that = createBuffer(that, len)
 
@@ -2343,7 +2042,7 @@ function fromObject (that, obj) {
 }
 
 function checked (length) {
-  // Note: cannot use `length < kMaxLength()` here because that fails when
+  // Note: cannot use `length < kMaxLength` here because that fails when
   // length is NaN (which is otherwise coerced to zero.)
   if (length >= kMaxLength()) {
     throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
@@ -2352,13 +2051,19 @@ function checked (length) {
   return length | 0
 }
 
-Buffer.isBuffer = isBuffer;
-function internalIsBuffer (b) {
+function SlowBuffer (length) {
+  if (+length != length) { // eslint-disable-line eqeqeq
+    length = 0
+  }
+  return Buffer.alloc(+length)
+}
+
+Buffer.isBuffer = function isBuffer (b) {
   return !!(b != null && b._isBuffer)
 }
 
 Buffer.compare = function compare (a, b) {
-  if (!internalIsBuffer(a) || !internalIsBuffer(b)) {
+  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
     throw new TypeError('Arguments must be Buffers')
   }
 
@@ -2386,9 +2091,9 @@ Buffer.isEncoding = function isEncoding (encoding) {
     case 'utf8':
     case 'utf-8':
     case 'ascii':
-    case 'latin1':
     case 'binary':
     case 'base64':
+    case 'raw':
     case 'ucs2':
     case 'ucs-2':
     case 'utf16le':
@@ -2420,7 +2125,7 @@ Buffer.concat = function concat (list, length) {
   var pos = 0
   for (i = 0; i < list.length; ++i) {
     var buf = list[i]
-    if (!internalIsBuffer(buf)) {
+    if (!Buffer.isBuffer(buf)) {
       throw new TypeError('"list" argument must be an Array of Buffers')
     }
     buf.copy(buffer, pos)
@@ -2430,7 +2135,7 @@ Buffer.concat = function concat (list, length) {
 }
 
 function byteLength (string, encoding) {
-  if (internalIsBuffer(string)) {
+  if (Buffer.isBuffer(string)) {
     return string.length
   }
   if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
@@ -2449,8 +2154,9 @@ function byteLength (string, encoding) {
   for (;;) {
     switch (encoding) {
       case 'ascii':
-      case 'latin1':
       case 'binary':
+      case 'raw':
+      case 'raws':
         return len
       case 'utf8':
       case 'utf-8':
@@ -2523,9 +2229,8 @@ function slowToString (encoding, start, end) {
       case 'ascii':
         return asciiSlice(this, start, end)
 
-      case 'latin1':
       case 'binary':
-        return latin1Slice(this, start, end)
+        return binarySlice(this, start, end)
 
       case 'base64':
         return base64Slice(this, start, end)
@@ -2577,20 +2282,6 @@ Buffer.prototype.swap32 = function swap32 () {
   return this
 }
 
-Buffer.prototype.swap64 = function swap64 () {
-  var len = this.length
-  if (len % 8 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 64-bits')
-  }
-  for (var i = 0; i < len; i += 8) {
-    swap(this, i, i + 7)
-    swap(this, i + 1, i + 6)
-    swap(this, i + 2, i + 5)
-    swap(this, i + 3, i + 4)
-  }
-  return this
-}
-
 Buffer.prototype.toString = function toString () {
   var length = this.length | 0
   if (length === 0) return ''
@@ -2599,14 +2290,14 @@ Buffer.prototype.toString = function toString () {
 }
 
 Buffer.prototype.equals = function equals (b) {
-  if (!internalIsBuffer(b)) throw new TypeError('Argument must be a Buffer')
+  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
   if (this === b) return true
   return Buffer.compare(this, b) === 0
 }
 
 Buffer.prototype.inspect = function inspect () {
   var str = ''
-  var max = INSPECT_MAX_BYTES
+  var max = _expor_.INSPECT_MAX_BYTES
   if (this.length > 0) {
     str = this.toString('hex', 0, max).match(/.{2}/g).join(' ')
     if (this.length > max) str += ' ... '
@@ -2615,7 +2306,7 @@ Buffer.prototype.inspect = function inspect () {
 }
 
 Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
-  if (!internalIsBuffer(target)) {
+  if (!Buffer.isBuffer(target)) {
     throw new TypeError('Argument must be a Buffer')
   }
 
@@ -2673,73 +2364,7 @@ Buffer.prototype.compare = function compare (target, start, end, thisStart, this
   return 0
 }
 
-// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
-// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
-//
-// Arguments:
-// - buffer - a Buffer to search
-// - val - a string, Buffer, or number
-// - byteOffset - an index into `buffer`; will be clamped to an int32
-// - encoding - an optional encoding, relevant is val is a string
-// - dir - true for indexOf, false for lastIndexOf
-function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
-  // Empty buffer means no match
-  if (buffer.length === 0) return -1
-
-  // Normalize byteOffset
-  if (typeof byteOffset === 'string') {
-    encoding = byteOffset
-    byteOffset = 0
-  } else if (byteOffset > 0x7fffffff) {
-    byteOffset = 0x7fffffff
-  } else if (byteOffset < -0x80000000) {
-    byteOffset = -0x80000000
-  }
-  byteOffset = +byteOffset  // Coerce to Number.
-  if (isNaN(byteOffset)) {
-    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
-    byteOffset = dir ? 0 : (buffer.length - 1)
-  }
-
-  // Normalize byteOffset: negative offsets start from the end of the buffer
-  if (byteOffset < 0) byteOffset = buffer.length + byteOffset
-  if (byteOffset >= buffer.length) {
-    if (dir) return -1
-    else byteOffset = buffer.length - 1
-  } else if (byteOffset < 0) {
-    if (dir) byteOffset = 0
-    else return -1
-  }
-
-  // Normalize val
-  if (typeof val === 'string') {
-    val = Buffer.from(val, encoding)
-  }
-
-  // Finally, search either indexOf (if dir is true) or lastIndexOf
-  if (internalIsBuffer(val)) {
-    // Special case: looking for empty string/buffer always fails
-    if (val.length === 0) {
-      return -1
-    }
-    return arrayIndexOf(buffer, val, byteOffset, encoding, dir)
-  } else if (typeof val === 'number') {
-    val = val & 0xFF // Search for a byte value [0-255]
-    if (Buffer.TYPED_ARRAY_SUPPORT &&
-        typeof Uint8Array.prototype.indexOf === 'function') {
-      if (dir) {
-        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
-      } else {
-        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
-      }
-    }
-    return arrayIndexOf(buffer, [ val ], byteOffset, encoding, dir)
-  }
-
-  throw new TypeError('val must be string, number or Buffer')
-}
-
-function arrayIndexOf (arr, val, byteOffset, encoding, dir) {
+function arrayIndexOf (arr, val, byteOffset, encoding) {
   var indexSize = 1
   var arrLength = arr.length
   var valLength = val.length
@@ -2766,45 +2391,60 @@ function arrayIndexOf (arr, val, byteOffset, encoding, dir) {
     }
   }
 
-  var i
-  if (dir) {
-    var foundIndex = -1
-    for (i = byteOffset; i < arrLength; i++) {
-      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
-        if (foundIndex === -1) foundIndex = i
-        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
-      } else {
-        if (foundIndex !== -1) i -= i - foundIndex
-        foundIndex = -1
-      }
-    }
-  } else {
-    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength
-    for (i = byteOffset; i >= 0; i--) {
-      var found = true
-      for (var j = 0; j < valLength; j++) {
-        if (read(arr, i + j) !== read(val, j)) {
-          found = false
-          break
-        }
-      }
-      if (found) return i
+  var foundIndex = -1
+  for (var i = byteOffset; i < arrLength; ++i) {
+    if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
+      if (foundIndex === -1) foundIndex = i
+      if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
+    } else {
+      if (foundIndex !== -1) i -= i - foundIndex
+      foundIndex = -1
     }
   }
 
   return -1
 }
 
+Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
+  if (typeof byteOffset === 'string') {
+    encoding = byteOffset
+    byteOffset = 0
+  } else if (byteOffset > 0x7fffffff) {
+    byteOffset = 0x7fffffff
+  } else if (byteOffset < -0x80000000) {
+    byteOffset = -0x80000000
+  }
+  byteOffset >>= 0
+
+  if (this.length === 0) return -1
+  if (byteOffset >= this.length) return -1
+
+  // Negative offsets start from the end of the buffer
+  if (byteOffset < 0) byteOffset = Math.max(this.length + byteOffset, 0)
+
+  if (typeof val === 'string') {
+    val = Buffer.from(val, encoding)
+  }
+
+  if (Buffer.isBuffer(val)) {
+    // special case: looking for empty string/buffer always fails
+    if (val.length === 0) {
+      return -1
+    }
+    return arrayIndexOf(this, val, byteOffset, encoding)
+  }
+  if (typeof val === 'number') {
+    if (Buffer.TYPED_ARRAY_SUPPORT && Uint8Array.prototype.indexOf === 'function') {
+      return Uint8Array.prototype.indexOf.call(this, val, byteOffset)
+    }
+    return arrayIndexOf(this, [ val ], byteOffset, encoding)
+  }
+
+  throw new TypeError('val must be string, number or Buffer')
+}
+
 Buffer.prototype.includes = function includes (val, byteOffset, encoding) {
   return this.indexOf(val, byteOffset, encoding) !== -1
-}
-
-Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
-  return bidirectionalIndexOf(this, val, byteOffset, encoding, true)
-}
-
-Buffer.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
-  return bidirectionalIndexOf(this, val, byteOffset, encoding, false)
 }
 
 function hexWrite (buf, string, offset, length) {
@@ -2821,7 +2461,7 @@ function hexWrite (buf, string, offset, length) {
 
   // must be an even number of digits
   var strLen = string.length
-  if (strLen % 2 !== 0) throw new TypeError('Invalid hex string')
+  if (strLen % 2 !== 0) throw new Error('Invalid hex string')
 
   if (length > strLen / 2) {
     length = strLen / 2
@@ -2842,7 +2482,7 @@ function asciiWrite (buf, string, offset, length) {
   return blitBuffer(asciiToBytes(string), buf, offset, length)
 }
 
-function latin1Write (buf, string, offset, length) {
+function binaryWrite (buf, string, offset, length) {
   return asciiWrite(buf, string, offset, length)
 }
 
@@ -2904,9 +2544,8 @@ Buffer.prototype.write = function write (string, offset, length, encoding) {
       case 'ascii':
         return asciiWrite(this, string, offset, length)
 
-      case 'latin1':
       case 'binary':
-        return latin1Write(this, string, offset, length)
+        return binaryWrite(this, string, offset, length)
 
       case 'base64':
         // Warning: maxLength not taken into account in base64Write
@@ -2935,9 +2574,9 @@ Buffer.prototype.toJSON = function toJSON () {
 
 function base64Slice (buf, start, end) {
   if (start === 0 && end === buf.length) {
-    return fromByteArray(buf)
+    return base64.fromByteArray(buf)
   } else {
-    return fromByteArray(buf.slice(start, end))
+    return base64.fromByteArray(buf.slice(start, end))
   }
 }
 
@@ -3047,7 +2686,7 @@ function asciiSlice (buf, start, end) {
   return ret
 }
 
-function latin1Slice (buf, start, end) {
+function binarySlice (buf, start, end) {
   var ret = ''
   end = Math.min(buf.length, end)
 
@@ -3261,26 +2900,26 @@ Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
 
 Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
   if (!noAssert) checkOffset(offset, 4, this.length)
-  return read(this, offset, true, 23, 4)
+  return ieee754.read(this, offset, true, 23, 4)
 }
 
 Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
   if (!noAssert) checkOffset(offset, 4, this.length)
-  return read(this, offset, false, 23, 4)
+  return ieee754.read(this, offset, false, 23, 4)
 }
 
 Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
   if (!noAssert) checkOffset(offset, 8, this.length)
-  return read(this, offset, true, 52, 8)
+  return ieee754.read(this, offset, true, 52, 8)
 }
 
 Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
   if (!noAssert) checkOffset(offset, 8, this.length)
-  return read(this, offset, false, 52, 8)
+  return ieee754.read(this, offset, false, 52, 8)
 }
 
 function checkInt (buf, value, offset, ext, max, min) {
-  if (!internalIsBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
+  if (!Buffer.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
   if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
   if (offset + ext > buf.length) throw new RangeError('Index out of range')
 }
@@ -3525,7 +3164,7 @@ function writeFloat (buf, value, offset, littleEndian, noAssert) {
   if (!noAssert) {
     checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
   }
-  write(buf, value, offset, littleEndian, 23, 4)
+  ieee754.write(buf, value, offset, littleEndian, 23, 4)
   return offset + 4
 }
 
@@ -3541,7 +3180,7 @@ function writeDouble (buf, value, offset, littleEndian, noAssert) {
   if (!noAssert) {
     checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
   }
-  write(buf, value, offset, littleEndian, 52, 8)
+  ieee754.write(buf, value, offset, littleEndian, 52, 8)
   return offset + 8
 }
 
@@ -3653,7 +3292,7 @@ Buffer.prototype.fill = function fill (val, start, end, encoding) {
       this[i] = val
     }
   } else {
-    var bytes = internalIsBuffer(val)
+    var bytes = Buffer.isBuffer(val)
       ? val
       : utf8ToBytes(new Buffer(val, encoding).toString())
     var len = bytes.length
@@ -3797,9 +3436,8 @@ function utf16leToBytes (str, units) {
   return byteArray
 }
 
-
 function base64ToBytes (str) {
-  return toByteArray(base64clean(str))
+  return base64.toByteArray(base64clean(str))
 }
 
 function blitBuffer (src, dst, offset, length) {
@@ -3814,26 +3452,111 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"base64-js":1,"ieee754":3,"isarray":4}],3:[function(_dereq_,___mod,_expor_){
+_expor_.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
 
-// the following is from is-buffer, also by Feross Aboukhadijeh and with same lisence
-// The _isBuffer check is for Safari 5-7 support, because it's missing
-// Object.prototype.constructor. Remove this eventually
-function isBuffer(obj) {
-  return obj != null && (!!obj._isBuffer || isFastBuffer(obj) || isSlowBuffer(obj))
+  i += d
+
+  e = s & ((1 << (-nBits)) - 1)
+  s >>= (-nBits)
+  nBits += eLen
+  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1)
+  e >>= (-nBits)
+  nBits += mLen
+  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen)
+    e = e - eBias
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
 }
 
-function isFastBuffer (obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+_expor_.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+
+  value = Math.abs(value)
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0
+    e = eMax
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2)
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--
+      c *= 2
+    }
+    if (e + eBias >= 1) {
+      value += rt / c
+    } else {
+      value += rt * Math.pow(2, 1 - eBias)
+    }
+    if (value * c >= 2) {
+      e++
+      c /= 2
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0
+      e = eMax
+    } else if (e + eBias >= 1) {
+      m = (value * c - 1) * Math.pow(2, mLen)
+      e = e + eBias
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+      e = 0
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m
+  eLen += mLen
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128
 }
 
-// For Node v0.10 support. Remove this eventually.
-function isSlowBuffer (obj) {
-  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isFastBuffer(obj.slice(0, 0))
-}
+},{}],4:[function(_dereq_,___mod,_expor_){
+var toString = {}.toString;
+
+___mod.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+},{}],5:[function(_dereq_,___mod,_expor_){
+var buf = _dereq_('buffer');
+_buffer = buf.Buffer;
+_slowbuffer = buf.SlowBuffer;
+_INSPECT_MAX_BYTES = buf._INSPECT_MAX_BYTES;
+
+},{"buffer":2}]},{},[5]);
 
 function computeMerkleParent(left, right) {
   if (right) {
-    return sha256$1(Buffer.concat([new Buffer(left, 'hex'), new Buffer(right, 'hex')]));
+    return sha256$1(_buffer.concat([new _buffer(left, 'hex'), new _buffer(right, 'hex')]));
   }
   return left;
 }
