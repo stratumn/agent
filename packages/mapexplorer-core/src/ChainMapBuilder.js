@@ -25,8 +25,12 @@ export default class ChainMapBuilder {
     if (map.id && map.application) {
       this._load(map).then(chainscript => this.chainTree.display(chainscript));
     } else if (map.chainscript && map.chainscript.length) {
+      let chainscript = map.chainscript;
       try {
-        resolveLinks(JSON.parse(map.chainscript)).then(res => this.chainTree.display(res));
+        if (typeof(chainscript) !== 'object') {
+          chainscript = JSON.parse(chainscript);
+        }
+        resolveLinks(chainscript).then(res => this.chainTree.display(res));
       } catch (e) {
         console.log(e);
       }
