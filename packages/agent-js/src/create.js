@@ -7,9 +7,11 @@ import hashJson from './hashJson';
  * Creates an agent.
  * @param {object} actions - the action functions
  * @param {StoreClient} storeClient - the store client
+ * @param {object} [opts] - options
+ * @param {object} [opts.agentUrl] - agent root url
  * @returns {Client} a store HTTP client
  */
-export default function create(actions, storeClient) {
+export default function create(actions, storeClient, opts) {
   const agentInfo = getAgentInfo(actions);
 
   return {
@@ -42,12 +44,16 @@ export default function create(actions, storeClient) {
 
           const linkHash = hashJson(link);
 
-          const segment = {
-            link,
-            meta: {
-              linkHash
-            }
+          const meta = {
+            linkHash,
           };
+
+          if (opts.agentUrl) {
+            meta.agentUrl = opts.agentUrl;
+            meta.segmentUrl = `${opts.agentUrl}/segments/${linkHash}`;
+          }
+
+          const segment = { link, meta };
 
           return storeClient.saveSegment(segment);
         })
@@ -90,12 +96,16 @@ export default function create(actions, storeClient) {
 
           const linkHash = hashJson(link);
 
-          const segment = {
-            link,
-            meta: {
-              linkHash
-            }
+          const meta = {
+            linkHash,
           };
+
+          if (opts.agentUrl) {
+            meta.agentUrl = opts.agentUrl;
+            meta.segmentUrl = `${opts.agentUrl}/segments/${linkHash}`;
+          }
+
+          const segment = { link, meta };
 
           return storeClient.saveSegment(segment);
         })

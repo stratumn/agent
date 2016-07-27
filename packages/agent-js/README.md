@@ -17,7 +17,7 @@ var actions = require('./lib/actions');
 var storeHttpClient = Agent.storeHttpClient(process.env.STRATUMN_STORE_URL || 'http://store:5000');
 
 // Create an agent from the actions and the store client.
-var agent = Agent.create(actions, storeHttpClient);
+var agent = Agent.create(actions, storeHttpClient, { agentUrl: 'http://localhost:3000' });
 
 // Creates an HTTP server for the agent with CORS enabled.
 var agentHttpServer = Agent.httpServer(agent, { cors: {} });
