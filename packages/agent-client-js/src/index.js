@@ -3,7 +3,7 @@ import fromSegment from './fromSegment';
 
 // Deprecated.
 import getApplication from './getApplication';
-import load from './load';
+import loadLink from './loadLink';
 import config from './config';
 
 module.exports = {
@@ -12,6 +12,6 @@ module.exports = {
 
   // Deprecated.
   getApplication,
-  load,
+  loadLink,
   config
 };
