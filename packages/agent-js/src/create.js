@@ -3,6 +3,8 @@ import { mockAgent } from 'stratumn-mock-agent';
 import getAgentInfo from './getAgentInfo';
 import hashJson from './hashJson';
 
+const QUEUED = 'QUEUED';
+
 /**
  * Creates an agent.
  * @param {object} actions - the action functions
@@ -46,6 +48,7 @@ export default function create(actions, storeClient, opts = {}) {
 
           const meta = {
             linkHash,
+            evidence: { state: QUEUED }
           };
 
           if (opts.agentUrl) {
@@ -98,6 +101,7 @@ export default function create(actions, storeClient, opts = {}) {
 
           const meta = {
             linkHash,
+            evidence: { state: QUEUED }
           };
 
           if (opts.agentUrl) {
