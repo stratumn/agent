@@ -1,6 +1,6 @@
 {
   "name": "stratumn-sdk",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Stratumn SDK for Javascript",
   "main": "lib/index.js",
   "scripts": {
