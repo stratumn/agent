@@ -21,7 +21,7 @@ $ npm install mapexplorer-core
 ```
 
 ```javascript
-var StratumnSDK = require('mapexplorer-core');
+var MapexplorerCore = require('mapexplorer-core');
 ```
 
 ### Bower
