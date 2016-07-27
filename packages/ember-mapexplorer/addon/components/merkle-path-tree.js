@@ -1,3 +1,4 @@
+/* global MapexplorerCore */
 import Ember from 'ember';
 import layout from '../templates/components/merkle-path-tree';
 
