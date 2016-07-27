@@ -1,0 +1,38 @@
+.node {
+    cursor: pointer;
+}
+
+.node polygon {
+    fill: $segment-primary-color;
+}
+
+.node text {
+    font-family: $segment-text-font;
+    font-size: 14px;
+    fill: $segment-text-color;
+}
+
+.node rect {
+    fill: $segment-secondary-color;
+}
+
+.textpath {
+    font-family: $link-text-font;
+    font-size: 14px;
+    fill: $link-text-color;
+}
+
+.link {
+    fill: none;
+    stroke: $link-color;
+    stroke-width: 5px;
+    marker-end: url('#triangle');
+}
+
+.node.selected polygon {
+    fill: $selected-segment-primary-color;
+}
+
+.node.selected rect {
+    fill: $selected-segment-secondary-color;
+}

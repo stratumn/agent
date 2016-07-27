@@ -1,0 +1,10 @@
+.merkle-path {
+  .node circle {
+    fill: $merkle-path-node-color;
+  }
+
+  .link {
+    stroke: $merkle-path-link-color;
+    stroke-width: 2px;
+  }
+}

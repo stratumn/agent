@@ -1,7 +1,10 @@
 {
   "name": "mapexplorer-core",
   "description": "Core library for building Map Explorer components",
-  "main": "dist/mapexplorer-core.js",
+  "main": [
+    "dist/mapexplorer-core.js",
+    "assets/stylesheets/mapexplorer-core.scss"
+  ],
   "authors": [
     "Stratumn Team"
   ],
