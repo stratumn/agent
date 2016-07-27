@@ -1,7 +1,84 @@
-<h1>Map Explorer</h1>
+{{#if segment}}
+    <div class="segment-container">
+        <div class="title" layout="row">
+            <div>
+                <h1>Segment</h1>
+                <h2>{{segment.meta.linkHash}}</h2>
+            </div>
+            <span flex></span>
+          {{#paper-button onClick=(action "close")}}
+            {{paper-icon "close"}}
+          {{/paper-button}}
+        </div>
+        <div layout="row" class="body">
+            <div class="menu">
+                <ul>
+                    <li {{action "show" "state"}} class="{{if stateShowed 'active'}}">State</li>
+                    <li {{action "show" "link"}} class="{{if linkShowed 'active'}}">Link</li>
+                    <li {{action "show" "evidence"}} class="{{if evidenceShowed 'active'}}">Evidence</li>
+                    <li {{action "show" "json"}} class="{{if jsonShowed 'active'}}">JSON</li>
+                </ul>
+            </div>
+            <div class="content" flex-grow>
+                {{#if stateShowed}}
+                    <pre>{{ json segment.link.state }}</pre>
+                {{/if}}
+                {{#if linkShowed}}
+                  <div class="link">
+                      <h4>Map ID</h4>
+                      <p>{{segment.link.meta.mapId}}</p>
 
-{{application}}
+                      <h4>Agent Hash</h4>
+                      <p>{{segment.link.meta.agentHash}}</p>
 
-{{mapId}}
+                      <h4>State Hash</h4>
+                      <p>{{segment.link.meta.stateHash}}</p>
 
-<svg></svg>
+                      <h4>Previous Link hash</h4>
+                      <p>{{segment.link.meta.prevLinkHash}}</p>
+
+                      <h4>Action</h4>
+                      <p>{{segment.link.meta.action}}
+                          ({{join segment.link.meta.arguments delimiter=", "}})</p>
+                  </div>
+                {{/if}}
+                {{#if evidenceShowed}}
+                  <div layout="row">
+                      <div class="info">
+                          <h4>State</h4>
+                          <p>{{segment.meta.evidence.state}}</p>
+                          {{#if evidenceComplete}}
+                              <h4>Bitcoin Transaction</h4>
+                              <p>
+                                {{get segment.meta.evidence.transactions 'bitcoin:main'}}
+                                  <a target="_blank"
+                                     href="https://blockchain.info/tx/{{get segment.meta.evidence.transactions 'bitcoin:main'}}">View
+                                      transaction on Blockchain.info</a>
+                              </p>
+
+                              <h4>Merkle root</h4>
+                              <p>{{segment.meta.evidence.merkleRoot}}</p>
+                          {{/if}}
+                      </div>
+                      {{#if evidenceComplete}}
+                        <div class="merkle-path">
+                            <h4>Merkle Path</h4>
+                          {{merkle-path-tree merkle-path=segment.meta.evidence.merklePath}}
+                        </div>
+                      {{/if}}
+                  </div>
+                {{/if}}
+                {{#if jsonShowed}}
+                    <pre>{{json segment}}</pre>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+{{/if}}
+
+<svg>
+    <marker id="triangle" viewBox="0 0 10 10" refX="0" refY="5" markerUnits="strokeWidth"
+            markerWidth="4" markerHeight="3" orient="auto">
+        <path fill="#CCCCCC" d="M 0 0 L 10 5 L 0 10 z"/>
+    </marker>
+</svg>
