@@ -60,16 +60,35 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _getAgent2 = _interopRequireDefault(_getAgent);
 
-	var _fromSegment = __webpack_require__(11);
+	var _fromSegment = __webpack_require__(15);
 
 	var _fromSegment2 = _interopRequireDefault(_fromSegment);
+
+	var _getApplication = __webpack_require__(16);
+
+	var _getApplication2 = _interopRequireDefault(_getApplication);
+
+	var _loadLink = __webpack_require__(18);
+
+	var _loadLink2 = _interopRequireDefault(_loadLink);
+
+	var _config = __webpack_require__(17);
+
+	var _config2 = _interopRequireDefault(_config);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = {
 	  getAgent: _getAgent2.default,
-	  fromSegment: _fromSegment2.default
+	  fromSegment: _fromSegment2.default,
+
+	  // Deprecated.
+	  getApplication: _getApplication2.default,
+	  loadLink: _loadLink2.default,
+	  config: _config2.default
 	};
+
+	// Deprecated.
 
 /***/ },
 /* 1 */
@@ -90,17 +109,29 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createMap2 = _interopRequireDefault(_createMap);
 
-	var _getSegment = __webpack_require__(7);
+	var _getSegment = __webpack_require__(8);
 
 	var _getSegment2 = _interopRequireDefault(_getSegment);
 
-	var _findSegments = __webpack_require__(8);
+	var _findSegments = __webpack_require__(9);
 
 	var _findSegments2 = _interopRequireDefault(_findSegments);
 
-	var _getMapIds = __webpack_require__(10);
+	var _getMapIds = __webpack_require__(11);
 
 	var _getMapIds2 = _interopRequireDefault(_getMapIds);
+
+	var _getBranches = __webpack_require__(12);
+
+	var _getBranches2 = _interopRequireDefault(_getBranches);
+
+	var _getLink = __webpack_require__(13);
+
+	var _getLink2 = _interopRequireDefault(_getLink);
+
+	var _getMap = __webpack_require__(14);
+
+	var _getMap2 = _interopRequireDefault(_getMap);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -123,10 +154,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	      agent.findSegments = _findSegments2.default.bind(null, agent);
 	      agent.getMapIds = _getMapIds2.default.bind(null, agent);
 
+	      // Deprecated.
+	      agent.getBranches = _getBranches2.default.bind(null, agent);
+	      agent.getLink = _getLink2.default.bind(null, agent);
+	      agent.getMap = _getMap2.default.bind(null, agent);
+
 	      resolve(agent);
 	    });
 	  });
 	}
+
+	// Deprecated.
 
 /***/ },
 /* 2 */
@@ -1579,6 +1617,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
+	var _deprecated = __webpack_require__(7);
+
+	var _deprecated2 = _interopRequireDefault(_deprecated);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function segmentify(agent, obj) {
@@ -1620,11 +1662,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Promise.resolve(null);
 	  };
 
+	  // Deprecated.
+	  /*eslint-disable*/
+	  obj.load = function () {
+	    /*eslint-enable*/
+	    (0, _deprecated2.default)('segment#load()');
+	    return obj;
+	  };
+
 	  return obj;
 	}
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = deprecated;
+	function deprecated(oldFunc, newFunc) {
+	  if (!newFunc) {
+	    console.warn("WARNING: " + oldFunc + " is deprecated.");
+	  } else {
+	    console.warn("WARNING: " + oldFunc + " is deprecated. Please use " + newFunc + " instead.");
+	  }
+	}
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1663,7 +1731,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1681,7 +1749,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _segmentify2 = _interopRequireDefault(_segmentify);
 
-	var _makeQueryString = __webpack_require__(9);
+	var _makeQueryString = __webpack_require__(10);
 
 	var _makeQueryString2 = _interopRequireDefault(_makeQueryString);
 
@@ -1710,7 +1778,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1739,7 +1807,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1753,7 +1821,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
-	var _makeQueryString = __webpack_require__(9);
+	var _makeQueryString = __webpack_require__(10);
 
 	var _makeQueryString2 = _interopRequireDefault(_makeQueryString);
 
@@ -1780,7 +1848,92 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 11 */
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = getBranches;
+
+	var _findSegments = __webpack_require__(9);
+
+	var _findSegments2 = _interopRequireDefault(_findSegments);
+
+	var _deprecated = __webpack_require__(7);
+
+	var _deprecated2 = _interopRequireDefault(_deprecated);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function getBranches(agent, prevLinkHash) {
+	  var tags = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
+
+	  (0, _deprecated2.default)('Agent#getBranches(agent, prevLinkHash, tags = [])', 'Agent#findSegments(agent, filter)');
+
+	  return (0, _findSegments2.default)(agent, { prevLinkHash: prevLinkHash, tags: tags });
+	}
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = getLink;
+
+	var _getSegment = __webpack_require__(8);
+
+	var _getSegment2 = _interopRequireDefault(_getSegment);
+
+	var _deprecated = __webpack_require__(7);
+
+	var _deprecated2 = _interopRequireDefault(_deprecated);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function getLink(agent, hash) {
+	  (0, _deprecated2.default)('Agent#getLink(agent, hash)', 'Agent#getSegment(agent, hash)');
+
+	  return (0, _getSegment2.default)(agent, hash);
+	}
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = getMap;
+
+	var _findSegments = __webpack_require__(9);
+
+	var _findSegments2 = _interopRequireDefault(_findSegments);
+
+	var _deprecated = __webpack_require__(7);
+
+	var _deprecated2 = _interopRequireDefault(_deprecated);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function getMap(agent, mapId) {
+	  var tags = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
+
+	  (0, _deprecated2.default)('getMap(agent, mapId, tags = [])', 'findSegments(agent, filter)');
+
+	  return (0, _findSegments2.default)(agent, { mapId: mapId, tags: tags });
+	}
+
+/***/ },
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1801,9 +1954,84 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function fromSegment(obj) {
-	  return (0, _getAgent2.default)(obj.meta.agentUrl).then(function (agent) {
+	  return (0, _getAgent2.default)(obj.meta.agentUrl || obj.meta.applicationLocation).then(function (agent) {
 	    var segment = (0, _segmentify2.default)(agent, obj);
 	    return { agent: agent, segment: segment };
+	  });
+	}
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = getApplication;
+
+	var _getAgent = __webpack_require__(1);
+
+	var _getAgent2 = _interopRequireDefault(_getAgent);
+
+	var _deprecated = __webpack_require__(7);
+
+	var _deprecated2 = _interopRequireDefault(_deprecated);
+
+	var _config = __webpack_require__(17);
+
+	var _config2 = _interopRequireDefault(_config);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function getApplication(name, url) {
+	  (0, _deprecated2.default)('getApplication(name, url)', 'getAgent(url)');
+
+	  return (0, _getAgent2.default)(url || _config2.default.applicationUrl.replace('%s', name));
+	}
+
+/***/ },
+/* 17 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	// Deprecated.
+	exports.default = {
+	  applicationUrl: 'https://%s.stratumn.rocks'
+	};
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = loadLink;
+
+	var _fromSegment = __webpack_require__(15);
+
+	var _fromSegment2 = _interopRequireDefault(_fromSegment);
+
+	var _deprecated = __webpack_require__(7);
+
+	var _deprecated2 = _interopRequireDefault(_deprecated);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function loadLink(obj) {
+	  (0, _deprecated2.default)('loadLink(obj)', 'fromSegment(obj)');
+
+	  return (0, _fromSegment2.default)(obj).then(function (_ref) {
+	    var segment = _ref.segment;
+	    return segment;
 	  });
 	}
 
