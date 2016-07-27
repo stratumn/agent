@@ -39,7 +39,7 @@ StratumnSDK.getAgent('http://localhost:3000')
     return agent.createMap('My conversation');
   })
   .then(function(segment) {
-    // You can call a transition function like a regular function
+    // You can call an action like a regular function
     return segment.addMessage('Hello, World');
   })
   .then(function(segment) {
@@ -190,9 +190,9 @@ StratumnSDK
   });
 ```
 
-### Segment#:transitionFunction(...args)
+### Segment#:actionName(...args)
 
-Executes a transition function and returns a promise that resolves with a new segment.
+Executes an action and returns a promise that resolves with a new segment.
 
 ```javascript
 StratumnSDK
