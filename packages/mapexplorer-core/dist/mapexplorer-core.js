@@ -231,15 +231,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var ChainTree = function () {
 	  function ChainTree(element, options) {
+	    var _this = this;
+
 	    _classCallCheck(this, ChainTree);
 
-	    this.element = element;
 	    this.options = options;
 
 	    this.tree = d3.tree();
 	    this.transition = d3.transition().duration(this.options.duration).ease(d3.easeLinear);
 
 	    this.svg = d3.select(element.find('svg')[0]);
+
+	    if (options.zoomable) {
+	      var zoomed = function zoomed() {
+	        return _this.innerG.attr("transform", d3.event.transform);
+	      };
+	      this.svg.call(d3.zoom().on('zoom', zoomed));
+	    }
+
 	    this.innerG = this.svg.append('g').attr('transform', function () {
 	      return (0, _treeUtils.translate)(margin.top, margin.left);
 	    });
@@ -250,8 +259,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function display(chainscript) {
 	      if (chainscript && chainscript.length) {
 	        var root = (0, _parseChainscript2.default)(chainscript);
-	        root.x0 = height / 2;
-	        root.y0 = 0;
 	        this._update(root, root.descendants(), root.links());
 	      } else {
 	        this._update(null, [], []);
@@ -261,7 +268,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: '_update',
 	    value: function _update(root, nodes, links) {
 	      var self = this;
-	      var options = this.options;
 	      var maxDepth = d3.max(nodes, function (x) {
 	        return x.depth;
 	      }) || 0;
@@ -272,8 +278,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }, 1);
 	      var computedHeight = branchesCount * polygon.height * 1.5;
 
+	      root.x0 = computedHeight / 2;
+	      root.y0 = 0;
+
 	      this.tree.size([computedHeight, computedWidth]);
-	      this.svg.attr('width', computedWidth + margin.right + margin.left + arrowLength).attr('height', computedHeight + margin.top + margin.bottom);
+	      this.svg.attr('width', this.options.zoomable ? 1200 : computedWidth + margin.right + margin.left + arrowLength).attr('height', this.options.zoomable ? 800 : computedHeight + margin.top + margin.bottom);
 
 	      // Compute the new tree layout.
 	      if (root) {
@@ -295,24 +304,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // Enter any new links at the parent's previous position.
 	      link.enter().insert('path', 'g').attr('class', 'link').attr('id', function (d) {
 	        return 'link-' + d.target.id;
-	      }).attr('d', function (d) {
-	        return (0, _treeUtils.finalLink)(d, 15);
 	      });
+	      //  .attr('d', d => finalLink(d, 15));
 	      // .attr('d', d => {
 	      //   const o = d.source && d.source.x0 ? { x: d.source.x0, y: d.source.y0 } :
 	      //   { x: root.x0, y: root.y0 };
 	      //   return makeLink(o);
 	      // });
 
-	      // const linkUpdate = this.innerG.selectAll('path.link').transition(this.transition);
+	      var linkUpdate = this.innerG.selectAll('path.link:not(.init)').transition(this.transition);
 
 	      // Transition links to their new position.
-	      // linkUpdate.attr('d', d => finalLink(d, 15));
+	      linkUpdate.attr('d', function (d) {
+	        return (0, _treeUtils.finalLink)(d, 15);
+	      });
 
-	      // Transition exiting nodes to the parent's new position.
-	      link.exit().transition(this.transition).attr('d', function () {
-	        return (0, _treeUtils.makeLink)({ x: 0, y: 0 });
-	      }).remove();
+	      link.exit().remove();
 
 	      // Update the nodes...
 	      var node = this.innerG.selectAll('g.node').data(nodes, function key(d) {
@@ -330,7 +337,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }).on('click', function onClick(d) {
 	        d3.selectAll('g.node').classed('selected', false);
 	        d3.select(this).classed('selected', true);
-	        options.onclick(d, function () {
+	        self.options.onclick(d, function () {
 	          self.innerG.selectAll('g.node.selected').classed('selected', false);
 	        });
 	      });
@@ -362,7 +369,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_drawInit',
 	    value: function _drawInit(root) {
-	      this.innerG.append('path').attr('class', 'link').attr('id', 'init-link').attr('d', (0, _treeUtils.makeLink)({ x: root.x, y: root.y0 }, root, 15));
+	      this.innerG.append('path').attr('class', 'link init').attr('id', 'init-link').attr('d', (0, _treeUtils.makeLink)({ x: root.x, y: root.y0 }, root, 15));
 
 	      this.innerG.append('text').attr('dx', 20).attr('dy', '-0.3em').append('textPath').attr('class', 'textpath').attr('xlink:href', '#init-link').text('init');
 	    }

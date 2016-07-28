@@ -10,7 +10,6 @@ const arrowLength = polygon.width;
 
 export default class ChainTree {
   constructor(element, options) {
-    this.element = element;
     this.options = options;
 
     this.tree = d3.tree();
@@ -19,6 +18,12 @@ export default class ChainTree {
       .ease(d3.easeLinear);
 
     this.svg = d3.select(element.find('svg')[0]);
+
+    if (options.zoomable) {
+      const zoomed = () => this.innerG.attr("transform", d3.event.transform);
+      this.svg.call(d3.zoom().on('zoom', zoomed));
+    }
+
     this.innerG = this.svg.append('g')
       .attr('transform', () => translate(margin.top, margin.left));
   }
@@ -26,8 +31,6 @@ export default class ChainTree {
   display(chainscript) {
     if (chainscript && chainscript.length) {
       const root = parseChainscript(chainscript);
-      root.x0 = height / 2;
-      root.y0 = 0;
       this._update(root, root.descendants(), root.links());
     } else {
       this._update(null, [], []);
@@ -36,7 +39,6 @@ export default class ChainTree {
 
   _update(root, nodes, links) {
     const self = this;
-    const options = this.options;
     const maxDepth = d3.max(nodes, x => x.depth) || 0;
     const computedWidth = Math.max(maxDepth * (polygon.width + arrowLength), 500);
 
@@ -45,10 +47,13 @@ export default class ChainTree {
     );
     const computedHeight = branchesCount * polygon.height * 1.5;
 
+    root.x0 = computedHeight / 2;
+    root.y0 = 0;
+
     this.tree.size([computedHeight, computedWidth]);
     this.svg
-      .attr('width', computedWidth + margin.right + margin.left + arrowLength)
-      .attr('height', computedHeight + margin.top + margin.bottom);
+      .attr('width', this.options.zoomable ? 1200 : computedWidth + margin.right + margin.left + arrowLength)
+      .attr('height', this.options.zoomable ? 800 : computedHeight + margin.top + margin.bottom);
 
     // Compute the new tree layout.
     if (root) {
@@ -71,23 +76,20 @@ export default class ChainTree {
     // Enter any new links at the parent's previous position.
     link.enter().insert('path', 'g')
       .attr('class', 'link')
-      .attr('id', d => `link-${d.target.id}`)
-      .attr('d', d => finalLink(d, 15));
+      .attr('id', d => `link-${d.target.id}`);
+    //  .attr('d', d => finalLink(d, 15));
     // .attr('d', d => {
     //   const o = d.source && d.source.x0 ? { x: d.source.x0, y: d.source.y0 } :
     //   { x: root.x0, y: root.y0 };
     //   return makeLink(o);
     // });
 
-    // const linkUpdate = this.innerG.selectAll('path.link').transition(this.transition);
+    const linkUpdate = this.innerG.selectAll('path.link:not(.init)').transition(this.transition);
 
     // Transition links to their new position.
-    // linkUpdate.attr('d', d => finalLink(d, 15));
+    linkUpdate.attr('d', d => finalLink(d, 15));
 
-    // Transition exiting nodes to the parent's new position.
-    link.exit().transition(this.transition)
-      .attr('d', () => makeLink({ x: 0, y: 0 }))
-      .remove();
+    link.exit().remove();
 
     // Update the nodes...
     const node = this.innerG.selectAll('g.node').data(nodes,
@@ -106,7 +108,7 @@ export default class ChainTree {
           .classed('selected', false);
         d3.select(this)
           .classed('selected', true);
-        options.onclick(d, () => {
+        self.options.onclick(d, () => {
           self.innerG.selectAll('g.node.selected').classed('selected', false);
         });
       });
@@ -146,7 +148,7 @@ export default class ChainTree {
 
   _drawInit(root) {
     this.innerG.append('path')
-      .attr('class', 'link')
+      .attr('class', 'link init')
       .attr('id', 'init-link')
       .attr('d', makeLink({ x: root.x, y: root.y0 }, root, 15));
 
