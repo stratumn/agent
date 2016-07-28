@@ -18,7 +18,8 @@ const defaultOptions = {
 
 export default class ChainMapBuilder {
   constructor(element, options) {
-    this.chainTree = new ChainTree(element, Object.assign({}, defaultOptions, options));
+    options = {...defaultOptions, ...options};
+    this.chainTree = new ChainTree(element, options);
   }
 
   build(map) {

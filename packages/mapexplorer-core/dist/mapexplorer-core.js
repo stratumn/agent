@@ -111,6 +111,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _ChainTree = __webpack_require__(2);
@@ -150,7 +154,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function ChainMapBuilder(element, options) {
 	    _classCallCheck(this, ChainMapBuilder);
 
-	    this.chainTree = new _ChainTree2.default(element, Object.assign({}, defaultOptions, options));
+	    options = _extends({}, defaultOptions, options);
+	    this.chainTree = new _ChainTree2.default(element, options);
 	  }
 
 	  _createClass(ChainMapBuilder, [{
@@ -163,8 +168,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return _this.chainTree.display(chainscript);
 	        });
 	      } else if (map.chainscript && map.chainscript.length) {
+	        var chainscript = map.chainscript;
 	        try {
-	          (0, _resolveLinks2.default)(JSON.parse(map.chainscript)).then(function (res) {
+	          if ((typeof chainscript === 'undefined' ? 'undefined' : _typeof(chainscript)) !== 'object') {
+	            chainscript = JSON.parse(chainscript);
+	          }
+	          (0, _resolveLinks2.default)(chainscript).then(function (res) {
 	            return _this.chainTree.display(res);
 	          });
 	        } catch (e) {
