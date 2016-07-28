@@ -46,7 +46,7 @@ export default class ChainTree {
       (pre, cur) => pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0),
       1
     );
-    const computedHeight = branchesCount * polygon.height * options.verticalSpacing;
+    const computedHeight = branchesCount * polygon.height * this.options.verticalSpacing;
 
     root.x0 = computedHeight / 2;
     root.y0 = 0;

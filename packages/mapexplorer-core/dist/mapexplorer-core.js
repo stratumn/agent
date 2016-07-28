@@ -276,7 +276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var branchesCount = nodes.reduce(function (pre, cur) {
 	        return pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0);
 	      }, 1);
-	      var computedHeight = branchesCount * polygon.height * options.verticalSpacing;
+	      var computedHeight = branchesCount * polygon.height * this.options.verticalSpacing;
 
 	      root.x0 = computedHeight / 2;
 	      root.y0 = 0;
