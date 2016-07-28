@@ -35,6 +35,7 @@ export default class ChainTree {
   }
 
   _update(root, nodes, links) {
+    const self = this;
     const options = this.options;
     const maxDepth = d3.max(nodes, x => x.depth) || 0;
     const computedWidth = Math.max(maxDepth * (polygon.width + arrowLength), 500);
@@ -47,9 +48,8 @@ export default class ChainTree {
     // Compute the new tree layout.
     if (root) {
       this.tree(root);
+      root.each(node => { node.y += arrowLength; });
     }
-
-    root.each(node => { node.y += arrowLength; });
 
     // Update the nodes...
     const node = this.innerG.selectAll('g.node').data(nodes,
@@ -69,7 +69,7 @@ export default class ChainTree {
         d3.select(this)
           .classed('selected', true);
         options.onclick(d, () => {
-          this.innerG.selectAll('g.node.selected').classed('selected', false);
+          self.innerG.selectAll('g.node.selected').classed('selected', false);
         });
       });
 
