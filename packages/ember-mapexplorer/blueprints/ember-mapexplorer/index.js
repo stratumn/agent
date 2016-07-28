@@ -1,14 +1,16 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-mapexplorer',
+  normalizeEntityName: function() {
+    // this prevents an error when the entityName is
+    // not specified (since that doesn't actually matter
+    // to us
+  },
 
   afterInstall: function() {
-    return this.addBowerPackageToProject({ name: 'mapexplorer-core', target: 'latest' })
+    return this.addBowerPackageToProject('mapexplorer-core', 'alpha')
       .then(function () {
-        return _this.addPackagesToProject(
-          { name: 'ember-cli-sass', target: 'latest' }
-        );
-      });
+        return this.addPackageToProject('ember-cli-sass', 'latest');
+      }.bind(this));
   }
 };
