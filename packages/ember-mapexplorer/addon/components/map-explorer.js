@@ -10,6 +10,10 @@ export default Ember.Component.extend({
       this.set('segment', null);
       this.onHide();
 
+      const onSelectSegment = this.get('onSelectSegment');
+      if (onSelectSegment) {
+        onSelectSegment(null);
+      }
     },
     show(part) {
       ['state', 'link', 'evidence', 'json'].forEach((part) => this.set(part + 'Showed', false));
@@ -28,6 +32,11 @@ export default Ember.Component.extend({
         this.onHide = onHide;
         this.set('segment', d.data);
         this.set('evidenceComplete', this.get('segment').meta.evidence.state === 'COMPLETE');
+
+        const onSelectSegment = this.get('onSelectSegment');
+        if (onSelectSegment) {
+          onSelectSegment(this.get('segment'));
+        }
       }
     }));
 
