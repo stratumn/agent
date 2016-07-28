@@ -40,16 +40,54 @@ export default class ChainTree {
     const maxDepth = d3.max(nodes, x => x.depth) || 0;
     const computedWidth = Math.max(maxDepth * (polygon.width + arrowLength), 500);
 
-    this.tree.size([height, computedWidth]);
+    const branchesCount = nodes.reduce(
+      (pre, cur) => pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0), 1
+    );
+    const computedHeight = branchesCount * polygon.height * 1.5;
+
+    this.tree.size([computedHeight, computedWidth]);
     this.svg
       .attr('width', computedWidth + margin.right + margin.left + arrowLength)
-      .attr('height', height + margin.top + margin.bottom);
+      .attr('height', computedHeight + margin.top + margin.bottom);
 
     // Compute the new tree layout.
     if (root) {
       this.tree(root);
       root.each(node => { node.y += arrowLength; });
     }
+
+    // Update the links...
+    const link = this.innerG.selectAll('path.link').data(links,
+      function key(d) { return d ? d.target.id : this.id; });
+
+    link.enter().insert('text')
+      .attr('dx', polygon.width + 20)
+      .attr('dy', '-0.3em')
+      .append('textPath')
+      .attr('class', 'textpath')
+      .attr('xlink:href', d => `#link-${d.target.id}`)
+      .text(this.options.getLinkText);
+
+    // Enter any new links at the parent's previous position.
+    link.enter().insert('path', 'g')
+      .attr('class', 'link')
+      .attr('id', d => `link-${d.target.id}`)
+      .attr('d', d => finalLink(d, 15));
+    // .attr('d', d => {
+    //   const o = d.source && d.source.x0 ? { x: d.source.x0, y: d.source.y0 } :
+    //   { x: root.x0, y: root.y0 };
+    //   return makeLink(o);
+    // });
+
+    // const linkUpdate = this.innerG.selectAll('path.link').transition(this.transition);
+
+    // Transition links to their new position.
+    // linkUpdate.attr('d', d => finalLink(d, 15));
+
+    // Transition exiting nodes to the parent's new position.
+    link.exit().transition(this.transition)
+      .attr('d', () => makeLink({ x: 0, y: 0 }))
+      .remove();
 
     // Update the nodes...
     const node = this.innerG.selectAll('g.node').data(nodes,
@@ -103,39 +141,6 @@ export default class ChainTree {
     nodeExit.select('text').style('fill-opacity', 1e-6);
     nodeExit.attr('transform', () => translate(0, 0)).remove();
 
-    // Update the links...
-    const link = this.innerG.selectAll('path.link').data(links,
-      function key(d) { return d ? d.target.id : this.id; });
-
-    link.enter().insert('text')
-      .attr('dx', polygon.width + 20)
-      .attr('dy', '-0.3em')
-      .append('textPath')
-      .attr('class', 'textpath')
-      .attr('xlink:href', d => `#link-${d.target.id}`)
-      .text(this.options.getLinkText);
-
-    // Enter any new links at the parent's previous position.
-    link.enter().insert('path', 'g')
-      .attr('class', 'link')
-      .attr('id', d => `link-${d.target.id}`)
-      .attr('d', d => finalLink(d, 15));
-      // .attr('d', d => {
-      //   const o = d.source && d.source.x0 ? { x: d.source.x0, y: d.source.y0 } :
-      //   { x: root.x0, y: root.y0 };
-      //   return makeLink(o);
-      // });
-
-    // const linkUpdate = this.innerG.selectAll('path.link').transition(this.transition);
-
-    // Transition links to their new position.
-    // linkUpdate.attr('d', d => finalLink(d, 15));
-
-    // Transition exiting nodes to the parent's new position.
-    link.exit().transition(this.transition)
-      .attr('d', () => makeLink({ x: 0, y: 0 }))
-      .remove();
-
     this._drawInit(root);
   }
 
@@ -143,7 +148,7 @@ export default class ChainTree {
     this.innerG.append('path')
       .attr('class', 'link')
       .attr('id', 'init-link')
-      .attr('d', makeLink({ x: root.x0, y: root.y0 }, root, 15));
+      .attr('d', makeLink({ x: root.x, y: root.y0 }, root, 15));
 
     this.innerG.append('text')
       .attr('dx', 20)

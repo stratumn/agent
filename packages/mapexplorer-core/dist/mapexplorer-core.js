@@ -267,8 +267,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }) || 0;
 	      var computedWidth = Math.max(maxDepth * (polygon.width + arrowLength), 500);
 
-	      this.tree.size([height, computedWidth]);
-	      this.svg.attr('width', computedWidth + margin.right + margin.left + arrowLength).attr('height', height + margin.top + margin.bottom);
+	      var branchesCount = nodes.reduce(function (pre, cur) {
+	        return pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0);
+	      }, 1);
+	      var computedHeight = branchesCount * polygon.height * 1.5;
+
+	      this.tree.size([computedHeight, computedWidth]);
+	      this.svg.attr('width', computedWidth + margin.right + margin.left + arrowLength).attr('height', computedHeight + margin.top + margin.bottom);
 
 	      // Compute the new tree layout.
 	      if (root) {
@@ -277,6 +282,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	          node.y += arrowLength;
 	        });
 	      }
+
+	      // Update the links...
+	      var link = this.innerG.selectAll('path.link').data(links, function key(d) {
+	        return d ? d.target.id : this.id;
+	      });
+
+	      link.enter().insert('text').attr('dx', polygon.width + 20).attr('dy', '-0.3em').append('textPath').attr('class', 'textpath').attr('xlink:href', function (d) {
+	        return '#link-' + d.target.id;
+	      }).text(this.options.getLinkText);
+
+	      // Enter any new links at the parent's previous position.
+	      link.enter().insert('path', 'g').attr('class', 'link').attr('id', function (d) {
+	        return 'link-' + d.target.id;
+	      }).attr('d', function (d) {
+	        return (0, _treeUtils.finalLink)(d, 15);
+	      });
+	      // .attr('d', d => {
+	      //   const o = d.source && d.source.x0 ? { x: d.source.x0, y: d.source.y0 } :
+	      //   { x: root.x0, y: root.y0 };
+	      //   return makeLink(o);
+	      // });
+
+	      // const linkUpdate = this.innerG.selectAll('path.link').transition(this.transition);
+
+	      // Transition links to their new position.
+	      // linkUpdate.attr('d', d => finalLink(d, 15));
+
+	      // Transition exiting nodes to the parent's new position.
+	      link.exit().transition(this.transition).attr('d', function () {
+	        return (0, _treeUtils.makeLink)({ x: 0, y: 0 });
+	      }).remove();
 
 	      // Update the nodes...
 	      var node = this.innerG.selectAll('g.node').data(nodes, function key(d) {
@@ -321,43 +357,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return (0, _treeUtils.translate)(0, 0);
 	      }).remove();
 
-	      // Update the links...
-	      var link = this.innerG.selectAll('path.link').data(links, function key(d) {
-	        return d ? d.target.id : this.id;
-	      });
-
-	      link.enter().insert('text').attr('dx', polygon.width + 20).attr('dy', '-0.3em').append('textPath').attr('class', 'textpath').attr('xlink:href', function (d) {
-	        return '#link-' + d.target.id;
-	      }).text(this.options.getLinkText);
-
-	      // Enter any new links at the parent's previous position.
-	      link.enter().insert('path', 'g').attr('class', 'link').attr('id', function (d) {
-	        return 'link-' + d.target.id;
-	      }).attr('d', function (d) {
-	        return (0, _treeUtils.finalLink)(d, 15);
-	      });
-	      // .attr('d', d => {
-	      //   const o = d.source && d.source.x0 ? { x: d.source.x0, y: d.source.y0 } :
-	      //   { x: root.x0, y: root.y0 };
-	      //   return makeLink(o);
-	      // });
-
-	      // const linkUpdate = this.innerG.selectAll('path.link').transition(this.transition);
-
-	      // Transition links to their new position.
-	      // linkUpdate.attr('d', d => finalLink(d, 15));
-
-	      // Transition exiting nodes to the parent's new position.
-	      link.exit().transition(this.transition).attr('d', function () {
-	        return (0, _treeUtils.makeLink)({ x: 0, y: 0 });
-	      }).remove();
-
 	      this._drawInit(root);
 	    }
 	  }, {
 	    key: '_drawInit',
 	    value: function _drawInit(root) {
-	      this.innerG.append('path').attr('class', 'link').attr('id', 'init-link').attr('d', (0, _treeUtils.makeLink)({ x: root.x0, y: root.y0 }, root, 15));
+	      this.innerG.append('path').attr('class', 'link').attr('id', 'init-link').attr('d', (0, _treeUtils.makeLink)({ x: root.x, y: root.y0 }, root, 15));
 
 	      this.innerG.append('text').attr('dx', 20).attr('dy', '-0.3em').append('textPath').attr('class', 'textpath').attr('xlink:href', '#init-link').text('init');
 	    }
