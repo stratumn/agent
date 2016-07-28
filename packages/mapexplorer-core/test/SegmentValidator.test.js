@@ -1,5 +1,8 @@
 import SegmentValidator from '../src/SegmentValidator';
 import loadFixture from './utils/loadFixture';
+import request from 'superagent';
+import nocker from 'superagent-nock';
+const nock = nocker(request);
 
 describe('SegmentValidator', () => {
 
@@ -13,6 +16,14 @@ describe('SegmentValidator', () => {
     new SegmentValidator(segment).validate(errors);
     return errors;
   }
+
+  beforeEach(() => {
+    nock('https://api.blockcypher.com')
+      .get('/v1/btc/main/txs/2a443211e871f58a6ee5a93e62ce36cac2ddfc0f05a6bec1e7b11aa8d5e4cf38')
+      .reply(200, loadFixture('2a443211e871f58a6ee5a93e62ce36cac2ddfc0f05a6bec1e7b11aa8d5e4cf38'))
+      .get('/v1/btc/main/txs/d25a285b50204e1b0ca7472035d73cae93faea06ddac120800dd6aacca006688')
+      .reply(200, loadFixture('d25a285b50204e1b0ca7472035d73cae93faea06ddac120800dd6aacca006688'));
+  });
 
   describe('With a valid segment', () => {
     const validSegment = loadFixture('validSegment');

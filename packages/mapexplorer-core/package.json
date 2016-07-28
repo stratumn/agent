@@ -57,6 +57,7 @@
     "rimraf": "^2.5.2",
     "should": "^8.2.2",
     "superagent": "^2.1.0",
+    "superagent-nock": "^0.1.1",
     "webpack": "^1.12.14"
   },
   "dependencies": {
