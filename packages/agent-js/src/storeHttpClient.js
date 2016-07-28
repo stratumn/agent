@@ -1,4 +1,4 @@
-import superagent from 'superagent';
+import request from 'superagent';
 import makeQueryString from './makeQueryString';
 
 function handleResponse(resolve, reject, err, res) {
@@ -22,14 +22,9 @@ function handleResponse(resolve, reject, err, res) {
 /**
  * Creates a store HTTP client.
  * @param {string} url - the base URL of the store
- * @param {function} [request] - a request function (superagent or supertest)
  * @returns {Client} a store HTTP client
  */
-export default function storeHttpClient(url, request) {
-  /*eslint-disable*/
-  request = request || superagent;
-  /*eslint-enable*/
-
+export default function storeHttpClient(url) {
   return {
     /**
      * Gets information about the store.
@@ -38,7 +33,7 @@ export default function storeHttpClient(url, request) {
     getInfo() {
       return new Promise((resolve, reject) => {
         request
-          .get(url)
+          .get(`${url}/`)
           .end(handleResponse.bind(null, resolve, reject));
       });
     },
@@ -78,7 +73,7 @@ export default function storeHttpClient(url, request) {
     deleteSegment(linkHash) {
       return new Promise((resolve, reject) => {
         request
-          .delete(`${url}/segments/${linkHash}`)
+          .del(`${url}/segments/${linkHash}`)
           .end(handleResponse.bind(null, resolve, reject));
       });
     },

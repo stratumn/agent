@@ -126,12 +126,6 @@ export default function httpServer(agent, opts = {}) {
       .catch(next);
   });
 
-  app.use((req, res, next) => {
-    const err = new Error('not found');
-    err.status = 404;
-    next(err);
-  });
-
   // Legacy
   app.get('/branches/:hash', (req, res, next) => {
     /*eslint-disable*/
