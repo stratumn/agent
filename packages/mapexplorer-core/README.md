@@ -1,4 +1,8 @@
-# Core library for building Map Explorer components
+# MapExplorer Core
+
+[![build status](https://travis-ci.org/stratumn/mapexplorer-core.svg?branch=master)](https://travis-ci.org/stratumn/mapexplorer-core.svg?branch=master)
+
+Core library for building Map Explorer components
 
 ## Installation
 
