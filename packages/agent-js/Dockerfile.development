@@ -2,7 +2,7 @@ FROM node:6
 
 RUN mkdir /agent
 
-RUN npm install -g nodemon mocha
+RUN npm install -g mocha@^2.5.3 nodemon@^1.9.2 should@^10.0.0
 
 ONBUILD ADD package.json /agent/package.json
 ONBUILD RUN cd /agent; npm install
