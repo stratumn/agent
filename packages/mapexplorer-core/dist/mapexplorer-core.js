@@ -293,9 +293,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var origin = d.parent && d.parent.x0 ? d.parent : root;
 	        return (0, _treeUtils.translate)(origin.x0, origin.y0);
 	      }).on('click', function onClick(d) {
+	        var _this = this;
+
 	        d3.selectAll('g.node').classed('selected', false);
 	        d3.select(this).classed('selected', true);
-	        options.onclick(d);
+	        options.onclick(d, function () {
+	          _this.innerG.selectAll('g.node.selected').classed('selected', false);
+	        });
 	      });
 
 	      nodeEnter.append('polygon').attr('points', '0,' + polygon.height / 4 + ' ' + polygon.width / 2 + ',' + polygon.height / 2 + ' ' + (polygon.width + ',' + polygon.height / 4 + ' ' + polygon.width + ',' + -polygon.height / 4 + ' ') + (polygon.width / 2 + ',' + -polygon.height / 2 + ' 0,' + -polygon.height / 4));

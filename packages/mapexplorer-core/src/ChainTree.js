@@ -68,7 +68,9 @@ export default class ChainTree {
           .classed('selected', false);
         d3.select(this)
           .classed('selected', true);
-        options.onclick(d);
+        options.onclick(d, () => {
+          this.innerG.selectAll('g.node.selected').classed('selected', false);
+        });
       });
 
     nodeEnter.append('polygon').attr('points',
