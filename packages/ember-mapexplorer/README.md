@@ -1,5 +1,7 @@
 # Ember MapExplorer
 
+[![build status](https://travis-ci.org/stratumn/ember-mapexplorer.svg?branch=master)](https://travis-ci.org/stratumn/ember-mapexplorer.svg?branch=master)
+
 Ember addon that provides map-explorer, a component that displays a Chain Map
 
 ## Installation
