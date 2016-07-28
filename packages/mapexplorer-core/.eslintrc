@@ -5,6 +5,11 @@
     "mocha": true,
     "node": true
   },
+  "parserOptions":{
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
   "rules": {
     "comma-dangle": 0,
     "no-console": 0,
