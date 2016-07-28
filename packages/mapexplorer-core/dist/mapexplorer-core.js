@@ -139,14 +139,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var defaultOptions = {
 	  withArgs: false,
+	  duration: 750,
+	  verticalSpacing: 1.2,
 	  getSegmentText: function getSegmentText(node) {
 	    return (0, _compactHash2.default)(node.data.meta.linkHash);
 	  },
 	  getLinkText: function getLinkText(node) {
 	    return node.target.data.link.meta.action + (this.withArgs ? '(' + node.target.data.link.meta.arguments.join(', ') + ')' : '');
 	  },
-
-	  duration: 750,
 	  onclick: function onclick() {}
 	};
 
@@ -276,7 +276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var branchesCount = nodes.reduce(function (pre, cur) {
 	        return pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0);
 	      }, 1);
-	      var computedHeight = branchesCount * polygon.height * 1.5;
+	      var computedHeight = branchesCount * polygon.height * options.verticalSpacing;
 
 	      root.x0 = computedHeight / 2;
 	      root.y0 = 0;

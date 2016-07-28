@@ -43,9 +43,10 @@ export default class ChainTree {
     const computedWidth = Math.max(maxDepth * (polygon.width + arrowLength), 500);
 
     const branchesCount = nodes.reduce(
-      (pre, cur) => pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0), 1
+      (pre, cur) => pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0),
+      1
     );
-    const computedHeight = branchesCount * polygon.height * 1.5;
+    const computedHeight = branchesCount * polygon.height * options.verticalSpacing;
 
     root.x0 = computedHeight / 2;
     root.y0 = 0;

@@ -5,6 +5,8 @@ import StratumnSDK from 'stratumn-sdk';
 
 const defaultOptions = {
   withArgs: false,
+  duration: 750,
+  verticalSpacing: 1.2,
   getSegmentText(node) {
     return compactHash(node.data.meta.linkHash);
   },
@@ -12,7 +14,6 @@ const defaultOptions = {
     return node.target.data.link.meta.action +
       (this.withArgs ? `(${node.target.data.link.meta.arguments.join(', ')})` : '');
   },
-  duration: 750,
   onclick() {}
 };
 
