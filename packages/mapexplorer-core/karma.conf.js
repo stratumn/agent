@@ -1,8 +1,8 @@
 var path = require('path');
 var webpack = require('webpack');
 
-module.exports =
-  config => config.set({
+module.exports = function(config) {
+  config.set({
     // base path, that will be used to resolve files and exclude
     basePath: '',
 
@@ -32,10 +32,12 @@ module.exports =
       ],
       module: {
         loaders: [
-          { test: /\.js$/, loader: 'babel', query: {
+          {
+            test: /\.js$/, loader: 'babel', query: {
             presets: ['es2015']
-          } },
-          { loader: 'json', test: /\.json$/ }
+          }
+          },
+          {loader: 'json', test: /\.json$/}
         ]
       },
       node: {
@@ -87,4 +89,5 @@ module.exports =
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
     singleRun: true
-  });
+  })
+};
