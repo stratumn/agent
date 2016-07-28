@@ -34,6 +34,122 @@ var MapexplorerCore = require('mapexplorer-core');
 $ bower install mapexplorer-core
 ```
 
+## Usage
+
+### Display a map explorer
+
+```javascript
+const builder = new MapexplorerCore.ChainTreeBuilder(element, options);
+
+// with an application and a mapId
+builder.build({
+  id: myMapId,
+  application: myApplication
+});
+
+// with a chainscript (JSON string of array of segment as POJO)
+builder.build({
+  chainscript: myChainscript
+});
+```
+#### Available options
+
+##### withArgs
+```
+Default: false
+```
+
+Display action arguments on the paths between segments.
+
+##### duration
+```
+Default: 750
+```
+
+Transition duration
+
+##### verticalSpacing
+```
+Default: 1.2
+```
+Vertical space factor between segment polygon
+
+##### getSegmentText(node)
+``` 
+Default:  node => compactHash(node.data.meta.linkHash)
+```
+
+Function that returns the text displayed on a segment.
+
+##### getLinkText(node)
+``` 
+Default: 
+  function(node) {
+    return node.target.data.link.meta.action +
+        (this.withArgs ? `(${node.target.data.link.meta.arguments.join(', ')})` : '');
+  }
+```      
+
+Function that return the text displayed on a path between segments.
+
+##### onclick()
+```
+Default: noop
+```
+
+Event handler called when the user clicks on a segment.
+
+### Display a merkle path tree
+
+```javascript
+const merklePathTree = new MapexplorerCore.MerklePathTree(element);
+merklePathTree.display(merklePath);
+```
+
+where `merklePath` looks like:
+
+```
+[
+    {
+      "left": "14b9468d3b8ca51b45e27ecddc5875a48902a74d1182fed9693c1531dfcfd56c",
+      "right": "d15e1460234292852400271530be35cabe822eae5a4ed3376728d5acbbf04f27",
+      "parent": "3bfbc00bfe7aa149e17029e8bb08671636c1c1c16aa5addfc307d6c937134620"
+    },
+    {
+      "left": "3bfbc00bfe7aa149e17029e8bb08671636c1c1c16aa5addfc307d6c937134620",
+      "right": "9fd68d3335eabcad5777b4c717af6de3c51f4aa0af72c26aaf866cde176c96f1",
+      "parent": "8f16bfbe247be6ca881f3d9e462bc154f099298e26cd53662ef7119e1e60a887"
+    },
+    ...
+]
+```
+
+### Validate a chainscript
+
+```javascript
+new MapexplorerCore.ChainValidator(JSON.parse(chainscript)).validate()
+```
+
+Returns a Promise that resolves to an error object such as:
+
+```
+{
+      linkHash: [Promise, ...],
+      stateHash: [Promise, ...],
+      merklePath: [Promise, ...],
+      fossil: [Promise, ...]
+}
+```
+
+Each promise, in each array of each category resolves to an error string if an inconsistency has been detected. It resolves to null otherwise.
+
+Errors can be retrieved with (for instance):
+
+```javascript
+Promise.all(errors.linkHash).
+  then(err => err.filter(Boolean));
+```
+
 ## Development
 
 Install dependencies:
