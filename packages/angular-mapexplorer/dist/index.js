@@ -163,13 +163,11 @@
 	    controllerAs: 'me',
 	    link: function link(scope, element, attrs, controller) {
 	      var options = angular.isDefined(scope.options) ? scope.options : {};
-	      options.onclick = function (d) {
-	        d3.selectAll('g.node').classed('selected', false);
-	        d3.select(this).classed('selected', true);
-	        controller.show(d.data, d3.event);
+	      options.onclick = function (d, onHide) {
+	        controller.show(d.data, onHide);
 	        scope.$apply();
 	      };
-	      var builder = new MapexplorerCore.ChainMapBuilder(element, options);
+	      var builder = new MapexplorerCore.ChainTreeBuilder(element, options);
 
 	      var fn = debounce(function () {
 	        builder.build({
@@ -223,8 +221,9 @@
 
 	  _createClass(MapExplorer, [{
 	    key: 'show',
-	    value: function show(segment) {
+	    value: function show(segment, onHide) {
 	      this.segment = segment;
+	      this.onHide = onHide;
 	      this.$scope.$parent.onSegmentShow(this.$scope.name);
 	    }
 	  }, {
@@ -237,7 +236,7 @@
 	    value: function close() {
 	      this.segment = null;
 	      this.$scope.$parent.onSegmentHide(this.$scope.name);
-	      d3.selectAll('g.node.selected').classed('selected', false);
+	      this.onHide();
 	    }
 	  }]);
 
