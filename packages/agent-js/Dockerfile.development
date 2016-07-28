@@ -2,6 +2,8 @@ FROM node:6
 
 RUN mkdir /agent
 
+RUN npm install -g nodemon mocha
+
 ONBUILD ADD package.json /agent/package.json
 ONBUILD RUN cd /agent; npm install
 
