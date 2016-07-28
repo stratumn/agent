@@ -56,9 +56,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _ChainMapBuilder = __webpack_require__(1);
+	var _ChainTreeBuilder = __webpack_require__(1);
 
-	var _ChainMapBuilder2 = _interopRequireDefault(_ChainMapBuilder);
+	var _ChainTreeBuilder2 = _interopRequireDefault(_ChainTreeBuilder);
 
 	var _ChainTree = __webpack_require__(2);
 
@@ -91,7 +91,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = {
-	  ChainMapBuilder: _ChainMapBuilder2.default,
+	  ChainTreeBuilder: _ChainTreeBuilder2.default,
 	  ChainTree: _ChainTree2.default,
 	  ChainValidator: _ChainValidator2.default,
 	  SegmentValidator: _SegmentValidator2.default,
@@ -150,15 +150,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  onclick: function onclick() {}
 	};
 
-	var ChainMapBuilder = function () {
-	  function ChainMapBuilder(element, options) {
-	    _classCallCheck(this, ChainMapBuilder);
+	var ChainTreeBuilder = function () {
+	  function ChainTreeBuilder(element, options) {
+	    _classCallCheck(this, ChainTreeBuilder);
 
 	    options = _extends({}, defaultOptions, options);
 	    this.chainTree = new _ChainTree2.default(element, options);
 	  }
 
-	  _createClass(ChainMapBuilder, [{
+	  _createClass(ChainTreeBuilder, [{
 	    key: 'build',
 	    value: function build(map) {
 	      var _this = this;
@@ -196,10 +196,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }]);
 
-	  return ChainMapBuilder;
+	  return ChainTreeBuilder;
 	}();
 
-	exports.default = ChainMapBuilder;
+	exports.default = ChainTreeBuilder;
 
 /***/ },
 /* 2 */

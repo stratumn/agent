@@ -16,7 +16,7 @@ const defaultOptions = {
   onclick() {}
 };
 
-export default class ChainMapBuilder {
+export default class ChainTreeBuilder {
   constructor(element, options) {
     options = {...defaultOptions, ...options};
     this.chainTree = new ChainTree(element, options);

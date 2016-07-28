@@ -1,4 +1,4 @@
-import ChainMapBuilder from './ChainMapBuilder';
+import ChainTreeBuilder from './ChainTreeBuilder';
 import ChainTree from './ChainTree';
 import ChainValidator from './ChainValidator';
 import SegmentValidator from './SegmentValidator';
@@ -8,7 +8,7 @@ import parseChainscript from './parseChainscript';
 import resolveLinks from './resolveLinks';
 
 module.exports = {
-  ChainMapBuilder,
+  ChainTreeBuilder,
   ChainTree,
   ChainValidator,
   SegmentValidator,
