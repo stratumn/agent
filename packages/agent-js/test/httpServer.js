@@ -47,7 +47,6 @@ function testDeepEquals(req, status, body) {
   });
 }
 
-// TODO: tests
 describe('HttpServer()', () => {
   describe('GET "/"', () => {
     it('renders the agent info', () =>
