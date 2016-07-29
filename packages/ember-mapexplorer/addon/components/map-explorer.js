@@ -1,4 +1,3 @@
-/* global d3 */
 /* global MapexplorerCore */
 import Ember from 'ember';
 import layout from '../templates/components/map-explorer';
