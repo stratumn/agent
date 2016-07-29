@@ -385,7 +385,7 @@
 	angular.module('stratumn.angular-mapexplorer').run(['$templateCache', function ($templateCache) {
 	  'use strict';
 
-	  $templateCache.put('views/mapexplorer.html', "<div class=\"segment-container\" ng-show=\"me.segment\" ng-include=\" 'views/segment.html' \" flex></div>\n" + "<svg></svg>\n");
+	  $templateCache.put('views/mapexplorer.html', "<div class=\"segment-container\" ng-show=\"me.segment\" ng-include=\" 'views/segment.html' \" flex></div>\n" + "<div class=\"scroll\">\n" + "    <svg></svg>\n" + "</div>\n");
 
 	  $templateCache.put('views/mapvalidator.html', "<h2>Validations</h2>\n" + "<ul>\n" + "    <st-promise-loader title=\" 'Link Hashes' \" loading=\"loading\" errors=\"errors.linkHash\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'State Hashes' \" loading=\"loading\" errors=\"errors.stateHash\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'Merkle Path' \" loading=\"loading\" errors=\"errors.merklePath\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'Fossils' \" loading=\"loading\" errors=\"errors.fossil\"></st-promise-loader>\n" + "</ul>\n");
 
