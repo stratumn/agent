@@ -5,7 +5,6 @@ const actions = {
   action(d) { this.state.d = d; this.append(); }
 };
 
-// TODO: tests
 describe('#getAgentInfo()', () => {
   it('returns the agent info', () => {
     getAgentInfo(actions).should.deepEqual({
