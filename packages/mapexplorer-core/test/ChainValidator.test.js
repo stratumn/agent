@@ -17,4 +17,14 @@ describe('ChainValidator', () => {
     });
   });
 
+  describe('With only a segment', (done) => {
+    const validSegment = loadFixture('validSegment');
+
+    it('validates the linkHash', () => {
+      Object.values(validate(validSegment)).forEach(type => {
+        Promise.all(type).then(done).catch(done);
+      });
+    });
+  });
+
 });

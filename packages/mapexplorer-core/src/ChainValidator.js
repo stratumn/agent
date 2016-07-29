@@ -1,9 +1,10 @@
 import SegmentValidator from './SegmentValidator';
 import resolveLinks from './resolveLinks';
+import wrap from './wrap';
 
 export default class ChainValidator {
   constructor(chainscript) {
-    this.segments = chainscript;
+    this.segments = wrap(chainscript);
     this.errors = {
       linkHash: [],
       stateHash: [],

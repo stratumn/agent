@@ -1,6 +1,7 @@
 import ChainTree from './ChainTree';
 import compactHash from './compactHash';
 import resolveLinks from './resolveLinks';
+import wrap from './wrap';
 import StratumnSDK from 'stratumn-sdk';
 
 const defaultOptions = {
@@ -24,17 +25,13 @@ export default class ChainTreeBuilder {
 
   build(map) {
     if (map.id && map.application) {
-      this._load(map).then(chainscript => this.chainTree.display(chainscript));
+      return this._load(map).then(chainscript => this.chainTree.display(chainscript));
     } else if (map.chainscript && map.chainscript.length) {
       let chainscript = map.chainscript;
-      try {
-        if (typeof(chainscript) !== 'object') {
-          chainscript = JSON.parse(chainscript);
-        }
-        resolveLinks(chainscript).then(res => this.chainTree.display(res));
-      } catch (e) {
-        console.log(e);
+      if (typeof(chainscript) !== 'object') {
+        chainscript = JSON.parse(chainscript);
       }
+      return resolveLinks(wrap(chainscript)).then(res => this.chainTree.display(res));
     }
   }
 
