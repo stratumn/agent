@@ -121,32 +121,32 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	stMapExplorer.$inject = ['debounce']; /**
-	                                       @toc
-	                                      
-	                                       @param {Object} scope (attrs that must be defined on the scope (i.e. in the controller) -
-	                                       they can't just be defined in the partial html).
-	                                       REMEMBER: use snake-case when setting these on the partial!
-	                                       TODO
-	                                      
-	                                       @param {Object} attrs REMEMBER: use snake-case when setting these on the partial!
-	                                       i.e. my-attr='1' NOT myAttr='1'
-	                                       TODO
-	                                      
-	                                       @dependencies
-	                                       TODO
-	                                      
-	                                       @usage
-	                                       partial / html:
-	                                       TODO
-	                                      
-	                                       controller / js:
-	                                       TODO
-	                                      
-	                                       //end: usage
-	                                       */
+	stMapExplorer.$inject = ['$q', 'debounce']; /**
+	                                             @toc
+	                                            
+	                                             @param {Object} scope (attrs that must be defined on the scope (i.e. in the controller) -
+	                                             they can't just be defined in the partial html).
+	                                             REMEMBER: use snake-case when setting these on the partial!
+	                                             TODO
+	                                            
+	                                             @param {Object} attrs REMEMBER: use snake-case when setting these on the partial!
+	                                             i.e. my-attr='1' NOT myAttr='1'
+	                                             TODO
+	                                            
+	                                             @dependencies
+	                                             TODO
+	                                            
+	                                             @usage
+	                                             partial / html:
+	                                             TODO
+	                                            
+	                                             controller / js:
+	                                             TODO
+	                                            
+	                                             //end: usage
+	                                             */
 
-	function stMapExplorer(debounce) {
+	function stMapExplorer($q, debounce) {
 
 	  return {
 	    restrict: 'E',
@@ -170,10 +170,12 @@
 	      var builder = new MapexplorerCore.ChainTreeBuilder(element, options);
 
 	      var fn = debounce(function () {
-	        builder.build({
+	        $q.when(builder.build({
 	          id: scope.mapId,
 	          application: scope.application,
 	          chainscript: scope.chainscript
+	        })).catch(function (error) {
+	          return controller.error = error.message;
 	        });
 	      }, 100);
 
@@ -271,16 +273,14 @@
 	    link: function link(scope) {
 	      var fn = debounce(function () {
 	        if (angular.isDefined(scope.chainscript)) {
-	          try {
-	            scope.loading = true;
-	            $q.when(new MapexplorerCore.ChainValidator(JSON.parse(scope.chainscript)).validate()).then(function (errors) {
-	              scope.errors = errors;
-	              scope.loading = false;
-	            });
-	          } catch (e) {
+	          scope.loading = true;
+	          $q.when(new MapexplorerCore.ChainValidator(scope.chainscript).validate()).then(function (errors) {
+	            scope.errors = errors;
 	            scope.loading = false;
-	            console.log(e);
-	          }
+	          }).catch(function (error) {
+	            scope.error = error.message;
+	            scope.loading = false;
+	          });
 	        }
 	      }, 100);
 
@@ -385,7 +385,7 @@
 	angular.module('stratumn.angular-mapexplorer').run(['$templateCache', function ($templateCache) {
 	  'use strict';
 
-	  $templateCache.put('views/mapexplorer.html', "<div class=\"segment-container\" ng-show=\"me.segment\" ng-include=\" 'views/segment.html' \" flex></div>\n" + "<div class=\"scroll\">\n" + "    <svg></svg>\n" + "</div>\n");
+	  $templateCache.put('views/mapexplorer.html', "<span class=\"error\" ng-show=\"me.error\">{{me.error}}</span>\n" + "<div class=\"segment-container\" ng-show=\"me.segment\" ng-include=\" 'views/segment.html' \" flex></div>\n" + "<div class=\"scroll\">\n" + "    <svg></svg>\n" + "</div>\n");
 
 	  $templateCache.put('views/mapvalidator.html', "<h2>Validations</h2>\n" + "<ul>\n" + "    <st-promise-loader title=\" 'Link Hashes' \" loading=\"loading\" errors=\"errors.linkHash\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'State Hashes' \" loading=\"loading\" errors=\"errors.stateHash\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'Merkle Path' \" loading=\"loading\" errors=\"errors.merklePath\"></st-promise-loader>\n" + "    <st-promise-loader title=\" 'Fossils' \" loading=\"loading\" errors=\"errors.fossil\"></st-promise-loader>\n" + "</ul>\n");
 
