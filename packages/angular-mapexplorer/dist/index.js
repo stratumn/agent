@@ -170,6 +170,7 @@
 	      var builder = new MapexplorerCore.ChainTreeBuilder(element, options);
 
 	      var fn = debounce(function () {
+	        controller.error = null;
 	        $q.when(builder.build({
 	          id: scope.mapId,
 	          application: scope.application,
@@ -272,6 +273,7 @@
 	    templateUrl: 'views/mapvalidator.html',
 	    link: function link(scope) {
 	      var fn = debounce(function () {
+	        scope.error = null;
 	        if (angular.isDefined(scope.chainscript)) {
 	          scope.loading = true;
 	          $q.when(new MapexplorerCore.ChainValidator(scope.chainscript).validate()).then(function (errors) {
