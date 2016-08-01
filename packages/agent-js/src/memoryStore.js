@@ -12,9 +12,11 @@ export default function memoryStore() {
      */
     getInfo() {
       return Promise.resolve({
-        name: 'memory',
-        description: 'Stratumn memory store',
-        version: '0.1.0'
+        adapter: {
+          name: 'memory',
+          description: 'Stratumn memory store',
+          version: '0.1.0'
+        }
       });
     },
 
