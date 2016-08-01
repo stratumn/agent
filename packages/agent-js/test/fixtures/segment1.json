@@ -1,0 +1,14 @@
+{
+  "link": {
+    "state": {
+      "value": "one"
+    },
+    "meta": {
+      "mapId": "one",
+      "priority": 1
+    }
+  },
+  "meta": {
+    "linkHash": "segment1"
+  }
+}

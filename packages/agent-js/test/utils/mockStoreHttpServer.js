@@ -1,8 +1,3 @@
-import path from 'path';
-import fs from 'fs';
-
-const segment = JSON.parse(fs.readFileSync(path.resolve(__dirname, './fixtures/segment.json')));
-
 export default function mockStore(mock) {
   mock.get('http://localhost', () => ({
     status: 200,
@@ -20,12 +15,6 @@ export default function mockStore(mock) {
         status: 404,
         statusCode: 404,
         message: 'not found'
-      };
-    }
-    if (req.params.linkHash === 'full') {
-      return {
-        status: 200,
-        body: segment
       };
     }
     return {

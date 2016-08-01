@@ -1,28 +1,26 @@
-import request from 'superagent';
-import mocker from 'superagent-mocker';
 import create from '../src/create';
-import storeHttpClient from '../src/storeHttpClient';
+import memoryStore from '../src/memoryStore';
 import hashJson from '../src/hashJson';
-import mockStore from './mockStore';
-
-mockStore(mocker(request));
-
-const storeClient = storeHttpClient('http://localhost');
+import { memoryStoreInfo } from './fixtures';
 
 const actions = {
   init(a, b, c) { this.append({ a, b, c }); },
   action(d) { this.state.d = d; this.append(); }
 };
 
-const agent = create(actions, storeClient, { agentUrl: 'http://localhost' });
-
 describe('Agent', () => {
+  let agent;
+
+  beforeEach(() => {
+    agent = create(actions, memoryStore(), { agentUrl: 'http://localhost' });
+  });
+
   describe('#getInfo()', () => {
     it('resolves with the agent info', () =>
       agent
         .getInfo()
         .then(info => info.should.deepEqual({
-          storeInfo: { name: 'mock' },
+          storeInfo: memoryStoreInfo,
           agentInfo: {
             functions: {
               init: { args: ['a', 'b', 'c'] },
@@ -54,17 +52,22 @@ describe('Agent', () => {
   describe('#createSegment()', () => {
     it('resolves with the new segment', () =>
       agent
-        .createSegment('full', 'action', 4)
-        .then(segment => {
-          segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
-          segment.link.meta.stateHash.should.be.exactly(hashJson({ a: 1, b: 2, c: 3, d: 4 }));
-          segment.link.meta.action.should.be.exactly('action');
-          segment.link.meta.arguments.should.deepEqual([4]);
-          segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
-          segment.meta.evidence.should.deepEqual({ state: 'DISABLED' });
-          segment.meta.agentUrl.should.be.exactly('http://localhost');
-          segment.meta.segmentUrl.should.be.exactly(`http://localhost/segments/${segment.meta.linkHash}`);
-        })
+        .createMap(1, 2, 3)
+        .then(segment1 => (
+          agent
+            .createSegment(segment1.meta.linkHash, 'action', 4))
+            .then(segment2 => {
+              segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
+              segment2.link.meta.stateHash.should.be.exactly(hashJson({ a: 1, b: 2, c: 3, d: 4 }));
+              segment2.link.meta.action.should.be.exactly('action');
+              segment2.link.meta.arguments.should.deepEqual([4]);
+              segment2.link.meta.prevLinkHash.should.be.exactly(segment1.meta.linkHash);
+              segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
+              segment2.meta.evidence.should.deepEqual({ state: 'DISABLED' });
+              segment2.meta.agentUrl.should.be.exactly('http://localhost');
+              segment2.meta.segmentUrl.should.be.exactly(`http://localhost/segments/${segment2.meta.linkHash}`);
+            })
+        )
     );
   });
 });

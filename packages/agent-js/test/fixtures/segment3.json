@@ -1,0 +1,17 @@
+{
+  "link": {
+    "state": {
+      "value": "three"
+    },
+    "meta": {
+      "mapId": "two",
+      "tags": [
+        "two"
+      ],
+      "priority": 3
+    }
+  },
+  "meta": {
+    "linkHash": "segment3"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "link": {
+    "state": {
+      "value": "two"
+    },
+    "meta": {
+      "mapId": "one",
+      "prevLinkHash": "segment1",
+      "tags": [
+        "one",
+        "two"
+      ],
+      "priority": 2
+    }
+  },
+  "meta": {
+    "linkHash": "segment2"
+  }
+}

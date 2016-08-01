@@ -1,24 +1,13 @@
-import request from 'superagent';
-import mocker from 'superagent-mocker';
 import supertest from 'supertest';
 import httpServer from '../src/httpServer';
 import create from '../src/create';
-import storeHttpClient from '../src/storeHttpClient';
+import memoryStore from '../src/memoryStore';
 import hashJson from '../src/hashJson';
-import mockStore from './mockStore';
-
-mockStore(mocker(request));
-
-const storeClient = storeHttpClient('http://localhost');
 
 const actions = {
   init(a, b, c) { this.append({ a, b, c }); },
   action(d) { this.state.d = d; this.append(); }
 };
-
-const agent = create(actions, storeClient, { agentUrl: 'http://localhost' });
-
-const server = httpServer(agent);
 
 function testFn(req, fn) {
   return new Promise((resolve, reject) => {
@@ -48,6 +37,14 @@ function testDeepEquals(req, status, body) {
 }
 
 describe('HttpServer()', () => {
+  let agent;
+  let server;
+
+  beforeEach(() => {
+    agent = create(actions, memoryStore(), { agentUrl: 'http://localhost' });
+    server = httpServer(agent);
+  });
+
   describe('GET "/"', () => {
     it('renders the agent info', () =>
       agent
@@ -78,35 +75,45 @@ describe('HttpServer()', () => {
 
   describe('POST "/segments/:linkHash/:action"', () => {
     it('renders the new segment', () => {
-      const req = supertest(server).post('/segments/full/action').send([4]);
-      return testFn(req, (err, res) => {
-        if (err) { throw err; }
-        res.status.should.be.exactly(200);
-        const segment = res.body;
-        segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
-        segment.link.meta.stateHash.should.be.exactly(hashJson({ a: 1, b: 2, c: 3, d: 4 }));
-        segment.link.meta.action.should.be.exactly('action');
-        segment.link.meta.arguments.should.deepEqual([4]);
-        segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
-        segment.meta.evidence.should.deepEqual({ state: 'DISABLED' });
-        segment.meta.agentUrl.should.be.exactly('http://localhost');
-        segment.meta.segmentUrl.should.be.exactly(`http://localhost/segments/${segment.meta.linkHash}`);
-      });
+      agent
+        .createMap(1, 2, 3)
+        .then(segment1 => {
+          const req = supertest(server)
+            .post(`/segments/${segment1.meta.linkHash}/action`).send([4]);
+          return testFn(req, (err, res) => {
+            if (err) { throw err; }
+            res.status.should.be.exactly(200);
+            const segment2 = res.body;
+            segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
+            segment2.link.meta.stateHash.should.be.exactly(hashJson({ a: 1, b: 2, c: 3, d: 4 }));
+            segment2.link.meta.action.should.be.exactly('action');
+            segment2.link.meta.arguments.should.deepEqual([4]);
+            segment2.link.meta.prevLinkHash.should.be.exactly(segment1.link.meta.linkHash);
+            segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
+            segment2.meta.evidence.should.deepEqual({ state: 'DISABLED' });
+            segment2.meta.agentUrl.should.be.exactly('http://localhost');
+            segment2.meta.segmentUrl.should.be.exactly(`http://localhost/segment2s/${segment2.meta.linkHash}`);
+          });
+        });
     });
   });
 
   describe('GET "/segments/:linkHash"', () => {
     it('renders the segment', () =>
       agent
-        .getSegment('full')
-        .then(segment => testDeepEquals(supertest(server).get('/segments/full'), 200, segment))
+        .createMap(1, 2, 3)
+        .then(segment =>
+          testDeepEquals(supertest(server).get(`/segments/${segment.meta.linkHash}`), 200, segment)
+        )
     );
   });
 
   describe('GET "/segments"', () => {
     it('renders the segments', () =>
       agent
-        .findSegments({ limit: 20 })
+        .createMap(1, 2, 3)
+        .then(segment => agent.createSegment(segment.meta.linkHash, 'action', 4))
+        .then(() => agent.findSegments({ limit: 20 }))
         .then(segments =>
           testDeepEquals(supertest(server).get('/segments?limit=20'), 200, segments)
         )
@@ -116,7 +123,10 @@ describe('HttpServer()', () => {
   describe('GET "/maps"', () => {
     it('renders the map IDs', () =>
       agent
-        .getMapIds({ limit: 20 })
+        .createMap(1, 2, 3)
+        .then(() => agent.createMap(4, 5, 6))
+        .then(() => agent.createMap(7, 8, 9))
+        .then(() => agent.getMapIds({ limit: 20 }))
         .then(mapIds => testDeepEquals(supertest(server).get('/maps?limit=20'), 200, mapIds))
     );
   });
@@ -145,35 +155,45 @@ describe('HttpServer()', () => {
 
   describe('[DEPRECATED] POST "/links/:linkHash/:action"', () => {
     it('renders the new segment', () => {
-      const req = supertest(server).post('/links/full/action').send([4]);
-      return testFn(req, (err, res) => {
-        if (err) { throw err; }
-        res.status.should.be.exactly(200);
-        const segment = res.body;
-        segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
-        segment.link.meta.stateHash.should.be.exactly(hashJson({ a: 1, b: 2, c: 3, d: 4 }));
-        segment.link.meta.action.should.be.exactly('action');
-        segment.link.meta.arguments.should.deepEqual([4]);
-        segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
-        segment.meta.evidence.should.deepEqual({ state: 'DISABLED' });
-        segment.meta.agentUrl.should.be.exactly('http://localhost');
-        segment.meta.segmentUrl.should.be.exactly(`http://localhost/segments/${segment.meta.linkHash}`);
-      });
+      agent
+        .createMap(1, 2, 3)
+        .then(segment1 => {
+          const req = supertest(server)
+            .post(`/links/${segment1.meta.linkHash}/action`).send([4]);
+          return testFn(req, (err, res) => {
+            if (err) { throw err; }
+            res.status.should.be.exactly(200);
+            const segment2 = res.body;
+            segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
+            segment2.link.meta.stateHash.should.be.exactly(hashJson({ a: 1, b: 2, c: 3, d: 4 }));
+            segment2.link.meta.action.should.be.exactly('action');
+            segment2.link.meta.arguments.should.deepEqual([4]);
+            segment2.link.meta.prevLinkHash.should.be.exactly(segment1.link.meta.linkHash);
+            segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
+            segment2.meta.evidence.should.deepEqual({ state: 'DISABLED' });
+            segment2.meta.agentUrl.should.be.exactly('http://localhost');
+            segment2.meta.segmentUrl.should.be.exactly(`http://localhost/segment2s/${segment2.meta.linkHash}`);
+          });
+        });
     });
   });
 
   describe('[DEPRECATED] GET "/links/:linkHash"', () => {
     it('renders the segment', () =>
       agent
-        .getSegment('full')
-        .then(segment => testDeepEquals(supertest(server).get('/links/full'), 200, segment))
+        .createMap(1, 2, 3)
+        .then(segment =>
+          testDeepEquals(supertest(server).get(`/links/${segment.meta.linkHash}`), 200, segment)
+        )
     );
   });
 
   describe('[DEPRECATED] GET "/links"', () => {
     it('renders the segments', () =>
       agent
-        .findSegments({ limit: 20 })
+        .createMap(1, 2, 3)
+        .then(segment => agent.createSegment(segment.meta.linkHash, 'action', 4))
+        .then(() => agent.findSegments({ limit: 20 }))
         .then(segments =>
           testDeepEquals(supertest(server).get('/links?limit=20'), 200, segments)
         )
@@ -183,16 +203,36 @@ describe('HttpServer()', () => {
   describe('[DEPRECATED] GET "/maps/:id"', () => {
     it('renders the segments', () =>
       agent
-        .findSegments({ mapId: 'test' })
-        .then(segments => testDeepEquals(supertest(server).get('/maps/test'), 200, segments))
+        .createMap(1, 2, 3)
+        .then(segment => (
+          agent
+            .createMap(4, 5, 6))
+            .then(() => agent.createSegment(segment.meta.linkHash, 'action', 10))
+            .then(() => agent.findSegments({ mapId: segment.link.meta.mapId }))
+            .then(segments =>
+              testDeepEquals(
+                supertest(server).get(`/maps/${segment.link.meta.mapId}`), 200, segments
+              )
+            )
+        )
     );
   });
 
   describe('[DEPRECATED] GET "/branches/:linkHash"', () => {
     it('renders the segments', () =>
       agent
-        .findSegments({ prevLinkHash: 'test' })
-        .then(segments => testDeepEquals(supertest(server).get('/branches/test'), 200, segments))
+        .createMap(1, 2, 3)
+        .then(segment => (
+          agent
+            .createMap(4, 5, 6))
+            .then(() => agent.createSegment(segment.meta.linkHash, 'action', 10))
+            .then(() => agent.findSegments({ prevLinkHash: segment.meta.linkHash }))
+            .then(segments =>
+              testDeepEquals(
+                supertest(server).get(`/branches/${segment.meta.linkHash}`), 200, segments
+              )
+            )
+        )
     );
   });
 });

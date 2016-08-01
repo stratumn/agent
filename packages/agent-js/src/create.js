@@ -76,6 +76,12 @@ export default function create(actions, storeClient, opts = {}) {
      * @returns {Promise} a promise that resolve with the segment
      */
     createSegment(prevLinkHash, action, ...args) {
+      if (!actions[action]) {
+        const err = new Error('not found');
+        err.status = 404;
+        return Promise.reject(err);
+      }
+
       return storeClient
         .getSegment(prevLinkHash)
         .then(segment => {

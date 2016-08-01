@@ -1,9 +1,9 @@
 import request from 'superagent';
 import mocker from 'superagent-mocker';
 import storeHttpClient from '../src/storeHttpClient';
-import mockStore from './mockStore';
+import mockStoreHttpServer from './utils/mockStoreHttpServer';
 
-mockStore(mocker(request));
+mockStoreHttpServer(mocker(request));
 
 describe('StoreHttpClient', () => {
   describe('#getInfo()', () => {
