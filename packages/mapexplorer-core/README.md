@@ -92,10 +92,17 @@ Default:
 
 Function that return the text displayed on a path between segments.
 
-##### onclick()
+##### onclick(data)
 ```
 Default: noop
 ```
+
+##### onTag(tag)
+```
+Default: noop
+```
+
+Hook that is called when a segment is tagged
 
 Event handler called when the user clicks on a segment.
 

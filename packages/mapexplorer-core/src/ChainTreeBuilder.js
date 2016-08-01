@@ -3,6 +3,7 @@ import compactHash from './compactHash';
 import resolveLinks from './resolveLinks';
 import wrap from './wrap';
 import parseIfJson from './parseIfJson';
+import tagsSet from './tagsSet';
 import StratumnSDK from 'stratumn-sdk';
 
 const defaultOptions = {
@@ -16,26 +17,40 @@ const defaultOptions = {
     return node.target.data.link.meta.action +
       (this.withArgs ? `(${node.target.data.link.meta.arguments.join(', ')})` : '');
   },
-  onclick() {}
+  onclick() {},
+  onTag() {}
 };
 
 export default class ChainTreeBuilder {
   constructor(element, options) {
+    this.onTag = options.onTag;
     this.chainTree = new ChainTree(element, { ...defaultOptions, ...options });
   }
 
   build(map) {
     if (map.id && map.application) {
-      return this._load(map).then(chainscript => this.chainTree.display(chainscript));
+      return this._load(map)
+        .then(segments => {
+          this.chainTree.display(segments);
+          this._notifyTags(segments);
+        });
     } else if (map.chainscript && map.chainscript.length) {
       let chainscript = map.chainscript;
       try {
-        return resolveLinks(wrap(parseIfJson(chainscript))).then(res => this.chainTree.display(res));
+        return resolveLinks(wrap(parseIfJson(chainscript)))
+          .then(segments => {
+            this.chainTree.display(segments);
+            this._notifyTags(segments);
+          });
       } catch (err) {
         return Promise.reject(err);
       }
     }
     return Promise.resolve();
+  }
+
+  _notifyTags(chainscript) {
+    tagsSet(chainscript).forEach(this.onTag);
   }
 
   _load(map) {
