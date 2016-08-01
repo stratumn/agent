@@ -53,6 +53,6 @@
     "webpack": "^1.12.14"
   },
   "dependencies": {
-    "superagent": "^1.7.2"
+    "superagent": "^2.1.0"
   }
 }
