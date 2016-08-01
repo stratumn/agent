@@ -1,21 +1,28 @@
 import getAgent from '../src/getAgent';
+import agentHttpServer from './utils/agentHttpServer';
 
-describe('#getSegment', () => {
+describe('#getMapIds', () => {
+
+  let closeServer;
+  beforeEach(() => agentHttpServer(3333).then(c => { closeServer = c; }));
+  afterEach(() => closeServer());
 
   let agent;
 
   beforeEach(() =>
-    getAgent('http://localhost:3000').then(res => { agent = res; })
+    getAgent('http://localhost:3333').then(res => { agent = res; })
   );
 
-  it('gets a segment', () =>
+  it('gets map IDs', () =>
     agent
-      .createMap('hi there')
-      .then(segment =>
-        agent.getSegment(segment.meta.linkHash)
-      )
-      .then(segment => {
-        segment.link.state.title.should.be.exactly('hi there');
+      .createMap('hi')
+      .then(() => agent.createMap('hi'))
+      .then(() => agent.createMap('hi'))
+      .then(() => agent.getMapIds())
+      .then(mapIds => {
+        mapIds.should.be.an.Array();
+        mapIds.length.should.be.exactly(3);
+        mapIds.forEach(mapId => mapId.should.be.a.String());
       })
   );
 

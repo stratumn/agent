@@ -1,11 +1,15 @@
 import getAgent from '../src/getAgent';
+import agentHttpServer from './utils/agentHttpServer';
 
 describe('#createMap', () => {
 
-  let agent;
+  let closeServer;
+  beforeEach(() => agentHttpServer(3333).then(c => { closeServer = c; }));
+  afterEach(() => closeServer());
 
+  let agent;
   beforeEach(() =>
-    getAgent('http://localhost:3000').then(res => { agent = res; })
+    getAgent('http://localhost:3333').then(res => { agent = res; })
   );
 
   it('creates a map', () =>
@@ -16,7 +20,7 @@ describe('#createMap', () => {
       })
   );
 
-  it('handle error', () =>
+  it('handles error', () =>
     agent
       .createMap()
       .then(() => {
