@@ -1,5 +1,8 @@
 # Stratumn SDK for Javascript [ALPHA - incompatible with production]
 
+[![Build Status](https://travis-ci.org/stratumn/stratumn-sdk-js.svg?branch=alpha)](https://travis-ci.org/stratumn/stratumn-sdk-js)
+[![Build Status](https://david-dm.org/stratumn/stratumn-sdk-js.svg?branch=alpha)](https://david-dm.org/stratumn/stratumn-sdk-js) 
+
 ## Installation
 
 ### Browser
