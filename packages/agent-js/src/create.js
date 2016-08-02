@@ -179,6 +179,15 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
           });
 
           return storeClient.saveSegment(segment);
+        })
+        .then(segment => {
+          // Call didFossilize event if present.
+          if (typeof actions.events === 'object' &&
+              typeof actions.events.didFossilize === 'function') {
+            mockAgent(actions, segment.link).events.didFossilize(evidence);
+          }
+
+          return segment;
         });
     },
 

@@ -16,6 +16,9 @@ describe('Agent', () => {
   beforeEach(() => {
     agent = create(actions, memoryStore(), null, { agentUrl: 'http://localhost' });
   });
+  afterEach(() => {
+    delete actions.events;
+  });
 
   describe('#getInfo()', () => {
     it('resolves with the agent info', () =>
@@ -108,6 +111,31 @@ describe('Agent', () => {
               err.status.should.be.exactly(401);
             })
         )
+    );
+
+    it('should call the #didFossilize() event', () =>
+      agent
+        .createMap(1, 2, 3)
+        .then(segment => {
+          let callCount = 0;
+          actions.events = {
+            didFossilize(evidence) {
+              callCount++;
+              evidence.should.deepEqual({ test: true });
+              this.state.should.deepEqual({ a: 1, b: 2, c: 3 });
+              this.meta.mapId.should.be.a.String();
+              this.meta.stateHash.should.be.exactly(hashJson({ a: 1, b: 2, c: 3 }));
+              this.meta.action.should.be.exactly('init');
+              this.meta.arguments.should.deepEqual([1, 2, 3]);
+            }
+          };
+          const secret = generateSecret(segment.meta.linkHash, '');
+          return agent
+            .insertEvidence(segment.meta.linkHash, { test: true }, secret)
+            .then(() => {
+              callCount.should.be.exactly(1);
+            });
+        })
     );
   });
 });
