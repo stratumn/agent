@@ -119,14 +119,10 @@ describe('Agent', () => {
         .then(segment => {
           let callCount = 0;
           actions.events = {
-            didFossilize(evidence) {
+            didFossilize(s) {
               callCount++;
-              evidence.should.deepEqual({ test: true });
+              s.meta.evidence.should.deepEqual({ state: 'COMPLETE', test: true });
               this.state.should.deepEqual({ a: 1, b: 2, c: 3 });
-              this.meta.mapId.should.be.a.String();
-              this.meta.stateHash.should.be.exactly(hashJson({ a: 1, b: 2, c: 3 }));
-              this.meta.action.should.be.exactly('init');
-              this.meta.arguments.should.deepEqual([1, 2, 3]);
             }
           };
           const secret = generateSecret(segment.meta.linkHash, '');
