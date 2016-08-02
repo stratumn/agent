@@ -20,7 +20,7 @@ export default class ChainTree {
     this.svg = d3.select(element.find('svg')[0]);
 
     if (options.zoomable) {
-      const zoomed = () => this.innerG.attr("transform", d3.event.transform);
+      const zoomed = () => this.innerG.attr('transform', d3.event.transform);
       this.svg.call(d3.zoom().on('zoom', zoomed));
     }
 
@@ -53,8 +53,10 @@ export default class ChainTree {
 
     this.tree.size([computedHeight, computedWidth]);
     this.svg
-      .attr('width', this.options.zoomable ? 1200 : computedWidth + margin.right + margin.left + arrowLength)
-      .attr('height', this.options.zoomable ? 800 : computedHeight + margin.top + margin.bottom);
+      .attr('width',
+        this.options.zoomable ? 1200 : computedWidth + margin.right + margin.left + arrowLength)
+      .attr('height',
+        (this.options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
 
     // Compute the new tree layout.
     if (root) {

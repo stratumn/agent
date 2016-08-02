@@ -35,9 +35,8 @@ export default class ChainTreeBuilder {
           this._notifyTags(segments);
         });
     } else if (map.chainscript && map.chainscript.length) {
-      let chainscript = map.chainscript;
       try {
-        return resolveLinks(wrap(parseIfJson(chainscript)))
+        return resolveLinks(wrap(parseIfJson(map.chainscript)))
           .then(segments => {
             this.chainTree.display(segments);
             this._notifyTags(segments);
