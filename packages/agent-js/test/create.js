@@ -52,6 +52,22 @@ describe('Agent', () => {
           segment.meta.segmentUrl.should.be.exactly(`http://localhost/segments/${segment.meta.linkHash}`);
         })
     );
+
+    it('should call the #didAppend() event', () => {
+      let callCount = 0;
+      actions.events = {
+        didAppend(s) {
+          callCount++;
+          s.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
+          this.state.should.deepEqual({ a: 1, b: 2, c: 3 });
+        }
+      };
+      return agent
+        .createMap(1, 2, 3)
+        .then(() => {
+          callCount.should.be.exactly(1);
+        });
+    });
   });
 
   describe('#createSegment()', () => {
@@ -74,6 +90,26 @@ describe('Agent', () => {
             })
         )
       )
+    );
+
+    it('should call the #didAppend() event', () =>
+      agent
+        .createMap(1, 2, 3)
+        .then(segment1 => {
+          let callCount = 0;
+          actions.events = {
+            didAppend(s) {
+              callCount++;
+              s.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
+              this.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
+            }
+          };
+          return agent
+            .createSegment(segment1.meta.linkHash, 'action', 4)
+            .then(() => {
+              callCount.should.be.exactly(1);
+            });
+        })
     );
   });
 

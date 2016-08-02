@@ -38,6 +38,21 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
     return segment;
   }
 
+  function saveSegment(segment1) {
+    return storeClient
+      .saveSegment(segment1)
+      .then(fossilizeSegment)
+      .then(segment2 => {
+        // Call didAppend event if present.
+        if (typeof actions.events === 'object' &&
+            typeof actions.events.didAppend === 'function') {
+          mockAgent(actions, segment2.link).events.didAppend(segment2);
+        }
+
+        return segment2;
+      });
+  }
+
   return {
     /**
      * Gets information about the agent.
@@ -59,6 +74,12 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
 
       return mockAgent(actions, initialLink)
         .init(...args)
+        .catch(err => {
+          /*eslint-disable*/
+          err.status = 400;
+          /*eslint-enable*/
+          throw err;
+        })
         .then(l => {
           const link = l;
 
@@ -80,14 +101,7 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
 
           const segment = { link, meta };
 
-          return storeClient.saveSegment(segment);
-        })
-        .then(fossilizeSegment)
-        .catch(err => {
-          /*eslint-disable*/
-          err.status = 400;
-          /*eslint-enable*/
-          throw err;
+          return saveSegment(segment);
         });
     },
 
@@ -117,7 +131,13 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
 
           initialLink.meta.prevLinkHash = prevLinkHash;
 
-          return mockAgent(actions, initialLink)[action](...args);
+          return mockAgent(actions, initialLink)[action](...args)
+            .catch(err => {
+              /*eslint-disable*/
+              err.status = 400;
+              /*eslint-enable*/
+              throw err;
+            });
         })
         .then(l => {
           const link = l;
@@ -140,14 +160,7 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
 
           const segment = { link, meta };
 
-          return storeClient.saveSegment(segment);
-        })
-        .then(fossilizeSegment)
-        .catch(err => {
-          /*eslint-disable*/
-          err.status = 400;
-          /*eslint-enable*/
-          throw err;
+          return saveSegment(segment);
         });
     },
 
