@@ -40,6 +40,7 @@ export default function fossilizerHttpClient(url, opts = {}) {
       return new Promise((resolve, reject) => {
         request
           .post(`${url}/fossils`)
+          .type('form')
           .send({ data, callbackUrl })
           .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
       });

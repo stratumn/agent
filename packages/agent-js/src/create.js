@@ -69,7 +69,7 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
 
           const meta = {
             linkHash,
-            evidence: { state: DISABLED }
+            evidence: { state: fossilizerClient ? QUEUED : DISABLED }
           };
 
           if (opts.agentUrl) {
