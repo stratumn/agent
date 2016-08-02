@@ -61,7 +61,15 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
     getInfo() {
       return storeClient
         .getInfo()
-        .then(storeInfo => ({ agentInfo, storeInfo }));
+        .then(storeInfo => {
+          if (fossilizerClient) {
+            return fossilizerClient
+              .getInfo()
+              .then(fossilizerInfo => ({ agentInfo, storeInfo, fossilizerInfo }));
+          }
+
+          return { agentInfo, storeInfo };
+        });
     },
 
     /**
