@@ -1,23 +1,6 @@
 import request from 'superagent';
 import makeQueryString from './makeQueryString';
-
-function handleResponse(resolve, reject, err, res) {
-  if (res && res.body && res.body.error) {
-    /*eslint-disable*/
-    err = new Error(res.body.error)
-    /*eslint-enable*/
-  }
-
-  if (err) {
-    /*eslint-disable*/
-    err.status = res ? res.statusCode : 500;
-    /*eslint-enable*/
-    reject(err);
-    return;
-  }
-
-  resolve(res.body);
-}
+import handleResponse from './handleResponse';
 
 /**
  * Creates a store HTTP client.
@@ -34,7 +17,7 @@ export default function storeHttpClient(url) {
       return new Promise((resolve, reject) => {
         request
           .get(`${url}/`)
-          .end(handleResponse.bind(null, resolve, reject));
+          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
       });
     },
 
@@ -48,7 +31,7 @@ export default function storeHttpClient(url) {
         request
           .post(`${url}/segments`)
           .send(segment)
-          .end(handleResponse.bind(null, resolve, reject));
+          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
       });
     },
 
@@ -61,7 +44,7 @@ export default function storeHttpClient(url) {
       return new Promise((resolve, reject) => {
         request
           .get(`${url}/segments/${linkHash}`)
-          .end(handleResponse.bind(null, resolve, reject));
+          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
       });
     },
 
@@ -74,7 +57,7 @@ export default function storeHttpClient(url) {
       return new Promise((resolve, reject) => {
         request
           .del(`${url}/segments/${linkHash}`)
-          .end(handleResponse.bind(null, resolve, reject));
+          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
       });
     },
 
@@ -92,7 +75,7 @@ export default function storeHttpClient(url) {
       return new Promise((resolve, reject) => {
         request
           .get(`${url}/segments${makeQueryString(opts || {})}`)
-          .end(handleResponse.bind(null, resolve, reject));
+          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
       });
     },
 
@@ -107,7 +90,7 @@ export default function storeHttpClient(url) {
       return new Promise((resolve, reject) => {
         request
           .get(`${url}/maps${makeQueryString(opts || {})}`)
-          .end(handleResponse.bind(null, resolve, reject));
+          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
       });
     }
   };

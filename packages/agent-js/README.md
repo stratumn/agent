@@ -19,8 +19,15 @@ var actions = require('./lib/actions');
 // Assumes an HTTP store server is available on env.STRATUMN_STORE_URL or http://store:5000.
 var storeHttpClient = Agent.storeHttpClient(process.env.STRATUMN_STORE_URL || 'http://store:5000');
 
-// Create an agent from the actions and the store client.
-var agent = Agent.create(actions, storeHttpClient, { agentUrl: 'http://localhost:3000' });
+// Create an HTTP fossilizer client to fossilize segments.
+// Assumes an HTTP fossilizer server is available on env.STRATUMN_FOSSILIZER_URL or http://fossilizer:6000.
+var fossilizerHttpClient = Agent.fossilizerHttpClient(process.env.STRATUMN_FOSSILIZER_URL || 'http://fossilizer:6000');
+
+// Create an agent from the actions, the store client, and the fossilizer client.
+var agent = Agent.create(actions, storeHttpClient, fossilizerHttpClient, {
+  agentUrl: 'http://localhost:3000',               // the agent needs to know its root URL,
+  salt: process.env.STRATUMN_SALT || Math.random() // change to a unique salt
+});
 
 // Creates an HTTP server for the agent with CORS enabled.
 var agentHttpServer = Agent.httpServer(agent, { cors: {} });
@@ -43,4 +50,5 @@ app.listen(3000, function() {
 
 - `create` creates an agent instance.
 - `storeHttpClient` creates an instance to work with stores via HTTP.
+- `fossilizerHttpClient` creates an instance to work with fossilizers via HTTP.
 - `httpServer` creates an HTTP server for an agent.

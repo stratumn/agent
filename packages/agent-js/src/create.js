@@ -2,19 +2,40 @@ import uuid from 'node-uuid';
 import { mockAgent } from 'stratumn-mock-agent';
 import getAgentInfo from './getAgentInfo';
 import hashJson from './hashJson';
+import makeQueryString from './makeQueryString';
+import generateSecret from './generateSecret';
 
+const QUEUED = 'QUEUED';
 const DISABLED = 'DISABLED';
+const COMPLETE = 'COMPLETE';
 
 /**
  * Creates an agent.
  * @param {object} actions - the action functions
  * @param {StoreClient} storeClient - the store client
+ * @param {fossilizerClient} [fossilizerClient] - the fossilizer client
  * @param {object} [opts] - options
  * @param {object} [opts.agentUrl] - agent root url
+ * @param {string} [opts.salt] - a unique salt
  * @returns {Client} a store HTTP client
  */
-export default function create(actions, storeClient, opts = {}) {
+export default function create(actions, storeClient, fossilizerClient, opts = {}) {
   const agentInfo = getAgentInfo(actions);
+
+  function fossilizeSegment(segment) {
+    if (fossilizerClient) {
+      const linkHash = segment.meta.linkHash;
+      const secret = generateSecret(linkHash, opts.salt || '');
+      let callbackUrl = `${opts.agentUrl}/evidence/${linkHash}`;
+      callbackUrl += makeQueryString({ secret });
+
+      return fossilizerClient
+        .fossilize(linkHash, callbackUrl)
+        .then(() => segment);
+    }
+
+    return segment;
+  }
 
   return {
     /**
@@ -60,6 +81,7 @@ export default function create(actions, storeClient, opts = {}) {
 
           return storeClient.saveSegment(segment);
         })
+        .then(fossilizeSegment)
         .catch(err => {
           /*eslint-disable*/
           err.status = 400;
@@ -107,7 +129,7 @@ export default function create(actions, storeClient, opts = {}) {
 
           const meta = {
             linkHash,
-            evidence: { state: DISABLED }
+            evidence: { state: fossilizerClient ? QUEUED : DISABLED }
           };
 
           if (opts.agentUrl) {
@@ -119,11 +141,43 @@ export default function create(actions, storeClient, opts = {}) {
 
           return storeClient.saveSegment(segment);
         })
+        .then(fossilizeSegment)
         .catch(err => {
           /*eslint-disable*/
           err.status = 400;
           /*eslint-enable*/
           throw err;
+        });
+    },
+
+    /**
+     * Inserts evidence.
+     * @param {string} linkHash - the link hash
+     * @param {object} evidence - evidence to insert
+     * @param {strint} secret - a secret
+     * @returns {Promise} a promise that resolve with the segment
+     */
+    insertEvidence(linkHash, evidence, secret) {
+      const expected = generateSecret(linkHash, opts.salt || '');
+
+      if (secret !== expected) {
+        const err = new Error('unauthorized');
+        err.status = 401;
+        return Promise.reject(err);
+      }
+
+      // Not atomic. Not an issue at the moment, but could it
+      // become one in the future, for instance if there can be
+      // more than one fossilizers? Could it be solved by adding
+      // an insertEvidence route to stores?
+      return storeClient
+        .getSegment(linkHash)
+        .then(segment => {
+          Object.assign(segment.meta.evidence, evidence, {
+            state: COMPLETE
+          });
+
+          return storeClient.saveSegment(segment);
         });
     },
 

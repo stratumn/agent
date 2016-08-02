@@ -1,4 +1,4 @@
-export default function mockStore(mock) {
+export default function mockStoreHttpServer(mock) {
   mock.get('http://localhost', () => ({
     status: 200,
     body: { name: 'mock' }
@@ -33,9 +33,9 @@ export default function mockStore(mock) {
     body: [{ link: { state: { query: '' } } }]
   }));
 
-  mock.get('http://localhost/segments?*', req => ({
+  mock.get('http://localhost/segments?:query', req => ({
     status: 200,
-    body: [{ link: { state: { query: req.url.split('?')[1] } } }]
+    body: [{ link: { state: { query: req.params.query } } }]
   }));
 
   mock.get('http://localhost/maps', () => ({
@@ -43,8 +43,8 @@ export default function mockStore(mock) {
     body: ['mapId']
   }));
 
-  mock.get('http://localhost/maps?*', req => ({
+  mock.get('http://localhost/maps?:query', req => ({
     status: 200,
-    body: [req.url.split('?')[1]]
+    body: [req.params.query]
   }));
 }

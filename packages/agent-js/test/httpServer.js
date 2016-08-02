@@ -3,6 +3,7 @@ import httpServer from '../src/httpServer';
 import create from '../src/create';
 import memoryStore from '../src/memoryStore';
 import hashJson from '../src/hashJson';
+import generateSecret from '../src/generateSecret';
 
 const actions = {
   init(a, b, c) { this.append({ a, b, c }); },
@@ -41,7 +42,7 @@ describe('HttpServer()', () => {
   let server;
 
   beforeEach(() => {
-    agent = create(actions, memoryStore(), { agentUrl: 'http://localhost' });
+    agent = create(actions, memoryStore(), null, { agentUrl: 'http://localhost' });
     server = httpServer(agent);
   });
 
@@ -128,6 +129,27 @@ describe('HttpServer()', () => {
         .then(() => agent.createMap(7, 8, 9))
         .then(() => agent.getMapIds({ limit: 20 }))
         .then(mapIds => testDeepEquals(supertest(server).get('/maps?limit=20'), 200, mapIds))
+    );
+  });
+
+  describe('POST "/evidence/:linkHash"', () => {
+    it('renders the updated segment', () =>
+      agent
+        .createMap(1, 2, 3)
+        .then(segment1 => {
+          const secret = generateSecret(segment1.meta.linkHash, '');
+          return agent
+            .insertEvidence(segment1.meta.linkHash, { test: true }, secret)
+            .then(segment2 =>
+              testDeepEquals(
+                supertest(server)
+                  .post(`/evidence/${segment1.meta.linkHash}?secret=${secret}`)
+                  .send({ test: true }),
+                200,
+                segment2
+              )
+            );
+        })
     );
   });
 

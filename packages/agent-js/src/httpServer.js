@@ -9,6 +9,7 @@ import parseArgs from './parseArgs';
  * @param {Agent} agent - the agent instance
  * @param {object} [opts] - options
  * @param {object} [opts.cors] - CORS options
+ * @param {object} [opts.salt] - salt used for callback URLs
  * @returns {express.Server} an express server
  */
 export default function httpServer(agent, opts = {}) {
@@ -26,7 +27,7 @@ export default function httpServer(agent, opts = {}) {
 
   app.get('/', (req, res, next) => {
     agent
-      .getInfo(req.params.hash)
+      .getInfo()
       .then(res.json.bind(res))
       .catch(next);
   });
@@ -42,20 +43,20 @@ export default function httpServer(agent, opts = {}) {
       .catch(next);
   });
 
-  app.post('/segments/:hash/:action', (req, res, next) => {
+  app.post('/segments/:linkHash/:action', (req, res, next) => {
     /*eslint-disable*/
     res.locals.renderErrorAsLink = true;
     /*eslint-enable*/
 
     agent
-      .createSegment(req.params.hash, req.params.action, ...parseArgs(req.body))
+      .createSegment(req.params.linkHash, req.params.action, ...parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
   });
 
-  app.get('/segments/:hash', (req, res, next) => {
+  app.get('/segments/:linkHash', (req, res, next) => {
     agent
-      .getSegment(req.params.hash)
+      .getSegment(req.params.linkHash)
       .then(res.json.bind(res))
       .catch(next);
   });
@@ -63,6 +64,13 @@ export default function httpServer(agent, opts = {}) {
   app.get('/segments', (req, res, next) => {
     agent
       .findSegments(req.query)
+      .then(res.json.bind(res))
+      .catch(next);
+  });
+
+  app.post('/evidence/:linkHash', (req, res, next) => {
+    agent
+      .insertEvidence(req.params.linkHash, req.body, req.query.secret)
       .then(res.json.bind(res))
       .catch(next);
   });
@@ -87,21 +95,21 @@ export default function httpServer(agent, opts = {}) {
   });
 
   // Legacy
-  app.post('/links/:hash/:action', (req, res, next) => {
+  app.post('/links/:linkHash/:action', (req, res, next) => {
     /*eslint-disable*/
     res.locals.renderErrorAsLink = true;
     /*eslint-enable*/
 
     agent
-      .createSegment(req.params.hash, req.params.action, ...parseArgs(req.body))
+      .createSegment(req.params.linkHash, req.params.action, ...parseArgs(req.body))
       .then(res.json.bind(res))
       .catch(next);
   });
 
   // Legacy
-  app.get('/links/:hash', (req, res, next) => {
+  app.get('/links/:linkHash', (req, res, next) => {
     agent
-      .getSegment(req.params.hash)
+      .getSegment(req.params.linkHash)
       .then(res.json.bind(res))
       .catch(next);
   });
@@ -127,9 +135,9 @@ export default function httpServer(agent, opts = {}) {
   });
 
   // Legacy
-  app.get('/branches/:hash', (req, res, next) => {
+  app.get('/branches/:linkHash', (req, res, next) => {
     /*eslint-disable*/
-    req.query.prevLinkHash = req.params.hash;
+    req.query.prevLinkHash = req.params.linkHash;
     /*eslint-enable*/
 
     agent
