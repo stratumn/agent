@@ -29,7 +29,7 @@
     "angular-material": "^1.0.9",
     "angular-ui-ace": "^0.2.3",
     "angular-query": "^0.1.1",
-    "mapexplorer-core": "stratumn/mapexplorer-core#master"
+    "mapexplorer-core": "^0.0.6"
   },
   "devDependencies": {},
   "main": [

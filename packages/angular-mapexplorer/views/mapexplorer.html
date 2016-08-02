@@ -1,0 +1,9 @@
+<span class="error" ng-show="me.error">{{me.error}}</span>
+<div class="segment-container" ng-show="me.segment" ng-include=" 'views/segment.html' " flex></div>
+<div draggable id="tags-configuration">
+    <h4>Configure link tag color</h4>
+    <st-tag-color-picker ng-repeat="tag in tags" tag="tag"></st-tag-color-picker>
+</div>
+<div class="scroll">
+    <svg></svg>
+</div>

@@ -1,6 +1,8 @@
-stMapValidator.$inject = ['$q', 'debounce'];
+import { ChainValidator } from 'mapexplorer-core';
 
-export default function stMapValidator($q, debounce) {
+stMapValidator.$inject = ['$q'];
+
+export default function stMapValidator($q) {
 
   return {
     restrict: 'E',
@@ -9,12 +11,12 @@ export default function stMapValidator($q, debounce) {
     },
     templateUrl: 'views/mapvalidator.html',
     link: (scope) => {
-      const fn = debounce(() => {
+      scope.$watch('chainscript', () => {
         scope.error = null;
         if (angular.isDefined(scope.chainscript)) {
           scope.loading = true;
           $q.when(
-            new MapexplorerCore.ChainValidator(scope.chainscript).validate()
+            new ChainValidator(scope.chainscript).validate()
           ).then(errors => {
             scope.errors = errors;
             scope.loading = false;
@@ -23,9 +25,7 @@ export default function stMapValidator($q, debounce) {
             scope.loading = false;
           });
         }
-      }, 100);
-
-      scope.$watch('chainscript', fn);
+      });
     }
   };
 }

@@ -1,3 +1,5 @@
+import { MerklePathTree } from 'mapexplorer-core';
+
 export default function stMerklePathTree() {
   return {
     restrict: 'E',
@@ -6,7 +8,7 @@ export default function stMerklePathTree() {
     },
     template: '<svg></svg>',
     link: (scope, element) => {
-      const merklePathTree = new MapexplorerCore.MerklePathTree(element);
+      const merklePathTree = new MerklePathTree(element);
       scope.$watch('merklePath', () => merklePathTree.display(scope.merklePath));
     }
   };
