@@ -16,6 +16,7 @@ const COMPLETE = 'COMPLETE';
  * @param {fossilizerClient} [fossilizerClient] - the fossilizer client
  * @param {object} [opts] - options
  * @param {object} [opts.agentUrl] - agent root url
+ * @param {object} [opts.evidenceCallbackUrl] - evidence callback root url
  * @param {string} [opts.salt] - a unique salt
  * @returns {Client} a store HTTP client
  */
@@ -26,7 +27,7 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
     if (fossilizerClient) {
       const linkHash = segment.meta.linkHash;
       const secret = generateSecret(linkHash, opts.salt || '');
-      let callbackUrl = `${opts.agentUrl}/evidence/${linkHash}`;
+      let callbackUrl = `${opts.evidenceCallbackUrl || opts.agentUrl}/evidence/${linkHash}`;
       callbackUrl += makeQueryString({ secret });
 
       return fossilizerClient
