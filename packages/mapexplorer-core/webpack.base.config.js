@@ -21,7 +21,12 @@ module.exports = {
     libraryTarget: 'umd'
   },
   externals: {
-    d3: 'd3'
+    'd3-hierarchy': 'd3-hierarchy',
+    'd3-selection': 'd3-selection',
+    'd3-transition': 'd3-transition',
+    'd3-array': 'd3-array',
+    'd3-zoom': 'd3-zoom',
+    'd3-ease': 'd3-ease'
   },
   resolve: {
     extensions: ['', '.js']

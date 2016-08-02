@@ -1,5 +1,11 @@
 import { makeLink, finalLink, translate } from './treeUtils';
 import parseChainscript from './parseChainscript';
+import { tree } from 'd3-hierarchy';
+import { transition } from 'd3-transition';
+import { easeLinear } from 'd3-ease';
+import { select, selectAll, event } from 'd3-selection';
+import { zoom } from 'd3-zoom';
+import { max } from 'd3-array';
 
 const margin = { top: 20, right: 120, bottom: 20, left: 120 };
 const height = 800 - margin.top - margin.bottom;
@@ -12,16 +18,16 @@ export default class ChainTree {
   constructor(element, options) {
     this.options = options;
 
-    this.tree = d3.tree();
-    this.transition = d3.transition()
+    this.tree = tree();
+    this.transition = transition()
       .duration(this.options.duration)
-      .ease(d3.easeLinear);
+      .ease(easeLinear);
 
-    this.svg = d3.select(element.find('svg')[0]);
+    this.svg = select(element.find('svg')[0]);
 
     if (options.zoomable) {
-      const zoomed = () => this.innerG.attr('transform', d3.event.transform);
-      this.svg.call(d3.zoom().on('zoom', zoomed));
+      const zoomed = () => this.innerG.attr('transform', event.transform);
+      this.svg.call(zoom().on('zoom', zoomed));
     }
 
     this.innerG = this.svg.append('g')
@@ -39,7 +45,7 @@ export default class ChainTree {
 
   _update(root, nodes, links) {
     const self = this;
-    const maxDepth = d3.max(nodes, x => x.depth) || 0;
+    const maxDepth = max(nodes, x => x.depth) || 0;
     const computedWidth = Math.max(maxDepth * (polygon.width + arrowLength), 500);
 
     const branchesCount = nodes.reduce(
@@ -107,9 +113,9 @@ export default class ChainTree {
         return translate(origin.x0, origin.y0);
       })
       .on('click', function onClick(d) {
-        d3.selectAll('g.node')
+        selectAll('g.node')
           .classed('selected', false);
-        d3.select(this)
+        select(this)
           .classed('selected', true);
         self.options.onclick(d, () => {
           self.innerG.selectAll('g.node.selected').classed('selected', false);

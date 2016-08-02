@@ -63,6 +63,8 @@
   "dependencies": {
     "canonical-json": "0.0.4",
     "crypto-browserify": "^3.11.0",
+    "d3-array": "^1.0.0",
+    "d3-ease": "^1.0.0",
     "d3-hierarchy": "^1.0.0",
     "d3-selection": "^1.0.0",
     "d3-zoom": "^1.0.2",

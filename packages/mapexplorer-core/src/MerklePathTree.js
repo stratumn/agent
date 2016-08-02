@@ -1,14 +1,17 @@
 import { makeLink, translate } from './treeUtils';
 import compactHash from './compactHash';
 
+import { tree, stratify } from 'd3-hierarchy';
+import { select } from 'd3-selection';
+
 const margin = { top: 10, right: 5, bottom: 20, left: 5 };
 const height = 350 - margin.top - margin.bottom;
 const width = 400 - margin.left - margin.right;
 
 export default class MerklePathTree {
   constructor(element) {
-    this.tree = d3.tree().size([width, height]);
-    this.svg = d3.select(element.find('svg')[0])
+    this.tree = tree().size([width, height]);
+    this.svg = select(element.find('svg')[0])
       .attr('width', width + margin.right + margin.left)
       .attr('height', height + margin.top + margin.bottom);
     this.innerG = this.svg.append('g')
@@ -50,7 +53,7 @@ export default class MerklePathTree {
       name: root
     });
 
-    return d3.stratify()(nodes);
+    return stratify()(nodes);
   }
 
   _update(nodes, links) {
@@ -78,10 +81,10 @@ export default class MerklePathTree {
 
     nodeEnter
       .on('mouseover', function go(d) {
-        d3.select(this).select('text').text(d.data.name);
+        select(this).select('text').text(d.data.name);
       })
       .on('mouseout', function go(d) {
-        d3.select(this).select('text').text(compactHash(d.data.name));
+        select(this).select('text').text(compactHash(d.data.name));
       });
 
     node.exit().remove();
