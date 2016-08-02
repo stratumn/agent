@@ -180,9 +180,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          _this._notifyTags(segments);
 	        });
 	      } else if (map.chainscript && map.chainscript.length) {
-	        var chainscript = map.chainscript;
 	        try {
-	          return (0, _resolveLinks2.default)((0, _wrap2.default)((0, _parseIfJson2.default)(chainscript))).then(function (segments) {
+	          return (0, _resolveLinks2.default)((0, _wrap2.default)((0, _parseIfJson2.default)(map.chainscript))).then(function (segments) {
 	            _this.chainTree.display(segments);
 	            _this._notifyTags(segments);
 	          });
@@ -261,7 +260,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (options.zoomable) {
 	      var zoomed = function zoomed() {
-	        return _this.innerG.attr("transform", d3.event.transform);
+	        return _this.innerG.attr('transform', d3.event.transform);
 	      };
 	      this.svg.call(d3.zoom().on('zoom', zoomed));
 	    }
@@ -299,7 +298,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      root.y0 = 0;
 
 	      this.tree.size([computedHeight, computedWidth]);
-	      this.svg.attr('width', this.options.zoomable ? 1200 : computedWidth + margin.right + margin.left + arrowLength).attr('height', this.options.zoomable ? 800 : computedHeight + margin.top + margin.bottom);
+	      this.svg.attr('width', this.options.zoomable ? 1200 : computedWidth + margin.right + margin.left + arrowLength).attr('height', (this.options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
 
 	      // Compute the new tree layout.
 	      if (root) {

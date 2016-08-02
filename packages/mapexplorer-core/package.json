@@ -1,6 +1,6 @@
 {
   "name": "mapexplorer-core",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Core library for building Map Explorer components",
   "main": "lib/index.js",
   "scripts": {
