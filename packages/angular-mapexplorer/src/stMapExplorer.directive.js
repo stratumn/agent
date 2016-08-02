@@ -24,10 +24,11 @@
  */
 
 import MapExplorer from './MapExplorer.controller';
+import { ChainTreeBuilder } from 'mapexplorer-core';
 
-stMapExplorer.$inject = ['$q', 'debounce'];
+stMapExplorer.$inject = ['$q'];
 
-export default function stMapExplorer($q, debounce) {
+export default function stMapExplorer($q) {
 
   return {
     restrict: 'E',
@@ -55,18 +56,16 @@ export default function stMapExplorer($q, debounce) {
         }
       };
       options.zoomable = true;
-      const builder = new MapexplorerCore.ChainTreeBuilder(element, options);
+      const builder = new ChainTreeBuilder(element, options);
 
-      const fn = debounce(() => {
+      scope.$watchGroup(['application', 'mapId', 'refresh', 'chainscript'], () => {
         controller.error = null;
         $q.when(builder.build({
           id: scope.mapId,
           application: scope.application,
           chainscript: scope.chainscript
         })).catch(error => (controller.error = error.message));
-      }, 100);
-
-      scope.$watchGroup(['application', 'mapId', 'refresh', 'chainscript'], fn);
+      });
     }
   };
 }
