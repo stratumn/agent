@@ -1,6 +1,6 @@
 {
   "name": "angular-mapexplorer",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "authors": [
     "Stratumn Team"
   ],
@@ -28,8 +28,7 @@
     "angular-touch": "~1.5.0",
     "angular-material": "^1.0.9",
     "angular-ui-ace": "^0.2.3",
-    "angular-query": "^0.1.1",
-    "mapexplorer-core": "^0.0.6"
+    "angular-query": "^0.1.1"
   },
   "devDependencies": {},
   "main": [

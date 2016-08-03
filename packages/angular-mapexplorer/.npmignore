@@ -1,0 +1,8 @@
+.DS_Store
+*.log
+*.pdf
+test
+coverage
+_book
+dist
+bower_components
