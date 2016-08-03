@@ -1790,8 +1790,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function segmentify(agent, obj) {
-	  Object.keys(agent.agentInfo.functions).filter(function (key) {
-	    return ['init', 'catchAll'].indexOf(key) < 0;
+	  Object.keys(agent.agentInfo.actions).filter(function (key) {
+	    return ['init'].indexOf(key) < 0;
 	  }).forEach(function (key) {
 	    /*eslint-disable*/
 	    obj[key] = function () {
@@ -1960,7 +1960,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	function makeQueryString(obj) {
 	  var parts = Object.keys(obj).reduce(function (curr, key) {
-	    var val = Array.isArray(obj[key]) ? obj[key].join(',') : obj[key];
+	    var val = Array.isArray(obj[key]) ? obj[key].join('+') : obj[key];
 	    curr.push(encodeURIComponent(key) + '=' + encodeURIComponent(val));
 	    return curr;
 	  }, []);
