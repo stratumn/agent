@@ -1,6 +1,9 @@
 # angular-mapexplorer
 
-AngularJS directive to display a chainscript map
+AngularJS directive to display a chainscript map.
+
+[![npm version](https://badge.fury.io/js/angular-mapexplorer.svg)](https://badge.fury.io/js/angular-mapexplorer)
+[![Bower version](https://badge.fury.io/bo/angular-mapexplorer.svg)](https://badge.fury.io/bo/angular-mapexplorer)
 
 ## Demo
 http://stratumn.github.io/angular-mapexplorer/
