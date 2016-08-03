@@ -21,7 +21,7 @@ const COMPLETE = 'COMPLETE';
  * @returns {Client} a store HTTP client
  */
 export default function create(actions, storeClient, fossilizerClient, opts = {}) {
-  const agentInfo = { functions: getActionsInfo(actions) };
+  const agentInfo = { actions: getActionsInfo(actions) };
 
   function fossilizeSegment(segment) {
     if (fossilizerClient) {

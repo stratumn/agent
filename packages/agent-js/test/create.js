@@ -27,7 +27,7 @@ describe('Agent', () => {
         .then(info => info.should.deepEqual({
           storeInfo: memoryStoreInfo,
           agentInfo: {
-            functions: {
+            actions: {
               init: { args: ['a', 'b', 'c'] },
               action: { args: ['d'] }
             }
