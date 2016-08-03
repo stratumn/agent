@@ -3,8 +3,8 @@ import deprecated from './deprecated';
 
 export default function segmentify(agent, obj) {
   Object
-    .keys(agent.agentInfo.functions)
-    .filter(key => ['init', 'catchAll'].indexOf(key) < 0)
+    .keys(agent.agentInfo.actions)
+    .filter(key => ['init'].indexOf(key) < 0)
     .forEach(key => {
       /*eslint-disable*/
       obj[key] = (...args) =>

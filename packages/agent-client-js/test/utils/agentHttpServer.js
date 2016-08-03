@@ -52,7 +52,7 @@ const actions = {
 
 export default function agentHttpServer(port) {
   return new Promise(resolve => {
-    const agent = create(actions, memoryStore(), { agentUrl: `http://localhost:${port}` });
+    const agent = create(actions, memoryStore(), null, { agentUrl: `http://localhost:${port}` });
     const server = httpServer(agent).listen(port, () => {
       const close = () => new Promise(done => server.close(done));
       resolve(close);
