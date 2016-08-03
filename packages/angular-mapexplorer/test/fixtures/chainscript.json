@@ -1,0 +1,67 @@
+[
+  {
+    "link": {
+      "state": {
+        "gameId": "blah"
+      },
+      "meta": {
+        "mapId": "576d5e03f75bec9b2b743115",
+        "agentHash": "e0b0976355e77077905db39c8dee0879b82e24f962853fa50c87799f8e33d19f",
+        "stateHash": "c2922d1f6105262f64424abc57cd88b76f2b476e6b7c8920004f4f8413140432",
+        "prevLinkHash": null,
+        "action": "init",
+        "arguments": [
+          "blah"
+        ]
+      }
+    },
+    "meta": {
+      "linkHash": "50044824101e6f10c8af31e7e8bee8771b31073eb398b90460311100897c2f71",
+      "evidence": {
+        "state": "COMPLETE",
+        "merkleRoot": "86aab95fbe95ebe8c63899772cd5d05305ad11e70366f113d99428afc9e244e2",
+        "merklePath": [
+          {
+            "left": "d92ac106fa27208fbd48805b9cc1a491b8d1e41b3e31c0c5c27630c288be15a5",
+            "right": "50044824101e6f10c8af31e7e8bee8771b31073eb398b90460311100897c2f71",
+            "parent": "a6329c2be21f80447ddefd0ddb5490368a06277a5172e37a939d575cd789bfb8"
+          },
+          {
+            "left": "a6329c2be21f80447ddefd0ddb5490368a06277a5172e37a939d575cd789bfb8",
+            "right": "d4af91a13548787fd0fd6f7f7c91f6affc3d7add6f44452de3f21a25bf2a670e",
+            "parent": "a630ad16390a55812d218cccaf516c529a1198c7892abeb6482f4e40cc697d38"
+          },
+          {
+            "left": "a630ad16390a55812d218cccaf516c529a1198c7892abeb6482f4e40cc697d38",
+            "parent": "a630ad16390a55812d218cccaf516c529a1198c7892abeb6482f4e40cc697d38"
+          },
+          {
+            "left": "55833e6cf1bdb03288455434b402142fa79503c447747565273be45bfc31a650",
+            "right": "a630ad16390a55812d218cccaf516c529a1198c7892abeb6482f4e40cc697d38",
+            "parent": "3aa6d982fb2df80c5b46a02f05d16f7148619ecb2d62419e5f9eb0ea772503eb"
+          },
+          {
+            "left": "9e4ea606cde80f5598738b4cd5e633bedca17394b179687bbd015bb8bdfd8f03",
+            "right": "3aa6d982fb2df80c5b46a02f05d16f7148619ecb2d62419e5f9eb0ea772503eb",
+            "parent": "86aab95fbe95ebe8c63899772cd5d05305ad11e70366f113d99428afc9e244e2"
+          }
+        ],
+        "transactions": {
+          "bitcoin:main": "1f15f3d223d01c30f570ab5941a46f6babbf48c74443964a841976305e8d9b03"
+        }
+      },
+      "application": "snake-eyes",
+      "applicationLocation": "https://snake-eyes.stratumn.net",
+      "linkLocation": "https://snake-eyes.stratumn.net/links/50044824101e6f10c8af31e7e8bee8771b31073eb398b90460311100897c2f71",
+      "xStratumn": {
+        "totalTimeMs": 6.6515439999999995,
+        "loadApplicationCache": "hit",
+        "loadApplicationTimeMs": 0.027527,
+        "loadOwnerIdCache": "hit",
+        "loadOwnerIdTimeMs": 0.008956,
+        "loadInputLinkCache": "miss",
+        "loadInputLinkTimeMs": 6.523302999999999
+      }
+    }
+  }
+]

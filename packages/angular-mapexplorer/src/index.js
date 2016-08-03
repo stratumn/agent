@@ -1,5 +1,4 @@
 import angular from 'angular';
-import ngSanitize from 'angular-sanitize';
 import ngAnimate from 'angular-animate';
 import ngMaterial from 'angular-material';
 import ngAria from 'angular-aria';
@@ -11,10 +10,11 @@ import stMapValidator from './stMapValidator.directive';
 import stPromiseLoader from './stPromiseLoader.directive';
 import stTagColorPicker from './stTagColorPicker.directive';
 import AceConfigurationService from './AceConfiguration.service';
+import ChainTreeBuilderService from './ChainTreeBuilder.service';
 import configureTemplates from './templates';
 
 export default angular.module('stratumn.angular-mapexplorer',
-  [ngSanitize, ngAnimate, ngMaterial, ngAria, mdColorPicker, 'ui.drop']
+  ['ngAnimate', 'ngMaterial', 'ngAria', 'mdColorPicker', 'ui.drop']
 )
   .directive('stMapExplorer', stMapExplorer)
   .directive('stMerklePathTree', stMerklePathTree)
@@ -22,6 +22,7 @@ export default angular.module('stratumn.angular-mapexplorer',
   .directive('stPromiseLoader', stPromiseLoader)
   .directive('stTagColorPicker', stTagColorPicker)
   .service('AceConfigurationService', AceConfigurationService)
+  .service('ChainTreeBuilderService', ChainTreeBuilderService)
   .run(['$templateCache', configureTemplates])
   .name;
 
