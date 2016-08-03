@@ -25,6 +25,7 @@
     "grunt-contrib-jshint": "~0.7.0",
     "grunt-contrib-less": "~0.8.1",
     "grunt-contrib-uglify": "~0.2.5",
+    "imports-loader": "^0.6.5",
     "json-loader": "^0.5.4",
     "karma": "^1.1.1",
     "karma-mocha": "^1.1.1",
@@ -40,10 +41,11 @@
     "lint": "eslint src",
     "test_old": "mocha --compilers js:babel-core/register --recursive --require should",
     "test": "karma start karma.conf.js",
-    "prebuild": "grunt",
+    "prebuild:lib": "grunt",
+    "prebuild:module": "grunt",
     "build:lib": "babel src --presets babel-preset-es2015 --out-dir lib --source-maps inline",
     "build:module": "webpack src/index.js src/templates.js dist/index.js --config webpack.config.js",
-    "build:all": "npm run build:module && npm run build:lib",
+    "build:all": "npm run lint && npm run build:module && npm run build:lib",
     "prepublish": "npm run build:all"
   },
   "repository": {
@@ -51,8 +53,12 @@
     "url": "https://github.com/stratumn/angular-mapexplorer"
   },
   "dependencies": {
+    "angular": "^1.5.8",
+    "angular-animate": "^1.5.8",
+    "angular-aria": "^1.5.8",
     "angular-drop": "github:caitp/angular-drop",
-    "mapexplorer-core": "github:stratumn/mapexplorer-core#master",
+    "angular-material": "^1.1.0-rc.5",
+    "mapexplorer-core": "^0.0.6",
     "md-color-picker": "^0.2.6"
   }
 }

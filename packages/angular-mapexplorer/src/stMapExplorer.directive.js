@@ -23,6 +23,7 @@
  //end: usage
  */
 
+import angular from 'angular';
 import MapExplorer from './MapExplorer.controller';
 import { ChainTreeBuilder } from 'mapexplorer-core';
 
