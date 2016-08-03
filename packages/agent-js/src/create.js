@@ -1,6 +1,6 @@
 import uuid from 'node-uuid';
 import { mockAgent } from 'stratumn-mock-agent';
-import getAgentInfo from './getAgentInfo';
+import getActionsInfo from './getActionsInfo';
 import hashJson from './hashJson';
 import makeQueryString from './makeQueryString';
 import generateSecret from './generateSecret';
@@ -21,7 +21,7 @@ const COMPLETE = 'COMPLETE';
  * @returns {Client} a store HTTP client
  */
 export default function create(actions, storeClient, fossilizerClient, opts = {}) {
-  const agentInfo = getAgentInfo(actions);
+  const agentInfo = { functions: getActionsInfo(actions) };
 
   function fossilizeSegment(segment) {
     if (fossilizerClient) {

@@ -5,7 +5,7 @@ import getFunctionArgNames from './getFunctionArgNames';
  * @param {object} actions - the action functions
  * @returns {object} information about the agent
  */
-export default function getAgentInfo(actions) {
+export default function getActionsInfo(actions) {
   const funcNames = Object.keys(actions).filter(key =>
     typeof actions[key] === 'function'
   );
@@ -20,5 +20,5 @@ export default function getAgentInfo(actions) {
     functions.init = { args: [] };
   }
 
-  return { functions };
+  return functions;
 }
