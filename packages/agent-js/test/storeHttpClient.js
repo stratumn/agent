@@ -65,7 +65,7 @@ describe('StoreHttpClient', () => {
           limit: 10
         })
         .then(body => body[0].link.state.query.should.be.exactly(
-          'mapId=map&prevLinkHash=hash&tags=tag1%2Ctag2&offset=20&limit=10'
+          'mapId=map&prevLinkHash=hash&tags=tag1%2Btag2&offset=20&limit=10'
         ))
     );
   });

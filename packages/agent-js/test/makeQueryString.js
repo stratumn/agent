@@ -10,6 +10,6 @@ describe('#makeQueryString()', () => {
   });
 
   it('joins array elements with a comma', () => {
-    makeQueryString({ a: [1, 2, 'three'] }).should.be.exactly('?a=1%2C2%2Cthree');
+    makeQueryString({ a: [1, 2, 'three'] }).should.be.exactly('?a=1%2B2%2Bthree');
   });
 });
