@@ -18,7 +18,11 @@ module.exports = {
   },
   externals: {
     'angular': 'angular',
-    'MapexplorerCore': 'MapExplorerCore'
+    'angular-sanitize': '"ngSanitize"',
+    'angular-animate': '"ngAnimate"',
+    'angular-material': '"ngMaterial"',
+    'angular-aria': '"ngAria"',
+    'imports?tinycolor=tinycolor2!md-color-picker': '"mdColorPicker"'
   },
   resolve: {
     extensions: ['', '.js'],

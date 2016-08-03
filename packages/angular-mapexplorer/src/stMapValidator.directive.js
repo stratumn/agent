@@ -1,3 +1,4 @@
+import angular from 'angular';
 import { ChainValidator } from 'mapexplorer-core';
 
 stMapValidator.$inject = ['$q'];
