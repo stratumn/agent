@@ -274,7 +274,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var zoomed = function zoomed() {
 	        return _this.innerG.attr('transform', _d3Selection.event.transform);
 	      };
-	      this.svg.call(fzoom().on('zoom', zoomed));
+	      this.svg.call((0, _d3Zoom.zoom)().on('zoom', zoomed));
 	    }
 
 	    this.innerG = this.svg.append('g').attr('transform', function () {
