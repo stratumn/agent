@@ -1,30 +1,29 @@
 import angular from 'angular';
-import { ChainValidator } from 'mapexplorer-core';
+import template from '../views/mapvalidator.html';
 
-stMapValidator.$inject = ['$q'];
+stMapValidator.$inject = ['MapValidatorService'];
 
-export default function stMapValidator($q) {
+export default function stMapValidator(MapValidatorService) {
 
   return {
     restrict: 'E',
     scope: {
       chainscript: '=?'
     },
-    templateUrl: 'views/mapvalidator.html',
+    templateUrl: template,
     link: (scope) => {
       scope.$watch('chainscript', () => {
         scope.error = null;
         if (angular.isDefined(scope.chainscript)) {
           scope.loading = true;
-          $q.when(
-            new ChainValidator(scope.chainscript).validate()
-          ).then(errors => {
-            scope.errors = errors;
-            scope.loading = false;
-          }).catch(error => {
-            scope.error = error.message;
-            scope.loading = false;
-          });
+          MapValidatorService.validate(scope.chainscript)
+            .then(errors => {
+              scope.errors = errors;
+              scope.loading = false;
+            }).catch(error => {
+              scope.error = error.message;
+              scope.loading = false;
+            });
         }
       });
     }

@@ -8,12 +8,18 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel',
-        include: [path.join(__dirname, 'src')],
         query: {
           presets: ['es2015']
         }
       },
-      { loader: 'json', test: /\.json$/ }
+      {
+        loader: 'json',
+        test: /\.json$/
+      },
+      {
+        test: /\.html$/,
+        loader: "ngtemplate!html"
+      }
     ]
   },
   externals: {

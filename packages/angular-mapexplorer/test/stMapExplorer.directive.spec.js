@@ -2,7 +2,7 @@ import mapexplorer from '../src/index';
 
 import chainscript from './fixtures/chainscript.json';
 
-describe('stratum.angular-mapexplorer', function () {
+describe('st-map-explorer', function () {
 
   let element;
   let scope;
@@ -19,8 +19,7 @@ describe('stratum.angular-mapexplorer', function () {
     scope = $rootScope.$new();
 
     compileElement(
-      '<st-map-explorer application="application" mapId="mapId" chainscript="chainscript">' +
-      '</st-map-explorer>'
+      '<st-map-explorer application="application" mapId="mapId" chainscript="chainscript" />'
     );
   }));
 
@@ -50,6 +49,24 @@ describe('stratum.angular-mapexplorer', function () {
 
       expect(ChainTreeBuilderService.getBuilder).not.toHaveBeenCalled();
       expect(ChainTreeBuilderService.build).toHaveBeenCalled();
+    });
+
+    it('should display the selected segment', () => {
+      scope.$digest();
+      const controller = element.controller('stMapExplorer');
+
+      // console.log(element[0].querySelector('.segment-container'));
+      expect(
+        angular.element(element[0].querySelector('.segment-container')).hasClass('ng-hide')
+      ).toBe(true);
+
+      controller.segment = chainscript[0];
+      scope.$apply();
+
+      expect(element.text()).toContain(controller.segment.meta.linkHash);
+      expect(
+        angular.element(element[0].querySelector('.segment-container')).hasClass('ng-hide')
+      ).toBe(false);
     });
   });
 

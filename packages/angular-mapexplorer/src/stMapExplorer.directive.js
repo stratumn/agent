@@ -1,5 +1,5 @@
 import angular from 'angular';
-import MapExplorer from './MapExplorer.controller';
+import template from '../views/mapexplorer.html';
 
 stMapExplorer.$inject = ['ChainTreeBuilderService'];
 
@@ -15,8 +15,8 @@ export default function stMapExplorer(ChainTreeBuilderService) {
       options: '=?',
       name: '=?'
     },
-    templateUrl: 'views/mapexplorer.html',
-    controller: MapExplorer,
+    templateUrl: template,
+    controller: 'MapExplorerController',
     controllerAs: 'me',
     link: (scope, element, attrs, controller) => {
       scope.tags = [];

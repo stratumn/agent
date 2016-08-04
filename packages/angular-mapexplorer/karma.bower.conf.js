@@ -1,3 +1,5 @@
+var webpack = require('./webpack.config');
+
 module.exports = function(config) {
   'use strict';
   config.set({
@@ -13,9 +15,15 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'bower_components/babel-polyfill/browser-polyfill.js',
-      'node_modules/angular/angular.min.js',
-      'node_modules/angular-mocks/angular-mocks.js',
+      'bower_components/angular/angular.min.js',
+      'bower_components/angular-animate/angular-animate.js',
+      'bower_components/angular-aria/angular-aria.js',
+      'bower_components/angular-material/angular-material.js',
+      'bower_components/angular-sanitize/angular-sanitize.js',
+      'bower_components/tinycolor/tinycolor.js',
+      'bower_components/md-color-picker/dist/mdColorPicker.js',
       'bower_components/angular-drop/angular-drop.js',
+      'node_modules/angular-mocks/angular-mocks.js',
       'test/*.spec.js',
       'test/fixtures/*.json'
     ],
@@ -31,29 +39,7 @@ module.exports = function(config) {
       'test/*.spec.js': ['webpack', 'sourcemap']
     },
 
-    webpack: {
-      devtool: 'inline-source-map',
-      resolve: {
-        modulesDirectories: ['web_modules', 'node_modules', 'src']
-      },
-      module: {
-        loaders: [
-          {
-            test: /\.js$/,
-            loader: 'babel',
-            query: {
-              presets: ['es2015']
-            }
-          },
-          {
-            loader: 'json', test: /\.json$/
-          }
-        ]
-      },
-      node: {
-        fs: 'empty'
-      }
-    },
+    webpack: webpack,
 
 
     // test results reporter to use

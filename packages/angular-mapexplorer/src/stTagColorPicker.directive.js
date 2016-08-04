@@ -1,4 +1,5 @@
 import hashStringToColor from './hashToStringColor';
+import template from '../views/tagcolorpicker.html';
 
 export default function stTagColorPicker() {
 
@@ -13,7 +14,7 @@ export default function stTagColorPicker() {
     scope: {
       tag: '='
     },
-    templateUrl: 'views/tagcolorpicker.html',
+    templateUrl: template,
     link: (scope) => {
       scope.color = hashStringToColor(scope.tag);
 
