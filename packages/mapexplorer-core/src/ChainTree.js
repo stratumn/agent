@@ -68,7 +68,7 @@ export default class ChainTree {
     if (options.zoomable) {
       this.svg.call(zoom().on('zoom', this.zoomed));
     } else {
-      this.svg.on('zoom', null);
+      this.svg.on('.zoom', null);
     }
 
     // Update the links...

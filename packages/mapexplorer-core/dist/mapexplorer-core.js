@@ -323,7 +323,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (options.zoomable) {
 	        this.svg.call((0, _d3Zoom.zoom)().on('zoom', this.zoomed));
 	      } else {
-	        this.svg.on('zoom', null);
+	        this.svg.on('.zoom', null);
 	      }
 
 	      // Update the links...
