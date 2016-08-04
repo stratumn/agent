@@ -15,36 +15,32 @@ const box = { width: polygon.width, height: 25 };
 const arrowLength = polygon.width;
 
 export default class ChainTree {
-  constructor(element, options) {
-    this.options = options;
-
+  constructor(element) {
     this.tree = tree();
     this.transition = transition()
       .duration(this.options.duration)
       .ease(easeLinear);
 
     this.svg = select(element.find('svg')[0]);
-
-    if (options.zoomable) {
-      const zoomed = () => this.innerG.attr('transform', event.transform);
-      this.svg.call(zoom().on('zoom', zoomed));
-    }
-
     this.innerG = this.svg.append('g')
       .attr('transform', () => translate(margin.top, margin.left));
+
+    this.zoomed = () => this.innerG.attr('transform', event.transform);
   }
 
-  display(chainscript) {
+  display(chainscript, options) {
     if (chainscript && chainscript.length) {
       const root = parseChainscript(chainscript);
-      this._update(root, root.descendants(), root.links());
+      this._update(root, options);
     } else {
-      this._update(null, [], []);
+      this._update(null, options);
     }
   }
 
-  _update(root, nodes, links) {
+  _update(root, options) {
     const self = this;
+    const nodes = root ? root.descendants() : [];
+    const links = root ? root.links() : [];
     const maxDepth = max(nodes, x => x.depth) || 0;
     const computedWidth = Math.max(maxDepth * (polygon.width + arrowLength), 500);
 
@@ -54,20 +50,25 @@ export default class ChainTree {
     );
     const computedHeight = branchesCount * polygon.height * this.options.verticalSpacing;
 
-    root.x0 = computedHeight / 2;
-    root.y0 = 0;
-
     this.tree.size([computedHeight, computedWidth]);
     this.svg
       .attr('width',
-        this.options.zoomable ? 1200 : computedWidth + margin.right + margin.left + arrowLength)
+        options.zoomable ? 1200 : computedWidth + margin.right + margin.left + arrowLength)
       .attr('height',
-        (this.options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
+        (options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
 
     // Compute the new tree layout.
     if (root) {
+      root.x0 = computedHeight / 2;
+      root.y0 = 0;
       this.tree(root);
       root.each(node => { node.y += arrowLength; });
+    }
+
+    if (options.zoomable) {
+      this.svg.call(zoom().on('zoom', this.zoomed));
+    } else {
+      this.svg.on('zoom', null);
     }
 
     // Update the links...
@@ -80,7 +81,7 @@ export default class ChainTree {
       .append('textPath')
       .attr('class', 'textpath')
       .attr('xlink:href', d => `#link-${d.target.id}`)
-      .text(this.options.getLinkText);
+      .text(options.getLinkText);
 
     // Enter any new links at the parent's previous position.
     link.enter().insert('path', 'g')
@@ -117,7 +118,7 @@ export default class ChainTree {
           .classed('selected', false);
         select(this)
           .classed('selected', true);
-        self.options.onclick(d, () => {
+        options.onclick(d, () => {
           self.innerG.selectAll('g.node.selected').classed('selected', false);
         });
       });
@@ -137,7 +138,7 @@ export default class ChainTree {
       .attr('dx', 12)
       .attr('dy', 4)
       .attr('text-anchor', 'begin')
-      .text(this.options.getSegmentText)
+      .text(options.getSegmentText)
       .style('fill-opacity', 1e-6);
 
     // Transition nodes to their new position.

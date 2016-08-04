@@ -22,30 +22,29 @@ const defaultOptions = {
 };
 
 export default class ChainTreeBuilder {
-  constructor(element, options) {
-    this.onTag = options.onTag;
-    this.chainTree = new ChainTree(element, { ...defaultOptions, ...options });
+  constructor(element) {
+    this.chainTree = new ChainTree(element);
   }
 
-  build(map) {
+  build(map, options) {
+    this.onTag = options.onTag;
     if (map.id && map.application) {
-      return this._load(map)
-        .then(segments => {
-          this.chainTree.display(segments);
-          this._notifyTags(segments);
-        });
+      return this._load(map).then(segments => this._display(segments, options));
     } else if (map.chainscript && map.chainscript.length) {
       try {
         return resolveLinks(wrap(parseIfJson(map.chainscript)))
-          .then(segments => {
-            this.chainTree.display(segments);
-            this._notifyTags(segments);
-          });
+          .then(segments => this._display(segments, options));
       } catch (err) {
         return Promise.reject(err);
       }
     }
     return Promise.resolve();
+  }
+
+  _display(segments, options) {
+    this.chainTree.display(segments, { ...defaultOptions, ...options });
+    this._notifyTags(segments);
+    return segments;
   }
 
   _notifyTags(chainscript) {

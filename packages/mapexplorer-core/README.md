@@ -39,18 +39,18 @@ $ bower install mapexplorer-core
 ### Display a map explorer
 
 ```javascript
-const builder = new MapexplorerCore.ChainTreeBuilder(element, options);
+const builder = new MapexplorerCore.ChainTreeBuilder(element);
 
 // with an application and a mapId
 builder.build({
   id: myMapId,
   application: myApplication
-});
+}, options);
 
 // with a chainscript (JSON string of array of segment as POJO)
 builder.build({
   chainscript: myChainscript
-});
+}), options;
 ```
 #### Available options
 

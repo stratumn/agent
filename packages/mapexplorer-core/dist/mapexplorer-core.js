@@ -162,34 +162,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var ChainTreeBuilder = function () {
-	  function ChainTreeBuilder(element, options) {
+	  function ChainTreeBuilder(element) {
 	    _classCallCheck(this, ChainTreeBuilder);
 
-	    this.onTag = options.onTag;
-	    this.chainTree = new _ChainTree2.default(element, _extends({}, defaultOptions, options));
+	    this.chainTree = new _ChainTree2.default(element);
 	  }
 
 	  _createClass(ChainTreeBuilder, [{
 	    key: 'build',
-	    value: function build(map) {
+	    value: function build(map, options) {
 	      var _this = this;
 
+	      this.onTag = options.onTag;
 	      if (map.id && map.application) {
 	        return this._load(map).then(function (segments) {
-	          _this.chainTree.display(segments);
-	          _this._notifyTags(segments);
+	          return _this._display(segments, options);
 	        });
 	      } else if (map.chainscript && map.chainscript.length) {
 	        try {
 	          return (0, _resolveLinks2.default)((0, _wrap2.default)((0, _parseIfJson2.default)(map.chainscript))).then(function (segments) {
-	            _this.chainTree.display(segments);
-	            _this._notifyTags(segments);
+	            return _this._display(segments, options);
 	          });
 	        } catch (err) {
 	          return Promise.reject(err);
 	        }
 	      }
 	      return Promise.resolve();
+	    }
+	  }, {
+	    key: '_display',
+	    value: function _display(segments, options) {
+	      this.chainTree.display(segments, _extends({}, defaultOptions, options));
+	      this._notifyTags(segments);
+	      return segments;
 	    }
 	  }, {
 	    key: '_notifyTags',
@@ -258,44 +263,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	var arrowLength = polygon.width;
 
 	var ChainTree = function () {
-	  function ChainTree(element, options) {
+	  function ChainTree(element) {
 	    var _this = this;
 
 	    _classCallCheck(this, ChainTree);
-
-	    this.options = options;
 
 	    this.tree = (0, _d3Hierarchy.tree)();
 	    this.transition = (0, _d3Transition.transition)().duration(this.options.duration).ease(_d3Ease.easeLinear);
 
 	    this.svg = (0, _d3Selection.select)(element.find('svg')[0]);
-
-	    if (options.zoomable) {
-	      var zoomed = function zoomed() {
-	        return _this.innerG.attr('transform', _d3Selection.event.transform);
-	      };
-	      this.svg.call((0, _d3Zoom.zoom)().on('zoom', zoomed));
-	    }
-
 	    this.innerG = this.svg.append('g').attr('transform', function () {
 	      return (0, _treeUtils.translate)(margin.top, margin.left);
 	    });
+
+	    this.zoomed = function () {
+	      return _this.innerG.attr('transform', _d3Selection.event.transform);
+	    };
 	  }
 
 	  _createClass(ChainTree, [{
 	    key: 'display',
-	    value: function display(chainscript) {
+	    value: function display(chainscript, options) {
 	      if (chainscript && chainscript.length) {
 	        var root = (0, _parseChainscript2.default)(chainscript);
-	        this._update(root, root.descendants(), root.links());
+	        this._update(root, options);
 	      } else {
-	        this._update(null, [], []);
+	        this._update(null, options);
 	      }
 	    }
 	  }, {
 	    key: '_update',
-	    value: function _update(root, nodes, links) {
+	    value: function _update(root, options) {
 	      var self = this;
+	      var nodes = root ? root.descendants() : [];
+	      var links = root ? root.links() : [];
 	      var maxDepth = (0, _d3Array.max)(nodes, function (x) {
 	        return x.depth;
 	      }) || 0;
@@ -306,18 +307,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }, 1);
 	      var computedHeight = branchesCount * polygon.height * this.options.verticalSpacing;
 
-	      root.x0 = computedHeight / 2;
-	      root.y0 = 0;
-
 	      this.tree.size([computedHeight, computedWidth]);
-	      this.svg.attr('width', this.options.zoomable ? 1200 : computedWidth + margin.right + margin.left + arrowLength).attr('height', (this.options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
+	      this.svg.attr('width', options.zoomable ? 1200 : computedWidth + margin.right + margin.left + arrowLength).attr('height', (options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
 
 	      // Compute the new tree layout.
 	      if (root) {
+	        root.x0 = computedHeight / 2;
+	        root.y0 = 0;
 	        this.tree(root);
 	        root.each(function (node) {
 	          node.y += arrowLength;
 	        });
+	      }
+
+	      if (options.zoomable) {
+	        this.svg.call((0, _d3Zoom.zoom)().on('zoom', this.zoomed));
+	      } else {
+	        this.svg.on('zoom', null);
 	      }
 
 	      // Update the links...
@@ -327,7 +333,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      link.enter().insert('text').attr('dx', polygon.width + 20).attr('dy', '-0.3em').append('textPath').attr('class', 'textpath').attr('xlink:href', function (d) {
 	        return '#link-' + d.target.id;
-	      }).text(this.options.getLinkText);
+	      }).text(options.getLinkText);
 
 	      // Enter any new links at the parent's previous position.
 	      link.enter().insert('path', 'g').attr('class', 'link').attr('id', function (d) {
@@ -365,7 +371,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }).on('click', function onClick(d) {
 	        (0, _d3Selection.selectAll)('g.node').classed('selected', false);
 	        (0, _d3Selection.select)(this).classed('selected', true);
-	        self.options.onclick(d, function () {
+	        options.onclick(d, function () {
 	          self.innerG.selectAll('g.node.selected').classed('selected', false);
 	        });
 	      });
@@ -374,7 +380,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      nodeEnter.append('rect').attr('y', -(box.height / 2)).attr('width', polygon.width).attr('height', box.height).style('fill-opacity', 1e-6);
 
-	      nodeEnter.append('text').attr('dx', 12).attr('dy', 4).attr('text-anchor', 'begin').text(this.options.getSegmentText).style('fill-opacity', 1e-6);
+	      nodeEnter.append('text').attr('dx', 12).attr('dy', 4).attr('text-anchor', 'begin').text(options.getSegmentText).style('fill-opacity', 1e-6);
 
 	      // Transition nodes to their new position.
 	      var nodeUpdate = this.svg.selectAll('g.node').transition(this.transition);
