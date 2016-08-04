@@ -305,7 +305,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var branchesCount = nodes.reduce(function (pre, cur) {
 	        return pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0);
 	      }, 1);
-	      var computedHeight = branchesCount * polygon.height * this.options.verticalSpacing;
+	      var computedHeight = branchesCount * polygon.height * options.verticalSpacing;
 
 	      this.tree.size([computedHeight, computedWidth]);
 	      this.svg.attr('width', options.zoomable ? 1200 : computedWidth + margin.right + margin.left + arrowLength).attr('height', (options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
