@@ -21,7 +21,7 @@ export default function segmentify(agent, obj) {
                 : err;
 
               if (error) {
-                error.status = res.statusCode;
+                error.status = res && res.statusCode;
                 reject(error);
                 return;
               }

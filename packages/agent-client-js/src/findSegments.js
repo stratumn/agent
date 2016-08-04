@@ -11,7 +11,7 @@ export default function findSegments(agent, opts = {}) {
       .end((err, res) => {
         if (err) {
           /*eslint-disable*/
-          err.status = res.statusCode;
+          err.status = res && res.statusCode;
           /*eslint-enable*/
           reject(err);
           return;

@@ -140,7 +140,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
 	        /*eslint-disable*/
-	        err.status = res.statusCode;
+	        err.status = res && res.statusCode;
 	        /*eslint-enable*/
 	        reject(err);
 	        return;
@@ -1758,7 +1758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var error = res.body.meta && res.body.meta.errorMessage ? new Error(res.body.meta.errorMessage) : err;
 
 	      if (error) {
-	        error.status = res.statusCode;
+	        error.status = res && res.statusCode;
 	        reject(error);
 	        return;
 	      }
@@ -1807,7 +1807,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var error = res.body.meta && res.body.meta.errorMessage ? new Error(res.body.meta.errorMessage) : err;
 
 	          if (error) {
-	            error.status = res.statusCode;
+	            error.status = res && res.statusCode;
 	            reject(error);
 	            return;
 	          }
@@ -1885,7 +1885,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
 	        /*eslint-disable*/
-	        err.status = res.statusCode;
+	        err.status = res && res.statusCode;
 	        /*eslint-enable*/
 	        reject(err);
 	        return;
@@ -1930,7 +1930,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
 	        /*eslint-disable*/
-	        err.status = res.statusCode;
+	        err.status = res && res.statusCode;
 	        /*eslint-enable*/
 	        reject(err);
 	        return;
@@ -2002,7 +2002,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
 	        /*eslint-disable*/
-	        err.status = res.statusCode;
+	        err.status = res && res.statusCode;
 	        /*eslint-enable*/
 	        reject(err);
 	        return;
