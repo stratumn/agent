@@ -69,6 +69,7 @@ export default class ChainTree {
       this.svg.call(zoom().on('zoom', this.zoomed));
     } else {
       this.svg.on('.zoom', null);
+      this.innerG.attr('transform', 0);
     }
 
     // Update the links...

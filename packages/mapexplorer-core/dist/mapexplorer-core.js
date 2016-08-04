@@ -324,6 +324,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.svg.call((0, _d3Zoom.zoom)().on('zoom', this.zoomed));
 	      } else {
 	        this.svg.on('.zoom', null);
+	        this.innerG.attr('transform', 0);
 	      }
 
 	      // Update the links...
