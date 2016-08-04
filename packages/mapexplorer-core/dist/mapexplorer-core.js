@@ -269,7 +269,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _classCallCheck(this, ChainTree);
 
 	    this.tree = (0, _d3Hierarchy.tree)();
-	    this.transition = (0, _d3Transition.transition)().duration(this.options.duration).ease(_d3Ease.easeLinear);
 
 	    this.svg = (0, _d3Selection.select)(element.find('svg')[0]);
 	    this.innerG = this.svg.append('g').attr('transform', function () {
@@ -301,6 +300,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return x.depth;
 	      }) || 0;
 	      var computedWidth = Math.max(maxDepth * (polygon.width + arrowLength), 500);
+	      var treeTransition = (0, _d3Transition.transition)().duration(this.options.duration).ease(_d3Ease.easeLinear);
 
 	      var branchesCount = nodes.reduce(function (pre, cur) {
 	        return pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0);
@@ -346,7 +346,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      //   return makeLink(o);
 	      // });
 
-	      var linkUpdate = this.innerG.selectAll('path.link:not(.init)').transition(this.transition);
+	      var linkUpdate = this.innerG.selectAll('path.link:not(.init)').transition(treeTransition);
 
 	      // Transition links to their new position.
 	      linkUpdate.attr('d', function (d) {
@@ -383,7 +383,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      nodeEnter.append('text').attr('dx', 12).attr('dy', 4).attr('text-anchor', 'begin').text(options.getSegmentText).style('fill-opacity', 1e-6);
 
 	      // Transition nodes to their new position.
-	      var nodeUpdate = this.svg.selectAll('g.node').transition(this.transition);
+	      var nodeUpdate = this.svg.selectAll('g.node').transition(treeTransition);
 
 	      nodeUpdate.attr('transform', function (d) {
 	        return (0, _treeUtils.translate)(d.x, d.y);
@@ -392,7 +392,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      nodeUpdate.select('rect').style('fill-opacity', 1);
 
 	      // Transition exiting nodes to the parent's new position.
-	      var nodeExit = node.exit(); // .transition(this.transition);
+	      var nodeExit = node.exit(); // .transition(treeTransition);
 	      nodeExit.select('text').style('fill-opacity', 1e-6);
 	      nodeExit.attr('transform', function () {
 	        return (0, _treeUtils.translate)(0, 0);

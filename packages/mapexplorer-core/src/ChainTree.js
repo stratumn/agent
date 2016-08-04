@@ -17,9 +17,6 @@ const arrowLength = polygon.width;
 export default class ChainTree {
   constructor(element) {
     this.tree = tree();
-    this.transition = transition()
-      .duration(this.options.duration)
-      .ease(easeLinear);
 
     this.svg = select(element.find('svg')[0]);
     this.innerG = this.svg.append('g')
@@ -43,6 +40,9 @@ export default class ChainTree {
     const links = root ? root.links() : [];
     const maxDepth = max(nodes, x => x.depth) || 0;
     const computedWidth = Math.max(maxDepth * (polygon.width + arrowLength), 500);
+    const treeTransition = transition()
+      .duration(this.options.duration)
+      .ease(easeLinear);
 
     const branchesCount = nodes.reduce(
       (pre, cur) => pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0),
@@ -94,7 +94,7 @@ export default class ChainTree {
     //   return makeLink(o);
     // });
 
-    const linkUpdate = this.innerG.selectAll('path.link:not(.init)').transition(this.transition);
+    const linkUpdate = this.innerG.selectAll('path.link:not(.init)').transition(treeTransition);
 
     // Transition links to their new position.
     linkUpdate.attr('d', d => finalLink(d, 15));
@@ -142,14 +142,14 @@ export default class ChainTree {
       .style('fill-opacity', 1e-6);
 
     // Transition nodes to their new position.
-    const nodeUpdate = this.svg.selectAll('g.node').transition(this.transition);
+    const nodeUpdate = this.svg.selectAll('g.node').transition(treeTransition);
 
     nodeUpdate.attr('transform', d => translate(d.x, d.y));
     nodeUpdate.select('text').style('fill-opacity', 1);
     nodeUpdate.select('rect').style('fill-opacity', 1);
 
     // Transition exiting nodes to the parent's new position.
-    const nodeExit = node.exit(); // .transition(this.transition);
+    const nodeExit = node.exit(); // .transition(treeTransition);
     nodeExit.select('text').style('fill-opacity', 1e-6);
     nodeExit.attr('transform', () => translate(0, 0)).remove();
 
