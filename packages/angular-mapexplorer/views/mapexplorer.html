@@ -76,8 +76,17 @@
 </div>
 <div ng-hide="me.loading" class="scroll">
     <div ng-show="tags && tags.length && options.showTagColorConfiguration" draggable id="tags-configuration">
-        <h4>Configure link tag color</h4>
+      <md-toolbar>
+        <div class="md-toolbar-tools">
+          <h4>Configure link tag color</h4>
+          <md-button class="md-icon-button" aria-label="Close" ng-click="options.showTagColorConfiguration = false">
+            <md-icon md-font-library="material-icons">close</md-icon>
+          </md-button>
+        </div>
+      </md-toolbar>
+      <div class="content">
         <st-tag-color-picker ng-repeat="tag in tags" tag="tag"></st-tag-color-picker>
+      </div>
     </div>
     <svg></svg>
 </div>
