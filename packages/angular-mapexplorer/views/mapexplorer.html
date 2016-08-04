@@ -71,10 +71,13 @@
     </div>
   </div>
 </div>
-<div ng-show="tags && tags.length" draggable id="tags-configuration">
-    <h4>Configure link tag color</h4>
-    <st-tag-color-picker ng-repeat="tag in tags" tag="tag"></st-tag-color-picker>
+<div ng-show="me.loading" layout="row" layout-sm="column" layout-align="space-around">
+    <md-progress-circular md-mode="indeterminate" md-diameter="80"></md-progress-circular>
 </div>
-<div class="scroll">
+<div ng-hide="me.loading" class="scroll">
+    <div ng-show="tags && tags.length" draggable id="tags-configuration">
+        <h4>Configure link tag color</h4>
+        <st-tag-color-picker ng-repeat="tag in tags" tag="tag"></st-tag-color-picker>
+    </div>
     <svg></svg>
 </div>
