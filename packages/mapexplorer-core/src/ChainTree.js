@@ -41,7 +41,7 @@ export default class ChainTree {
     const maxDepth = max(nodes, x => x.depth) || 0;
     const computedWidth = Math.max(maxDepth * (polygon.width + arrowLength), 500);
     const treeTransition = transition()
-      .duration(this.options.duration)
+      .duration(options.duration)
       .ease(easeLinear);
 
     const branchesCount = nodes.reduce(

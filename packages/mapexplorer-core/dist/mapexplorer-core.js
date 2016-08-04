@@ -300,7 +300,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return x.depth;
 	      }) || 0;
 	      var computedWidth = Math.max(maxDepth * (polygon.width + arrowLength), 500);
-	      var treeTransition = (0, _d3Transition.transition)().duration(this.options.duration).ease(_d3Ease.easeLinear);
+	      var treeTransition = (0, _d3Transition.transition)().duration(options.duration).ease(_d3Ease.easeLinear);
 
 	      var branchesCount = nodes.reduce(function (pre, cur) {
 	        return pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0);
