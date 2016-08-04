@@ -271,9 +271,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.tree = (0, _d3Hierarchy.tree)();
 
 	    this.svg = (0, _d3Selection.select)(element.find('svg')[0]);
-	    this.innerG = this.svg.append('g').attr('transform', function () {
-	      return (0, _treeUtils.translate)(margin.top, margin.left);
-	    });
+	    this.innerG = this.svg.append('g');
 
 	    this.zoomed = function () {
 	      return _this.innerG.attr('transform', _d3Selection.event.transform);
@@ -324,8 +322,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.svg.call((0, _d3Zoom.zoom)().on('zoom', this.zoomed));
 	      } else {
 	        this.svg.on('.zoom', null);
-	        this.innerG.attr('transform', 0);
 	      }
+	      this.innerG.attr('transform', function () {
+	        return (0, _treeUtils.translate)(margin.top, margin.left);
+	      });
 
 	      // Update the links...
 	      var link = this.innerG.selectAll('path.link').data(links, function key(d) {

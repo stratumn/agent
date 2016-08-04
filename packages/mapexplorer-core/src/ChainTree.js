@@ -19,8 +19,8 @@ export default class ChainTree {
     this.tree = tree();
 
     this.svg = select(element.find('svg')[0]);
-    this.innerG = this.svg.append('g')
-      .attr('transform', () => translate(margin.top, margin.left));
+    this.innerG = this.svg.append('g');
+
 
     this.zoomed = () => this.innerG.attr('transform', event.transform);
   }
@@ -69,8 +69,8 @@ export default class ChainTree {
       this.svg.call(zoom().on('zoom', this.zoomed));
     } else {
       this.svg.on('.zoom', null);
-      this.innerG.attr('transform', 0);
     }
+    this.innerG.attr('transform', () => translate(margin.top, margin.left));
 
     // Update the links...
     const link = this.innerG.selectAll('path.link').data(links,
