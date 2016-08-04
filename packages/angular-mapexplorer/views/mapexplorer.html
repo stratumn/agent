@@ -75,7 +75,7 @@
     <md-progress-circular md-mode="indeterminate" md-diameter="80"></md-progress-circular>
 </div>
 <div ng-hide="me.loading" class="scroll">
-    <div ng-show="tags && tags.length" draggable id="tags-configuration">
+    <div ng-show="tags && tags.length && options.showTagColorConfiguration" draggable id="tags-configuration">
         <h4>Configure link tag color</h4>
         <st-tag-color-picker ng-repeat="tag in tags" tag="tag"></st-tag-color-picker>
     </div>

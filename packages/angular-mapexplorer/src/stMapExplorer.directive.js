@@ -20,18 +20,18 @@ export default function stMapExplorer(ChainTreeBuilderService) {
     controllerAs: 'me',
     link: (scope, element, attrs, controller) => {
       scope.tags = [];
-      const options = angular.isDefined(scope.options) ? scope.options : {};
-      options.onclick = (d, onHide) => {
+      scope.options = angular.isDefined(scope.options) ? scope.options : {};
+      scope.options.onclick = (d, onHide) => {
         controller.show(d.data, onHide);
         scope.$apply();
       };
-      options.onTag = tag => {
+      scope.options.onTag = tag => {
         if (tag) {
           scope.tags = Array.from(new Set(scope.tags.concat(tag)));
         }
       };
       const elem = angular.element(element[0].querySelector('.scroll'));
-      const builder = ChainTreeBuilderService.getBuilder(elem, options);
+      const builder = ChainTreeBuilderService.getBuilder(elem, scope.options);
 
       scope.$watchGroup(['application', 'mapId', 'refresh', 'chainscript'], () => {
         controller.error = null;

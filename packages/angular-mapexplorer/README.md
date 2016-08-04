@@ -35,8 +35,24 @@ You might also need `tinycolor.js` and `angular-drop`.
 or
 
 ```
-<st-map-explorer application="home.application" map-id="home.mapId"></st-map-explorer>
+<st-map-explorer application="home.application" map-id="home.mapId" options="{zoomable: true}"></st-map-explorer>
 ```
+
+### Options
+
+##### zoomable
+```
+Default: false
+```
+
+Make the map zoomable.
+
+##### showTagColorConfiguration
+```
+Default: false
+```
+
+Display the tag color legend and allow configuration
 
 
 
