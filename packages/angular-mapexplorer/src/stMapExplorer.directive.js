@@ -30,13 +30,18 @@ export default function stMapExplorer(ChainTreeBuilderService) {
           scope.tags = Array.from(new Set(scope.tags.concat(tag)));
         }
       };
-      options.zoomable = true;
-      const builder = ChainTreeBuilderService.getBuilder(element, options);
+      const elem = angular.element(element[0].querySelector('.scroll'));
+      const builder = ChainTreeBuilderService.getBuilder(elem, options);
 
       scope.$watchGroup(['application', 'mapId', 'refresh', 'chainscript'], () => {
         controller.error = null;
+        controller.loading = true;
         ChainTreeBuilderService.build(builder, scope)
-          .catch(error => (controller.error = error.message));
+          .then(() => (controller.loading = false))
+          .catch(error => {
+            controller.loading = false;
+            controller.error = error.message;
+          });
       });
     }
   };
