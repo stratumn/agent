@@ -5,16 +5,16 @@ export default class ChainTreeBuilderService {
     this.$q = $q;
   }
 
-  getBuilder(element, options) {
-    return new ChainTreeBuilder(element, options);
+  getBuilder(element) {
+    return new ChainTreeBuilder(element);
   }
 
-  build(builder, map) {
+  build(builder, map, options) {
     return this.$q.when(builder.build({
       id: map.mapId,
       application: map.application,
       chainscript: map.chainscript
-    }));
+    }, options));
   }
 }
 

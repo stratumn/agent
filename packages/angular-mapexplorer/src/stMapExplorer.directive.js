@@ -19,30 +19,37 @@ export default function stMapExplorer(ChainTreeBuilderService) {
     controller: 'MapExplorerController',
     controllerAs: 'me',
     link: (scope, element, attrs, controller) => {
-      scope.tags = [];
-      scope.options = angular.isDefined(scope.options) ? scope.options : {};
-      scope.options.onclick = (d, onHide) => {
-        controller.show(d.data, onHide);
-        scope.$apply();
-      };
-      scope.options.onTag = tag => {
-        if (tag) {
-          scope.tags = Array.from(new Set(scope.tags.concat(tag)));
+      const defaultOptions = {
+        onclick(d, onHide) {
+          controller.show(d.data, onHide);
+          scope.$apply();
+        },
+        onTag(tag) {
+          if (tag) {
+            scope.tags = Array.from(new Set(scope.tags.concat(tag)));
+          }
         }
       };
-      const elem = angular.element(element[0].querySelector('.scroll'));
-      const builder = ChainTreeBuilderService.getBuilder(elem, scope.options);
 
-      scope.$watchGroup(['application', 'mapId', 'refresh', 'chainscript'], () => {
+      scope.tags = [];
+      const elem = angular.element(element[0].querySelector('.scroll'));
+      const builder = ChainTreeBuilderService.getBuilder(elem);
+
+      const update = () => {
+        const options = { ...defaultOptions, ...scope.options };
+
         controller.error = null;
         controller.loading = true;
-        ChainTreeBuilderService.build(builder, scope)
+        ChainTreeBuilderService.build(builder, scope, options)
           .then(() => (controller.loading = false))
           .catch(error => {
             controller.loading = false;
             controller.error = error.message;
           });
-      });
+      };
+
+      scope.$watchGroup(['application', 'mapId', 'refresh', 'chainscript'], update);
+      scope.$watch('options', update, true);
     }
   };
 }
