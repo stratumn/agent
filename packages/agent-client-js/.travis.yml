@@ -1,8 +1,13 @@
 language: node_js
+
 node_js:
   - "4"
   - "6"
-branches:
-  only:
-    - master
-    - alpha
+
+install:
+  - npm install
+  - npm install -g codecov
+
+script:
+  - npm run test:cov
+  - codecov
