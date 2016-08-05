@@ -38,7 +38,7 @@ describe('st-map-explorer', function () {
       scope.$apply();
 
       expect(ChainTreeBuilderService.getBuilder).toHaveBeenCalledWith(
-        angular.element(element[0].querySelector('.scroll'))
+        angular.element(element[0].querySelector('.scroll'))[0]
       );
       expect(ChainTreeBuilderService.build).toHaveBeenCalledWith(
         undefined, jasmine.objectContaining({ chainscript }), jasmine.any(Object));

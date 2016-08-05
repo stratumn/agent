@@ -32,7 +32,7 @@ export default function stMapExplorer(ChainTreeBuilderService) {
       };
 
       scope.tags = [];
-      const elem = angular.element(element[0].querySelector('.scroll'));
+      const elem = angular.element(element[0].querySelector('.scroll'))[0];
       const builder = ChainTreeBuilderService.getBuilder(elem);
 
       const update = () => {

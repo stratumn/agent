@@ -59,6 +59,11 @@ module.exports = function(config) {
       }
     },
 
+    webpackMiddleware: {
+      stats: {
+        chunks: false,
+      }
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
