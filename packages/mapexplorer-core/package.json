@@ -7,7 +7,7 @@
     "test": "karma start karma.conf.js",
     "test:ci": "npm test -- --single-run",
     "lint": "eslint src test",
-    "check": "npm run lint && npm run test",
+    "check": "npm run lint && npm run test:ci",
     "build:lib": "babel src --out-dir lib",
     "build:umd": "webpack src/index.js dist/mapexplorer-core.js --config webpack.config.js",
     "build:umd:min": "webpack src/index.js dist/mapexplorer-core.min.js --config webpack.min.config.js",
