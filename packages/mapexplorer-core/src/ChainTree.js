@@ -18,9 +18,8 @@ export default class ChainTree {
   constructor(element) {
     this.tree = tree();
 
-    this.svg = select(element.find('svg')[0]);
+    this.svg = select(element).append('svg');
     this.innerG = this.svg.append('g');
-
 
     this.zoomed = () => this.innerG.attr('transform', event.transform);
   }
@@ -88,12 +87,6 @@ export default class ChainTree {
     link.enter().insert('path', 'g')
       .attr('class', 'link')
       .attr('id', d => `link-${d.target.id}`);
-    //  .attr('d', d => finalLink(d, 15));
-    // .attr('d', d => {
-    //   const o = d.source && d.source.x0 ? { x: d.source.x0, y: d.source.y0 } :
-    //   { x: root.x0, y: root.y0 };
-    //   return makeLink(o);
-    // });
 
     const linkUpdate = this.innerG.selectAll('path.link:not(.init)').transition(treeTransition);
 

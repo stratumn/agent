@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "karma start karma.conf.js",
+    "test:ci": "npm test -- --single-run",
     "lint": "eslint src test",
     "check": "npm run lint && npm run test",
     "build:lib": "babel src --out-dir lib",

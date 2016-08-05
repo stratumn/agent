@@ -6,7 +6,7 @@ import parseIfJson from './parseIfJson';
 import tagsSet from './tagsSet';
 import StratumnSDK from 'stratumn-sdk';
 
-const defaultOptions = {
+export const defaultOptions = {
   withArgs: false,
   duration: 750,
   verticalSpacing: 1.2,

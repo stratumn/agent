@@ -37,11 +37,20 @@ module.exports = function(config) {
             presets: ['es2015']
           }
           },
-          {loader: 'json', test: /\.json$/}
+          {
+            loader: 'json',
+            test: /\.json$/
+          }
         ]
       },
       node: {
         fs: 'empty'
+      },
+    },
+
+    webpackMiddleware: {
+      stats: {
+        chunks: false,
       }
     },
 
@@ -88,6 +97,6 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: true
+    singleRun: false
   })
 };
