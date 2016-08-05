@@ -13,6 +13,7 @@ import AceConfigurationService from './AceConfiguration.service';
 import ChainTreeBuilderService from './ChainTreeBuilder.service';
 import MapValidatorService from './MapValidator.service';
 import MapExplorerController from './MapExplorer.controller';
+import functionArguments from './functionArguments.filter';
 
 export default angular.module('stratumn.angular-mapexplorer',
   [ngAnimate, ngMaterial, ngAria, 'mdColorPicker', 'ui.drop']
@@ -26,5 +27,6 @@ export default angular.module('stratumn.angular-mapexplorer',
   .service('ChainTreeBuilderService', ChainTreeBuilderService)
   .service('MapValidatorService', MapValidatorService)
   .controller('MapExplorerController', MapExplorerController)
+  .filter('functionArguments', () => functionArguments)
   .name;
 

@@ -40,7 +40,7 @@
         <p>{{me.segment.link.meta.prevLinkHash}}</p>
 
         <h4>Action</h4>
-        <p>{{me.segment.link.meta.action}}({{me.segment.link.meta.arguments.join(', ')}})</p>
+        <p>{{me.segment.link.meta.action}}({{me.segment.link.meta.arguments | functionArguments}})</p>
       </div>
       <div ng-show="me.displayed == 'evidence'" layout-gt-sm="row" layout="column">
         <div class="info">
