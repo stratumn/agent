@@ -110,6 +110,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.defaultOptions = undefined;
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -147,7 +148,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var defaultOptions = {
+	var defaultOptions = exports.defaultOptions = {
 	  withArgs: false,
 	  duration: 750,
 	  verticalSpacing: 1.2,
@@ -270,7 +271,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    this.tree = (0, _d3Hierarchy.tree)();
 
-	    this.svg = (0, _d3Selection.select)(element.find('svg')[0]);
+	    this.svg = (0, _d3Selection.select)(element).append('svg');
 	    this.innerG = this.svg.append('g');
 
 	    this.zoomed = function () {
@@ -340,12 +341,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      link.enter().insert('path', 'g').attr('class', 'link').attr('id', function (d) {
 	        return 'link-' + d.target.id;
 	      });
-	      //  .attr('d', d => finalLink(d, 15));
-	      // .attr('d', d => {
-	      //   const o = d.source && d.source.x0 ? { x: d.source.x0, y: d.source.y0 } :
-	      //   { x: root.x0, y: root.y0 };
-	      //   return makeLink(o);
-	      // });
 
 	      var linkUpdate = this.innerG.selectAll('path.link:not(.init)').transition(treeTransition);
 
