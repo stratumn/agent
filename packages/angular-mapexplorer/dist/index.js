@@ -229,6 +229,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.defaultOptions = undefined;
 
 	var _extends = Object.assign || function (target) {
 	  for (var i = 1; i < arguments.length; i++) {
@@ -288,7 +289,7 @@
 	  }
 	}
 
-	var defaultOptions = {
+	var defaultOptions = exports.defaultOptions = {
 	  withArgs: false,
 	  duration: 750,
 	  verticalSpacing: 1.2,
@@ -425,7 +426,7 @@
 
 	    this.tree = (0, _d3Hierarchy.tree)();
 
-	    this.svg = (0, _d3Selection.select)(element.find('svg')[0]);
+	    this.svg = (0, _d3Selection.select)(element).append('svg');
 	    this.innerG = this.svg.append('g');
 
 	    this.zoomed = function () {
@@ -495,12 +496,6 @@
 	      link.enter().insert('path', 'g').attr('class', 'link').attr('id', function (d) {
 	        return 'link-' + d.target.id;
 	      });
-	      //  .attr('d', d => finalLink(d, 15));
-	      // .attr('d', d => {
-	      //   const o = d.source && d.source.x0 ? { x: d.source.x0, y: d.source.y0 } :
-	      //   { x: root.x0, y: root.y0 };
-	      //   return makeLink(o);
-	      // });
 
 	      var linkUpdate = this.innerG.selectAll('path.link:not(.init)').transition(treeTransition);
 
@@ -29760,7 +29755,7 @@
 	      };
 
 	      scope.tags = [];
-	      var elem = _angular2.default.element(element[0].querySelector('.scroll'));
+	      var elem = _angular2.default.element(element[0].querySelector('.scroll'))[0];
 	      var builder = ChainTreeBuilderService.getBuilder(elem);
 
 	      var update = function update() {
@@ -29787,7 +29782,7 @@
 /***/ function(module, exports) {
 
 	var path = '/Users/adrien/workspace/stratumn/angular-mapexplorer/views/mapexplorer.html';
-	var html = "<span class=\"error\" ng-show=\"me.error\">{{me.error}}</span>\n<div class=\"segment-container\" ng-show=\"me.segment\" flex>\n  <div class=\"title\" layout=\"row\">\n    <div class=\"header\">\n      <h1>Segment</h1>\n      <h2>{{me.segment.meta.linkHash}}</h2>\n    </div>\n    <span flex></span>\n    <md-button class=\"md-icon-button\" aria-label=\"Close\" ng-click=\"me.close()\">\n      <md-icon md-font-library=\"material-icons\">close</md-icon>\n    </md-button>\n  </div>\n  <div layout=\"row\" class=\"body\">\n    <div class=\"menu\">\n      <ul>\n        <li ng-class=\"{ active: me.displayed == 'state'}\" ng-click=\"me.display('state')\">State</li>\n        <li ng-class=\"{ active: me.displayed == 'link' }\" ng-click=\"me.display('link')\">Link</li>\n        <li ng-class=\"{ active: me.displayed == 'evidence' }\" ng-click=\"me.display('evidence')\">Evidence</li>\n        <li ng-class=\"{ active: me.displayed == 'json' }\" ng-click=\"me.display('json')\">JSON</li>\n      </ul>\n    </div>\n    <div class=\"content\" flex-grow>\n      <div ng-show=\"me.displayed == 'state'\" flex-grow>\n        <div ui-ace=\"{\n                            useWrapMode: true,\n                            onLoad: me.aceLoaded\n                        }\" ng-model=\"me.state\" readonly></div>\n      </div>\n      <div ng-show=\"me.displayed == 'link'\" class=\"link\">\n        <h4>Map ID</h4>\n        <p>{{me.segment.link.meta.mapId}}</p>\n\n        <h4>Agent Hash</h4>\n        <p>{{me.segment.link.meta.agentHash}}</p>\n\n        <h4>State Hash</h4>\n        <p>{{me.segment.link.meta.stateHash}}</p>\n\n        <h4>Previous Link hash</h4>\n        <p>{{me.segment.link.meta.prevLinkHash}}</p>\n\n        <h4>Action</h4>\n        <p>{{me.segment.link.meta.action}}({{me.segment.link.meta.arguments.join(', ')}})</p>\n      </div>\n      <div ng-show=\"me.displayed == 'evidence'\" layout-gt-sm=\"row\" layout=\"column\">\n        <div class=\"info\">\n          <h4>State</h4>\n          <p>{{me.segment.meta.evidence.state}}</p>\n          <div ng-show=\"me.segment.meta.evidence.state === 'COMPLETE'\">\n            <h4>Bitcoin Transaction</h4>\n            <p>\n              {{me.segment.meta.evidence.transactions['bitcoin:main']}}\n              <a target=\"_blank\" ng-href=\"https://blockchain.info/tx/{{me.segment.meta.evidence.transactions['bitcoin:main']}}\">View transaction on Blockchain.info</a>\n            </p>\n\n            <h4>Merkle root</h4>\n            <p>{{me.segment.meta.evidence.merkleRoot}}</p>\n          </div>\n        </div>\n        <div class=\"merkle-path\" ng-show=\"me.segment.meta.evidence.state === 'COMPLETE'\">\n          <h4>Merkle Path</h4>\n          <st-merkle-path-tree merkle-path=\"me.segment.meta.evidence.merklePath\"></st-merkle-path-tree>\n        </div>\n      </div>\n      <div ng-show=\"me.displayed == 'json'\">\n        <div ui-ace=\"{\n                            useWrapMode: true,\n                            onLoad: me.aceLoaded\n                        }\" ng-model=\"me.segmentJSON\" readonly></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div ng-show=\"me.loading\" layout=\"row\" layout-sm=\"column\" layout-align=\"space-around\">\n    <md-progress-circular md-mode=\"indeterminate\" md-diameter=\"80\"></md-progress-circular>\n</div>\n<div ng-hide=\"me.loading\" class=\"scroll\">\n    <div ng-show=\"tags && tags.length && options.showTagColorConfiguration\" draggable id=\"tags-configuration\">\n      <md-toolbar>\n        <div class=\"md-toolbar-tools\">\n          <h4>Configure link tag color</h4>\n          <md-button class=\"md-icon-button\" aria-label=\"Close\" ng-click=\"options.showTagColorConfiguration = false\">\n            <md-icon md-font-library=\"material-icons\">close</md-icon>\n          </md-button>\n        </div>\n      </md-toolbar>\n      <div class=\"content\">\n        <st-tag-color-picker ng-repeat=\"tag in tags\" tag=\"tag\"></st-tag-color-picker>\n      </div>\n    </div>\n    <svg></svg>\n</div>\n";
+	var html = "<span class=\"error\" ng-show=\"me.error\">{{me.error}}</span>\n<div class=\"segment-container\" ng-show=\"me.segment\" flex>\n  <div class=\"title\" layout=\"row\">\n    <div class=\"header\">\n      <h1>Segment</h1>\n      <h2>{{me.segment.meta.linkHash}}</h2>\n    </div>\n    <span flex></span>\n    <md-button class=\"md-icon-button\" aria-label=\"Close\" ng-click=\"me.close()\">\n      <md-icon md-font-library=\"material-icons\">close</md-icon>\n    </md-button>\n  </div>\n  <div layout=\"row\" class=\"body\">\n    <div class=\"menu\">\n      <ul>\n        <li ng-class=\"{ active: me.displayed == 'state'}\" ng-click=\"me.display('state')\">State</li>\n        <li ng-class=\"{ active: me.displayed == 'link' }\" ng-click=\"me.display('link')\">Link</li>\n        <li ng-class=\"{ active: me.displayed == 'evidence' }\" ng-click=\"me.display('evidence')\">Evidence</li>\n        <li ng-class=\"{ active: me.displayed == 'json' }\" ng-click=\"me.display('json')\">JSON</li>\n      </ul>\n    </div>\n    <div class=\"content\" flex-grow>\n      <div ng-show=\"me.displayed == 'state'\" flex-grow>\n        <div ui-ace=\"{\n                            useWrapMode: true,\n                            onLoad: me.aceLoaded\n                        }\" ng-model=\"me.state\" readonly></div>\n      </div>\n      <div ng-show=\"me.displayed == 'link'\" class=\"link\">\n        <h4>Map ID</h4>\n        <p>{{me.segment.link.meta.mapId}}</p>\n\n        <h4>Agent Hash</h4>\n        <p>{{me.segment.link.meta.agentHash}}</p>\n\n        <h4>State Hash</h4>\n        <p>{{me.segment.link.meta.stateHash}}</p>\n\n        <h4>Previous Link hash</h4>\n        <p>{{me.segment.link.meta.prevLinkHash}}</p>\n\n        <h4>Action</h4>\n        <p>{{me.segment.link.meta.action}}({{me.segment.link.meta.arguments.join(', ')}})</p>\n      </div>\n      <div ng-show=\"me.displayed == 'evidence'\" layout-gt-sm=\"row\" layout=\"column\">\n        <div class=\"info\">\n          <h4>State</h4>\n          <p>{{me.segment.meta.evidence.state}}</p>\n          <div ng-show=\"me.segment.meta.evidence.state === 'COMPLETE'\">\n            <h4>Bitcoin Transaction</h4>\n            <p>\n              {{me.segment.meta.evidence.transactions['bitcoin:main']}}\n              <a target=\"_blank\" ng-href=\"https://blockchain.info/tx/{{me.segment.meta.evidence.transactions['bitcoin:main']}}\">View transaction on Blockchain.info</a>\n            </p>\n\n            <h4>Merkle root</h4>\n            <p>{{me.segment.meta.evidence.merkleRoot}}</p>\n          </div>\n        </div>\n        <div class=\"merkle-path\" ng-show=\"me.segment.meta.evidence.state === 'COMPLETE'\">\n          <h4>Merkle Path</h4>\n          <st-merkle-path-tree merkle-path=\"me.segment.meta.evidence.merklePath\"></st-merkle-path-tree>\n        </div>\n      </div>\n      <div ng-show=\"me.displayed == 'json'\">\n        <div ui-ace=\"{\n                            useWrapMode: true,\n                            onLoad: me.aceLoaded\n                        }\" ng-model=\"me.segmentJSON\" readonly></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div ng-show=\"me.loading\" layout=\"row\" layout-sm=\"column\" layout-align=\"space-around\">\n    <md-progress-circular md-mode=\"indeterminate\" md-diameter=\"80\"></md-progress-circular>\n</div>\n<div ng-hide=\"me.loading\" class=\"scroll\">\n    <div ng-show=\"tags && tags.length && options.showTagColorConfiguration\" draggable id=\"tags-configuration\">\n      <md-toolbar>\n        <div class=\"md-toolbar-tools\">\n          <h4>Configure link tag color</h4>\n          <md-button class=\"md-icon-button\" aria-label=\"Close\" ng-click=\"options.showTagColorConfiguration = false\">\n            <md-icon md-font-library=\"material-icons\">close</md-icon>\n          </md-button>\n        </div>\n      </md-toolbar>\n      <div class=\"content\">\n        <st-tag-color-picker ng-repeat=\"tag in tags\" tag=\"tag\"></st-tag-color-picker>\n      </div>\n    </div>\n</div>\n";
 	window.angular.module('ng').run(['$templateCache', function(c) { c.put(path, html) }]);
 	module.exports = path;
 
