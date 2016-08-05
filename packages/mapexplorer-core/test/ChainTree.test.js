@@ -39,5 +39,5 @@ describe('ChainTree', () => {
 
   it('should display the action on links', () => {
     svg.selectAll('.textpath').text().should.be.eql('register');
-  })
+  });
 });
