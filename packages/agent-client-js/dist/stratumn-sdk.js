@@ -109,7 +109,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createMap2 = _interopRequireDefault(_createMap);
 
-	var _getSegment = __webpack_require__(10);
+	var _getSegment = __webpack_require__(13);
 
 	var _getSegment2 = _interopRequireDefault(_getSegment);
 
@@ -117,11 +117,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _findSegments2 = _interopRequireDefault(_findSegments);
 
-	var _getMapIds = __webpack_require__(13);
+	var _getMapIds = __webpack_require__(14);
 
 	var _getMapIds2 = _interopRequireDefault(_getMapIds);
 
-	var _getBranches = __webpack_require__(14);
+	var _getBranches = __webpack_require__(10);
 
 	var _getBranches2 = _interopRequireDefault(_getBranches);
 
@@ -137,9 +137,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function getAgent(url) {
 	  return new Promise(function (resolve, reject) {
-	    return _superagent2.default.get(url).end(function (err, res) {
+	    _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
 	        /*eslint-disable*/
+	        err.message = res && res.body.error ? res.body.error : err.message;
 	        err.status = res && res.statusCode;
 	        /*eslint-enable*/
 	        reject(err);
@@ -1754,7 +1755,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new Promise(function (resolve, reject) {
 	    var url = agent.url + '/segments';
 
-	    return _superagent2.default.post(url).send(args).end(function (err, res) {
+	    _superagent2.default.post(url).send(args).end(function (err, res) {
 	      var error = res.body.meta && res.body.meta.errorMessage ? new Error(res.body.meta.errorMessage) : err;
 
 	      if (error) {
@@ -1787,6 +1788,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _deprecated2 = _interopRequireDefault(_deprecated);
 
+	var _getBranches = __webpack_require__(10);
+
+	var _getBranches2 = _interopRequireDefault(_getBranches);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function segmentify(agent, obj) {
@@ -1803,7 +1808,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var url = agent.url + '/segments/' + obj.meta.linkHash + '/' + key;
 	        /*eslint-enable*/
 
-	        return _superagent2.default.post(url).send(args).end(function (err, res) {
+	        _superagent2.default.post(url).send(args).end(function (err, res) {
 	          var error = res.body.meta && res.body.meta.errorMessage ? new Error(res.body.meta.errorMessage) : err;
 
 	          if (error) {
@@ -1833,7 +1838,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  obj.load = function () {
 	    /*eslint-enable*/
 	    (0, _deprecated2.default)('segment#load()');
-	    return obj;
+	    return Promise.resolve(segmentify(agent, {
+	      link: JSON.parse(JSON.stringify(obj.link)),
+	      meta: JSON.parse(JSON.stringify(obj.meta))
+	    }));
+	  };
+
+	  // Deprecated.
+	  /*eslint-disable*/
+	  obj.getBranches = function () {
+	    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	      args[_key2] = arguments[_key2];
+	    }
+
+	    /*eslint-enable*/
+	    return _getBranches2.default.apply(undefined, [agent, obj.meta.linkHash].concat(args));
 	  };
 
 	  return obj;
@@ -1866,34 +1885,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = getSegment;
+	exports.default = getBranches;
 
-	var _superagent = __webpack_require__(2);
+	var _findSegments = __webpack_require__(11);
 
-	var _superagent2 = _interopRequireDefault(_superagent);
+	var _findSegments2 = _interopRequireDefault(_findSegments);
 
-	var _segmentify = __webpack_require__(8);
+	var _deprecated = __webpack_require__(9);
 
-	var _segmentify2 = _interopRequireDefault(_segmentify);
+	var _deprecated2 = _interopRequireDefault(_deprecated);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function getSegment(agent, linkHash) {
-	  return new Promise(function (resolve, reject) {
-	    var url = agent.url + '/segments/' + linkHash;
+	function getBranches(agent, prevLinkHash) {
+	  var tags = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
 
-	    return _superagent2.default.get(url).end(function (err, res) {
-	      if (err) {
-	        /*eslint-disable*/
-	        err.status = res && res.statusCode;
-	        /*eslint-enable*/
-	        reject(err);
-	        return;
-	      }
+	  (0, _deprecated2.default)('Agent#getBranches(agent, prevLinkHash, tags = [])', 'Agent#findSegments(agent, filter)');
 
-	      resolve((0, _segmentify2.default)(agent, res.body));
-	    });
-	  });
+	  return (0, _findSegments2.default)(agent, { prevLinkHash: prevLinkHash, tags: tags });
 	}
 
 /***/ },
@@ -1927,9 +1936,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new Promise(function (resolve, reject) {
 	    var url = agent.url + '/segments' + (0, _makeQueryString2.default)(opts);
 
-	    return _superagent2.default.get(url).end(function (err, res) {
+	    _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
 	        /*eslint-disable*/
+	        err.message = res && res.body.error ? res.body.error : err.message;
 	        err.status = res && res.statusCode;
 	        /*eslint-enable*/
 	        reject(err);
@@ -1981,6 +1991,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.default = getSegment;
+
+	var _superagent = __webpack_require__(2);
+
+	var _superagent2 = _interopRequireDefault(_superagent);
+
+	var _segmentify = __webpack_require__(8);
+
+	var _segmentify2 = _interopRequireDefault(_segmentify);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function getSegment(agent, linkHash) {
+	  return new Promise(function (resolve, reject) {
+	    var url = agent.url + '/segments/' + linkHash;
+
+	    _superagent2.default.get(url).end(function (err, res) {
+	      if (err) {
+	        /*eslint-disable*/
+	        err.message = res && res.body.error ? res.body.error : err.message;
+	        err.status = res && res.statusCode;
+	        /*eslint-enable*/
+	        reject(err);
+	        return;
+	      }
+
+	      resolve((0, _segmentify2.default)(agent, res.body));
+	    });
+	  });
+	}
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	exports.default = getMapIds;
 
 	var _superagent = __webpack_require__(2);
@@ -1999,9 +2049,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new Promise(function (resolve, reject) {
 	    var url = agent.url + '/maps' + (0, _makeQueryString2.default)(opts);
 
-	    return _superagent2.default.get(url).end(function (err, res) {
+	    _superagent2.default.get(url).end(function (err, res) {
 	      if (err) {
 	        /*eslint-disable*/
+	        err.message = res && res.body.error ? res.body.error : err.message;
 	        err.status = res && res.statusCode;
 	        /*eslint-enable*/
 	        reject(err);
@@ -2011,35 +2062,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      resolve(res.body);
 	    });
 	  });
-	}
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = getBranches;
-
-	var _findSegments = __webpack_require__(11);
-
-	var _findSegments2 = _interopRequireDefault(_findSegments);
-
-	var _deprecated = __webpack_require__(9);
-
-	var _deprecated2 = _interopRequireDefault(_deprecated);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function getBranches(agent, prevLinkHash) {
-	  var tags = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
-
-	  (0, _deprecated2.default)('Agent#getBranches(agent, prevLinkHash, tags = [])', 'Agent#findSegments(agent, filter)');
-
-	  return (0, _findSegments2.default)(agent, { prevLinkHash: prevLinkHash, tags: tags });
 	}
 
 /***/ },
@@ -2053,7 +2075,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.default = getLink;
 
-	var _getSegment = __webpack_require__(10);
+	var _getSegment = __webpack_require__(13);
 
 	var _getSegment2 = _interopRequireDefault(_getSegment);
 
