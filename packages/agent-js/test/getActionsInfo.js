@@ -30,4 +30,13 @@ describe('#getActionsInfo()', () => {
       action: { args: ['d'] }
     });
   });
+
+  it('works when init is null', () => {
+    const a = { action: actions.action };
+
+    getActionsInfo(a).should.deepEqual({
+      init: { args: [] },
+      action: { args: ['d'] }
+    });
+  });
 });

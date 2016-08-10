@@ -66,6 +66,16 @@ describe('MemoryStore', () => {
         .then(() => store.deleteSegment('segment1'))
         .then(body => body.should.deepEqual(segment1))
     );
+
+    it('rejects if there is an error', () =>
+      store
+        .deleteSegment('notFound')
+        .then(() => { throw new Error('should not resolve'); })
+        .catch(err => {
+          err.statusCode.should.be.exactly(404);
+          err.message.should.be.exactly('not found');
+        })
+    );
   });
 
   describe('#findSegments()', () => {

@@ -171,6 +171,12 @@ describe('HttpServer()', () => {
     );
   });
 
+  describe('GET /404', () => {
+    it('renders an error', () =>
+      testDeepEquals(supertest(server).get('/404'), 404, { status: 404, error: 'not found' })
+    );
+  });
+
   // Legacy routes
 
   describe('[DEPRECATED] POST "/maps"', () => {
