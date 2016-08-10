@@ -44,7 +44,7 @@ export default function memoryStore() {
      * @returns {Promise} a promise that resolve with the segment
      */
     saveSegment(segment) {
-      segments[segment.meta.linkHash] = segment;
+      segments[segment.meta.linkHash] = JSON.parse(JSON.stringify(segment));
       return Promise.resolve(segment);
     },
 
@@ -62,7 +62,7 @@ export default function memoryStore() {
         return Promise.reject(err);
       }
 
-      return Promise.resolve(segment);
+      return Promise.resolve(JSON.parse(JSON.stringify(segment)));
     },
 
     /**
@@ -122,7 +122,7 @@ export default function memoryStore() {
           }
         }
 
-        a.push(segment);
+        a.push(JSON.parse(JSON.stringify(segment)));
       });
 
       a.sort((l, r) => {
