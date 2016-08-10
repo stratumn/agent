@@ -10,12 +10,13 @@ import getLink from './getLink';
 import getMap from './getMap';
 
 export default function getAgent(url) {
-  return new Promise((resolve, reject) =>
+  return new Promise((resolve, reject) => {
     request
       .get(url)
       .end((err, res) => {
         if (err) {
           /*eslint-disable*/
+          err.message = res && res.body.error ? res.body.error : err.message;
           err.status = res && res.statusCode;
           /*eslint-enable*/
           reject(err);
@@ -36,6 +37,6 @@ export default function getAgent(url) {
         agent.getMap = getMap.bind(null, agent);
 
         resolve(agent);
-      })
-  );
+      });
+  });
 }

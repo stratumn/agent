@@ -49,7 +49,8 @@
     "mocha": "^2.4.5",
     "rimraf": "^2.5.2",
     "should": "^8.2.2",
-    "stratumn-agent": "^0.10.0",
+    "stratumn-agent": "^0.12.3",
+    "stratumn-agent-js": "^0.2.1",
     "webpack": "^1.12.14"
   },
   "dependencies": {

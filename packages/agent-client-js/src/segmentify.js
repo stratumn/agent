@@ -1,5 +1,6 @@
 import request from 'superagent';
 import deprecated from './deprecated';
+import getBranches from './getBranches';
 
 export default function segmentify(agent, obj) {
   Object
@@ -12,7 +13,7 @@ export default function segmentify(agent, obj) {
           const url = `${agent.url}/segments/${obj.meta.linkHash}/${key}`;
           /*eslint-enable*/
 
-          return request
+          request
             .post(url)
             .send(args)
             .end((err, res) => {
@@ -46,7 +47,17 @@ export default function segmentify(agent, obj) {
   obj.load = () => {
     /*eslint-enable*/
     deprecated('segment#load()');
-    return obj;
+    return Promise.resolve(segmentify(agent, {
+      link: JSON.parse(JSON.stringify(obj.link)),
+      meta: JSON.parse(JSON.stringify(obj.meta))
+    }));
+  };
+
+  // Deprecated.
+  /*eslint-disable*/
+  obj.getBranches = (...args) => {
+    /*eslint-enable*/
+    return getBranches(agent, obj.meta.linkHash, ...args);
   };
 
   return obj;

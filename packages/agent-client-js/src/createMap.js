@@ -5,7 +5,7 @@ export default function createMap(agent, ...args) {
   return new Promise((resolve, reject) => {
     const url = `${agent.url}/segments`;
 
-    return request
+    request
       .post(url)
       .send(args)
       .end((err, res) => {

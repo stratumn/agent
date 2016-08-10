@@ -6,11 +6,12 @@ export default function findSegments(agent, opts = {}) {
   return new Promise((resolve, reject) => {
     const url = `${agent.url}/segments${makeQueryString(opts)}`;
 
-    return request
+    request
       .get(url)
       .end((err, res) => {
         if (err) {
           /*eslint-disable*/
+          err.message = res && res.body.error ? res.body.error : err.message;
           err.status = res && res.statusCode;
           /*eslint-enable*/
           reject(err);
