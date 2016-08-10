@@ -58,7 +58,7 @@ export default function memoryStore() {
 
       if (!segment) {
         const err = new Error('not found');
-        err.statusCode = 404;
+        err.status = 404;
         return Promise.reject(err);
       }
 
@@ -75,7 +75,7 @@ export default function memoryStore() {
 
       if (!segment) {
         const err = new Error('not found');
-        err.statusCode = 404;
+        err.status = 404;
         return Promise.reject(err);
       }
 

@@ -53,7 +53,7 @@ describe('MemoryStore', () => {
         .getSegment('notFound')
         .then(() => { throw new Error('should not resolve'); })
         .catch(err => {
-          err.statusCode.should.be.exactly(404);
+          err.status.should.be.exactly(404);
           err.message.should.be.exactly('not found');
         })
     );
@@ -72,7 +72,7 @@ describe('MemoryStore', () => {
         .deleteSegment('notFound')
         .then(() => { throw new Error('should not resolve'); })
         .catch(err => {
-          err.statusCode.should.be.exactly(404);
+          err.status.should.be.exactly(404);
           err.message.should.be.exactly('not found');
         })
     );
