@@ -19,8 +19,8 @@
         <li ng-class="{ active: me.displayed == 'json' }" ng-click="me.display('json')">JSON</li>
       </ul>
     </div>
-    <div class="content" flex-grow>
-      <div ng-show="me.displayed == 'state'" flex-grow>
+    <div class="content" flex="grow">
+      <div ng-show="me.displayed == 'state'" flex="grow">
         <div ui-ace="{
                             useWrapMode: true,
                             onLoad: me.aceLoaded
