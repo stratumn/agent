@@ -28,7 +28,8 @@
     "angular-material": "^1.0.9",
     "angular-drop": "^0.0.1",
     "md-color-picker": "^0.2.6",
-    "angular-aria": "^1.5.8"
+    "angular-aria": "^1.5.8",
+    "mapexplorer-core": "^0.0.16"
   },
   "devDependencies": {
     "babel-polyfill": "^0.0.1"
