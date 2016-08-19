@@ -13,7 +13,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'bower_components/babel-polyfill/browser-polyfill.js',
-      'node_modules/angular/angular.min.js',
+      'node_modules/angular/angular.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'bower_components/angular-drop/angular-drop.js',
       'test/*.spec.js',
@@ -110,7 +110,7 @@ module.exports = function(config) {
 
   if(process.env.TRAVIS){
     config.set({
-      browsers: ['TravisCI_Chrome', 'Firefox', 'PhantomJS'],
+      browsers: ['TravisCI_Chrome', 'PhantomJS'],
       customLaunchers: {
         TravisCI_Chrome: {
           base: 'Chrome',
