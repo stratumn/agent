@@ -93,7 +93,7 @@ module.exports = function(config) {
 
   if(process.env.TRAVIS){
     config.set({
-      browsers: ['TravisCI_Chrome', 'Firefox', 'PhantomJS'],
+      browsers: ['TravisCI_Chrome', 'PhantomJS'],
       customLaunchers: {
         TravisCI_Chrome: {
           base: 'Chrome',
