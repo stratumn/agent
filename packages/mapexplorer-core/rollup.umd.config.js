@@ -18,17 +18,8 @@ module.exports = {
     'd3-zoom': 'd3',
     'd3-array': 'd3'
   },
-  targets: [
-    {
-      dest: pkg['main'],
-      format: 'umd',
-      moduleName: 'mapexplorerCore',
-      sourceMap: true
-    },
-    {
-      dest: pkg['jsnext:main'],
-      format: 'es',
-      sourceMap: true
-    }
-  ]
+  dest: pkg['main'],
+  format: 'umd',
+  moduleName: 'mapexplorerCore',
+  sourceMap: true
 };

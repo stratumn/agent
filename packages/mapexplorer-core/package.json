@@ -12,7 +12,7 @@
     "test:integration:ci": "npm run test:integration -- --single-run",
     "test:ci": "npm run test:unit && npm run test:integration:ci",
     "prebuild": "eslint src test",
-    "build:npm": "rollup -c",
+    "build:npm": "rollup -c rollup.es.config.js && rollup -c rollup.umd.config.js",
     "build:bower": "rollup -c rollup.bower.config.js",
     "build": "npm run build:npm && npm run build:bower",
     "watch": "rollup -c -w",
