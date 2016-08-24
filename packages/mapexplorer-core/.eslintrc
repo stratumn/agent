@@ -22,6 +22,6 @@
     "no-param-reassign": 0
   },
   "globals": {
-    "d3": true
+    "sinon": true
   }
 }

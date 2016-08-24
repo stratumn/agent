@@ -473,7 +473,7 @@ Emitter.prototype.hasListeners = function(event){
 var index$3 = interopDefault(index$2);
 
 
-var require$$1 = Object.freeze({
+var require$$4 = Object.freeze({
   default: index$3
 });
 
@@ -506,7 +506,7 @@ module.exports = function(arr, fn, initial){
 var index$5 = interopDefault(index$4);
 
 
-var require$$0$1 = Object.freeze({
+var require$$3 = Object.freeze({
   default: index$5
 });
 
@@ -529,7 +529,7 @@ module.exports = isObject;
 var isObject$1 = interopDefault(isObject);
 
 
-var require$$0$2 = Object.freeze({
+var require$$0$1 = Object.freeze({
   default: isObject$1
 });
 
@@ -537,7 +537,7 @@ var requestBase = createCommonjsModule(function (module, exports) {
 /**
  * Module of mixed-in functions shared between node and client code
  */
-var isObject = interopDefault(require$$0$2);
+var isObject = interopDefault(require$$0$1);
 
 /**
  * Clear previous timeout.
@@ -766,7 +766,7 @@ module.exports = request;
 var request$1 = interopDefault(request);
 
 
-var require$$0$3 = Object.freeze({
+var require$$0$2 = Object.freeze({
   default: request$1
 });
 
@@ -775,10 +775,10 @@ var client = createCommonjsModule(function (module) {
  * Module dependencies.
  */
 
-var Emitter = interopDefault(require$$1);
-var reduce = interopDefault(require$$0$1);
+var Emitter = interopDefault(require$$4);
+var reduce = interopDefault(require$$3);
 var requestBase = interopDefault(require$$2$1);
-var isObject = interopDefault(require$$0$2);
+var isObject = interopDefault(require$$0$1);
 
 /**
  * Root reference for iframes.
@@ -827,7 +827,7 @@ function isHost(obj) {
  * Expose `request`.
  */
 
-var request = module.exports = interopDefault(require$$0$3).bind(null, Request);
+var request = module.exports = interopDefault(require$$0$2).bind(null, Request);
 
 /**
  * Determine XHR.
@@ -1874,7 +1874,7 @@ exports.default = config;
 var config$2 = interopDefault(config$1);
 
 
-var require$$1$1 = Object.freeze({
+var require$$1 = Object.freeze({
   default: config$2
 });
 
@@ -1890,7 +1890,7 @@ var _superagent = interopDefault(require$$2);
 
 var _superagent2 = _interopRequireDefault(_superagent);
 
-var _config = interopDefault(require$$1$1);
+var _config = interopDefault(require$$1);
 
 var _config2 = _interopRequireDefault(_config);
 
@@ -1952,7 +1952,7 @@ function linkify(app, obj) {
 var linkify$1 = interopDefault(linkify);
 
 
-var require$$1$2 = Object.freeze({
+var require$$1$1 = Object.freeze({
   default: linkify$1
 });
 
@@ -1968,11 +1968,11 @@ var _superagent = interopDefault(require$$2);
 
 var _superagent2 = _interopRequireDefault(_superagent);
 
-var _config = interopDefault(require$$1$1);
+var _config = interopDefault(require$$1);
 
 var _config2 = _interopRequireDefault(_config);
 
-var _linkify = interopDefault(require$$1$2);
+var _linkify = interopDefault(require$$1$1);
 
 var _linkify2 = _interopRequireDefault(_linkify);
 
@@ -2002,7 +2002,7 @@ function createMap(app) {
 var createMap$1 = interopDefault(createMap);
 
 
-var require$$3 = Object.freeze({
+var require$$3$1 = Object.freeze({
   default: createMap$1
 });
 
@@ -2018,11 +2018,11 @@ var _superagent = interopDefault(require$$2);
 
 var _superagent2 = _interopRequireDefault(_superagent);
 
-var _config = interopDefault(require$$1$1);
+var _config = interopDefault(require$$1);
 
 var _config2 = _interopRequireDefault(_config);
 
-var _linkify = interopDefault(require$$1$2);
+var _linkify = interopDefault(require$$1$1);
 
 var _linkify2 = _interopRequireDefault(_linkify);
 
@@ -2063,11 +2063,11 @@ var _superagent = interopDefault(require$$2);
 
 var _superagent2 = _interopRequireDefault(_superagent);
 
-var _config = interopDefault(require$$1$1);
+var _config = interopDefault(require$$1);
 
 var _config2 = _interopRequireDefault(_config);
 
-var _linkify = interopDefault(require$$1$2);
+var _linkify = interopDefault(require$$1$1);
 
 var _linkify2 = _interopRequireDefault(_linkify);
 
@@ -2102,7 +2102,7 @@ function getMap(app, mapId) {
 var getMap$1 = interopDefault(getMap);
 
 
-var require$$1$3 = Object.freeze({
+var require$$1$2 = Object.freeze({
   default: getMap$1
 });
 
@@ -2118,11 +2118,11 @@ var _superagent = interopDefault(require$$2);
 
 var _superagent2 = _interopRequireDefault(_superagent);
 
-var _config = interopDefault(require$$1$1);
+var _config = interopDefault(require$$1);
 
 var _config2 = _interopRequireDefault(_config);
 
-var _linkify = interopDefault(require$$1$2);
+var _linkify = interopDefault(require$$1$1);
 
 var _linkify2 = _interopRequireDefault(_linkify);
 
@@ -2157,7 +2157,7 @@ function getBranches(app, linkHash) {
 var getBranches$1 = interopDefault(getBranches);
 
 
-var require$$0$4 = Object.freeze({
+var require$$0$3 = Object.freeze({
   default: getBranches$1
 });
 
@@ -2173,11 +2173,11 @@ var _superagent = interopDefault(require$$2);
 
 var _superagent2 = _interopRequireDefault(_superagent);
 
-var _config = interopDefault(require$$1$1);
+var _config = interopDefault(require$$1);
 
 var _config2 = _interopRequireDefault(_config);
 
-var _createMap = interopDefault(require$$3);
+var _createMap = interopDefault(require$$3$1);
 
 var _createMap2 = _interopRequireDefault(_createMap);
 
@@ -2185,11 +2185,11 @@ var _getLink = interopDefault(require$$2$2);
 
 var _getLink2 = _interopRequireDefault(_getLink);
 
-var _getMap = interopDefault(require$$1$3);
+var _getMap = interopDefault(require$$1$2);
 
 var _getMap2 = _interopRequireDefault(_getMap);
 
-var _getBranches = interopDefault(require$$0$4);
+var _getBranches = interopDefault(require$$0$3);
 
 var _getBranches2 = _interopRequireDefault(_getBranches);
 
@@ -2238,7 +2238,7 @@ var _superagent = interopDefault(require$$2);
 
 var _superagent2 = _interopRequireDefault(_superagent);
 
-var _linkify = interopDefault(require$$1$2);
+var _linkify = interopDefault(require$$1$1);
 
 var _linkify2 = _interopRequireDefault(_linkify);
 
@@ -2269,7 +2269,7 @@ function loadLink(segment) {
 var loadLink$2 = interopDefault(loadLink$1);
 
 
-var require$$1$4 = Object.freeze({
+var require$$1$3 = Object.freeze({
   default: loadLink$2
 });
 
@@ -2280,11 +2280,11 @@ var _getApplication = interopDefault(require$$0);
 
 var _getApplication2 = _interopRequireDefault(_getApplication);
 
-var _loadLink = interopDefault(require$$1$4);
+var _loadLink = interopDefault(require$$1$3);
 
 var _loadLink2 = _interopRequireDefault(_loadLink);
 
-var _config = interopDefault(require$$1$1);
+var _config = interopDefault(require$$1);
 
 var _config2 = _interopRequireDefault(_config);
 
@@ -2874,1201 +2874,504 @@ function hashJson(obj) {
   return sha256$1(stringify(obj));
 }
 
-var client$2 = createCommonjsModule(function (module) {
-/**
- * Module dependencies.
- */
+var cleanurl = createCommonjsModule(function (module) {
+'use strict';
 
-var Emitter = interopDefault(require$$1);
-var reduce = interopDefault(require$$0$1);
-
-/**
- * Root reference for iframes.
- */
-
-var root;
-if (typeof window !== 'undefined') { // Browser window
-  root = window;
-} else if (typeof self !== 'undefined') { // Web Worker
-  root = self;
-} else { // Other environments
-  root = commonjsGlobal;
-}
-
-/**
- * Noop.
- */
-
-function noop(){};
-
-/**
- * Check if `obj` is a host object,
- * we don't want to serialize these :)
- *
- * TODO: future proof, move to compoent land
- *
- * @param {Object} obj
- * @return {Boolean}
- * @api private
- */
-
-function isHost(obj) {
-  var str = {}.toString.call(obj);
-
-  switch (str) {
-    case '[object File]':
-    case '[object Blob]':
-    case '[object FormData]':
-      return true;
-    default:
-      return false;
-  }
-}
-
-/**
- * Determine XHR.
- */
-
-request.getXHR = function () {
-  if (root.XMLHttpRequest
-      && (!root.location || 'file:' != root.location.protocol
-          || !root.ActiveXObject)) {
-    return new XMLHttpRequest;
-  } else {
-    try { return new ActiveXObject('Microsoft.XMLHTTP'); } catch(e) {}
-    try { return new ActiveXObject('Msxml2.XMLHTTP.6.0'); } catch(e) {}
-    try { return new ActiveXObject('Msxml2.XMLHTTP.3.0'); } catch(e) {}
-    try { return new ActiveXObject('Msxml2.XMLHTTP'); } catch(e) {}
-  }
-  return false;
-};
-
-/**
- * Removes leading and trailing whitespace, added to support IE.
- *
- * @param {String} s
- * @return {String}
- * @api private
- */
-
-var trim = ''.trim
-  ? function(s) { return s.trim(); }
-  : function(s) { return s.replace(/(^\s*|\s*$)/g, ''); };
-
-/**
- * Check if `obj` is an object.
- *
- * @param {Object} obj
- * @return {Boolean}
- * @api private
- */
-
-function isObject(obj) {
-  return obj === Object(obj);
-}
-
-/**
- * Serialize the given `obj`.
- *
- * @param {Object} obj
- * @return {String}
- * @api private
- */
-
-function serialize(obj) {
-  if (!isObject(obj)) return obj;
-  var pairs = [];
-  for (var key in obj) {
-    if (null != obj[key]) {
-      pushEncodedKeyValuePair(pairs, key, obj[key]);
-        }
-      }
-  return pairs.join('&');
-}
-
-/**
- * Helps 'serialize' with serializing arrays.
- * Mutates the pairs array.
- *
- * @param {Array} pairs
- * @param {String} key
- * @param {Mixed} val
- */
-
-function pushEncodedKeyValuePair(pairs, key, val) {
-  if (Array.isArray(val)) {
-    return val.forEach(function(v) {
-      pushEncodedKeyValuePair(pairs, key, v);
+module.exports = {
+  processRequest: function(req) {
+    req.url = req.url.replace(/[^%]+/g, function(s) {
+      return encodeURI(s);
     });
   }
-  pairs.push(encodeURIComponent(key)
-    + '=' + encodeURIComponent(val));
+};
+});
+
+var cleanurl$1 = interopDefault(cleanurl);
+var processRequest = cleanurl.processRequest;
+
+var require$$7 = Object.freeze({
+  default: cleanurl$1,
+  processRequest: processRequest
+});
+
+var xhrBrowser = createCommonjsModule(function (module) {
+module.exports = window.XMLHttpRequest;
+});
+
+var xhrBrowser$1 = interopDefault(xhrBrowser);
+
+
+var require$$6 = Object.freeze({
+	default: xhrBrowser$1
+});
+
+var delay = createCommonjsModule(function (module) {
+'use strict';
+
+// Wrap a function in a `setTimeout` call. This is used to guarantee async
+// behavior, which can avoid unexpected errors.
+
+module.exports = function(fn) {
+  return function() {
+    var
+      args = Array.prototype.slice.call(arguments, 0),
+      newFunc = function() {
+        return fn.apply(null, args);
+      };
+    setTimeout(newFunc, 0);
+  };
+};
+});
+
+var delay$1 = interopDefault(delay);
+
+
+var require$$5 = Object.freeze({
+  default: delay$1
+});
+
+var request$2 = createCommonjsModule(function (module) {
+'use strict';
+
+function Request(optsOrUrl) {
+  var opts = typeof optsOrUrl === 'string' ? {url: optsOrUrl} : optsOrUrl || {};
+  this.method = opts.method ? opts.method.toUpperCase() : 'GET';
+  this.url = opts.url;
+  this.headers = opts.headers || {};
+  this.body = opts.body;
+  this.timeout = opts.timeout || 0;
+  this.errorOn404 = opts.errorOn404 != null ? opts.errorOn404 : true;
+  this.onload = opts.onload;
+  this.onerror = opts.onerror;
 }
 
-/**
- * Expose serialization method.
- */
-
- request.serializeObject = serialize;
-
- /**
-  * Parse the given x-www-form-urlencoded `str`.
-  *
-  * @param {String} str
-  * @return {Object}
-  * @api private
-  */
-
-function parseString(str) {
-  var obj = {};
-  var pairs = str.split('&');
-  var parts;
-  var pair;
-
-  for (var i = 0, len = pairs.length; i < len; ++i) {
-    pair = pairs[i];
-    parts = pair.split('=');
-    obj[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
-  }
-
-  return obj;
-}
-
-/**
- * Expose parser.
- */
-
-request.parseString = parseString;
-
-/**
- * Default MIME type map.
- *
- *     superagent.types.xml = 'application/xml';
- *
- */
-
-request.types = {
-  html: 'text/html',
-  json: 'application/json',
-  xml: 'application/xml',
-  urlencoded: 'application/x-www-form-urlencoded',
-  'form': 'application/x-www-form-urlencoded',
-  'form-data': 'application/x-www-form-urlencoded'
-};
-
-/**
- * Default serialization map.
- *
- *     superagent.serialize['application/xml'] = function(obj){
- *       return 'generated xml here';
- *     };
- *
- */
-
- request.serialize = {
-   'application/x-www-form-urlencoded': serialize,
-   'application/json': JSON.stringify
- };
-
- /**
-  * Default parsers.
-  *
-  *     superagent.parse['application/xml'] = function(str){
-  *       return { object parsed from str };
-  *     };
-  *
-  */
-
-request.parse = {
-  'application/x-www-form-urlencoded': parseString,
-  'application/json': JSON.parse
-};
-
-/**
- * Parse the given header `str` into
- * an object containing the mapped fields.
- *
- * @param {String} str
- * @return {Object}
- * @api private
- */
-
-function parseHeader(str) {
-  var lines = str.split(/\r?\n/);
-  var fields = {};
-  var index;
-  var line;
-  var field;
-  var val;
-
-  lines.pop(); // trailing CRLF
-
-  for (var i = 0, len = lines.length; i < len; ++i) {
-    line = lines[i];
-    index = line.indexOf(':');
-    field = line.slice(0, index).toLowerCase();
-    val = trim(line.slice(index + 1));
-    fields[field] = val;
-  }
-
-  return fields;
-}
-
-/**
- * Check if `mime` is json or has +json structured syntax suffix.
- *
- * @param {String} mime
- * @return {Boolean}
- * @api private
- */
-
-function isJSON(mime) {
-  return /[\/+]json\b/.test(mime);
-}
-
-/**
- * Return the mime type for the given `str`.
- *
- * @param {String} str
- * @return {String}
- * @api private
- */
-
-function type(str){
-  return str.split(/ *; */).shift();
-};
-
-/**
- * Return header field parameters.
- *
- * @param {String} str
- * @return {Object}
- * @api private
- */
-
-function params(str){
-  return reduce(str.split(/ *; */), function(obj, str){
-    var parts = str.split(/ *= */)
-      , key = parts.shift()
-      , val = parts.shift();
-
-    if (key && val) obj[key] = val;
-    return obj;
-  }, {});
-};
-
-/**
- * Initialize a new `Response` with the given `xhr`.
- *
- *  - set flags (.ok, .error, etc)
- *  - parse header
- *
- * Examples:
- *
- *  Aliasing `superagent` as `request` is nice:
- *
- *      request = superagent;
- *
- *  We can use the promise-like API, or pass callbacks:
- *
- *      request.get('/').end(function(res){});
- *      request.get('/', function(res){});
- *
- *  Sending data can be chained:
- *
- *      request
- *        .post('/user')
- *        .send({ name: 'tj' })
- *        .end(function(res){});
- *
- *  Or passed to `.send()`:
- *
- *      request
- *        .post('/user')
- *        .send({ name: 'tj' }, function(res){});
- *
- *  Or passed to `.post()`:
- *
- *      request
- *        .post('/user', { name: 'tj' })
- *        .end(function(res){});
- *
- * Or further reduced to a single call for simple cases:
- *
- *      request
- *        .post('/user', { name: 'tj' }, function(res){});
- *
- * @param {XMLHTTPRequest} xhr
- * @param {Object} options
- * @api private
- */
-
-function Response(req, options) {
-  options = options || {};
-  this.req = req;
-  this.xhr = this.req.xhr;
-  // responseText is accessible only if responseType is '' or 'text' and on older browsers
-  this.text = ((this.req.method !='HEAD' && (this.xhr.responseType === '' || this.xhr.responseType === 'text')) || typeof this.xhr.responseType === 'undefined')
-     ? this.xhr.responseText
-     : null;
-  this.statusText = this.req.xhr.statusText;
-  this.setStatusProperties(this.xhr.status);
-  this.header = this.headers = parseHeader(this.xhr.getAllResponseHeaders());
-  // getAllResponseHeaders sometimes falsely returns "" for CORS requests, but
-  // getResponseHeader still works. so we get content-type even if getting
-  // other headers fails.
-  this.header['content-type'] = this.xhr.getResponseHeader('content-type');
-  this.setHeaderProperties(this.header);
-  this.body = this.req.method != 'HEAD'
-    ? this.parseBody(this.text ? this.text : this.xhr.response)
-    : null;
-}
-
-/**
- * Get case-insensitive `field` value.
- *
- * @param {String} field
- * @return {String}
- * @api public
- */
-
-Response.prototype.get = function(field){
-  return this.header[field.toLowerCase()];
-};
-
-/**
- * Set header related properties:
- *
- *   - `.type` the content type without params
- *
- * A response of "Content-Type: text/plain; charset=utf-8"
- * will provide you with a `.type` of "text/plain".
- *
- * @param {Object} header
- * @api private
- */
-
-Response.prototype.setHeaderProperties = function(header){
-  // content-type
-  var ct = this.header['content-type'] || '';
-  this.type = type(ct);
-
-  // params
-  var obj = params(ct);
-  for (var key in obj) this[key] = obj[key];
-};
-
-/**
- * Parse the given body `str`.
- *
- * Used for auto-parsing of bodies. Parsers
- * are defined on the `superagent.parse` object.
- *
- * @param {String} str
- * @return {Mixed}
- * @api private
- */
-
-Response.prototype.parseBody = function(str){
-  var parse = request.parse[this.type];
-  return parse && str && (str.length || str instanceof Object)
-    ? parse(str)
-    : null;
-};
-
-/**
- * Set flags such as `.ok` based on `status`.
- *
- * For example a 2xx response will give you a `.ok` of __true__
- * whereas 5xx will be __false__ and `.error` will be __true__. The
- * `.clientError` and `.serverError` are also available to be more
- * specific, and `.statusType` is the class of error ranging from 1..5
- * sometimes useful for mapping respond colors etc.
- *
- * "sugar" properties are also defined for common cases. Currently providing:
- *
- *   - .noContent
- *   - .badRequest
- *   - .unauthorized
- *   - .notAcceptable
- *   - .notFound
- *
- * @param {Number} status
- * @api private
- */
-
-Response.prototype.setStatusProperties = function(status){
-  // handle IE9 bug: http://stackoverflow.com/questions/10046972/msie-returns-status-code-of-1223-for-ajax-request
-  if (status === 1223) {
-    status = 204;
-  }
-
-  var type = status / 100 | 0;
-
-  // status / class
-  this.status = this.statusCode = status;
-  this.statusType = type;
-
-  // basics
-  this.info = 1 == type;
-  this.ok = 2 == type;
-  this.clientError = 4 == type;
-  this.serverError = 5 == type;
-  this.error = (4 == type || 5 == type)
-    ? this.toError()
-    : false;
-
-  // sugar
-  this.accepted = 202 == status;
-  this.noContent = 204 == status;
-  this.badRequest = 400 == status;
-  this.unauthorized = 401 == status;
-  this.notAcceptable = 406 == status;
-  this.notFound = 404 == status;
-  this.forbidden = 403 == status;
-};
-
-/**
- * Return an `Error` representative of this response.
- *
- * @return {Error}
- * @api public
- */
-
-Response.prototype.toError = function(){
-  var req = this.req;
-  var method = req.method;
-  var url = req.url;
-
-  var msg = 'cannot ' + method + ' ' + url + ' (' + this.status + ')';
-  var err = new Error(msg);
-  err.status = this.status;
-  err.method = method;
-  err.url = url;
-
-  return err;
-};
-
-/**
- * Expose `Response`.
- */
-
-request.Response = Response;
-
-/**
- * Initialize a new `Request` with the given `method` and `url`.
- *
- * @param {String} method
- * @param {String} url
- * @api public
- */
-
-function Request(method, url) {
-  var self = this;
-  Emitter.call(this);
-  this._query = this._query || [];
-  this.method = method;
-  this.url = url;
-  this.header = {};
-  this._header = {};
-  this.on('end', function(){
-    var err = null;
-    var res = null;
-
-    try {
-      res = new Response(self);
-    } catch(e) {
-      err = new Error('Parser is unable to parse the response');
-      err.parse = true;
-      err.original = e;
-      // issue #675: return the raw response if the response parsing fails
-      err.rawResponse = self.xhr && self.xhr.responseText ? self.xhr.responseText : null;
-      return self.callback(err);
-    }
-
-    self.emit('response', res);
-
-    if (err) {
-      return self.callback(err, res);
-    }
-
-    if (res.status >= 200 && res.status < 300) {
-      return self.callback(err, res);
-    }
-
-    var new_err = new Error(res.statusText || 'Unsuccessful HTTP response');
-    new_err.original = err;
-    new_err.response = res;
-    new_err.status = res.status;
-
-    self.callback(new_err, res);
-  });
-}
-
-/**
- * Mixin `Emitter`.
- */
-
-Emitter(Request.prototype);
-
-/**
- * Allow for extension
- */
-
-Request.prototype.use = function(fn) {
-  fn(this);
-  return this;
-}
-
-/**
- * Set timeout to `ms`.
- *
- * @param {Number} ms
- * @return {Request} for chaining
- * @api public
- */
-
-Request.prototype.timeout = function(ms){
-  this._timeout = ms;
-  return this;
-};
-
-/**
- * Clear previous timeout.
- *
- * @return {Request} for chaining
- * @api public
- */
-
-Request.prototype.clearTimeout = function(){
-  this._timeout = 0;
-  clearTimeout(this._timer);
-  return this;
-};
-
-/**
- * Abort the request, and clear potential timeout.
- *
- * @return {Request}
- * @api public
- */
-
-Request.prototype.abort = function(){
+Request.prototype.abort = function() {
   if (this.aborted) return;
   this.aborted = true;
   this.xhr.abort();
-  this.clearTimeout();
-  this.emit('abort');
   return this;
 };
 
-/**
- * Set header `field` to `val`, or multiple fields with one object.
- *
- * Examples:
- *
- *      req.get('/')
- *        .set('Accept', 'application/json')
- *        .set('X-API-Key', 'foobar')
- *        .end(callback);
- *
- *      req.get('/')
- *        .set({ Accept: 'application/json', 'X-API-Key': 'foobar' })
- *        .end(callback);
- *
- * @param {String|Object} field
- * @param {String} val
- * @return {Request} for chaining
- * @api public
- */
+Request.prototype.header = function(name, value) {
+  var k;
+  for (k in this.headers) {
+    if (this.headers.hasOwnProperty(k)) {
+      if (name.toLowerCase() === k.toLowerCase()) {
+        if (arguments.length === 1) {
+          return this.headers[k];
+        }
 
-Request.prototype.set = function(field, val){
-  if (isObject(field)) {
-    for (var key in field) {
-      this.set(key, field[key]);
+        delete this.headers[k];
+        break;
+      }
     }
-    return this;
   }
-  this._header[field.toLowerCase()] = val;
-  this.header[field] = val;
-  return this;
-};
-
-/**
- * Remove header `field`.
- *
- * Example:
- *
- *      req.get('/')
- *        .unset('User-Agent')
- *        .end(callback);
- *
- * @param {String} field
- * @return {Request} for chaining
- * @api public
- */
-
-Request.prototype.unset = function(field){
-  delete this._header[field.toLowerCase()];
-  delete this.header[field];
-  return this;
-};
-
-/**
- * Get case-insensitive header `field` value.
- *
- * @param {String} field
- * @return {String}
- * @api private
- */
-
-Request.prototype.getHeader = function(field){
-  return this._header[field.toLowerCase()];
-};
-
-/**
- * Set Content-Type to `type`, mapping values from `request.types`.
- *
- * Examples:
- *
- *      superagent.types.xml = 'application/xml';
- *
- *      request.post('/')
- *        .type('xml')
- *        .send(xmlstring)
- *        .end(callback);
- *
- *      request.post('/')
- *        .type('application/xml')
- *        .send(xmlstring)
- *        .end(callback);
- *
- * @param {String} type
- * @return {Request} for chaining
- * @api public
- */
-
-Request.prototype.type = function(type){
-  this.set('Content-Type', request.types[type] || type);
-  return this;
-};
-
-/**
- * Force given parser
- *
- * Sets the body parser no matter type.
- *
- * @param {Function}
- * @api public
- */
-
-Request.prototype.parse = function(fn){
-  this._parser = fn;
-  return this;
-};
-
-/**
- * Set Accept to `type`, mapping values from `request.types`.
- *
- * Examples:
- *
- *      superagent.types.json = 'application/json';
- *
- *      request.get('/agent')
- *        .accept('json')
- *        .end(callback);
- *
- *      request.get('/agent')
- *        .accept('application/json')
- *        .end(callback);
- *
- * @param {String} accept
- * @return {Request} for chaining
- * @api public
- */
-
-Request.prototype.accept = function(type){
-  this.set('Accept', request.types[type] || type);
-  return this;
-};
-
-/**
- * Set Authorization field value with `user` and `pass`.
- *
- * @param {String} user
- * @param {String} pass
- * @return {Request} for chaining
- * @api public
- */
-
-Request.prototype.auth = function(user, pass){
-  var str = btoa(user + ':' + pass);
-  this.set('Authorization', 'Basic ' + str);
-  return this;
-};
-
-/**
-* Add query-string `val`.
-*
-* Examples:
-*
-*   request.get('/shoes')
-*     .query('size=10')
-*     .query({ color: 'blue' })
-*
-* @param {Object|String} val
-* @return {Request} for chaining
-* @api public
-*/
-
-Request.prototype.query = function(val){
-  if ('string' != typeof val) val = serialize(val);
-  if (val) this._query.push(val);
-  return this;
-};
-
-/**
- * Write the field `name` and `val` for "multipart/form-data"
- * request bodies.
- *
- * ``` js
- * request.post('/upload')
- *   .field('foo', 'bar')
- *   .end(callback);
- * ```
- *
- * @param {String} name
- * @param {String|Blob|File} val
- * @return {Request} for chaining
- * @api public
- */
-
-Request.prototype.field = function(name, val){
-  if (!this._formData) this._formData = new root.FormData();
-  this._formData.append(name, val);
-  return this;
-};
-
-/**
- * Queue the given `file` as an attachment to the specified `field`,
- * with optional `filename`.
- *
- * ``` js
- * request.post('/upload')
- *   .attach(new Blob(['<a id="a"><b id="b">hey!</b></a>'], { type: "text/html"}))
- *   .end(callback);
- * ```
- *
- * @param {String} field
- * @param {Blob|File} file
- * @param {String} filename
- * @return {Request} for chaining
- * @api public
- */
-
-Request.prototype.attach = function(field, file, filename){
-  if (!this._formData) this._formData = new root.FormData();
-  this._formData.append(field, file, filename || file.name);
-  return this;
-};
-
-/**
- * Send `data` as the request body, defaulting the `.type()` to "json" when
- * an object is given.
- *
- * Examples:
- *
- *       // manual json
- *       request.post('/user')
- *         .type('json')
- *         .send('{"name":"tj"}')
- *         .end(callback)
- *
- *       // auto json
- *       request.post('/user')
- *         .send({ name: 'tj' })
- *         .end(callback)
- *
- *       // manual x-www-form-urlencoded
- *       request.post('/user')
- *         .type('form')
- *         .send('name=tj')
- *         .end(callback)
- *
- *       // auto x-www-form-urlencoded
- *       request.post('/user')
- *         .type('form')
- *         .send({ name: 'tj' })
- *         .end(callback)
- *
- *       // defaults to x-www-form-urlencoded
-  *      request.post('/user')
-  *        .send('name=tobi')
-  *        .send('species=ferret')
-  *        .end(callback)
- *
- * @param {String|Object} data
- * @return {Request} for chaining
- * @api public
- */
-
-Request.prototype.send = function(data){
-  var obj = isObject(data);
-  var type = this.getHeader('Content-Type');
-
-  // merge
-  if (obj && isObject(this._data)) {
-    for (var key in data) {
-      this._data[key] = data[key];
-    }
-  } else if ('string' == typeof data) {
-    if (!type) this.type('form');
-    type = this.getHeader('Content-Type');
-    if ('application/x-www-form-urlencoded' == type) {
-      this._data = this._data
-        ? this._data + '&' + data
-        : data;
-    } else {
-      this._data = (this._data || '') + data;
-    }
-  } else {
-    this._data = data;
+  if (value != null) {
+    this.headers[name] = value;
+    return value;
   }
-
-  if (!obj || isHost(data)) return this;
-  if (!type) this.type('json');
-  return this;
 };
 
-/**
- * Invoke the callback with `err` and `res`
- * and handle arity check.
- *
- * @param {Error} err
- * @param {Response} res
- * @api private
- */
 
-Request.prototype.callback = function(err, res){
-  var fn = this._callback;
-  this.clearTimeout();
-  fn(err, res);
-};
-
-/**
- * Invoke callback with x-domain error.
- *
- * @api private
- */
-
-Request.prototype.crossDomainError = function(){
-  var err = new Error('Request has been terminated\nPossible causes: the network is offline, Origin is not allowed by Access-Control-Allow-Origin, the page is being unloaded, etc.');
-  err.crossDomain = true;
-
-  err.status = this.status;
-  err.method = this.method;
-  err.url = this.url;
-
-  this.callback(err);
-};
-
-/**
- * Invoke callback with timeout error.
- *
- * @api private
- */
-
-Request.prototype.timeoutError = function(){
-  var timeout = this._timeout;
-  var err = new Error('timeout of ' + timeout + 'ms exceeded');
-  err.timeout = timeout;
-  this.callback(err);
-};
-
-/**
- * Enable transmission of cookies with x-domain requests.
- *
- * Note that for this to work the origin must not be
- * using "Access-Control-Allow-Origin" with a wildcard,
- * and also must set "Access-Control-Allow-Credentials"
- * to "true".
- *
- * @api public
- */
-
-Request.prototype.withCredentials = function(){
-  this._withCredentials = true;
-  return this;
-};
-
-/**
- * Initiate request, invoking callback `fn(res)`
- * with an instanceof `Response`.
- *
- * @param {Function} fn
- * @return {Request} for chaining
- * @api public
- */
-
-Request.prototype.end = function(fn){
-  var self = this;
-  var xhr = this.xhr = request.getXHR();
-  var query = this._query.join('&');
-  var timeout = this._timeout;
-  var data = this._formData || this._data;
-
-  // store callback
-  this._callback = fn || noop;
-
-  // state change
-  xhr.onreadystatechange = function(){
-    if (4 != xhr.readyState) return;
-
-    // In IE9, reads to any property (e.g. status) off of an aborted XHR will
-    // result in the error "Could not complete the operation due to error c00c023f"
-    var status;
-    try { status = xhr.status } catch(e) { status = 0; }
-
-    if (0 == status) {
-      if (self.timedout) return self.timeoutError();
-      if (self.aborted) return;
-      return self.crossDomainError();
-    }
-    self.emit('end');
-  };
-
-  // progress
-  var handleProgress = function(e){
-    if (e.total > 0) {
-      e.percent = e.loaded / e.total * 100;
-    }
-    e.direction = 'download';
-    self.emit('progress', e);
-  };
-  if (this.hasListeners('progress')) {
-    xhr.onprogress = handleProgress;
-  }
-  try {
-    if (xhr.upload && this.hasListeners('progress')) {
-      xhr.upload.onprogress = handleProgress;
-    }
-  } catch(e) {
-    // Accessing xhr.upload fails in IE from a web worker, so just pretend it doesn't exist.
-    // Reported here:
-    // https://connect.microsoft.com/IE/feedback/details/837245/xmlhttprequest-upload-throws-invalid-argument-when-used-from-web-worker-context
-  }
-
-  // timeout
-  if (timeout && !this._timer) {
-    this._timer = setTimeout(function(){
-      self.timedout = true;
-      self.abort();
-    }, timeout);
-  }
-
-  // querystring
-  if (query) {
-    query = request.serializeObject(query);
-    this.url += ~this.url.indexOf('?')
-      ? '&' + query
-      : '?' + query;
-  }
-
-  // initiate request
-  xhr.open(this.method, this.url, true);
-
-  // CORS
-  if (this._withCredentials) xhr.withCredentials = true;
-
-  // body
-  if ('GET' != this.method && 'HEAD' != this.method && 'string' != typeof data && !isHost(data)) {
-    // serialize stuff
-    var contentType = this.getHeader('Content-Type');
-    var serialize = this._parser || request.serialize[contentType ? contentType.split(';')[0] : ''];
-    if (!serialize && isJSON(contentType)) serialize = request.serialize['application/json'];
-    if (serialize) data = serialize(data);
-  }
-
-  // set header fields
-  for (var field in this.header) {
-    if (null == this.header[field]) continue;
-    xhr.setRequestHeader(field, this.header[field]);
-  }
-
-  // send stuff
-  this.emit('request', this);
-
-  // IE11 xhr.send(undefined) sends 'undefined' string as POST payload (instead of nothing)
-  // We need null here if data is undefined
-  xhr.send(typeof data !== 'undefined' ? data : null);
-  return this;
-};
-
-/**
- * Faux promise support
- *
- * @param {Function} fulfill
- * @param {Function} reject
- * @return {Request}
- */
-
-Request.prototype.then = function (fulfill, reject) {
-  return this.end(function(err, res) {
-    err ? reject(err) : fulfill(res);
-  });
-}
-
-/**
- * Expose `Request`.
- */
-
-request.Request = Request;
-
-/**
- * Issue a request:
- *
- * Examples:
- *
- *    request('GET', '/users').end(callback)
- *    request('/users').end(callback)
- *    request('/users', callback)
- *
- * @param {String} method
- * @param {String|Function} url or callback
- * @return {Request}
- * @api public
- */
-
-function request(method, url) {
-  // callback
-  if ('function' == typeof url) {
-    return new Request('GET', method).end(url);
-  }
-
-  // url first
-  if (1 == arguments.length) {
-    return new Request('GET', method);
-  }
-
-  return new Request(method, url);
-}
-
-/**
- * GET `url` with optional callback `fn(res)`.
- *
- * @param {String} url
- * @param {Mixed|Function} data or fn
- * @param {Function} fn
- * @return {Request}
- * @api public
- */
-
-request.get = function(url, data, fn){
-  var req = request('GET', url);
-  if ('function' == typeof data) fn = data, data = null;
-  if (data) req.query(data);
-  if (fn) req.end(fn);
-  return req;
-};
-
-/**
- * HEAD `url` with optional callback `fn(res)`.
- *
- * @param {String} url
- * @param {Mixed|Function} data or fn
- * @param {Function} fn
- * @return {Request}
- * @api public
- */
-
-request.head = function(url, data, fn){
-  var req = request('HEAD', url);
-  if ('function' == typeof data) fn = data, data = null;
-  if (data) req.send(data);
-  if (fn) req.end(fn);
-  return req;
-};
-
-/**
- * DELETE `url` with optional callback `fn(res)`.
- *
- * @param {String} url
- * @param {Function} fn
- * @return {Request}
- * @api public
- */
-
-function del(url, fn){
-  var req = request('DELETE', url);
-  if (fn) req.end(fn);
-  return req;
-};
-
-request['del'] = del;
-request['delete'] = del;
-
-/**
- * PATCH `url` with optional `data` and callback `fn(res)`.
- *
- * @param {String} url
- * @param {Mixed} data
- * @param {Function} fn
- * @return {Request}
- * @api public
- */
-
-request.patch = function(url, data, fn){
-  var req = request('PATCH', url);
-  if ('function' == typeof data) fn = data, data = null;
-  if (data) req.send(data);
-  if (fn) req.end(fn);
-  return req;
-};
-
-/**
- * POST `url` with optional `data` and callback `fn(res)`.
- *
- * @param {String} url
- * @param {Mixed} data
- * @param {Function} fn
- * @return {Request}
- * @api public
- */
-
-request.post = function(url, data, fn){
-  var req = request('POST', url);
-  if ('function' == typeof data) fn = data, data = null;
-  if (data) req.send(data);
-  if (fn) req.end(fn);
-  return req;
-};
-
-/**
- * PUT `url` with optional `data` and callback `fn(res)`.
- *
- * @param {String} url
- * @param {Mixed|Function} data or fn
- * @param {Function} fn
- * @return {Request}
- * @api public
- */
-
-request.put = function(url, data, fn){
-  var req = request('PUT', url);
-  if ('function' == typeof data) fn = data, data = null;
-  if (data) req.send(data);
-  if (fn) req.end(fn);
-  return req;
-};
-
-/**
- * Expose `request`.
- */
-
-module.exports = request;
+module.exports = Request;
 });
 
-var request$2 = interopDefault(client$2);
+var request$3 = interopDefault(request$2);
+
+
+var require$$1$4 = Object.freeze({
+  default: request$3
+});
+
+var index$8 = createCommonjsModule(function (module) {
+module.exports = extend
+
+function extend() {
+    var target = {}
+
+    for (var i = 0; i < arguments.length; i++) {
+        var source = arguments[i]
+
+        for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+                target[key] = source[key]
+            }
+        }
+    }
+
+    return target
+}
+});
+
+var index$9 = interopDefault(index$8);
+
+
+var require$$0$5 = Object.freeze({
+    default: index$9
+});
+
+var extractResponseProps = createCommonjsModule(function (module) {
+'use strict';
+
+var extend = interopDefault(require$$0$5);
+
+module.exports = function(req) {
+  var xhr = req.xhr;
+  var props = {request: req, xhr: xhr};
+
+  // Try to create the response from the request. If the request was aborted,
+  // accesssing properties of the XHR may throw an error, so we wrap in a
+  // try/catch.
+  try {
+    var lines, i, m, headers = {};
+    if (xhr.getAllResponseHeaders) {
+      lines = xhr.getAllResponseHeaders().split('\n');
+      for (i = 0; i < lines.length; i++) {
+        if ((m = lines[i].match(/\s*([^\s]+):\s+([^\s]+)/))) {
+          headers[m[1]] = m[2];
+        }
+      }
+    }
+
+    props = extend(props, {
+      status: xhr.status,
+      contentType: xhr.contentType || (xhr.getResponseHeader && xhr.getResponseHeader('Content-Type')),
+      headers: headers,
+      text: xhr.responseText,
+      body: xhr.response || xhr.responseText
+    });
+  } catch (err) {}
+
+  return props;
+};
+});
+
+var extractResponseProps$1 = interopDefault(extractResponseProps);
+
+
+var require$$0$4 = Object.freeze({
+  default: extractResponseProps$1
+});
+
+var response = createCommonjsModule(function (module) {
+'use strict';
+
+var Request = interopDefault(require$$1$4);
+var extractResponseProps = interopDefault(require$$0$4);
+
+function Response(props) {
+  this.request = props.request;
+  this.xhr = props.xhr;
+  this.headers = props.headers || {};
+  this.status = props.status || 0;
+  this.text = props.text;
+  this.body = props.body;
+  this.contentType = props.contentType;
+  this.isHttpError = props.status >= 400;
+}
+
+Response.prototype.header = Request.prototype.header;
+
+Response.fromRequest = function(req) {
+  return new Response(extractResponseProps(req));
+};
+
+
+module.exports = Response;
+});
+
+var response$1 = interopDefault(response);
+
+
+var require$$2$3 = Object.freeze({
+  default: response$1
+});
+
+var error = createCommonjsModule(function (module) {
+'use strict';
+
+var Response = interopDefault(require$$2$3);
+var extractResponseProps = interopDefault(require$$0$4);
+var extend = interopDefault(require$$0$5);
+
+function RequestError(message, props) {
+  var err = new Error(message);
+  err.name = 'RequestError';
+  this.name = err.name;
+  this.message = err.message;
+  if (err.stack) {
+    this.stack = err.stack;
+  }
+
+  this.toString = function() {
+    return this.message;
+  };
+
+  for (var k in props) {
+    if (props.hasOwnProperty(k)) {
+      this[k] = props[k];
+    }
+  }
+}
+
+RequestError.prototype = extend(Error.prototype);
+RequestError.prototype.constructor = RequestError;
+
+RequestError.create = function(message, req, props) {
+  var err = new RequestError(message, props);
+  Response.call(err, extractResponseProps(req));
+  return err;
+};
+
+module.exports = RequestError;
+});
+
+var error$1 = interopDefault(error);
+
+
+var require$$4$1 = Object.freeze({
+  default: error$1
+});
+
+var once = createCommonjsModule(function (module) {
+'use strict';
+
+// A "once" utility.
+module.exports = function(fn) {
+  var result, called = false;
+  return function() {
+    if (!called) {
+      called = true;
+      result = fn.apply(this, arguments);
+    }
+    return result;
+  };
+};
+});
+
+var once$1 = interopDefault(once);
+
+
+var require$$0$6 = Object.freeze({
+  default: once$1
+});
+
+var index$7 = createCommonjsModule(function (module) {
+'use strict';
+
+var
+  cleanURL = interopDefault(require$$7),
+  XHR = interopDefault(require$$6),
+  delay = interopDefault(require$$5),
+  RequestError = interopDefault(require$$4$1),
+  Response = interopDefault(require$$2$3),
+  Request = interopDefault(require$$1$4),
+  extend = interopDefault(require$$0$5),
+  once = interopDefault(require$$0$6);
+
+var i,
+    createError = RequestError.create;
+
+function factory(defaults, plugins) {
+  defaults = defaults || {};
+  plugins = plugins || [];
+
+  function http(req, cb) {
+    var xhr, plugin, done, k, timeoutId, supportsLoadAndErrorEvents;
+
+    req = new Request(extend(defaults, req));
+
+    for (i = 0; i < plugins.length; i++) {
+      plugin = plugins[i];
+      if (plugin.processRequest) {
+        plugin.processRequest(req);
+      }
+    }
+
+    // Give the plugins a chance to create the XHR object
+    for (i = 0; i < plugins.length; i++) {
+      plugin = plugins[i];
+      if (plugin.createXHR) {
+        xhr = plugin.createXHR(req);
+        break; // First come, first serve
+      }
+    }
+    xhr = xhr || new XHR();
+
+    req.xhr = xhr;
+
+    // Use a single completion callback. This can be called with or without
+    // an error. If no error is passed, the request will be examined to see
+    // if it was successful.
+    done = once(delay(function(rawError) {
+      clearTimeout(timeoutId);
+      xhr.onload = xhr.onerror = xhr.onabort = xhr.onreadystatechange = xhr.ontimeout = xhr.onprogress = null;
+
+      var err = getError(req, rawError);
+
+      var res = err || Response.fromRequest(req);
+      for (i = 0; i < plugins.length; i++) {
+        plugin = plugins[i];
+        if (plugin.processResponse) {
+          plugin.processResponse(res);
+        }
+      }
+
+      // Invoke callbacks
+      if (err && req.onerror) req.onerror(err);
+      if (!err && req.onload) req.onload(res);
+      if (cb) cb(err, err ? undefined : res);
+
+    }));
+
+    supportsLoadAndErrorEvents = ('onload' in xhr) && ('onerror' in xhr);
+    xhr.onload = function() { done(); };
+    xhr.onerror = done;
+    xhr.onabort = function() { done(); };
+
+    // We'd rather use `onload`, `onerror`, and `onabort` since they're the
+    // only way to reliably detect successes and failures but, if they
+    // aren't available, we fall back to using `onreadystatechange`.
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState !== 4) return;
+
+      if (req.aborted) return done();
+
+      if (!supportsLoadAndErrorEvents) {
+        // Assume a status of 0 is an error. This could be a false
+        // positive, but there's no way to tell when using
+        // `onreadystatechange` ):
+        // See matthewwithanm/react-inlinesvg#10.
+
+        // Some browsers don't like you reading XHR properties when the
+        // XHR has been aborted. In case we've gotten here as a result
+        // of that (either our calling `about()` in the timeout handler
+        // or the user calling it directly even though they shouldn't),
+        // be careful about accessing it.
+        var status;
+        try {
+          status = xhr.status;
+        } catch (err) {}
+        var err = status === 0 ? new Error('Internal XHR Error') : null;
+        return done(err);
+      }
+    };
+
+    // IE sometimes fails if you don't specify every handler.
+    // See http://social.msdn.microsoft.com/Forums/ie/en-US/30ef3add-767c-4436-b8a9-f1ca19b4812e/ie9-rtm-xdomainrequest-issued-requests-may-abort-if-all-event-handlers-not-specified?forum=iewebdevelopment
+    xhr.ontimeout = function() { /* noop */ };
+    xhr.onprogress = function() { /* noop */ };
+
+    xhr.open(req.method, req.url);
+
+    if (req.timeout) {
+      // If we use the normal XHR timeout mechanism (`xhr.timeout` and
+      // `xhr.ontimeout`), `onreadystatechange` will be triggered before
+      // `ontimeout`. There's no way to recognize that it was triggered by
+      // a timeout, and we'd be unable to dispatch the right error.
+      timeoutId = setTimeout(function() {
+        req.timedOut = true;
+        done();
+        try {
+          xhr.abort();
+        } catch (err) {}
+      }, req.timeout);
+    }
+
+    for (k in req.headers) {
+      if (req.headers.hasOwnProperty(k)) {
+        xhr.setRequestHeader(k, req.headers[k]);
+      }
+    }
+
+    xhr.send(req.body);
+
+    return req;
+  }
+
+  var method,
+    methods = ['get', 'post', 'put', 'head', 'patch', 'delete'],
+    verb = function(method) {
+      return function(req, cb) {
+        req = new Request(req);
+        req.method = method;
+        return http(req, cb);
+      };
+    };
+  for (i = 0; i < methods.length; i++) {
+    method = methods[i];
+    http[method] = verb(method);
+  }
+
+  http.plugins = function() {
+    return plugins;
+  };
+
+  http.defaults = function(newValues) {
+    if (newValues) {
+      return factory(extend(defaults, newValues), plugins);
+    }
+    return defaults;
+  };
+
+  http.use = function() {
+    var newPlugins = Array.prototype.slice.call(arguments, 0);
+    return factory(defaults, plugins.concat(newPlugins));
+  };
+
+  http.bare = function() {
+    return factory();
+  };
+
+  http.Request = Request;
+  http.Response = Response;
+  http.RequestError = RequestError;
+
+  return http;
+}
+
+module.exports = factory({}, [cleanURL]);
+
+/**
+ * Analyze the request to see if it represents an error. If so, return it! An
+ * original error object can be passed as a hint.
+ */
+function getError(req, err) {
+  if (req.aborted) return createError('Request aborted', req, {name: 'Abort'});
+
+  if (req.timedOut) return createError('Request timeout', req, {name: 'Timeout'});
+
+  var xhr = req.xhr;
+  var type = Math.floor(xhr.status / 100);
+
+  var kind;
+  switch (type) {
+    case 0:
+    case 2:
+      // These don't represent errors unless the function was passed an
+      // error object explicitly.
+      if (!err) return;
+      return createError(err.message, req);
+    case 4:
+      // Sometimes 4XX statuses aren't errors.
+      if (xhr.status === 404 && !req.errorOn404) return;
+      kind = 'Client';
+      break;
+    case 5:
+      kind = 'Server';
+      break;
+    default:
+      kind = 'HTTP';
+  }
+  var msg = kind + ' Error: ' +
+        'The server returned a status of ' + xhr.status +
+        ' for the request "' +
+        req.method.toUpperCase() + ' ' + req.url + '"';
+  return createError(msg, req);
+}
+});
+
+var httpplease = interopDefault(index$7);
 
 var _buffer;
 var _slowbuffer;
@@ -6101,7 +5404,8 @@ var SegmentValidator = function () {
 
       var txId = this.segment.meta.evidence.transactions['bitcoin:main'];
       return this._getFossil(txId).then(function (res) {
-        if (!res.body.outputs.find(function (output) {
+        var body = JSON.parse(res.xhr.response);
+        if (!body.outputs.find(function (output) {
           return output.data_hex === _this2.segment.meta.evidence.merkleRoot;
         })) {
           return 'Merkle root not found in transaction data';
@@ -6117,7 +5421,7 @@ var SegmentValidator = function () {
       }
 
       var p = new Promise(function (resolve, reject) {
-        return request$2('https://api.blockcypher.com/v1/btc/main/txs/' + txId).end(function (err, res) {
+        return httpplease.get('https://api.blockcypher.com/v1/btc/main/txs/' + txId, function (err, res) {
           return err ? reject(err) : resolve(res);
         });
       });

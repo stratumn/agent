@@ -52,11 +52,13 @@
     "karma-phantomjs-launcher": "^1.0.1",
     "karma-rollup-plugin": "^0.2.2",
     "karma-should": "^1.0.0",
+    "karma-sinon": "^1.0.5",
     "karma-sourcemap-loader": "^0.3.7",
     "mocha": "^2.4.5",
     "rimraf": "^2.5.2",
     "rollup": "^0.34.7",
     "rollup-plugin-babel": "^2.6.1",
+    "rollup-plugin-coffee-script": "^1.1.0",
     "rollup-plugin-commonjs": "^3.3.1",
     "rollup-plugin-json": "^2.0.1",
     "rollup-plugin-node-builtins": "^1.0.7",
@@ -64,7 +66,8 @@
     "rollup-plugin-node-resolve": "^2.0.0",
     "rollup-watch": "^2.5.0",
     "should": "^8.2.2",
-    "superagent-nock": "^0.1.1"
+    "sinon": "^1.17.5",
+    "zock": "^0.2.6"
   },
   "dependencies": {
     "canonical-json": "0.0.4",
@@ -75,8 +78,8 @@
     "d3-transition": "^1.0.1",
     "d3-zoom": "^1.0.2",
     "deepmerge": "^0.2.10",
+    "httpplease": "^0.16.4",
     "js-sha256": "^0.3.0",
-    "stratumn-sdk": "^0.5.0",
-    "superagent": "1.7.1"
+    "stratumn-sdk": "^0.5.0"
   }
 }

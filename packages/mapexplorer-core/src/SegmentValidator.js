@@ -1,5 +1,5 @@
 import hashJson from './hashJson';
-import request from 'superagent';
+import httpplease from 'httpplease';
 
 import computeMerkleParent from './computeMerkleParent';
 
@@ -79,7 +79,8 @@ export default class SegmentValidator {
     const txId = this.segment.meta.evidence.transactions['bitcoin:main'];
     return this._getFossil(txId)
       .then(res => {
-        if (!res.body.outputs.find(
+        const body = JSON.parse(res.xhr.response);
+        if (!body.outputs.find(
             output => output.data_hex === this.segment.meta.evidence.merkleRoot)) {
           return 'Merkle root not found in transaction data';
         }
@@ -93,7 +94,7 @@ export default class SegmentValidator {
     }
 
     const p = new Promise((resolve, reject) =>
-      request(`https://api.blockcypher.com/v1/btc/main/txs/${txId}`).end((err, res) =>
+      httpplease.get(`https://api.blockcypher.com/v1/btc/main/txs/${txId}`, (err, res) =>
         (err ? reject(err) : resolve(res)))
     );
     blockCypherCache[txId] = p;
