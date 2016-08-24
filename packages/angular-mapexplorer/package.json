@@ -33,7 +33,6 @@
     "karma-sourcemap-loader": "^0.3.7",
     "mocha": "^2.3.2",
     "rollup": "^0.34.7",
-    "rollup-plugin-angular": "^0.2.3",
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-bower-resolve": "^0.1.1",
     "rollup-plugin-commonjs": "^3.3.1",
@@ -50,7 +49,9 @@
     "lint": "eslint src",
     "test": "karma start karma.conf.js",
     "test:ci": "npm run test -- --single-run",
-    "build:npm": "rollup -c",
+    "build:npm": "npm run build:npm:es && npm run build:npm:umd",
+    "build:npm:es": "rollup -c rollup.es.config.js",
+    "build:npm:umd": "rollup -c rollup.umd.config.js",
     "build:bower": "rollup -c rollup.bower.config.js",
     "build": "npm run build:npm && npm run build:bower"
   },
