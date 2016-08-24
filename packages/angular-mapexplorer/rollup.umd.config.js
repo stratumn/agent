@@ -11,23 +11,11 @@ module.exports = {
   plugins: [
     angular(),
     babel(babelrc()),
-    bowerResolve({
-      skip: ['angular', 'angular-animate', 'angular-material', 'angular-aria', 'md-color-picker',
-        'mapexplorer-core']
-    }),
+    bowerResolve(),
   ],
   external: external,
-  targets: [
-    {
-      dest: pkg['main'],
-      format: 'umd',
-      moduleName: 'angularMapexplorer',
-      sourceMap: true
-    },
-    {
-      dest: pkg['jsnext:main'],
-      format: 'es',
-      sourceMap: true
-    }
-  ]
+  dest: pkg['main'],
+  format: 'umd',
+  moduleName: 'angularMapexplorer',
+  sourceMap: true
 };
