@@ -29,12 +29,12 @@
     "angular-drop": "^0.0.1",
     "md-color-picker": "^0.2.6",
     "angular-aria": "^1.5.8",
-    "mapexplorer-core": "^0.0.16"
+    "mapexplorer-core": "0.0.17"
   },
   "devDependencies": {
     "babel-polyfill": "^0.0.1"
   },
   "main": [
-    "dist/index.js"
+    "dist/angular-mapexplorer.js"
   ]
 }

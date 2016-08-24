@@ -1,5 +1,3 @@
-import mapexplorer from '../src/index';
-
 import chainscript from './fixtures/chainscript.json';
 
 describe('st-map-validator', () => {
@@ -9,7 +7,7 @@ describe('st-map-validator', () => {
   let compile;
   let MapValidatorService;
 
-  beforeEach(angular.mock.module(mapexplorer));
+  beforeEach(angular.mock.module('stratumn.angular-mapexplorer'));
 
   beforeEach(inject((_$rootScope_,_$compile_, _MapValidatorService_) => {
     const $rootScope = _$rootScope_;

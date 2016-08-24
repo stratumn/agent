@@ -1,4 +1,6 @@
-var webpack = require('./webpack.config');
+var babel = require('rollup-plugin-babel');
+var babelrc = require('babelrc-rollup').default;
+var json = require('rollup-plugin-json');
 
 module.exports = function(config) {
   'use strict';
@@ -23,9 +25,11 @@ module.exports = function(config) {
       'bower_components/tinycolor/tinycolor.js',
       'bower_components/md-color-picker/dist/mdColorPicker.js',
       'bower_components/angular-drop/angular-drop.js',
+      'bower_components/d3/d3.js',
+      'bower_components/mapexplorer-core/dist/mapexplorer-core.js',
       'node_modules/angular-mocks/angular-mocks.js',
-      'test/*.spec.js',
-      'test/fixtures/*.json'
+      'dist/angular-mapexplorer.js',
+      'test/*.spec.js'
     ],
 
 
@@ -35,15 +39,22 @@ module.exports = function(config) {
     ],
 
     preprocessors: {
-      'src/index.js': ['webpack', 'sourcemap'],
-      'test/*.spec.js': ['webpack', 'sourcemap']
+      'test/*.spec.js': ['rollup'],
+      'dist/angular-mapexplorer.js': ['sourcemap']
     },
 
-    webpack: webpack,
-
-    webpackMiddleware: {
-      stats: {
-        chunks: false,
+    rollupPreprocessor: {
+      plugins: [
+        json(),
+        babel(Object.assign({
+          exclude: 'node_modules/**'
+        }, babelrc()))
+      ],
+      // will help to prevent conflicts between different tests entries
+      format: 'iife',
+      sourceMap: 'inline',
+      globals: {
+        "angular-mapexplorer": "angularMapexplorer"
       }
     },
 
@@ -91,7 +102,7 @@ module.exports = function(config) {
   });
 
 
-  if(process.env.TRAVIS){
+  if (process.env.TRAVIS){
     config.set({
       browsers: ['TravisCI_Chrome', 'PhantomJS'],
       customLaunchers: {
