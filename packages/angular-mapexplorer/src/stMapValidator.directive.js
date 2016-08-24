@@ -1,5 +1,4 @@
 import angular from 'angular';
-import template from '../views/mapvalidator.html';
 
 stMapValidator.$inject = ['MapValidatorService'];
 
@@ -10,7 +9,7 @@ export default function stMapValidator(MapValidatorService) {
     scope: {
       chainscript: '=?'
     },
-    templateUrl: template,
+    templateUrl: '../views/mapvalidator.html',
     link: (scope) => {
       scope.$watch('chainscript', () => {
         scope.error = null;

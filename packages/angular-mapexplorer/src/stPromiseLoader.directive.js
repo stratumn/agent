@@ -1,5 +1,3 @@
-import template from '../views/promiseloader.html';
-
 stPromiseLoader.$inject = ['$q'];
 
 export default function stPromiseLoader($q) {
@@ -11,7 +9,7 @@ export default function stPromiseLoader($q) {
       loading: '=',
       title: '='
     },
-    templateUrl: template,
+    templateUrl: '../views/promiseloader.html',
     link: (scope) => {
       scope.errorMessages = [];
       scope.loadingErrors = false;

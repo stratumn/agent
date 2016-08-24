@@ -12,3 +12,5 @@ before_install:
 before_script:
   - npm install -qg bower
   - bower install
+script:
+  - npm run test:ci
