@@ -1,5 +1,10 @@
 var path = require('path');
-var webpack = require('webpack');
+var babel = require('rollup-plugin-babel');
+var babelrc = require('babelrc-rollup').default;
+var json = require('rollup-plugin-json');
+var commonjs = require('rollup-plugin-commonjs');
+var nodeResolve = require('rollup-plugin-node-resolve');
+var builtins = require('rollup-plugin-node-builtins');
 
 module.exports = function(config) {
   config.set({
@@ -13,45 +18,43 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'bower_components/babel-polyfill/browser-polyfill.js',
-      'test/*.test.js'
+      'bower_components/d3/d3.js',
+      'dist/mapexplorer-core.js',
+      'test/integration/*.test.js'
     ],
 
     preprocessors: {
-      'test/*.test.js': ['webpack', 'sourcemap']
+      'test/integration/*.test.js': ['rollup']
     },
 
-    webpack: {
-      devtool: 'inline-source-map',
-      resolve: {
-        modulesDirectories: ['web_modules', 'node_modules', 'bower_components']
-      },
+    rollupPreprocessor: {
       plugins: [
-        new webpack.ResolverPlugin(
-          new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('.bower.json', ['main'])
-        )
+        json(),
+        babel(Object.assign({
+          exclude: 'node_modules/**'
+        }, babelrc())),
+        builtins(),
+        nodeResolve({
+          jsnext: true,
+          browser: true,
+          preferBuiltins: true,
+          skip: ['d3-selection', 'mapexplorer-core']
+        }),
+        commonjs({
+          // non-CommonJS modules will be ignored, but you can also
+          // specifically include/exclude files
+          // include: 'node_modules/**',  // Default: undefined
+          // exclude: [],
+          exclude: ['node_modules/rollup-plugin-node-globals/**']
+        })
       ],
-      module: {
-        loaders: [
-          {
-            test: /\.js$/, loader: 'babel', query: {
-            presets: ['es2015']
-          }
-          },
-          {
-            loader: 'json',
-            test: /\.json$/
-          }
-        ]
+      globals: {
+        'd3-selection': 'd3',
+        'mapexplorer-core': 'mapexplorerCore'
       },
-      node: {
-        fs: 'empty'
-      },
-    },
-
-    webpackMiddleware: {
-      stats: {
-        chunks: false,
-      }
+      // will help to prevent conflicts between different tests entries
+      format: 'iife',
+      sourceMap: 'inline'
     },
 
     // list of files to exclude
@@ -88,7 +91,7 @@ module.exports = function(config) {
     // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
-    browsers: ['PhantomJS'],
+    browsers: ['PhantomJS', 'Chrome'],
 
 
     // If browser does not capture in given timeout [ms], kill it
@@ -98,5 +101,17 @@ module.exports = function(config) {
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
     singleRun: false
-  })
+  });
+
+  if (process.env.TRAVIS){
+    config.set({
+      browsers: ['TravisCI_Chrome', 'PhantomJS'],
+      customLaunchers: {
+        TravisCI_Chrome: {
+          base: 'Chrome',
+          flags: ['--no-sandbox']
+        }
+      }
+    });
+  }
 };

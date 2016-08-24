@@ -1,19 +1,9 @@
-import ChainTreeBuilder from './ChainTreeBuilder';
-import ChainTree from './ChainTree';
-import ChainValidator from './ChainValidator';
-import SegmentValidator from './SegmentValidator';
-import MerklePathTree from './MerklePathTree';
-import compactHash from './compactHash';
-import parseChainscript from './parseChainscript';
-import resolveLinks from './resolveLinks';
-
-module.exports = {
-  ChainTreeBuilder,
-  ChainTree,
-  ChainValidator,
-  SegmentValidator,
-  MerklePathTree,
-  compactHash,
-  parseChainscript,
-  resolveLinks
-};
+export { default as ChainTreeBuilder } from './ChainTreeBuilder';
+export { defaultOptions } from './ChainTreeBuilder';
+export { default as ChainTree } from './ChainTree';
+export { default as ChainValidator } from './ChainValidator';
+export { default as SegmentValidator } from './SegmentValidator';
+export { default as MerklePathTree } from './MerklePathTree';
+export { default as compactHash } from './compactHash';
+export { default as parseChainscript } from './parseChainscript';
+export { default as resolveLinks } from './resolveLinks';

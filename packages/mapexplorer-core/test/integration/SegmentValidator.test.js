@@ -1,8 +1,20 @@
-import SegmentValidator from '../src/SegmentValidator';
-import loadFixture from './utils/loadFixture';
+import { SegmentValidator } from 'mapexplorer-core';
 import request from 'superagent';
 import nocker from 'superagent-nock';
 const nock = nocker(request);
+
+import _2a4
+  from '../fixtures/2a443211e871f58a6ee5a93e62ce36cac2ddfc0f05a6bec1e7b11aa8d5e4cf38.json';
+import _d25
+  from '../fixtures/d25a285b50204e1b0ca7472035d73cae93faea06ddac120800dd6aacca006688.json';
+
+import validSegment from '../fixtures/validSegment.json';
+import invalidSegment from '../fixtures/invalidSegment.json';
+import brokenMerklePath from '../fixtures/brokenMerklePath.json';
+import invalidMerklePathParent from '../fixtures/invalidMerklePathParent.json';
+import invalidMerkleRoot from '../fixtures/invalidMerkleRoot.json';
+import invalidFossil from '../fixtures/invalidFossil.json';
+
 
 describe('SegmentValidator', () => {
 
@@ -20,14 +32,12 @@ describe('SegmentValidator', () => {
   beforeEach(() => {
     nock('https://api.blockcypher.com')
       .get('/v1/btc/main/txs/2a443211e871f58a6ee5a93e62ce36cac2ddfc0f05a6bec1e7b11aa8d5e4cf38')
-      .reply(200, loadFixture('2a443211e871f58a6ee5a93e62ce36cac2ddfc0f05a6bec1e7b11aa8d5e4cf38'))
+      .reply(200, _2a4)
       .get('/v1/btc/main/txs/d25a285b50204e1b0ca7472035d73cae93faea06ddac120800dd6aacca006688')
-      .reply(200, loadFixture('d25a285b50204e1b0ca7472035d73cae93faea06ddac120800dd6aacca006688'));
+      .reply(200, _d25);
   });
 
   describe('With a valid segment', () => {
-    const validSegment = loadFixture('validSegment');
-
     it('validates', (done) => {
       Promise.all([].concat.apply([], Object.values(validate(validSegment)))).then(errors => {
         errors.filter(Boolean).should.be.empty();
@@ -37,8 +47,6 @@ describe('SegmentValidator', () => {
   });
 
   describe('With a invalid segment', () => {
-    const invalidSegment = loadFixture('invalidSegment');
-
     it('validates the linkHash', (done) => {
       Promise.all(validate(invalidSegment).linkHash).then(res => {
         res[0].should.eql(
@@ -59,10 +67,8 @@ describe('SegmentValidator', () => {
   });
 
   describe('With a broken merkle path', () => {
-    const invalidSegment = loadFixture('brokenMerklePath');
-
     it('validates the merklePath', (done) => {
-      Promise.all(validate(invalidSegment).merklePath).then(res => {
+      Promise.all(validate(brokenMerklePath).merklePath).then(res => {
         res[0].should.match(
           /Invalid Merkle Node {.*}: previous hash \(.*\)/);
       });
@@ -71,10 +77,8 @@ describe('SegmentValidator', () => {
   });
 
   describe('With an invalid merkle path parent', () => {
-    const invalidSegment = loadFixture('invalidMerklePathParent');
-
     it('validates the merklePath', (done) => {
-      Promise.all(validate(invalidSegment).merklePath).then(res => {
+      Promise.all(validate(invalidMerklePathParent).merklePath).then(res => {
         res[0].should.match(
           /Invalid Merkle Node {.*}: computed parent: .*/);
         done();
@@ -83,10 +87,8 @@ describe('SegmentValidator', () => {
   });
 
   describe('With a invalid merkle root', () => {
-    const invalidSegment = loadFixture('invalidMerkleRoot');
-
     it('validates the merklePath', (done) => {
-      Promise.all(validate(invalidSegment).merklePath).then(res => {
+      Promise.all(validate(invalidMerkleRoot).merklePath).then(res => {
         res[0].should.match(
           /Invalid Merkle Root .*: not found in Merkle Path/);
         done();
@@ -95,8 +97,6 @@ describe('SegmentValidator', () => {
   });
 
   describe('With a invalid fossil', () => {
-    const invalidFossil = loadFixture('invalidFossil');
-
     it('validates the fossil', (done) => {
       Promise.all(validate(invalidFossil).fossil).then(res => {
         res[0].should.eql('Merkle root not found in transaction data');

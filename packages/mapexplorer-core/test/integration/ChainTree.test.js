@@ -1,14 +1,13 @@
-import ChainTree from '../src/ChainTree';
-import loadFixture from './utils/loadFixture';
-
-import { defaultOptions } from '../src/ChainTreeBuilder';
+import { ChainTree } from 'mapexplorer-core';
+import { defaultOptions } from 'mapexplorer-core';
 import { select, selectAll } from 'd3-selection';
+
+import validMap from '../fixtures/fullMap.json';
 
 describe('ChainTree', () => {
 
   let tree;
   let svg;
-  const validMap = loadFixture('fullMap');
 
   beforeEach(() => {
     tree = new ChainTree('body');

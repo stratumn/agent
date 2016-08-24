@@ -1,4 +1,4 @@
-import wrap from '../src/wrap';
+import wrap from '../../src/wrap';
 
 describe('wrap', () => {
 
