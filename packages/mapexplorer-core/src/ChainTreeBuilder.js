@@ -4,7 +4,7 @@ import resolveLinks from './resolveLinks';
 import wrap from './wrap';
 import parseIfJson from './parseIfJson';
 import tagsSet from './tagsSet';
-import StratumnSDK from 'stratumn-sdk';
+import { getApplication } from 'stratumn-sdk';
 
 export const defaultOptions = {
   withArgs: false,
@@ -52,7 +52,7 @@ export default class ChainTreeBuilder {
   }
 
   _load(map) {
-    return StratumnSDK.getApplication(map.application)
+    return getApplication(map.application)
       .then(app => app.getMap(map.id))
       .then(res => Promise.all(res.map(link => link.load())))
       .catch(res => console.log(res));
