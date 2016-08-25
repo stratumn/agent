@@ -25,7 +25,6 @@ export default {
     commonjs({
       exclude: ['node_modules/rollup-plugin-node-globals/**']
     }),
-    // needed for angular-drop (unavailable on npm)
     globals()
   ],
   format: 'umd',
