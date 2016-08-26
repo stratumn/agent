@@ -294,6 +294,7 @@ var MapExplorer = function () {
 
     this.$scope = $scope;
     this.displayed = 'state';
+    this.editors = [];
 
     $scope.$watch(function () {
       return _this.segment;
@@ -305,6 +306,7 @@ var MapExplorer = function () {
     });
 
     this.aceLoaded = function (_editor) {
+      _this.editors.push(_editor);
       AceConfigurationService.configure(_editor);
     };
   }
@@ -320,6 +322,11 @@ var MapExplorer = function () {
     key: 'display',
     value: function display(tab) {
       this.displayed = tab;
+
+      this.editors.forEach(function (editor) {
+        editor.resize();
+        editor.renderer.updateFull();
+      });
     }
   }, {
     key: 'close',
