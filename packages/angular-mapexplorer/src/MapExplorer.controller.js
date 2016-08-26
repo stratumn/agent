@@ -3,6 +3,7 @@ export default class MapExplorer {
   constructor($scope, AceConfigurationService) {
     this.$scope = $scope;
     this.displayed = 'state';
+    this.editors = [];
 
     $scope.$watch(() => this.segment, () => {
       if (this.segment) {
@@ -12,6 +13,7 @@ export default class MapExplorer {
     });
 
     this.aceLoaded = _editor => {
+      this.editors.push(_editor);
       AceConfigurationService.configure(_editor);
     };
   }
@@ -24,6 +26,11 @@ export default class MapExplorer {
 
   display(tab) {
     this.displayed = tab;
+
+    this.editors.forEach(editor => {
+      editor.resize();
+      editor.renderer.updateFull();
+    });
   }
 
   close() {
