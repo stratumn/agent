@@ -37,7 +37,6 @@
     "mocha": "^2.3.2",
     "rollup": "^0.34.7",
     "rollup-plugin-babel": "^2.6.1",
-    "rollup-plugin-bower-resolve": "^0.1.1",
     "rollup-plugin-commonjs": "^3.3.1",
     "rollup-plugin-includepaths": "^0.1.5",
     "rollup-plugin-json": "^2.0.1",

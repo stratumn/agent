@@ -1,9 +1,4 @@
 import angular from 'angular';
-import 'angular-animate';
-import 'angular-material';
-import 'angular-aria';
-import 'md-color-picker';
-import 'angular-drop';
 
 import stMerklePathTree from './stMerklePathTree.directive';
 import stMapExplorer from './stMapExplorer.directive';
@@ -17,7 +12,9 @@ import MapExplorerController from './MapExplorer.controller';
 import functionArguments from './functionArguments.filter';
 
 export default angular.module('stratumn.angular-mapexplorer',
-  ['ngAnimate', 'ngMaterial', 'ngAria', 'mdColorPicker', 'ui.drop']
+  ['ngAnimate', 'material.components.autocomplete', 'material.components.button',
+    'material.components.icon', 'material.components.toolbar',
+    'material.components.progressCircular', 'ngAria', 'mdColorPicker', 'ui.drop', 'ui.ace']
 )
   .directive('stMapExplorer', stMapExplorer)
   .directive('stMerklePathTree', stMerklePathTree)

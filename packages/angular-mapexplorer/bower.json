@@ -29,7 +29,9 @@
     "angular-drop": "^0.0.1",
     "md-color-picker": "^0.2.6",
     "angular-aria": "^1.5.8",
-    "mapexplorer-core": "0.1.0"
+    "mapexplorer-core": "0.1.0",
+    "angular-ui-ace": "^0.2.3",
+    "angular-route": "^1.5.8"
   },
   "devDependencies": {
     "babel-polyfill": "^0.0.1",

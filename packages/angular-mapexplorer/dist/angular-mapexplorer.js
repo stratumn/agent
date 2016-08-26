@@ -1,8 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('angular'), require('angular-animate'), require('angular-material'), require('angular-aria'), require('md-color-picker'), require('angular-drop'), require('mapexplorer-core')) :
-  typeof define === 'function' && define.amd ? define(['angular', 'angular-animate', 'angular-material', 'angular-aria', 'md-color-picker', 'angular-drop', 'mapexplorer-core'], factory) :
-  (global.angularMapexplorer = factory(global.angular,global.angularAnimate,global.angularMaterial,global.angularAria,global.mdColorPicker,global.angularDrop,global.mapexplorerCore));
-}(this, (function (angular,angularAnimate,angularMaterial,angularAria,mdColorPicker,angularDrop,mapexplorerCore) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('angular'), require('mapexplorer-core')) :
+  typeof define === 'function' && define.amd ? define(['angular', 'mapexplorer-core'], factory) :
+  (global.angularMapexplorer = factory(global.angular,global.mapexplorerCore));
+}(this, (function (angular,mapexplorerCore) { 'use strict';
 
 angular = 'default' in angular ? angular['default'] : angular;
 
@@ -352,7 +352,7 @@ function filter() {
   }).join(', ');
 }
 
-var index = angular.module('stratumn.angular-mapexplorer', ['ngAnimate', 'ngMaterial', 'ngAria', 'mdColorPicker', 'ui.drop']).directive('stMapExplorer', stMapExplorer).directive('stMerklePathTree', stMerklePathTree).directive('stMapValidator', stMapValidator).directive('stPromiseLoader', stPromiseLoader).directive('stTagColorPicker', stTagColorPicker).service('AceConfigurationService', AceConfigurationService).service('ChainTreeBuilderService', ChainTreeBuilderService).service('MapValidatorService', MapValidatorService).controller('MapExplorerController', MapExplorer).filter('functionArguments', function () {
+var index = angular.module('stratumn.angular-mapexplorer', ['ngAnimate', 'material.components.autocomplete', 'material.components.button', 'material.components.icon', 'material.components.toolbar', 'material.components.progressCircular', 'ngAria', 'mdColorPicker', 'ui.drop', 'ui.ace']).directive('stMapExplorer', stMapExplorer).directive('stMerklePathTree', stMerklePathTree).directive('stMapValidator', stMapValidator).directive('stPromiseLoader', stPromiseLoader).directive('stTagColorPicker', stTagColorPicker).service('AceConfigurationService', AceConfigurationService).service('ChainTreeBuilderService', ChainTreeBuilderService).service('MapValidatorService', MapValidatorService).controller('MapExplorerController', MapExplorer).filter('functionArguments', function () {
   return filter;
 }).name;
 
