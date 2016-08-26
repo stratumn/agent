@@ -2,13 +2,9 @@ import babel from 'rollup-plugin-babel';
 import babelrc from 'babelrc-rollup';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import builtins from 'rollup-plugin-node-builtins';
-import bowerResolve from 'rollup-plugin-bower-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import globals from 'rollup-plugin-node-globals';
 import angular from './rollup-plugin-angular1';
-
-let pkg = require('./package.json');
-const nodeExternal = Object.keys(pkg.dependencies);
 
 export default {
   plugins: [
@@ -24,9 +20,6 @@ export default {
       preferBuiltins: true,
       browser: true,
       jsnext: true
-    }),
-    bowerResolve({
-      skip: nodeExternal
     }),
     commonjs(),
     globals()
