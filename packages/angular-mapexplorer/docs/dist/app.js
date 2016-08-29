@@ -70153,175 +70153,1880 @@ interopDefault(index$7);
  */
 !function(e,t,o){!function(e,t,r){"use strict";var l=function(e,o){this.type=e,this.restrictX=o,this.offset={x:null,y:null},this.height=255,this.$scope=null,this.$element=null,this.get=t.bind(this,function(e,o,r){this.$scope=e,this.$element=o,this.canvas=this.$element.children()[0],this.marker=this.$element.children()[1],this.context=this.canvas.getContext("2d"),this.currentColor=this.$scope.color.toRgb(),this.currentHue=this.$scope.color.toHsv().h,this.$element.on("mousedown",t.bind(this,this.onMouseDown)),this.$scope.$on("mdColorPicker:colorSet",t.bind(this,this.onColorSet)),this.extra&&this.extra(),this.draw()})};l.prototype.$window=t.element(e),l.prototype.getColorByMouse=function(e){var t=e.pageX-this.offset.x,o=e.pageY-this.offset.y;return this.getColorByPoint(t,o)},l.prototype.setMarkerCenter=function(e,o){var l=-1*this.marker.offsetWidth/2,a=-1*this.marker.offsetHeight/2;o===r?(o=e+a,o=Math.max(Math.min(this.height-1+a,o),Math.ceil(a)),e=0):(e+=l,o+=a,e=Math.max(Math.min(this.height+l,e),Math.ceil(l)),o=Math.max(Math.min(this.height+a,o),Math.ceil(a))),t.element(this.marker).css({left:e+"px"}),t.element(this.marker).css({top:o+"px"})},l.prototype.getMarkerCenter=function(){var e={x:this.marker.offsetLeft+Math.floor(this.marker.offsetWidth/2),y:this.marker.offsetTop+Math.floor(this.marker.offsetHeight/2)};return e},l.prototype.getImageData=function(e,t){e=Math.max(0,Math.min(e,this.canvas.width-1)),t=Math.max(0,Math.min(t,this.canvas.height-1));var o=this.context.getImageData(e,t,1,1).data;return o},l.prototype.onMouseDown=function(e){e.preventDefault(),e.stopImmediatePropagation(),this.$scope.previewUnfocus(),this.$element.css({cursor:"none"}),this.offset.x=this.canvas.getBoundingClientRect().left+1,this.offset.y=this.canvas.getBoundingClientRect().top;var o=t.bind(this,function(e){switch(this.type){case"hue":var t=this.getColorByMouse(e);this.$scope.$broadcast("mdColorPicker:spectrumHueChange",{hue:t});break;case"alpha":var o=this.getColorByMouse(e);this.$scope.color.setAlpha(o),this.$scope.alpha=o,this.$scope.$apply();break;case"spectrum":var r=this.getColorByMouse(e);this.setColor(r)}});this.$window.on("mousemove",o),this.$window.one("mouseup",t.bind(this,function(e){this.$window.off("mousemove",o),this.$element.css({cursor:"crosshair"})})),o(e)},l.prototype.setColor=function(e){this.$scope.color._r=e.r,this.$scope.color._g=e.g,this.$scope.color._b=e.b,this.$scope.$apply(),this.$scope.$broadcast("mdColorPicker:spectrumColorChange",{color:e})},l.prototype.onColorSet=function(e,t){switch(this.type){case"hue":var o=this.$scope.color.toHsv();this.setMarkerCenter(this.canvas.height-this.canvas.height*(o.h/360));break;case"alpha":this.currentColor=t.color.toRgb(),this.draw();var r=t.color.getAlpha(),l=this.canvas.height-this.canvas.height*r;this.setMarkerCenter(l);break;case"spectrum":var o=t.color.toHsv();this.currentHue=o.h,this.draw();var a=this.canvas.width*o.s,n=this.canvas.height-this.canvas.height*o.v;this.setMarkerCenter(a,n)}};var a=new l("hue",!0);a.getColorByPoint=function(e,t){var r=this.getImageData(e,t);this.setMarkerCenter(t);var l=new o({r:r[0],g:r[1],b:r[2]});return l.toHsl().h},a.draw=function(){this.$element.css({height:this.height+"px"}),this.canvas.height=this.height,this.canvas.width=this.height;var e=this.context.createLinearGradient(90,0,90,this.height);e.addColorStop(.01,"rgba(255, 0, 0, 1.000)"),e.addColorStop(.167,"rgba(255, 0, 255, 1.000)"),e.addColorStop(.333,"rgba(0, 0, 255, 1.000)"),e.addColorStop(.5,"rgba(0, 255, 255, 1.000)"),e.addColorStop(.666,"rgba(0, 255, 0, 1.000)"),e.addColorStop(.828,"rgba(255, 255, 0, 1.000)"),e.addColorStop(.999,"rgba(255, 0, 0, 1.000)"),this.context.fillStyle=e,this.context.fillRect(0,0,this.canvas.width,this.height)};var n=new l("alpha",!0);n.getColorByPoint=function(e,t){var o=this.getImageData(e,t);return this.setMarkerCenter(t),o[3]/255},n.draw=function(){this.$element.css({height:this.height+"px"}),this.canvas.height=this.height,this.canvas.width=this.height;var e=this.context.createLinearGradient(90,0,90,this.height);e.addColorStop(.01,"rgba("+this.currentColor.r+","+this.currentColor.g+","+this.currentColor.b+", 1.000)"),e.addColorStop(.999,"rgba("+this.currentColor.r+","+this.currentColor.g+","+this.currentColor.b+", 0.000)"),this.context.fillStyle=e,this.context.fillRect(0,0,this.canvas.width,this.height)},n.extra=function(){this.$scope.$on("mdColorPicker:spectrumColorChange",t.bind(this,function(e,t){this.currentColor=t.color,this.draw()}))};var i=new l("spectrum",!1);i.getColorByPoint=function(e,t){var o=this.getImageData(e,t);return this.setMarkerCenter(e,t),{r:o[0],g:o[1],b:o[2]}},i.draw=function(){this.canvas.height=this.height,this.canvas.width=this.height,this.context.clearRect(0,0,this.canvas.width,this.canvas.height);var e=this.context.createLinearGradient(0,0,this.canvas.width,0);e.addColorStop(0,"rgba(255, 255, 255, 1.000)"),e.addColorStop(1,"rgba(255, 255, 255, 0.000)");var t=this.context.createLinearGradient(0,0,0,this.canvas.height);t.addColorStop(0,"rgba(0, 0, 0, 0.000)"),t.addColorStop(1,"rgba(0, 0, 0, 1.000)"),this.context.fillStyle="hsl( "+this.currentHue+", 100%, 50%)",this.context.fillRect(0,0,this.canvas.width,this.canvas.height),this.context.fillStyle=e,this.context.fillRect(0,0,this.canvas.width,this.canvas.height),this.context.fillStyle=t,this.context.fillRect(0,0,this.canvas.width,this.canvas.height)},i.extra=function(){this.$scope.$on("mdColorPicker:spectrumHueChange",t.bind(this,function(e,t){this.currentHue=t.hue,this.draw();var o=this.getMarkerCenter(),r=this.getColorByPoint(o.x,o.y);this.setColor(r)}))},t.module("mdColorPicker",[]).run(["$templateCache",function(e){var t={clear:'<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>',gradient:'<path d="M11 9h2v2h-2zm-2 2h2v2H9zm4 0h2v2h-2zm2-2h2v2h-2zM7 9h2v2H7zm12-6H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 18H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm2-7h-2v2h2v2h-2v-2h-2v2h-2v-2h-2v2H9v-2H7v2H5v-2h2v-2H5V5h14v6z"/>',tune:'<path d="M13 21v-2h8v-2h-8v-2h-2v6h2zM3 17v2h6v-2H3z"/><path d="M21 13v-2H11v2h10zM7 9v2H3v2h4v2h2V9H7z"/><path d="M15 9h2V7h4V5h-4V3h-2v6zM3 5v2h10V5H3z"/>',view_module:'<path d="M4 11h5V5H4v6z"/><path d="M4 18h5v-6H4v6z"/><path d="M10 18h5v-6h-5v6z"/><path d="M16 18h5v-6h-5v6z"/><path d="M10 11h5V5h-5v6z"/><path d="M16 5v6h5V5h-5z"/>',view_headline:'<path d="M4 15h17v-2H4v2z"/><path d="M4 19h17v-2H4v2z"/><path d="M4 11h17V9H4v2z"/><path d="M4 5v2h17V5H4z"/>',history:'<path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/><path d="M12 8v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>',clear_all:'<path d="M5 13h14v-2H5v2zm-2 4h14v-2H3v2zM7 7v2h14V7H7z"/>'};for(var o in t)t.hasOwnProperty(o)&&e.put([o,"svg"].join("."),['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">',t[o],"</svg>"].join(""))}]).factory("mdColorPickerHistory",["$injector",function(e){var t=[],r=[],l=!1;try{l=e.get("$cookies")}catch(a){}if(l)for(var n=l.getObject("mdColorPickerHistory")||[],i=0;i<n.length;i++)t.push(o(n[i])),r.push(n[i]);var c=40;return{length:function(){return arguments[0]?void(c=arguments[0]):t.length},add:function(e){for(var o=0;o<t.length;o++)t[o].toRgbString()===e.toRgbString()&&(t.splice(o,1),r.splice(o,1));t.unshift(e),r.unshift(e.toRgbString()),t.length>c&&(t.pop(),r.pop()),l&&l.putObject("mdColorPickerHistory",r)},get:function(){return t},reset:function(){t=[],r=[],l&&l.putObject("mdColorPickerHistory",r)}}}]).directive("mdColorPicker",["$timeout","mdColorPickerHistory",function(e,t){return{templateUrl:"mdColorPicker.tpl.html",require:"^ngModel",scope:{options:"=mdColorPicker",type:"@",label:"@",icon:"@",random:"@","default":"@",openOnInput:"@",hasBackdrop:"@",clickOutsideToClose:"@",skipHide:"@",preserveScope:"@",mdColorClearButton:"=?",mdColorPreview:"=?",mdColorAlphaChannel:"=?",mdColorSpectrum:"=?",mdColorSliders:"=?",mdColorGenericPalette:"=?",mdColorMaterialPalette:"=?",mdColorHistory:"=?",mdColorDefaultTab:"=?"},controller:["$scope","$element","$attrs","$mdDialog","$mdColorPicker",function(e,t,o,l,a){var n=!1;if(e.options!==r)for(var i in e.options)if(e.options.hasOwnProperty(i)){var c=r;e.hasOwnProperty(i)?c=i:e.hasOwnProperty("mdColor"+i.slice(0,1).toUpperCase()+i.slice(1))&&(c="mdColor"+i.slice(0,1).toUpperCase()+i.slice(1)),c&&e[c]===r&&(e[c]=e.options[i])}var s=t.controller("ngModel"),d=function(t){e.value=t||s.$viewValue||""};e.mdColorClearButton=e.mdColorClearButton===r?!0:e.mdColorClearButton,e.mdColorPreview=e.mdColorPreview===r?!0:e.mdColorPreview,e.mdColorAlphaChannel=e.mdColorAlphaChannel===r?!0:e.mdColorAlphaChannel,e.mdColorSpectrum=e.mdColorSpectrum===r?!0:e.mdColorSpectrum,e.mdColorSliders=e.mdColorSliders===r?!0:e.mdColorSliders,e.mdColorGenericPalette=e.mdColorGenericPalette===r?!0:e.mdColorGenericPalette,e.mdColorMaterialPalette=e.mdColorMaterialPalette===r?!0:e.mdColorMaterialPalette,e.mdColorHistory=e.mdColorHistory===r?!0:e.mdColorHistory,d(),e.$watch(function(){return s.$modelValue},function(e){d(e)}),e.$watch("value",function(e,t){""!==e&&"undefined"!=typeof e&&e&&e!==t&&s.$setViewValue(e)}),e.clearValue=function(){e.value=""},e.showColorPicker=function(t){n||a.show({value:e.value,defaultValue:e["default"],random:e.random,clickOutsideToClose:e.clickOutsideToClose,hasBackdrop:e.hasBackdrop,skipHide:e.skipHide,preserveScope:e.preserveScope,mdColorAlphaChannel:e.mdColorAlphaChannel,mdColorSpectrum:e.mdColorSpectrum,mdColorSliders:e.mdColorSliders,mdColorGenericPalette:e.mdColorGenericPalette,mdColorMaterialPalette:e.mdColorMaterialPalette,mdColorHistory:e.mdColorHistory,mdColorDefaultTab:e.mdColorDefaultTab,$event:t}).then(function(t){e.value=t})}}],compile:function(e,t){t.type=t.type!==r?t.type:0}}}]).directive("mdColorPickerContainer",["$compile","$timeout","$mdColorPalette","mdColorPickerHistory",function(e,r,l,a){return{templateUrl:"mdColorPickerContainer.tpl.html",scope:{value:"=?","default":"@",random:"@",ok:"=?",mdColorAlphaChannel:"=",mdColorSpectrum:"=",mdColorSliders:"=",mdColorGenericPalette:"=",mdColorMaterialPalette:"=",mdColorHistory:"=",mdColorDefaultTab:"="},controller:["$scope","$element","$attrs",function(e,n,i){function c(t){var o=0;if(t&&"string"==typeof t){for(var r="mdColor"+t.slice(0,1).toUpperCase()+t.slice(1),l=["mdColorSpectrum","mdColorSliders","mdColorGenericPalette","mdColorMaterialPalette","mdColorHistory"],a=0;a<l.length;a++)if(l[a]==r&&e[r]){o=a;break}}else t&&"number"==typeof t&&(o=t);return o}var s=t.element(n[0].querySelector(".md-color-picker-container")),d=(t.element(s[0].querySelector(".md-color-picker-result")),t.element(n[0].querySelector(".md-color-picker-preview-input"))),h=["toHexString","toRgbString","toHslString"];e["default"]=e["default"]?e["default"]:e.random?o.random():"rgb(255,255,255)",e.value.search("#")>=0?e.type=0:e.value.search("rgb")>=0?e.type=1:e.value.search("hsl")>=0&&(e.type=2),e.color=new o(e.value||e["default"]),e.alpha=e.color.getAlpha(),e.history=a,e.materialFamily=[],e.whichPane=c(e.mdColorDefaultTab),e.inputFocus=!1;var m=9;2*Math.PI/m;e.palette=[["rgb(255, 204, 204)","rgb(255, 230, 204)","rgb(255, 255, 204)","rgb(204, 255, 204)","rgb(204, 255, 230)","rgb(204, 255, 255)","rgb(204, 230, 255)","rgb(204, 204, 255)","rgb(230, 204, 255)","rgb(255, 204, 255)"],["rgb(255, 153, 153)","rgb(255, 204, 153)","rgb(255, 255, 153)","rgb(153, 255, 153)","rgb(153, 255, 204)","rgb(153, 255, 255)","rgb(153, 204, 255)","rgb(153, 153, 255)","rgb(204, 153, 255)","rgb(255, 153, 255)"],["rgb(255, 102, 102)","rgb(255, 179, 102)","rgb(255, 255, 102)","rgb(102, 255, 102)","rgb(102, 255, 179)","rgb(102, 255, 255)","rgb(102, 179, 255)","rgb(102, 102, 255)","rgb(179, 102, 255)","rgb(255, 102, 255)"],["rgb(255, 51, 51)","rgb(255, 153, 51)","rgb(255, 255, 51)","rgb(51, 255, 51)","rgb(51, 255, 153)","rgb(51, 255, 255)","rgb(51, 153, 255)","rgb(51, 51, 255)","rgb(153, 51, 255)","rgb(255, 51, 255)"],["rgb(255, 0, 0)","rgb(255, 128, 0)","rgb(255, 255, 0)","rgb(0, 255, 0)","rgb(0, 255, 128)","rgb(0, 255, 255)","rgb(0, 128, 255)","rgb(0, 0, 255)","rgb(128, 0, 255)","rgb(255, 0, 255)"],["rgb(245, 0, 0)","rgb(245, 123, 0)","rgb(245, 245, 0)","rgb(0, 245, 0)","rgb(0, 245, 123)","rgb(0, 245, 245)","rgb(0, 123, 245)","rgb(0, 0, 245)","rgb(123, 0, 245)","rgb(245, 0, 245)"],["rgb(214, 0, 0)","rgb(214, 108, 0)","rgb(214, 214, 0)","rgb(0, 214, 0)","rgb(0, 214, 108)","rgb(0, 214, 214)","rgb(0, 108, 214)","rgb(0, 0, 214)","rgb(108, 0, 214)","rgb(214, 0, 214)"],["rgb(163, 0, 0)","rgb(163, 82, 0)","rgb(163, 163, 0)","rgb(0, 163, 0)","rgb(0, 163, 82)","rgb(0, 163, 163)","rgb(0, 82, 163)","rgb(0, 0, 163)","rgb(82, 0, 163)","rgb(163, 0, 163)"],["rgb(92, 0, 0)","rgb(92, 46, 0)","rgb(92, 92, 0)","rgb(0, 92, 0)","rgb(0, 92, 46)","rgb(0, 92, 92)","rgb(0, 46, 92)","rgb(0, 0, 92)","rgb(46, 0, 92)","rgb(92, 0, 92)"],["rgb(255, 255, 255)","rgb(205, 205, 205)","rgb(178, 178, 178)","rgb(153, 153, 153)","rgb(127, 127, 127)","rgb(102, 102, 102)","rgb(76, 76, 76)","rgb(51, 51, 51)","rgb(25, 25, 25)","rgb(0, 0, 0)"]],e.materialPalette=l,e.isDark=function(e){return t.isArray(e)?o({r:e[0],g:e[1],b:e[2]}).isDark():o(e).isDark()},e.previewFocus=function(){e.inputFocus=!0,r(function(){d[0].setSelectionRange(0,d[0].value.length)})},e.previewUnfocus=function(){e.inputFocus=!1,d[0].blur()},e.previewBlur=function(){e.inputFocus=!1,e.setValue()},e.previewKeyDown=function(t){13==t.keyCode&&e.ok&&e.ok()},e.setPaletteColor=function(t){r(function(){e.color=o(t.target.style.backgroundColor)})},e.setValue=function(){e.color&&e.color&&h[e.type]&&"rgba(0, 0, 0, 0)"!==e.color.toRgbString()&&(e.value=e.color[h[e.type]]())},e.changeValue=function(){e.color=o(e.value),e.$broadcast("mdColorPicker:colorSet",{color:e.color})},e.$watch("color._a",function(t){e.color.setAlpha(t)},!0),e.$watch("whichPane",function(t){e.$broadcast("mdColorPicker:colorSet",{color:e.color})}),e.$watch("type",function(){d.removeClass("switch"),r(function(){d.addClass("switch")})}),e.$watchGroup(["color.toRgbString()","type"],function(t){e.inputFocus||e.setValue()}),r(function(){e.$broadcast("mdColorPicker:colorSet",{color:e.color}),d.focus(),e.previewFocus()})}],link:function(e,o,l){function a(){var r=t.element(o[0].querySelector(".md-color-picker-palette")),l=t.element(o[0].querySelector(".md-color-picker-material-palette")),a=t.element('<div class="flex-15 layout-fill layout-row layout-align-space-between" layout-align="space-between" layout="row" layout-fill"></div>'),n=t.element('<div class="flex-10"></div>'),i=t.element('<div class="md-color-picker-material-title"></div>'),c=t.element('<div class="md-color-picker-with-label"></div>');t.forEach(e.palette,function(o,l){var i=a.clone();t.forEach(o,function(t){var o=n.clone();o.css({height:"25.5px",backgroundColor:t}),o.bind("click",e.setPaletteColor),i.append(o)}),r.append(i)}),t.forEach(e.materialPalette,function(o,r){var a=i.clone();a.html("<span>"+r.replace("-"," ")+"</span>"),a.css({height:"75px",backgroundColor:"rgb("+o[500].value[0]+","+o[500].value[1]+","+o[500].value[2]+")"}),e.isDark(o[500].value)&&a.addClass("dark"),l.append(a),t.forEach(o,function(t,o){var r=c.clone();r.css({height:"33px",backgroundColor:"rgb("+t.value[0]+","+t.value[1]+","+t.value[2]+")"}),e.isDark(t.value)&&r.addClass("dark"),r.html("<span>"+o+"</span>"),r.bind("click",e.setPaletteColor),l.append(r)})})}o[0].getElementsByTagName("md-tab");r(function(){a()})}}}]).directive("mdColorPickerHue",[function(){return{template:'<canvas width="100%" height="100%"></canvas><div class="md-color-picker-marker"></div>',link:a.get,controller:function(){}}}]).directive("mdColorPickerAlpha",[function(){return{template:'<canvas width="100%" height="100%"></canvas><div class="md-color-picker-marker"></div>',link:n.get,controller:function(){}}}]).directive("mdColorPickerSpectrum",[function(){return{template:'<canvas width="100%" height="100%"></canvas><div class="md-color-picker-marker"></div>{{hue}}',link:i.get,controller:function(){}}}]).factory("$mdColorPicker",["$q","$mdDialog","mdColorPickerHistory",function(e,t,l){var a;return{show:function(e){return e===r&&(e={}),e.hasBackdrop=e.hasBackdrop===r?!0:e.hasBackdrop,e.clickOutsideToClose=e.clickOutsideToClose===r?!0:e.clickOutsideToClose,e.defaultValue=e.defaultValue===r?"#FFFFFF":e.defaultValue,e.focusOnOpen=e.focusOnOpen===r?!1:e.focusOnOpen,e.preserveScope=e.preserveScope===r?!0:e.preserveScope,e.skipHide=e.skipHide===r?!0:e.skipHide,e.mdColorAlphaChannel=e.mdColorAlphaChannel===r?!1:e.mdColorAlphaChannel,e.mdColorSpectrum=e.mdColorSpectrum===r?!0:e.mdColorSpectrum,e.mdColorSliders=e.mdColorSliders===r?!0:e.mdColorSliders,e.mdColorGenericPalette=e.mdColorGenericPalette===r?!0:e.mdColorGenericPalette,e.mdColorMaterialPalette=e.mdColorMaterialPalette===r?!0:e.mdColorMaterialPalette,e.mdColorHistory=e.mdColorHistory===r?!0:e.mdColorHistory,a=t.show({templateUrl:"mdColorPickerDialog.tpl.html",hasBackdrop:e.hasBackdrop,clickOutsideToClose:e.clickOutsideToClose,controller:["$scope","options",function(e,o){e.close=function(){t.cancel()},e.ok=function(){t.hide(e.value)},e.hide=e.ok,e.value=o.value,e["default"]=o.defaultValue,e.random=o.random,e.mdColorAlphaChannel=o.mdColorAlphaChannel,e.mdColorSpectrum=o.mdColorSpectrum,e.mdColorSliders=o.mdColorSliders,e.mdColorGenericPalette=o.mdColorGenericPalette,e.mdColorMaterialPalette=o.mdColorMaterialPalette,e.mdColorHistory=o.mdColorHistory,e.mdColorDefaultTab=o.mdColorDefaultTab}],locals:{options:e},preserveScope:e.preserveScope,skipHide:e.skipHide,targetEvent:e.$event,focusOnOpen:e.focusOnOpen,autoWrap:!1,onShowing:function(){},onComplete:function(){}}),a.then(function(e){l.add(new o(e))},function(){}),a},hide:function(){return a.hide()},cancel:function(){return a.cancel()}}}])}(t,t.angular),e.module("mdColorPicker").run(["$templateCache",function(e){e.put("mdColorPicker.tpl.html",'<div class="md-color-picker-input-container" layout="row">\n	<div class="md-color-picker-preview md-color-picker-checkered-bg" ng-click="showColorPicker($event)" ng-if="mdColorPreview">\n		<div class="md-color-picker-result" ng-style="{background: value}"></div>\n	</div>\n	<md-input-container flex>\n		<label><md-icon ng-if="icon">{{icon}}</md-icon>{{label}}</label>\n		<input type="input" ng-model="value" class=\'md-color-picker-input\'  ng-mousedown="(openOnInput || !mdColorPreview) && showColorPicker($event)"/>\n	</md-input-container>\n	<md-button class="md-icon-button md-color-picker-clear" ng-if="mdColorClearButton && value" ng-click="clearValue();" aria-label="Clear Color">\n		<md-icon md-svg-icon="clear.svg"></md-icon>\n	</md-button>\n</div>\n'),e.put("mdColorPickerContainer.tpl.html",'<div class="md-color-picker-container in" layout="column">\n	<div class="md-color-picker-arrow" ng-style="{\'border-bottom-color\': color.toRgbString() }"></div>\n\n	<div class="md-color-picker-preview md-color-picker-checkered-bg" ng-class="{\'dark\': !color.isDark() || color.getAlpha() < .45}" flex="1" layout="column">\n\n		<div class="md-color-picker-result" ng-style="{\'background\': color.toRgbString()}" flex="100" layout="column" layout-fill layout-align="center center" ng-click="focusPreviewInput( $event )">\n			<!--<span flex  layout="column" layout-align="center center">{{value}}</span>-->\n			<div flex  layout="row" layout-align="center center">\n				<input class="md-color-picker-preview-input" type="text" ng-model="value" ng-focus="previewFocus($event);" ng-blur="previewBlur()" ng-change="changeValue()" ng-keypress="previewKeyDown($event)" layout-fill />\n			</div>\n			<div class="md-color-picker-tabs" style="width: 100%">\n				<md-tabs md-selected="type" md-stretch-tabs="always" md-no-bar md-no-ink md-no-pagination="true" >\n					<md-tab label="Hex" ng-disabled="color.getAlpha() !== 1" md-ink-ripple="#ffffff"></md-tab>\n					<md-tab label="RGB"></md-tab>\n					<md-tab label="HSL"></md-tab>\n					<!--<md-tab label="HSV"></md-tab>\n					<md-tab label="VEC"></md-tab>-->\n				</md-tabs>\n			</div>\n		</div>\n	</div>\n\n	<div class="md-color-picker-tabs md-color-picker-colors">\n		<md-tabs md-stretch-tabs="always" md-align-tabs="bottom"  md-selected="whichPane" md-no-pagination>\n			<md-tab ng-if="mdColorSpectrum">\n				<md-tab-label>\n					<md-icon md-svg-icon="gradient.svg"></md-icon>\n				</md-tab-label>\n				<md-tab-body>\n					<div layout="row" layout-align="space-between" style="height: 255px">\n						<div md-color-picker-spectrum></div>\n						<div md-color-picker-hue ng-class="{\'md-color-picker-wide\': !mdColorAlphaChannel}"></div>\n						<div md-color-picker-alpha class="md-color-picker-checkered-bg" ng-if="mdColorAlphaChannel"></div>\n					</div>\n				</md-tab-body>\n			</md-tab>\n			<md-tab ng-if="mdColorSliders">\n				<md-tab-label>\n					<md-icon md-svg-icon="tune.svg"></md-icon>\n				</md-tab-label>\n				<md-tab-body>\n					<div layout="column" flex="100" layout-fill layout-align="space-between start center" class="md-color-picker-sliders">\n						<div layout="row" layout-align="start center" layout-wrap flex layout-fill>\n							<div flex="10" layout layout-align="center center">\n								<span class="md-body-1">R</span>\n							</div>\n							<md-slider flex="65" min="0" max="255" ng-model="color._r" aria-label="red" class="red-slider"></md-slider>\n							<span flex></span>\n							<div flex="20" layout layout-align="center center">\n								<input style="width: 100%;" min="0" max="255" type="number" ng-model="color._r" aria-label="red" aria-controls="red-slider">\n							</div>\n						</div>\n						<div layout="row" layout-align="start center" layout-wrap flex layout-fill>\n							<div flex="10" layout layout-align="center center">\n								<span class="md-body-1">G</span>\n							</div>\n							<md-slider flex="65" min="0" max="255" ng-model="color._g" aria-label="green" class="green-slider"></md-slider>\n							<span flex></span>\n							<div flex="20" layout layout-align="center center">\n								<input style="width: 100%;" min="0" max="255" type="number" ng-model="color._g" aria-label="green" aria-controls="green-slider">\n							</div>\n						</div>\n						<div layout="row" layout-align="start center" layout-wrap flex layout-fill>\n							<div flex="10" layout layout-align="center center">\n								<span class="md-body-1">B</span>\n							</div>\n							<md-slider flex="65" min="0" max="255" ng-model="color._b" aria-label="blue" class="blue-slider"></md-slider>\n							<span flex></span>\n							<div flex="20" layout layout-align="center center" >\n								<input style="width: 100%;" min="0" max="255" type="number" ng-model="color._b" aria-label="blue" aria-controls="blue-slider">\n							</div>\n						</div>\n						<div layout="row" layout-align="start center" layout-wrap flex layout-fill ng-if="!mdColorAlphaChannel">\n							<div flex="10" layout layout-align="center center">\n								<span class="md-body-1">A</span>\n							</div>\n							<md-slider flex="65" min="0" max="1" step=".01" ng-model="color._a" aria-label="alpha" class="md-primary"></md-slider>\n							<span flex></span>\n							<div flex="20" layout layout-align="center center" >\n								<input style="width: 100%;" min="0" max="1" step=".01" type="number" ng-model="color._a" aria-label="alpha" aria-controls="alpha-slider">\n							</div>\n						</div>\n					</div>\n				</md-tab-body>\n			</md-tab>\n			<md-tab ng-if="mdColorGenericPalette">\n				<md-tab-label>\n					<md-icon md-svg-icon="view_module.svg"></md-icon>\n				</md-tab-label>\n				<md-tab-body>\n					<div layout="column" layout-align="space-between start center" flex class="md-color-picker-palette">\n\n					</div>\n				</md-tab-body>\n			</md-tab>\n			<md-tab  ng-if="mdColorMaterialPalette">\n				<md-tab-label>\n					<md-icon md-svg-icon="view_headline.svg"></md-icon>\n				</md-tab-label>\n				<md-tab-body>\n					<div layout="column" layout-fill flex class="md-color-picker-material-palette">\n\n					</div>\n				</md-tab-body>\n			</md-tab>\n			<md-tab ng-if="mdColorHistory">\n				<md-tab-label>\n					<md-icon md-svg-icon="history.svg"></md-icon>\n				</md-tab-label>\n				<md-tab-body layout="row" layout-fill>\n					<div layout="column" flex layout-align="space-between start" layout-wrap layout-fill class="md-color-picker-history">\n						<div layout="row" flex="80" layout-align="space-between start start" layout-wrap  layout-fill>\n							<div flex="10" ng-repeat="historyColor in history.get() track by $index">\n								<div  ng-style="{\'background\': historyColor.toRgbString()}" ng-click="setPaletteColor($event)"></div>\n							</div>\n						</div>\n\n\n						<md-button flex-end ng-click="history.reset()" class="md-mini" aria-label="Clear History">\n							<md-icon md-svg-icon="clear_all.svg"></md-icon>\n						</md-button>\n					</div>\n				</md-tab-body>\n			</md-tab>\n		</md-tabs>\n	</div>\n\n</div>\n'),e.put("mdColorPickerDialog.tpl.html",'<md-dialog class="md-color-picker-dialog">\n	<div md-color-picker-container\n		value="value"\n		default="{{defaultValue}}"\n		random="{{random}}"\n		ok="ok"\n		md-color-alpha-channel="mdColorAlphaChannel"\n		md-color-spectrum="mdColorSpectrum"\n		md-color-sliders="mdColorSliders"\n		md-color-generic-palette="mdColorGenericPalette"\n		md-color-material-palette="mdColorMaterialPalette"\n		md-color-history="mdColorHistory"\n		md-color-default-tab="mdColorDefaultTab"\n	></div>\n	<md-actions layout="row">\n		<md-button class="md-mini" ng-click="close()" style="width: 50%;">Cancel</md-button>\n		<md-button class="md-mini" ng-click="ok()" style="width: 50%;">Select</md-button>\n	</md-actions>\n</md-dialog>\n')}])}(angular,window,tinycolor);
 
-/*
- AngularDrop v0.0.1-13b6b1b
- (c) 2013 Caitlin Potter & Contributors. http://caitp.github.io/angular-drop
- License: MIT
-*/
-(function (n, v, q) {
-  'use strict';
-  function r() {}function s() {}var p = { full: "0.0.1-13b6b1b", major: "0", minor: "0", dot: "1", codeName: "badger" },
-      l,
-      u = { "false": !1, "true": !0, "": !0 },
-      k = function k(a, d, c) {
-    Object.defineProperty ? Object.defineProperty(a, d, { get: c, set: function set() {}, configurable: !1, enumerable: !0 }) : a.__defineGetter__ ? a.__defineGetter__(d, c) : a[d] = c();
-  },
-      t,
-      w = /^(\s*(\.-?([a-z\u00A0-\u10FFFF]|(\\\d+))([0-9a-z\u00A0-\u10FFFF_-]|(\\\d+))*)\s*)+$/i,
-      x = function x() {
-    var a = "matches matchesSelector msMatchesSelector mozMatchesSelector webkitMatchesSelector oMatchesSelector".split(" ");
-    if ("function" === typeof n.Element && "object" === _typeof(n.Element.prototype)) for (var d = 0, c = a.length; d < c; ++d) {
-      var e = a[d];if ("function" === typeof n.Element.prototype[e]) {
-        var h = n.Element.prototype[e];return function (a, b) {
-          return h.call(a[0], b);
-        };
-      }
-    }return "function" === typeof $ && "function" === typeof $.prototype.is ? function (a, b) {
-      return a.is(b);
-    } : "function" === typeof Sizzle && "function" === typeof Sizzle.matchesSelector ? function (a, b) {
-      return Sizzle.matchesSelector(a[0], b);
-    } : function (a, b) {
-      if (b && w.test(b)) return b = b.replace(/\s+/g, "").replace(".", " ").replace(/^\s+/, "").replace(/\s+$/, ""), a.hasClass(b);throw Error("Only class-based selectors are supported in this browser.");
+/**
+ * @license AngularJS v1.5.8
+ * (c) 2010-2016 Google, Inc. http://angularjs.org
+ * License: MIT
+ */
+(function(window, angular) {'use strict';
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *     Any commits to this file should be reviewed with security in mind.  *
+ *   Changes to this file can potentially create security vulnerabilities. *
+ *          An approval from 2 Core members with history of modifying      *
+ *                         this file is required.                          *
+ *                                                                         *
+ *  Does the change somehow allow for arbitrary javascript to be executed? *
+ *    Or allows for someone to change the prototype of built-in objects?   *
+ *     Or gives undesired access to variables likes document or window?    *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+var $sanitizeMinErr = angular.$$minErr('$sanitize');
+var bind;
+var extend;
+var forEach;
+var isDefined;
+var lowercase;
+var noop;
+var htmlParser;
+var htmlSanitizeWriter;
+
+/**
+ * @ngdoc module
+ * @name ngSanitize
+ * @description
+ *
+ * # ngSanitize
+ *
+ * The `ngSanitize` module provides functionality to sanitize HTML.
+ *
+ *
+ * <div doc-module-components="ngSanitize"></div>
+ *
+ * See {@link ngSanitize.$sanitize `$sanitize`} for usage.
+ */
+
+/**
+ * @ngdoc service
+ * @name $sanitize
+ * @kind function
+ *
+ * @description
+ *   Sanitizes an html string by stripping all potentially dangerous tokens.
+ *
+ *   The input is sanitized by parsing the HTML into tokens. All safe tokens (from a whitelist) are
+ *   then serialized back to properly escaped html string. This means that no unsafe input can make
+ *   it into the returned string.
+ *
+ *   The whitelist for URL sanitization of attribute values is configured using the functions
+ *   `aHrefSanitizationWhitelist` and `imgSrcSanitizationWhitelist` of {@link ng.$compileProvider
+ *   `$compileProvider`}.
+ *
+ *   The input may also contain SVG markup if this is enabled via {@link $sanitizeProvider}.
+ *
+ * @param {string} html HTML input.
+ * @returns {string} Sanitized HTML.
+ *
+ * @example
+   <example module="sanitizeExample" deps="angular-sanitize.js">
+   <file name="index.html">
+     <script>
+         angular.module('sanitizeExample', ['ngSanitize'])
+           .controller('ExampleController', ['$scope', '$sce', function($scope, $sce) {
+             $scope.snippet =
+               '<p style="color:blue">an html\n' +
+               '<em onmouseover="this.textContent=\'PWN3D!\'">click here</em>\n' +
+               'snippet</p>';
+             $scope.deliberatelyTrustDangerousSnippet = function() {
+               return $sce.trustAsHtml($scope.snippet);
+             };
+           }]);
+     </script>
+     <div ng-controller="ExampleController">
+        Snippet: <textarea ng-model="snippet" cols="60" rows="3"></textarea>
+       <table>
+         <tr>
+           <td>Directive</td>
+           <td>How</td>
+           <td>Source</td>
+           <td>Rendered</td>
+         </tr>
+         <tr id="bind-html-with-sanitize">
+           <td>ng-bind-html</td>
+           <td>Automatically uses $sanitize</td>
+           <td><pre>&lt;div ng-bind-html="snippet"&gt;<br/>&lt;/div&gt;</pre></td>
+           <td><div ng-bind-html="snippet"></div></td>
+         </tr>
+         <tr id="bind-html-with-trust">
+           <td>ng-bind-html</td>
+           <td>Bypass $sanitize by explicitly trusting the dangerous value</td>
+           <td>
+           <pre>&lt;div ng-bind-html="deliberatelyTrustDangerousSnippet()"&gt;
+&lt;/div&gt;</pre>
+           </td>
+           <td><div ng-bind-html="deliberatelyTrustDangerousSnippet()"></div></td>
+         </tr>
+         <tr id="bind-default">
+           <td>ng-bind</td>
+           <td>Automatically escapes</td>
+           <td><pre>&lt;div ng-bind="snippet"&gt;<br/>&lt;/div&gt;</pre></td>
+           <td><div ng-bind="snippet"></div></td>
+         </tr>
+       </table>
+       </div>
+   </file>
+   <file name="protractor.js" type="protractor">
+     it('should sanitize the html snippet by default', function() {
+       expect(element(by.css('#bind-html-with-sanitize div')).getInnerHtml()).
+         toBe('<p>an html\n<em>click here</em>\nsnippet</p>');
+     });
+
+     it('should inline raw snippet if bound to a trusted value', function() {
+       expect(element(by.css('#bind-html-with-trust div')).getInnerHtml()).
+         toBe("<p style=\"color:blue\">an html\n" +
+              "<em onmouseover=\"this.textContent='PWN3D!'\">click here</em>\n" +
+              "snippet</p>");
+     });
+
+     it('should escape snippet without any filter', function() {
+       expect(element(by.css('#bind-default div')).getInnerHtml()).
+         toBe("&lt;p style=\"color:blue\"&gt;an html\n" +
+              "&lt;em onmouseover=\"this.textContent='PWN3D!'\"&gt;click here&lt;/em&gt;\n" +
+              "snippet&lt;/p&gt;");
+     });
+
+     it('should update', function() {
+       element(by.model('snippet')).clear();
+       element(by.model('snippet')).sendKeys('new <b onclick="alert(1)">text</b>');
+       expect(element(by.css('#bind-html-with-sanitize div')).getInnerHtml()).
+         toBe('new <b>text</b>');
+       expect(element(by.css('#bind-html-with-trust div')).getInnerHtml()).toBe(
+         'new <b onclick="alert(1)">text</b>');
+       expect(element(by.css('#bind-default div')).getInnerHtml()).toBe(
+         "new &lt;b onclick=\"alert(1)\"&gt;text&lt;/b&gt;");
+     });
+   </file>
+   </example>
+ */
+
+
+/**
+ * @ngdoc provider
+ * @name $sanitizeProvider
+ *
+ * @description
+ * Creates and configures {@link $sanitize} instance.
+ */
+function $SanitizeProvider() {
+  var svgEnabled = false;
+
+  this.$get = ['$$sanitizeUri', function($$sanitizeUri) {
+    if (svgEnabled) {
+      extend(validElements, svgElements);
+    }
+    return function(html) {
+      var buf = [];
+      htmlParser(html, htmlSanitizeWriter(buf, function(uri, isImage) {
+        return !/^unsafe:/.test($$sanitizeUri(uri, isImage));
+      }));
+      return buf.join('');
     };
-  },
-      f = { nodeEq: function nodeEq(a, d) {
-      return _typeof(("string" === a.nodeName ? a.nodeName.toLowerCase() : a[0].nodeName).toLowerCase()) === d;
-    }, offset: function offset(a) {
-      a = a.length ? a[0] : a;var d = { top: 0, left: 0 },
-          c = a && a.ownerDocument;if (c) {
-        c = c.documentElement;if (!f.contains(c, a)) return d;angular.isFunction(a.getBoundingClientRect) && (d = a.getBoundingClientRect());a = f.window(c);return { top: d.top + a.pageYOffset - c.clientTop, left: d.left + a.pageXOffset - c.clientLeft };
+  }];
+
+
+  /**
+   * @ngdoc method
+   * @name $sanitizeProvider#enableSvg
+   * @kind function
+   *
+   * @description
+   * Enables a subset of svg to be supported by the sanitizer.
+   *
+   * <div class="alert alert-warning">
+   *   <p>By enabling this setting without taking other precautions, you might expose your
+   *   application to click-hijacking attacks. In these attacks, sanitized svg elements could be positioned
+   *   outside of the containing element and be rendered over other elements on the page (e.g. a login
+   *   link). Such behavior can then result in phishing incidents.</p>
+   *
+   *   <p>To protect against these, explicitly setup `overflow: hidden` css rule for all potential svg
+   *   tags within the sanitized content:</p>
+   *
+   *   <br>
+   *
+   *   <pre><code>
+   *   .rootOfTheIncludedContent svg {
+   *     overflow: hidden !important;
+   *   }
+   *   </code></pre>
+   * </div>
+   *
+   * @param {boolean=} flag Enable or disable SVG support in the sanitizer.
+   * @returns {boolean|ng.$sanitizeProvider} Returns the currently configured value if called
+   *    without an argument or self for chaining otherwise.
+   */
+  this.enableSvg = function(enableSvg) {
+    if (isDefined(enableSvg)) {
+      svgEnabled = enableSvg;
+      return this;
+    } else {
+      return svgEnabled;
+    }
+  };
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Private stuff
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  bind = angular.bind;
+  extend = angular.extend;
+  forEach = angular.forEach;
+  isDefined = angular.isDefined;
+  lowercase = angular.lowercase;
+  noop = angular.noop;
+
+  htmlParser = htmlParserImpl;
+  htmlSanitizeWriter = htmlSanitizeWriterImpl;
+
+  // Regular Expressions for parsing tags and attributes
+  var SURROGATE_PAIR_REGEXP = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g,
+    // Match everything outside of normal chars and " (quote character)
+    NON_ALPHANUMERIC_REGEXP = /([^\#-~ |!])/g;
+
+
+  // Good source of info about elements and attributes
+  // http://dev.w3.org/html5/spec/Overview.html#semantics
+  // http://simon.html5.org/html-elements
+
+  // Safe Void Elements - HTML5
+  // http://dev.w3.org/html5/spec/Overview.html#void-elements
+  var voidElements = toMap("area,br,col,hr,img,wbr");
+
+  // Elements that you can, intentionally, leave open (and which close themselves)
+  // http://dev.w3.org/html5/spec/Overview.html#optional-tags
+  var optionalEndTagBlockElements = toMap("colgroup,dd,dt,li,p,tbody,td,tfoot,th,thead,tr"),
+      optionalEndTagInlineElements = toMap("rp,rt"),
+      optionalEndTagElements = extend({},
+                                              optionalEndTagInlineElements,
+                                              optionalEndTagBlockElements);
+
+  // Safe Block Elements - HTML5
+  var blockElements = extend({}, optionalEndTagBlockElements, toMap("address,article," +
+          "aside,blockquote,caption,center,del,dir,div,dl,figure,figcaption,footer,h1,h2,h3,h4,h5," +
+          "h6,header,hgroup,hr,ins,map,menu,nav,ol,pre,section,table,ul"));
+
+  // Inline Elements - HTML5
+  var inlineElements = extend({}, optionalEndTagInlineElements, toMap("a,abbr,acronym,b," +
+          "bdi,bdo,big,br,cite,code,del,dfn,em,font,i,img,ins,kbd,label,map,mark,q,ruby,rp,rt,s," +
+          "samp,small,span,strike,strong,sub,sup,time,tt,u,var"));
+
+  // SVG Elements
+  // https://wiki.whatwg.org/wiki/Sanitization_rules#svg_Elements
+  // Note: the elements animate,animateColor,animateMotion,animateTransform,set are intentionally omitted.
+  // They can potentially allow for arbitrary javascript to be executed. See #11290
+  var svgElements = toMap("circle,defs,desc,ellipse,font-face,font-face-name,font-face-src,g,glyph," +
+          "hkern,image,linearGradient,line,marker,metadata,missing-glyph,mpath,path,polygon,polyline," +
+          "radialGradient,rect,stop,svg,switch,text,title,tspan");
+
+  // Blocked Elements (will be stripped)
+  var blockedElements = toMap("script,style");
+
+  var validElements = extend({},
+                                     voidElements,
+                                     blockElements,
+                                     inlineElements,
+                                     optionalEndTagElements);
+
+  //Attributes that have href and hence need to be sanitized
+  var uriAttrs = toMap("background,cite,href,longdesc,src,xlink:href");
+
+  var htmlAttrs = toMap('abbr,align,alt,axis,bgcolor,border,cellpadding,cellspacing,class,clear,' +
+      'color,cols,colspan,compact,coords,dir,face,headers,height,hreflang,hspace,' +
+      'ismap,lang,language,nohref,nowrap,rel,rev,rows,rowspan,rules,' +
+      'scope,scrolling,shape,size,span,start,summary,tabindex,target,title,type,' +
+      'valign,value,vspace,width');
+
+  // SVG attributes (without "id" and "name" attributes)
+  // https://wiki.whatwg.org/wiki/Sanitization_rules#svg_Attributes
+  var svgAttrs = toMap('accent-height,accumulate,additive,alphabetic,arabic-form,ascent,' +
+      'baseProfile,bbox,begin,by,calcMode,cap-height,class,color,color-rendering,content,' +
+      'cx,cy,d,dx,dy,descent,display,dur,end,fill,fill-rule,font-family,font-size,font-stretch,' +
+      'font-style,font-variant,font-weight,from,fx,fy,g1,g2,glyph-name,gradientUnits,hanging,' +
+      'height,horiz-adv-x,horiz-origin-x,ideographic,k,keyPoints,keySplines,keyTimes,lang,' +
+      'marker-end,marker-mid,marker-start,markerHeight,markerUnits,markerWidth,mathematical,' +
+      'max,min,offset,opacity,orient,origin,overline-position,overline-thickness,panose-1,' +
+      'path,pathLength,points,preserveAspectRatio,r,refX,refY,repeatCount,repeatDur,' +
+      'requiredExtensions,requiredFeatures,restart,rotate,rx,ry,slope,stemh,stemv,stop-color,' +
+      'stop-opacity,strikethrough-position,strikethrough-thickness,stroke,stroke-dasharray,' +
+      'stroke-dashoffset,stroke-linecap,stroke-linejoin,stroke-miterlimit,stroke-opacity,' +
+      'stroke-width,systemLanguage,target,text-anchor,to,transform,type,u1,u2,underline-position,' +
+      'underline-thickness,unicode,unicode-range,units-per-em,values,version,viewBox,visibility,' +
+      'width,widths,x,x-height,x1,x2,xlink:actuate,xlink:arcrole,xlink:role,xlink:show,xlink:title,' +
+      'xlink:type,xml:base,xml:lang,xml:space,xmlns,xmlns:xlink,y,y1,y2,zoomAndPan', true);
+
+  var validAttrs = extend({},
+                                  uriAttrs,
+                                  svgAttrs,
+                                  htmlAttrs);
+
+  function toMap(str, lowercaseKeys) {
+    var obj = {}, items = str.split(','), i;
+    for (i = 0; i < items.length; i++) {
+      obj[lowercaseKeys ? lowercase(items[i]) : items[i]] = true;
+    }
+    return obj;
+  }
+
+  var inertBodyElement;
+  (function(window) {
+    var doc;
+    if (window.document && window.document.implementation) {
+      doc = window.document.implementation.createHTMLDocument("inert");
+    } else {
+      throw $sanitizeMinErr('noinert', "Can't create an inert html document");
+    }
+    var docElement = doc.documentElement || doc.getDocumentElement();
+    var bodyElements = docElement.getElementsByTagName('body');
+
+    // usually there should be only one body element in the document, but IE doesn't have any, so we need to create one
+    if (bodyElements.length === 1) {
+      inertBodyElement = bodyElements[0];
+    } else {
+      var html = doc.createElement('html');
+      inertBodyElement = doc.createElement('body');
+      html.appendChild(inertBodyElement);
+      doc.appendChild(html);
+    }
+  })(window);
+
+  /**
+   * @example
+   * htmlParser(htmlString, {
+   *     start: function(tag, attrs) {},
+   *     end: function(tag) {},
+   *     chars: function(text) {},
+   *     comment: function(text) {}
+   * });
+   *
+   * @param {string} html string
+   * @param {object} handler
+   */
+  function htmlParserImpl(html, handler) {
+    if (html === null || html === undefined) {
+      html = '';
+    } else if (typeof html !== 'string') {
+      html = '' + html;
+    }
+    inertBodyElement.innerHTML = html;
+
+    //mXSS protection
+    var mXSSAttempts = 5;
+    do {
+      if (mXSSAttempts === 0) {
+        throw $sanitizeMinErr('uinput', "Failed to sanitize html because the input is unstable");
       }
-    }, contains: function contains(a, d) {
-      var c = 9 === a.nodeType ? a.documentElement : a,
-          e = d && d.parentNode;return a === e || !(!e || 1 !== e.nodeType || !f.contains(c, e));
-    }, window: function window(a) {
-      a = "undefined" === typeof a.nodeName && "number" === typeof a.length ? a[0] : a;return f.isWindow(a) ? a : 9 === a.nodeType && a.defaultView || a.ownerDocument && (a.ownerDocument.defaultView || a.ownerDocument.parentWindow);
-    }, isWindow: function isWindow(a) {
-      return a && a.document && a.location && a.alert && a.setInterval;
-    },
-    swapCss: function swapCss(a, d, c, e) {
-      var h,
-          m = {};for (h in d) {
-        m[h] = a.style[h], a.style[h] = d[h];
-      }c = c.apply(a, e || []);for (h in d) {
-        a.style[h] = m[h];
-      }return c;
-    }, swapDisplay: /^(none|table(?!-c[ea]).+)/, cssShow: { position: "absolute", visibility: "hidden", display: "block" }, size: function size(a) {
-      function d(a) {
-        return { width: a.offsetWidth, height: a.offsetHeight };
-      }var c = angular.element(a);a = a.nodeName ? a : a[0];return 0 === a.offsetWidth && f.swapDisplay.test(c.css("display")) ? f.swapCss(a, f.cssShow, d, [a]) : d(a);
-    }, keepSize: function keepSize(a) {
-      a = f.size(a);a.width += "px";a.height += "px";return a;
-    }, closest: function closest(a, d) {
-      a = angular.element(a);if ($.fn && angular.isFunction($.fn.closest)) return a.closest(d);a = a[0];d = d.toLowerCase();do {
-        if (a.nodeName.toLowerCase() === d) return angular.element(a);
-      } while (a = a.parentNode);
-    } },
-      y = { dragKeepSize: "keepSize", dragWithin: "dragWithin" },
-      z = ["$drag", "$document", "$interpolate", "$timeout", function (a, d, c, e) {
-    return { restrict: "A", link: function link(e, m, b) {
-        var g = {};angular.forEach(y, function (a, m) {
-          if ("undefined" !== typeof b[m]) {
-            var d;a: if (d = c(b[m], !1)(e), "string" === typeof d) {
-              var f;if (u.hasOwnProperty(d)) {
-                d = u[d];break a;
-              } else f = parseInt(d, 10), f === f && (d = f);
-            }g[a] = d;
-          }
-        });a.draggable(m, g);
-      } };
-  }],
-      A = function A() {
-    function a(a) {
-      angular.isUndefined(a) && (a = n.event || { pageX: 0, pageY: 0, preventDefault: function preventDefault() {} });angular.isFunction(a.preventDefault) || (a.preventDefault = function () {});return a;
-    }function d(a) {
-      if ("undefined" !== typeof a && 0 !== a.length) {
-        var e = f.offset(a);a = f.size(a);e.right = e.left + a.width;e.bottom = e.top + a.height;return e;
+      mXSSAttempts--;
+
+      // strip custom-namespaced attributes on IE<=11
+      if (window.document.documentMode) {
+        stripCustomNsAttrs(inertBodyElement);
       }
-    }this.$get = ["$document", "$drop", function (c, e) {
-      var h = { isDraggable: function isDraggable(a) {
-          return !!h.draggable(a, !1);
-        }, draggable: function draggable(a, b) {
-          a = angular.element(a);var e = a.data("$draggable");if (e) return e;if (!1 === b) return q;b = angular.extend({ delay: 500, distance: 1 }, b || {});e = new r();e.element = a;e.options = b;a.on("mousedown", e.dragStart);a.data("$draggable", e);return e;
-        } };r.prototype = { constructor: r, dragStart: function dragStart(e) {
-          e = a(e);e.preventDefault();var b = angular.isObject(this) && this.constructor === r ? this : h.draggable(this);l && l.dragEnd(e);l = b;b.cssDisplay = b.element.css("display");
-          b.dimensions = f.size(b.element);b.hanging || (b.cssPosition = b.element.css("position"), b.options.keepSize && (b.keepSize = { width: b.element[0].style.width, height: b.element[0].style.height }, b.element.css(f.keepSize(b.element))));if ("string" === typeof b.options.dragWithin) {
-            var g;g = b.options.dragWithin;var k = b.element;g = "" !== g.length ? /^(\.|#)/.test(g) && $.fn && angular.isFunction($.fn.closest) ? d(k.parent().closest(g)) : /^(\^|parent)$/.test(g) ? d(k.parent()) : d(f.closest(k.parent(), g)) : void 0;b.constraints = g;
-          }b.offset = b.positionAbs = f.offset(b.element);b.offset.scroll = !1;angular.extend(b.offset, { click: { top: e.pageY - b.offset.top, left: e.pageX - b.offset.left } });b.lastMouseY = e.pageY;b.lastMouseX = e.pageX;b.startEvent = e;b.element.css({ position: "absolute", left: b.offset.left, top: b.offset.top });c.on("mousemove", b.drag);c.on("mouseup", b.dragEnd);
-        }, dragEnd: function dragEnd(a) {
-          a.preventDefault();c.off("mousemove", self.drag);c.off("mouseup", self.dragEnd);e.drop(a);
-        }, drag: function drag(e) {
-          e = a(e);e.preventDefault();var b = l;if (b) {
-            var d = b.element.prop("style"),
-                h = e.pageY;e = e.pageX;var c = d.left || 0,
-                f;f = parseInt(d.top || 0, 10) + (h - b.lastMouseY);c = parseInt(c, 10) + (e - b.lastMouseX);if (!b.constraints || c >= b.constraints.left && c + b.dimensions.width <= b.constraints.right && f >= b.constraints.top && f + b.dimensions.height <= b.constraints.bottom) d.left = c + "px", d.top = f + "px";b.lastMouseY = h;b.lastMouseX = e;
-          }
-        }, finish: function finish() {
-          this.element.css({ position: this.cssPosition });l = this.dimensions = q;
-        } };k(h, "current", function () {
-        return l;
-      });k(h, "version", function () {
-        return p;
-      });return h;
-    }];k(this, "version", function () {
-      return p;
-    });
-  },
-      B = ["$drop", "$parse", function (a, d) {
-    return { restrict: "A", compile: function compile(c, e) {
-        return function (e, c, b) {
-          e = d(b.dropAllowed || "undefined")(e);c = a.droppable(c);e && c.allowedSelectors(e);
-        };
-      } };
-  }],
-      C = function C() {
-    this.$get = ["$document", "$rootScope", function (a, d) {
-      var c = { isDroppable: function isDroppable(a) {
-          return !!$drag.droppable(a, !1);
-        }, droppable: function droppable(a, d) {
-          a = angular.element(a);var c = a.data("$droppable");if (c) return c;if (!1 === d) return q;d = angular.extend({ constraints: null, delay: 500, distance: 1 }, d || {});c = new s();
-          c.element = a;c.options = d;a.data("$droppable", c);return c;
-        }, drop: function drop(a, c) {
-          function f() {
-            b.hanging = !0;b.element.css({ display: b.cssDisplay });l = q;d.$emit("$badDrop", b);
-          }if (l && ("undefined" === typeof a && (a = n.event), angular.isObject(a) && ("number" === typeof a.clientX && "number" === typeof a.clientY ? (c = a.clientY, a = a.clientX) : "number" === typeof a.left && "number" === typeof a.top && (c = a.top, a = a.left)), "number" === typeof a && "number" === typeof c)) {
-            var b = l,
-                g;b.element.css({ display: "none" });g = v.elementFromPoint(a, c);if (!g) return f();
-            3 === g.nodeType && (g = g.parentNode);g = angular.element(g);g = g.inheritedData("$droppable");if (!g || !this.dropAllowed(g, b.element)) return f();g.drop(b);return !0;
-          }
-        }, dropAllowed: function dropAllowed(a, d) {
-          var c = a.allowedSelectors();if (!c || !angular.isArray(c)) return !0;for (var b = 0; b < c.length; ++b) {
-            var f = c[b];if ("string" === typeof f) {
-              var k = d;"function" !== typeof t && (t = x());if (t(k, f)) return !0;
+      html = inertBodyElement.innerHTML; //trigger mXSS
+      inertBodyElement.innerHTML = html;
+    } while (html !== inertBodyElement.innerHTML);
+
+    var node = inertBodyElement.firstChild;
+    while (node) {
+      switch (node.nodeType) {
+        case 1: // ELEMENT_NODE
+          handler.start(node.nodeName.toLowerCase(), attrToMap(node.attributes));
+          break;
+        case 3: // TEXT NODE
+          handler.chars(node.textContent);
+          break;
+      }
+
+      var nextNode;
+      if (!(nextNode = node.firstChild)) {
+      if (node.nodeType == 1) {
+          handler.end(node.nodeName.toLowerCase());
+        }
+        nextNode = node.nextSibling;
+        if (!nextNode) {
+          while (nextNode == null) {
+            node = node.parentNode;
+            if (node === inertBodyElement) break;
+            nextNode = node.nextSibling;
+          if (node.nodeType == 1) {
+              handler.end(node.nodeName.toLowerCase());
             }
-          }return !1;
-        } };s.prototype = { constructor: s, drop: function drop(a, c) {
-          a = a || l;if ("number" === typeof a.length || a.nodeName) a = angular.element(a).data("$draggable");
-          a && a.constructor === r && (c = angular.extend(c || {}, { display: a.cssDisplay }), this.element.append(a.element), a.options.keepSize && (a.element.css(a.keepSize), a.keepSize = q), a.element.css({ display: c.display }), a.hanging = !1, d.$$phase || d.$apply(), a.finish());
-        }, allowedSelectors: function allowedSelectors(a) {
-          return 0 < arguments.length ? ("string" === typeof a && (a = a.split(",")), angular.isArray(a) && (this.allowed = a), this) : this.allowed;
-        } };k(c, "version", function () {
-        return p;
-      });return c;
-    }];k(this, "version", function () {
-      return p;
-    });
+          }
+        }
+      }
+      node = nextNode;
+    }
+
+    while (node = inertBodyElement.firstChild) {
+      inertBodyElement.removeChild(node);
+    }
+  }
+
+  function attrToMap(attrs) {
+    var map = {};
+    for (var i = 0, ii = attrs.length; i < ii; i++) {
+      var attr = attrs[i];
+      map[attr.name] = attr.value;
+    }
+    return map;
+  }
+
+
+  /**
+   * Escapes all potentially dangerous characters, so that the
+   * resulting string can be safely inserted into attribute or
+   * element text.
+   * @param value
+   * @returns {string} escaped text
+   */
+  function encodeEntities(value) {
+    return value.
+      replace(/&/g, '&amp;').
+      replace(SURROGATE_PAIR_REGEXP, function(value) {
+        var hi = value.charCodeAt(0);
+        var low = value.charCodeAt(1);
+        return '&#' + (((hi - 0xD800) * 0x400) + (low - 0xDC00) + 0x10000) + ';';
+      }).
+      replace(NON_ALPHANUMERIC_REGEXP, function(value) {
+        return '&#' + value.charCodeAt(0) + ';';
+      }).
+      replace(/</g, '&lt;').
+      replace(/>/g, '&gt;');
+  }
+
+  /**
+   * create an HTML/XML writer which writes to buffer
+   * @param {Array} buf use buf.join('') to get out sanitized html string
+   * @returns {object} in the form of {
+   *     start: function(tag, attrs) {},
+   *     end: function(tag) {},
+   *     chars: function(text) {},
+   *     comment: function(text) {}
+   * }
+   */
+  function htmlSanitizeWriterImpl(buf, uriValidator) {
+    var ignoreCurrentElement = false;
+    var out = bind(buf, buf.push);
+    return {
+      start: function(tag, attrs) {
+        tag = lowercase(tag);
+        if (!ignoreCurrentElement && blockedElements[tag]) {
+          ignoreCurrentElement = tag;
+        }
+        if (!ignoreCurrentElement && validElements[tag] === true) {
+          out('<');
+          out(tag);
+          forEach(attrs, function(value, key) {
+            var lkey = lowercase(key);
+            var isImage = (tag === 'img' && lkey === 'src') || (lkey === 'background');
+            if (validAttrs[lkey] === true &&
+              (uriAttrs[lkey] !== true || uriValidator(value, isImage))) {
+              out(' ');
+              out(key);
+              out('="');
+              out(encodeEntities(value));
+              out('"');
+            }
+          });
+          out('>');
+        }
+      },
+      end: function(tag) {
+        tag = lowercase(tag);
+        if (!ignoreCurrentElement && validElements[tag] === true && voidElements[tag] !== true) {
+          out('</');
+          out(tag);
+          out('>');
+        }
+        if (tag == ignoreCurrentElement) {
+          ignoreCurrentElement = false;
+        }
+      },
+      chars: function(chars) {
+        if (!ignoreCurrentElement) {
+          out(encodeEntities(chars));
+        }
+      }
+    };
+  }
+
+
+  /**
+   * When IE9-11 comes across an unknown namespaced attribute e.g. 'xlink:foo' it adds 'xmlns:ns1' attribute to declare
+   * ns1 namespace and prefixes the attribute with 'ns1' (e.g. 'ns1:xlink:foo'). This is undesirable since we don't want
+   * to allow any of these custom attributes. This method strips them all.
+   *
+   * @param node Root element to process
+   */
+  function stripCustomNsAttrs(node) {
+    if (node.nodeType === window.Node.ELEMENT_NODE) {
+      var attrs = node.attributes;
+      for (var i = 0, l = attrs.length; i < l; i++) {
+        var attrNode = attrs[i];
+        var attrName = attrNode.name.toLowerCase();
+        if (attrName === 'xmlns:ns1' || attrName.lastIndexOf('ns1:', 0) === 0) {
+          node.removeAttributeNode(attrNode);
+          i--;
+          l--;
+        }
+      }
+    }
+
+    var nextNode = node.firstChild;
+    if (nextNode) {
+      stripCustomNsAttrs(nextNode);
+    }
+
+    nextNode = node.nextSibling;
+    if (nextNode) {
+      stripCustomNsAttrs(nextNode);
+    }
+  }
+}
+
+function sanitizeText(chars) {
+  var buf = [];
+  var writer = htmlSanitizeWriter(buf, noop);
+  writer.chars(chars);
+  return buf.join('');
+}
+
+
+// define ngSanitize module and register $sanitize service
+angular.module('ngSanitize', []).provider('$sanitize', $SanitizeProvider);
+
+/**
+ * @ngdoc filter
+ * @name linky
+ * @kind function
+ *
+ * @description
+ * Finds links in text input and turns them into html links. Supports `http/https/ftp/mailto` and
+ * plain email address links.
+ *
+ * Requires the {@link ngSanitize `ngSanitize`} module to be installed.
+ *
+ * @param {string} text Input text.
+ * @param {string} target Window (`_blank|_self|_parent|_top`) or named frame to open links in.
+ * @param {object|function(url)} [attributes] Add custom attributes to the link element.
+ *
+ *    Can be one of:
+ *
+ *    - `object`: A map of attributes
+ *    - `function`: Takes the url as a parameter and returns a map of attributes
+ *
+ *    If the map of attributes contains a value for `target`, it overrides the value of
+ *    the target parameter.
+ *
+ *
+ * @returns {string} Html-linkified and {@link $sanitize sanitized} text.
+ *
+ * @usage
+   <span ng-bind-html="linky_expression | linky"></span>
+ *
+ * @example
+   <example module="linkyExample" deps="angular-sanitize.js">
+     <file name="index.html">
+       <div ng-controller="ExampleController">
+       Snippet: <textarea ng-model="snippet" cols="60" rows="3"></textarea>
+       <table>
+         <tr>
+           <th>Filter</th>
+           <th>Source</th>
+           <th>Rendered</th>
+         </tr>
+         <tr id="linky-filter">
+           <td>linky filter</td>
+           <td>
+             <pre>&lt;div ng-bind-html="snippet | linky"&gt;<br>&lt;/div&gt;</pre>
+           </td>
+           <td>
+             <div ng-bind-html="snippet | linky"></div>
+           </td>
+         </tr>
+         <tr id="linky-target">
+          <td>linky target</td>
+          <td>
+            <pre>&lt;div ng-bind-html="snippetWithSingleURL | linky:'_blank'"&gt;<br>&lt;/div&gt;</pre>
+          </td>
+          <td>
+            <div ng-bind-html="snippetWithSingleURL | linky:'_blank'"></div>
+          </td>
+         </tr>
+         <tr id="linky-custom-attributes">
+          <td>linky custom attributes</td>
+          <td>
+            <pre>&lt;div ng-bind-html="snippetWithSingleURL | linky:'_self':{rel: 'nofollow'}"&gt;<br>&lt;/div&gt;</pre>
+          </td>
+          <td>
+            <div ng-bind-html="snippetWithSingleURL | linky:'_self':{rel: 'nofollow'}"></div>
+          </td>
+         </tr>
+         <tr id="escaped-html">
+           <td>no filter</td>
+           <td><pre>&lt;div ng-bind="snippet"&gt;<br>&lt;/div&gt;</pre></td>
+           <td><div ng-bind="snippet"></div></td>
+         </tr>
+       </table>
+     </file>
+     <file name="script.js">
+       angular.module('linkyExample', ['ngSanitize'])
+         .controller('ExampleController', ['$scope', function($scope) {
+           $scope.snippet =
+             'Pretty text with some links:\n'+
+             'http://angularjs.org/,\n'+
+             'mailto:us@somewhere.org,\n'+
+             'another@somewhere.org,\n'+
+             'and one more: ftp://127.0.0.1/.';
+           $scope.snippetWithSingleURL = 'http://angularjs.org/';
+         }]);
+     </file>
+     <file name="protractor.js" type="protractor">
+       it('should linkify the snippet with urls', function() {
+         expect(element(by.id('linky-filter')).element(by.binding('snippet | linky')).getText()).
+             toBe('Pretty text with some links: http://angularjs.org/, us@somewhere.org, ' +
+                  'another@somewhere.org, and one more: ftp://127.0.0.1/.');
+         expect(element.all(by.css('#linky-filter a')).count()).toEqual(4);
+       });
+
+       it('should not linkify snippet without the linky filter', function() {
+         expect(element(by.id('escaped-html')).element(by.binding('snippet')).getText()).
+             toBe('Pretty text with some links: http://angularjs.org/, mailto:us@somewhere.org, ' +
+                  'another@somewhere.org, and one more: ftp://127.0.0.1/.');
+         expect(element.all(by.css('#escaped-html a')).count()).toEqual(0);
+       });
+
+       it('should update', function() {
+         element(by.model('snippet')).clear();
+         element(by.model('snippet')).sendKeys('new http://link.');
+         expect(element(by.id('linky-filter')).element(by.binding('snippet | linky')).getText()).
+             toBe('new http://link.');
+         expect(element.all(by.css('#linky-filter a')).count()).toEqual(1);
+         expect(element(by.id('escaped-html')).element(by.binding('snippet')).getText())
+             .toBe('new http://link.');
+       });
+
+       it('should work with the target property', function() {
+        expect(element(by.id('linky-target')).
+            element(by.binding("snippetWithSingleURL | linky:'_blank'")).getText()).
+            toBe('http://angularjs.org/');
+        expect(element(by.css('#linky-target a')).getAttribute('target')).toEqual('_blank');
+       });
+
+       it('should optionally add custom attributes', function() {
+        expect(element(by.id('linky-custom-attributes')).
+            element(by.binding("snippetWithSingleURL | linky:'_self':{rel: 'nofollow'}")).getText()).
+            toBe('http://angularjs.org/');
+        expect(element(by.css('#linky-custom-attributes a')).getAttribute('rel')).toEqual('nofollow');
+       });
+     </file>
+   </example>
+ */
+angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
+  var LINKY_URL_REGEXP =
+        /((ftp|https?):\/\/|(www\.)|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>"\u201d\u2019]/i,
+      MAILTO_REGEXP = /^mailto:/i;
+
+  var linkyMinErr = angular.$$minErr('linky');
+  var isDefined = angular.isDefined;
+  var isFunction = angular.isFunction;
+  var isObject = angular.isObject;
+  var isString = angular.isString;
+
+  return function(text, target, attributes) {
+    if (text == null || text === '') return text;
+    if (!isString(text)) throw linkyMinErr('notstring', 'Expected string but received: {0}', text);
+
+    var attributesFn =
+      isFunction(attributes) ? attributes :
+      isObject(attributes) ? function getAttributesObject() {return attributes;} :
+      function getEmptyAttributesObject() {return {};};
+
+    var match;
+    var raw = text;
+    var html = [];
+    var url;
+    var i;
+    while ((match = raw.match(LINKY_URL_REGEXP))) {
+      // We can not end in these as they are sometimes found at the end of the sentence
+      url = match[0];
+      // if we did not match ftp/http/www/mailto then assume mailto
+      if (!match[2] && !match[4]) {
+        url = (match[3] ? 'http://' : 'mailto:') + url;
+      }
+      i = match.index;
+      addText(raw.substr(0, i));
+      addLink(url, match[0].replace(MAILTO_REGEXP, ''));
+      raw = raw.substring(i + match[0].length);
+    }
+    addText(raw);
+    return $sanitize(html.join(''));
+
+    function addText(text) {
+      if (!text) {
+        return;
+      }
+      html.push(sanitizeText(text));
+    }
+
+    function addLink(url, text) {
+      var key, linkAttributes = attributesFn(url);
+      html.push('<a ');
+
+      for (key in linkAttributes) {
+        html.push(key + '="' + linkAttributes[key] + '" ');
+      }
+
+      if (isDefined(target) && !('target' in linkAttributes)) {
+        html.push('target="',
+                  target,
+                  '" ');
+      }
+      html.push('href="',
+                url.replace(/"/g, '&quot;'),
+                '">');
+      addText(text);
+      html.push('</a>');
+    }
+  };
+}]);
+
+
+})(window, window.angular);
+
+var index$9 = createCommonjsModule(function (module) {
+module.exports = 'ngSanitize';
+});
+
+interopDefault(index$9);
+
+/**
+ * @license AngularDrop v0.0.1-c8dcddb
+ * (c) 2013 Caitlin Potter & Contributors. http://caitp.github.io/angular-drop
+ * License: MIT
+ */
+(function (window, document, undefined) {
+  'use strict';
+
+  /**
+   * @ngdoc object
+   * @module ui.drop
+   * @name ui.drop.Version
+   * @description
+   * An object that contains information about the current Angular-Drop version. This object has the
+   * following properties:
+   *
+   * - `full` – `{string}` – Full version string, such as "0.9.18".
+   * - `major` – `{number}` – Major version number, such as "0".
+   * - `minor` – `{number}` – Minor version number, such as "9".
+   * - `dot` – `{number}` – Dot version number, such as "18".
+   * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
+   */
+
+  var _version = {
+    full: '0.0.1-c8dcddb', // all of these placeholder strings will be replaced by grunt's
+    major: '0', // package task
+    minor: '0',
+    dot: '1',
+    codeName: 'badger'
   },
-      D = function D() {
-    this.$get = [function () {
-      var a = {};k(a, "current", function () {
-        return l;
-      });k(a, "version", function () {
-        return p;
-      });return a;
-    }];k(this, "version", function () {
-      return p;
+      currentDrag,
+      booleans = {
+    'false': false,
+    'true': true,
+    '': true
+  },
+      unconst = function unconst(value) {
+    if (typeof value === 'string') {
+      var num;
+      if (booleans.hasOwnProperty(value)) {
+        return booleans[value];
+      } else {
+        // TODO: Support floats?
+        num = parseInt(value, 10);
+        if (num === num) {
+          value = num;
+        }
+      }
+    }
+    return value;
+  };
+
+  function Draggable() {};
+  function Droppable() {};
+
+  var readonly = function readonly(target, name, fn) {
+    if (Object.defineProperty) {
+      Object.defineProperty(target, name, {
+        get: fn,
+        set: function set() {},
+        configurable: false,
+        enumerable: true
+      });
+    } else if (target.__defineGetter__) {
+      target.__defineGetter__(name, fn);
+    } else {
+      target[name] = fn();
+    }
+  },
+      matchesFn,
+      CLASS_SELECTOR_REGEXP = /^(\s*(\.-?([a-z\u00A0-\u10FFFF]|(\\\d+))([0-9a-z\u00A0-\u10FFFF_-]|(\\\d+))*)\s*)+$/i,
+      getMatchesFn = function getMatchesFn() {
+    var selectorFunctions = ['matches', 'matchesSelector', 'msMatchesSelector', 'mozMatchesSelector', 'webkitMatchesSelector', 'oMatchesSelector'];
+
+    if (typeof window.Element === 'function' && _typeof(window.Element.prototype) === 'object') {
+      for (var i = 0, ii = selectorFunctions.length; i < ii; ++i) {
+        var name = selectorFunctions[i];
+        if (typeof window.Element.prototype[name] === 'function') {
+          var matches = window.Element.prototype[name];
+          return function (jq, selector) {
+            return matches.call(jq[0], selector);
+          };
+        }
+      }
+    }
+    if (typeof $ === 'function' && typeof $.prototype.is === 'function') {
+      return function (jq, selector) {
+        return jq.is(selector);
+      };
+    } else if (typeof Sizzle === 'function' && typeof Sizzle.matchesSelector === 'function') {
+      return function (jq, selector) {
+        return Sizzle.matchesSelector(jq[0], selector);
+      };
+    } else {
+      // Default case: throw if any non-class selectors are used.
+      return function (jq, selector) {
+        if (selector && CLASS_SELECTOR_REGEXP.test(selector)) {
+          selector = selector.replace(/\s+/g, '').replace('.', ' ').replace(/^\s+/, '').replace(/\s+$/, '');
+          return jq.hasClass(selector);
+        } else {
+          throw new Error("Only class-based selectors are supported in this browser.");
+        }
+      };
+    }
+  },
+      matchesSelector = function matchesSelector(node, selector) {
+    var domEle;
+
+    if (typeof matchesFn !== 'function') {
+      matchesFn = getMatchesFn();
+    }
+
+    return matchesFn(node, selector);
+  },
+      DOM = {
+    nodeEq: function nodeEq(node, name) {
+      return _typeof((node.nodeName === 'string' ? node.nodeName.toLowerCase() : node[0].nodeName).toLowerCase()) === name;
+    },
+
+    offset: function offset(node) {
+      node = node.length ? node[0] : node;
+      var win,
+          box = { top: 0, left: 0 },
+          doc = node && node.ownerDocument;
+
+      if (!doc) {
+        return;
+      }
+
+      doc = doc.documentElement;
+
+      if (!DOM.contains(doc, node)) {
+        return box;
+      }
+
+      if (angular.isFunction(node.getBoundingClientRect)) {
+        box = node.getBoundingClientRect();
+      }
+
+      win = DOM.window(doc);
+
+      return {
+        top: box.top + win.pageYOffset - doc.clientTop,
+        left: box.left + win.pageXOffset - doc.clientLeft
+      };
+    },
+
+    contains: function contains(a, b) {
+      var adown = a.nodeType === 9 ? a.documentElement : a,
+          bup = b && b.parentNode;
+      return a === bup || !!(bup && bup.nodeType === 1 && DOM.contains(adown, bup));
+    },
+
+    window: function window(node) {
+      node = typeof node.nodeName === 'undefined' && typeof node.length === 'number' ? node[0] : node;
+      return DOM.isWindow(node) ? node : node.nodeType === 9 && node.defaultView || node.ownerDocument && (node.ownerDocument.defaultView || node.ownerDocument.parentWindow);
+    },
+
+    isWindow: function isWindow(obj) {
+      return obj && obj.document && obj.location && obj.alert && obj.setInterval;
+    },
+
+    swapCss: function swapCss(element, css, callback, args) {
+      var ret,
+          prop,
+          old = {};
+      for (prop in css) {
+        old[prop] = element.style[prop];
+        element.style[prop] = css[prop];
+      }
+
+      ret = callback.apply(element, args || []);
+
+      for (prop in css) {
+        element.style[prop] = old[prop];
+      }
+
+      return ret;
+    },
+
+    swapDisplay: /^(none|table(?!-c[ea]).+)/,
+
+    cssShow: {
+      position: 'absolute',
+      visibility: 'hidden',
+      display: 'block'
+    },
+
+    size: function size(node) {
+      var jq = angular.element(node);
+      node = node.nodeName ? node : node[0];
+      if (node.offsetWidth === 0 && DOM.swapDisplay.test(jq.css('display'))) {
+        return DOM.swapCss(node, DOM.cssShow, getHeightAndWidth, [node]);
+      }
+      return getHeightAndWidth(node);
+
+      function getHeightAndWidth(element) {
+        return {
+          width: element.offsetWidth,
+          height: element.offsetHeight
+        };
+      }
+    },
+    keepSize: function keepSize(node) {
+      var css = DOM.size(node);
+      css.width = css.width + 'px';
+      css.height = css.height + 'px';
+      return css;
+    },
+    closest: function closest(node, value) {
+      node = angular.element(node);
+      if ($.fn && angular.isFunction($.fn.closest)) {
+        return node.closest(value);
+      }
+      // Otherwise, assume it's a tag name...
+      node = node[0];
+      value = value.toLowerCase();
+      do {
+        if (node.nodeName.toLowerCase() === value) {
+          return angular.element(node);
+        }
+      } while (node = node.parentNode);
+    }
+  };
+
+  /**
+   * @ngdoc directive
+   * @module ui.drop
+   * @name ui.drop.directive:draggable
+   *
+   * @description
+   *
+   * Simple directive which denotes a 'draggable' widget. Currently, there are no parameters,
+   * and it is impossible to configure the directive's behaviour.
+   *
+   * @param {boolean=} drag-keep-size The dragged item should maintain its original size while dragging
+   *   if set to true. Default: false.
+   * @param {string=} drag-within Provides a constraint to limit the area through which an element may
+   *   be dragged. It may be a tag name, or the special value '^' or 'parent' to refer to the parent
+   *   element. If jQuery is in use, it may also be a selector supported by jQuery's
+   *   {@link http://api.jquery.com/closest/ $.fn.closest}.
+   */
+  var draggableOptions = {
+    'dragKeepSize': 'keepSize',
+    'dragWithin': 'dragWithin'
+  };
+  var draggableDirective = ['$drag', '$document', '$interpolate', '$timeout', function ($drag, $document, $interpolate, $timeout) {
+    return {
+      restrict: 'A',
+      link: function link(scope, element, attrs) {
+        var options = {};
+        angular.forEach(draggableOptions, function (name, attr) {
+          if (typeof attrs[attr] !== 'undefined') {
+            options[name] = unconst($interpolate(attrs[attr], false)(scope));
+          }
+        });
+        $drag.draggable(element, options);
+      }
+    };
+  }];
+
+  /**
+   * @ngdoc object
+   * @module ui.drop
+   * @name ui.drop.$dragProvider
+   *
+   * @description
+   *
+   * TODO: enable the configuration of default Draggable options in $dragProvider.
+   */
+  var $dragProvider = function $dragProvider() {
+    /**
+     * @ngdoc object
+     * @module ui.drop
+     * @name ui.drop.$drag
+     * @requires $document
+     * @requires $drop
+     *
+     * @description
+     *
+     * Service responsible for controlling the behaviour of draggable nodes. $drag provides
+     * a mechanism to drag-enable any arbitrary element, which allows it to be used in
+     * custom directives, so that custom dragging behaviour can be achieved.
+     */
+    this.$get = ['$document', '$drop', function ($document, $drop) {
+      var $drag = {
+        /**
+         * @ngdoc method
+         * @module ui.drop
+         * @name ui.drop.$drag#isDraggable
+         * @methodOf ui.drop.$drag
+         * @returns {boolean} The draggable status of an element (true if an element is
+         *   drag-enabled, otherwise false)
+         *
+         * @description
+         *
+         * Query the drag-enabled status of an element. Drag-enabled in this context means
+         * that the element has Draggable state attached to it, and does not currently
+         * include other factors which might enable or disable the dragging of an element.
+         */
+        isDraggable: function isDraggable(element) {
+          return !!$drag.draggable(element, false);
+        },
+
+        /**
+         * @ngdoc method
+         * @module ui.drop
+         * @name ui.drop.$drag#draggable
+         * @methodOf ui.drop.$drag
+         * @returns {ui.drop.$drag.Draggable} The Draggable state bound to the element.
+         *
+         * @param {element} element jQuery / jqLite element or DOM node to be checked for
+         *   Draggable state, or to be the element to which a new Draggable state is associated.
+         * @param {object|boolean} options Configuration options for the Draggable state to be
+         *   created. If set to false, no Draggable state will be created, and the function
+         *   instead acts as a simple query. Option values include:
+         *
+         *   - keepSize {boolean} The dragged item should maintain its original size while dragging
+         *     if set to true. Default: false.
+         *   - dragWithin {string} Provides a constraint to limit the area through which an element
+         *     may be dragged. It may be a tag name, or the special value '^' or 'parent' to refer to
+         *     the parent element. If jQuery is in use, it may also be a selector supported by
+         *     jQuery's {@link http://api.jquery.com/closest/ $.fn.closest}.
+         *
+         * @description
+         *
+         * Queries for the Draggable state of a DOM node. If the element is not
+         * Draggable, and `options !== false`, then a new Draggable object is instantiated
+         * and associated with the element.
+         *
+         * As such, this method can be used to query for the existence of Draggable state
+         * attached to a DOM node, similar to {@link ui.drop.$drag#isDraggable isDraggable()}.
+         */
+        draggable: function draggable(element, options) {
+          element = angular.element(element);
+
+          var $draggable = element.data("$draggable");
+
+          if ($draggable) {
+            return $draggable;
+          }
+
+          if (options === false) {
+            return undefined;
+          }
+
+          options = angular.extend({
+            delay: 500,
+            distance: 1
+          }, options || {});
+
+          $draggable = new Draggable();
+
+          $draggable.element = element;
+          $draggable.options = options;
+
+          element.on("mousedown", $draggable.dragStart);
+
+          element.data("$draggable", $draggable);
+          return $draggable;
+        }
+      };
+
+      /**
+       * @ngdoc object
+       * @module ui.drop
+       * @name ui.drop.$drag.Draggable
+       *
+       * @description
+       * Draggable state is an object containing the drag state of a particular DOM node.
+       * It is instantiated and attached via {@link ui.drop.$drag#draggable draggable()}.
+       *
+       * The Draggable object is attached to a DOM node via jqLite / jQuery's expandostore,
+       * using the key `$draggable`. However, it is recomended that querying for a node's
+       * Draggable state be done using {@link ui.drop.$drag#draggable draggable()} or
+       * {@link ui.drop.$drag#isDraggable isDraggable()}, in case the expandostore key is
+       * changed in the future.
+       *
+       * This object provides several helpers which may be used in custom draggable node
+       * directives in order to customize the behaviour of drag & drop.
+       */
+      Draggable.prototype = {
+        constructor: Draggable,
+
+        /**
+         * @ngdoc function
+         * @module ui.drop
+         * @name ui.drop.$drag.Draggable#dragStart
+         * @methodOf ui.drop.$drag.Draggable
+         * @function
+         *
+         * @param {MouseEvent} event The event to which dragStart is responding
+         *
+         * @description
+         * dragStart is meant to be called in response to a mouse event such as mousedown.
+         * This routine is bound to the element's mousedown event during the construction of
+         * the Draggable state.
+         *
+         * If it is desirable to simulate an event, the only properties which are actually
+         * used in the event are Event.pageX and Event.pageY, which respectfully represent the
+         * position relative to the left edge of the document, and the position relative to the
+         * top edge of the document.
+         *
+         * See {@link https://developer.mozilla.org/en-US/docs/Web/API/event.pageX event.pageX}
+         * and {@link https://developer.mozilla.org/en-US/docs/Web/API/event.pageY event.pageY}
+         * for more details.
+         */
+        dragStart: function dragStart(event) {
+          event = fixup(event);
+          event.preventDefault();
+          var self = isDraggable(this) ? this : $drag.draggable(this);
+
+          if (currentDrag) {
+            currentDrag.dragEnd(event);
+          }
+
+          currentDrag = self;
+
+          self.cssDisplay = self.element.css('display');
+          self.dimensions = DOM.size(self.element);
+          if (!self.hanging) {
+            self.cssPosition = self.element.css("position");
+
+            if (self.options.keepSize) {
+              self.keepSize = {
+                width: self.element[0].style['width'],
+                height: self.element[0].style['height']
+              };
+              self.element.css(DOM.keepSize(self.element));
+            }
+          }
+
+          if (typeof self.options.dragWithin === 'string') {
+            self.constraints = dragConstraints(self.options.dragWithin, self.element);
+          }
+
+          self.offset = self.positionAbs = DOM.offset(self.element);
+
+          self.offset.scroll = false;
+
+          angular.extend(self.offset, {
+            click: {
+              top: event.pageY - self.offset.top,
+              left: event.pageX - self.offset.left
+            }
+          });
+
+          self.lastMouseY = event.pageY;
+          self.lastMouseX = event.pageX;
+
+          self.startEvent = event;
+
+          self.element.css({
+            position: 'absolute',
+            left: self.offset.left,
+            top: self.offset.top
+          });
+
+          $document.on("mousemove", self.drag);
+          $document.on("mouseup", self.dragEnd);
+        },
+
+        /**
+         * @ngdoc function
+         * @module ui.drop
+         * @name ui.drop.$drag.Draggable#dragEnd
+         * @methodOf ui.drop.$drag.Draggable
+         * @function
+         *
+         * @param {MouseEvent} event The event to which dragEnd is responding
+         *
+         * @description
+         * dragEnd is used to terminate a mouse drag. This is typically called in response to
+         * a {@link https://developer.mozilla.org/en-US/docs/Web/Reference/Events/mouseup mouseup}
+         * event on the document.
+         *
+         * This method essentially delegates functionality to the {@link ui.drop.$drag $drag} provider
+         * in order to find the appropriate droppable element (if any) to drop over, and attempt to
+         * place the element.
+         *
+         * Like {@link ui.drop.$drag.Draggable#dragStart dragStart()}, there are several properties
+         * which are expected to be present in the event object.
+         * {@link ui.drop.$drop#drop $drop.drop()} makes use of
+         * {@link https://developer.mozilla.org/en-US/docs/Web/API/event.clientX event.clientX} and
+         * {@link https://developer.mozilla.org/en-US/docs/Web/API/event.clientY event.clientY} if
+         * they are available, which they should be in a mouse event.
+         */
+        dragEnd: function dragEnd(event) {
+          event.preventDefault();
+          $document.off("mousemove", self.drag);
+          $document.off("mouseup", self.dragEnd);
+
+          $drop.drop(event);
+        },
+
+        /**
+         * @ngdoc function
+         * @module ui.drop
+         * @name ui.drop.$drag.Draggable#drag
+         * @methodOf ui.drop.$drag.Draggable
+         * @function
+         *
+         * @param {MouseEvent} event The event to which dragEnd is responding
+         *
+         * @description
+         * drag is used to continue a mouse drag, and is typically called in response to a mousemove
+         * event.
+         *
+         * Like {@link ui.drop.$drag.Draggable#dragStart dragStart()}, there are several properties
+         * which are expected to be present in the event object.
+         * {@link https://developer.mozilla.org/en-US/docs/Web/API/event.pageX event.pageX} and
+         * {@link https://developer.mozilla.org/en-US/docs/Web/API/event.pageY event.pageY} are used
+         * to determine the relative position from the last mouse position, and must be present in
+         * the event.
+         *
+         * This method functions simply by adding the difference in mouse coordinates between the
+         * last cached position with the current absolute position of the element, and sets the new
+         * position as an absolute position to the element's style.
+         */
+        drag: function drag(event) {
+          event = fixup(event);
+          event.preventDefault();
+
+          var self = currentDrag;
+          if (!self) {
+            return;
+          }
+
+          var style = self.element.prop('style');
+
+          var position = {
+            top: event.pageY,
+            left: event.pageX
+          },
+              x = style.left || 0,
+              y = style.top || 0,
+              nx,
+              ny;
+
+          ny = parseInt(y, 10) + (position.top - self.lastMouseY);
+          nx = parseInt(x, 10) + (position.left - self.lastMouseX);
+
+          if (!self.constraints || withinConstraints(self.constraints, nx, ny, self.dimensions.width, self.dimensions.height)) {
+            style.left = nx + "px";
+            style.top = ny + "px";
+          }
+
+          self.lastMouseY = position.top;
+          self.lastMouseX = position.left;
+        },
+
+        /**
+         * @ngdoc function
+         * @module ui.drop
+         * @name ui.drop.$drag.Draggable#finish
+         * @methodOf ui.drop.$drag.Draggable
+         * @function
+         *
+         * @description
+         * The finish method is a simple helper, called by
+         * {@link ui.drop.$drop.Droppable#drop Droppable.drop()} in order to terminate the dragging
+         * interaction.
+         *
+         * This method simply restores the original css `position` property to its original pre-drag
+         * value, and clears the currentDrag value.
+         *
+         * This should be considered a private method for the time being, because it is likely to
+         * be removed from {@link ui.drop.$drag.Draggable Draggable} in the near future.
+         */
+        finish: function finish() {
+          this.element.css({
+            position: this.cssPosition
+          });
+          this.dimensions = undefined;
+          currentDrag = undefined;
+        }
+      };
+
+      /**
+       * @ngdoc property
+       * @module ui.drop
+       * @name ui.drop.$drag#current
+       * @propertyOf ui.drop.$drag
+       * @returns {ui.drop.$drag.Draggable} Draggable instance representing the currently dragged
+       *   element.
+       *
+       * @description
+       * The current {@link ui.drop.$drag.Draggable Draggable}, which is being dragged at the given
+       * moment, or undefined.
+       */
+      readonly($drag, 'current', function () {
+        return currentDrag;
+      });
+
+      /**
+       * @ngdoc property
+       * @module ui.drop
+       * @name ui.drop.$drag#version
+       * @propertyOf ui.drop.$drag
+       * @returns {ui.drop.Version} Version
+       *
+       * @description
+       * A reference to the global {@link ui.drop.Version} object.
+       */
+      readonly($drag, 'version', function () {
+        return _version;
+      });
+
+      return $drag;
+    }];
+
+    /**
+     * @ngdoc property
+     * @module ui.drop
+     * @name ui.drop.$dragProvider#version
+     * @propertyOf ui.drop.$dragProvider
+     * @returns {ui.drop.Version} Version
+     *
+     * @description
+     * A reference to the global {@link ui.drop.Version} object.
+     */
+    readonly(this, 'version', function () {
+      return _version;
     });
-  };(function () {
-    angular.module("ui.drop", [], ["$provide", function (a) {
-      a.provider({ $dnd: D, $drag: A, $drop: C });
-    }]).directive({ draggable: z, droppable: B });
-  })();
+
+    function fixup(event) {
+      if (angular.isUndefined(event)) {
+        event = window.event || { pageX: 0, pageY: 0, preventDefault: function preventDefault() {} };
+      }
+      if (!angular.isFunction(event.preventDefault)) {
+        event.preventDefault = function () {};
+      }
+      return event;
+    }
+
+    function isDraggable(thing) {
+      return angular.isObject(thing) && thing.constructor === Draggable;
+    }
+
+    function dragConstraints(value, element) {
+      if (value.length === '') {
+        return;
+      }
+      if (/^(\.|#)/.test(value) && $.fn && angular.isFunction($.fn.closest)) {
+        // Find nearest element matching class
+        return constraintsFor(element.parent().closest(value));
+      }
+      if (/^(\^|parent)$/.test(value)) {
+        return constraintsFor(element.parent());
+      }
+      return constraintsFor(DOM.closest(element.parent(), value));
+    }
+
+    function constraintsFor(element) {
+      if (typeof element === 'undefined' || element.length === 0) {
+        return;
+      }
+      // Use offset + width/height for now?
+      var constraints = DOM.offset(element),
+          dimensions = DOM.size(element);
+      constraints.right = constraints.left + dimensions.width;
+      constraints.bottom = constraints.top + dimensions.height;
+      return constraints;
+    }
+
+    function withinConstraints(c, x, y, w, h) {
+      return x >= c.left && x + w <= c.right && y >= c.top && y + h <= c.bottom;
+    }
+  };
+
+  /**
+   * @ngdoc directive
+   * @module ui.drop
+   * @name ui.drop.directive:droppable
+   *
+   * @description
+   *
+   * Simple directive which denotes a 'droppable' widget (an area onto which adraggable may be dropped).
+   *
+   * @param {string=} drop-allowed provides an array of element selector constraints for which all draggables must contain
+   * in order to be dropped within this droppable.  If no drop-allowed is provided, all draggables will be allowed.  To
+   * specify multiple selectors list them separated by commas (drop-allowed="div.class-one, div#id-two").  If jQuery is
+   * present $.fn.is is used otherwise Element.matches selector functions are used (vendor prefixed).  If Element.matches
+   * functionality is not present class checking is used (element.hasClass).
+   *
+   */
+  var droppableDirective = ['$drop', '$parse', function ($drop, $parse) {
+    return {
+      restrict: 'A',
+      compile: function compile($element, $attrs) {
+        return function (scope, element, attrs) {
+          var allowed = $parse(attrs.dropAllowed || 'undefined')(scope);
+          var droppable = $drop.droppable(element);
+          if (allowed) {
+            droppable.allowedSelectors(allowed);
+          }
+        };
+      }
+    };
+  }];
+
+  /**
+   * @ngdoc object
+   * @module ui.drop
+   * @name ui.drop.$dropProvider
+   *
+   * @description
+   *
+   * TODO: enable the configuration of default Draggable options in $dragProvider.
+   */
+  var $dropProvider = function $dropProvider() {
+    /**
+     * @ngdoc object
+     * @module ui.drop
+     * @name ui.drop.$drop
+     * @requires $document
+     * @requires $rootScope
+     *
+     * @description
+     *
+     * Service responsible for controlling the behaviour of droppable nodes. $drop provides
+     * a mechanism to drop-enable any arbitrary element, which allows it to be used in
+     * custom directives, so that custom dragging behaviour can be achieved.
+     */
+    this.$get = ['$document', '$rootScope', function ($document, $rootScope) {
+      var $drop = {
+        /**
+         * @ngdoc method
+         * @module ui.drop
+         * @name ui.drop.$drop#isDroppable
+         * @methodOf ui.drop.$drop
+         * @returns {boolean} The draggable status of an element (true if an element is
+         *   drag-enabled, otherwise false)
+         *
+         * @description
+         *
+         * Query the droppable status of an element. Droppable in this context means
+         * that the element has Droppable state attached to it, and does not currently
+         * include other factors which might enable or disable the dropping a node into an
+         * element.
+         */
+        isDroppable: function isDroppable(element) {
+          return !!$drag.droppable(element, false);
+        },
+
+        /**
+         * @ngdoc method
+         * @module ui.drop
+         * @name ui.drop.$drop#droppable
+         * @methodOf ui.drop.$drop
+         * @returns {Object} The Droppable state bound to the element.
+         *
+         * @param {element} element jQuery / jqLite element or DOM node to be checked for
+         *   Droppable state, or to be the element to which a new Droppable state is associated.
+         * @param {object|boolean} options Configuration options for the Droppable state to be
+         *   created. If set to false, no Droppable state will be created, and the function
+         *   instead acts as a simple query.
+         *
+         * @description
+         *
+         * Queries for the Droppable state of a DOM node. If the element is not
+         * Droppable, and `options !== false`, then a new Droppable object is instantiated
+         * and associated with the element.
+         *
+         * As such, this method can be used to query for the existence of Droppable state
+         * attached to a DOM node, similar to {@link ui.drop.$drop#isDroppable isDroppable()}.
+         *
+         * TODO: Control actual behaviour of Droppable state with passed in options.
+         */
+        droppable: function droppable(element, options) {
+          element = angular.element(element);
+
+          var $droppable = element.data("$droppable");
+
+          if ($droppable) {
+            return $droppable;
+          }
+
+          if (options === false) {
+            return undefined;
+          }
+
+          options = angular.extend({
+            constraints: null,
+            delay: 500,
+            distance: 1
+          }, options || {});
+
+          $droppable = new Droppable();
+
+          $droppable.element = element;
+          $droppable.options = options;
+
+          element.data('$droppable', $droppable);
+
+          return $droppable;
+        },
+
+        /**
+         * @ngdoc method
+         * @module ui.drop
+         * @name ui.drop.$drop#drop
+         * @methodOf ui.drop.$drop
+         *
+         * @param {Event|number} event Either a DOM Event object which contains client coordinates
+         *   of a mouse release, or else the x coordinate at which the mouse was released.
+         * @param {number=} y The second parameter may serve as the y coordinate at which the mouse
+         *   was released, and is expected to be if `event` is a number.
+         *
+         * @description
+         * Given a client position at which a mouse was released, or a mouse release is being
+         * simulated, this method attempts to find the nearest Droppable element, onto which the
+         * dragged element shall be dropped.
+         *
+         * The css display of the dragged element is set to 'none' so that
+         * {@link https://developer.mozilla.org/en-US/docs/Web/API/document.elementFromPoint
+        * document.elementFromPoint()} will not always return the dragged element.
+         *
+         * If implementing custom drag/drop functionality, it is important to ensure that the
+         * non-hidden css display be restored when finished.
+         */
+        drop: function drop(x, y) {
+          if (!currentDrag) {
+            return;
+          }
+          if (typeof x === 'undefined') {
+            x = window.event;
+          }
+          if (angular.isObject(x)) {
+            // This might be an event object
+            if (typeof x.clientX === 'number' && typeof x.clientY === 'number') {
+              y = x.clientY;
+              x = x.clientX;
+            } else if (typeof x.left === 'number' && typeof x.top === 'number') {
+              y = x.top;
+              x = x.left;
+            }
+          }
+          if (typeof x !== 'number' || typeof y !== 'number') {
+            return;
+          }
+          var current = currentDrag,
+              element,
+              $droppable;
+
+          // Element must be hidden so that elementFromPoint can find the appropriate element.
+          current.element.css({
+            display: 'none'
+          });
+
+          element = document.elementFromPoint(x, y);
+          if (!element) {
+            return badDrop();
+          }
+          if (element.nodeType === 3) {
+            // Opera
+            element = element.parentNode;
+          }
+          element = angular.element(element);
+          $droppable = element.inheritedData('$droppable');
+
+          if (!$droppable || !this.dropAllowed($droppable, current.element)) {
+            // Element is not droppable...
+            return badDrop();
+          }
+
+          $droppable.drop(current);
+
+          return true;
+
+          function badDrop() {
+            current.hanging = true;
+            current.element.css({
+              display: current.cssDisplay
+            });
+            currentDrag = undefined;
+            $rootScope.$emit("$badDrop", current);
+          }
+        },
+
+        /**
+         * @ngdoc method
+         * @module ui.drop
+         * @name ui.drop.$drop#dropAllowed
+         * @methodOf ui.drop.$drop
+         *
+         * @param {droppable} The ui.drop.$drop.Droppable object
+         * @param {draggable} An angular.element() object representing the draggable
+         * @returns {boolean} whether or not the drop is allowed based
+         *
+         * @description
+         * Function to check if the provided draggable element has the class of the provided droppables 'allowed'
+         * attribute.  Returns true if a match is found, or false otherwise.
+         *
+         */
+        dropAllowed: function dropAllowed(droppable, draggable) {
+          var allowed = droppable.allowedSelectors();
+          if (!allowed || !angular.isArray(allowed)) {
+            return true;
+          }
+
+          for (var i = 0; i < allowed.length; ++i) {
+            var curAllowed = allowed[i];
+            if (typeof curAllowed === 'string') {
+              if (matchesSelector(draggable, curAllowed)) {
+                return true;
+              }
+            }
+          }
+          return false;
+        }
+      };
+
+      /**
+       * @ngdoc function
+       * @module ui.drop
+       * @name ui.drop.$drop.Droppable
+       *
+       * @returns {Object} Newly created Droppable instance.
+       *
+       * @description
+       * Droppable state is an object containing the droppable state of a particular DOM node.
+       * It is instantiated and attached via {@link ui.drop.$drop#droppable droppable()}.
+       *
+       * The Droppable object is attached to a DOM node via jqLite / jQuery's expandostore,
+       * using the key `$droppable`. However, it is recomended that querying for a node's
+       * Droppable state be done using {@link ui.drop.$drop#droppable droppable()} or
+       * {@link ui.drop.$drop#isDroppable isDroppable()}, in case the expandostore key is
+       * changed in the future.
+       *
+       * This object provides helpers, including a mechanism to programmatically drop an
+       * arbitrary Draggable onto the current Droppable. This mechanic is used by
+       * {@link ui.drop.$drop#drop $drop.drop()} in order to complete the work.
+       */
+      Droppable.prototype = {
+        constructor: Droppable,
+
+        /**
+         * @ngdoc function
+         * @module ui.drop
+         * @name ui.drop.Droppable#drop
+         * @methodOf ui.drop.$drop.Droppable
+         * @function
+         *
+         * @param {Draggable=} draggable The Draggable state of the dragged element, or
+         *   the current dragging object by default.
+         * @param {options=} options Presently this parameter is essentially unused. It is
+         *   intended to enable some customized behaviour in the future.
+         *
+         * @description
+         * Simplifies the process of dropping a dragged element over a $droppable element,
+         * and appending it to the $droppable node's children.
+         */
+        drop: function drop(draggable, options) {
+          draggable = draggable || currentDrag;
+          if (typeof draggable.length === 'number' || draggable.nodeName) {
+            // Looks like an element...
+            draggable = angular.element(draggable).data('$draggable');
+          }
+          if (!draggable || draggable.constructor !== Draggable) {
+            return;
+          }
+
+          options = angular.extend(options || {}, {
+            display: draggable.cssDisplay
+          });
+
+          this.element.append(draggable.element);
+
+          if (draggable.options.keepSize) {
+            draggable.element.css(draggable.keepSize);
+            draggable.keepSize = undefined;
+          }
+
+          draggable.element.css({
+            display: options.display
+          });
+          draggable.hanging = false;
+          if (!$rootScope.$$phase) {
+            $rootScope.$apply();
+          }
+          draggable.finish();
+        },
+
+        /**
+         * @ngdoc function
+         * @module ui.drop
+         * @name ui.drop.Droppable#allowedSelectors
+         * @methodOf ui.drop.$drop.Droppable
+         * @function
+         *
+         * @param {allowedSelectors} An array of strings representing selectors of draggables which can be
+         * dropped within the draggable
+         * @returns {Array} Array of strings
+         *
+         * @description
+         * A Setter/Getter method for the array of allowed selectors for this droppable.
+         */
+        allowedSelectors: function allowedSelectors(_allowedSelectors) {
+          if (arguments.length > 0) {
+            if (typeof _allowedSelectors === 'string') {
+              _allowedSelectors = _allowedSelectors.split(',');
+            }
+            if (angular.isArray(_allowedSelectors)) {
+              this.allowed = _allowedSelectors;
+            }
+            return this;
+          }
+          return this.allowed;
+        }
+      };
+
+      /**
+       * @ngdoc property
+       * @module ui.drop
+       * @name ui.drop.$drop#version
+       * @propertyOf ui.drop.$drop
+       * @returns {ui.drop.Version} Version
+       *
+       * @description
+       * A reference to the global {@link ui.drop.Version} object.
+       */
+      readonly($drop, 'version', function () {
+        return _version;
+      });
+
+      return $drop;
+    }];
+
+    /**
+     * @ngdoc property
+     * @module ui.drop
+     * @name ui.drop.$dropProvider#version
+     * @propertyOf ui.drop.$dropProvider
+     * @returns {ui.drop.Version} Version
+     *
+     * @description
+     * A reference to the global {@link ui.drop.Version} object.
+     */
+    readonly(this, 'version', function () {
+      return _version;
+    });
+  };
+
+  /**
+   * @ngdoc object
+   * @module ui.drop
+   * @name ui.drop.$dndProvider
+   *
+   * @description
+   * A configuration provider which is intended to combine access to both
+   * $drag and $drop during configuration, so that only a single provider
+   * need be injected.
+   */
+  var $dndProvider = function $dndProvider() {
+    /**
+     * @ngdoc object
+     * @module ui.drop
+     * @name ui.drop.$dnd
+     *
+     * @description
+     *
+     * TODO: Enable access to $drag and $drop in $dnd.
+     */
+    this.$get = [function () {
+      var $dnd = {};
+
+      /**
+       * @ngdoc property
+       * @module ui.drop
+       * @name ui.drop.$dnd#current
+       * @propertyOf ui.drop.$dnd
+       * @returns {ui.drop.$drag.Draggable} Draggable instance representing the currently dragged
+       *   element.
+       *
+       * @description
+       * The current {@link ui.drop.$drag.Draggable Draggable}, which is being dragged at the given
+       * moment, or undefined.
+       */
+      readonly($dnd, 'current', function () {
+        return currentDrag;
+      });
+
+      /**
+       * @ngdoc property
+       * @module ui.drop
+       * @name ui.drop.$dnd#version
+       * @propertyOf ui.drop.$dnd
+       * @returns {ui.drop.Version} Version
+       *
+       * @description
+       * A reference to the global {@link ui.drop.Version} object.
+       */
+      readonly($dnd, 'version', function () {
+        return _version;
+      });
+
+      return $dnd;
+    }];
+
+    /**
+     * @ngdoc property
+     * @module ui.drop
+     * @name ui.drop.$dndProvider#version
+     * @propertyOf ui.drop.$dndProvider
+     * @returns {ui.drop.Version} Version
+     *
+     * @description
+     * A reference to the global {@link ui.drop.Version} object.
+     */
+    readonly(this, 'version', function () {
+      return _version;
+    });
+  };
+
+  function publishExternalAPI() {
+    angular.module('ui.drop', [], ['$provide', function ($provide) {
+      $provide.provider({
+        $dnd: $dndProvider,
+        $drag: $dragProvider,
+        $drop: $dropProvider
+      });
+    }]).directive({
+      draggable: draggableDirective,
+      droppable: droppableDirective
+    });
+  }
+
+  publishExternalAPI();
 })(window, document);
 
 function node_each(callback) {
@@ -74262,7 +75967,7 @@ function max(array, f) {
   return a;
 }
 
-var index$11 = createCommonjsModule(function (module, exports) {
+var index$13 = createCommonjsModule(function (module, exports) {
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         define(factory);
@@ -74317,7 +76022,7 @@ return function deepmerge(target, src) {
 }));
 });
 
-var merge$1 = interopDefault(index$11);
+var merge$1 = interopDefault(index$13);
 
 var jsonrequest = createCommonjsModule(function (module) {
 'use strict';
@@ -74513,7 +76218,7 @@ var require$$1$1 = Object.freeze({
   default: request$2
 });
 
-var index$13 = createCommonjsModule(function (module) {
+var index$15 = createCommonjsModule(function (module) {
 module.exports = extend
 
 function extend() {
@@ -74533,11 +76238,11 @@ function extend() {
 }
 });
 
-var index$14 = interopDefault(index$13);
+var index$16 = interopDefault(index$15);
 
 
 var require$$0$2 = Object.freeze({
-    default: index$14
+    default: index$16
 });
 
 var extractResponseProps = createCommonjsModule(function (module) {
@@ -74686,7 +76391,7 @@ var require$$0$3 = Object.freeze({
   default: once$1
 });
 
-var index$12 = createCommonjsModule(function (module) {
+var index$14 = createCommonjsModule(function (module) {
 'use strict';
 
 var
@@ -74901,7 +76606,7 @@ function getError(req, err) {
 }
 });
 
-var httpplease = interopDefault(index$12);
+var httpplease = interopDefault(index$14);
 
 var request = httpplease.use(json$1);
 
@@ -75057,7 +76762,7 @@ function loadLink(segment) {
   });
 }
 
-var index$15 = createCommonjsModule(function (module) {
+var index$17 = createCommonjsModule(function (module) {
 /*
 The original version of this code is taken from Douglas Crockford's json2.js:
 https://github.com/douglascrockford/JSON-js/blob/master/json2.js
@@ -75278,7 +76983,7 @@ var stringify = function (value, replacer, space) {
 module.exports = stringify
 });
 
-var stringify = interopDefault(index$15);
+var stringify = interopDefault(index$17);
 
 var sha256 = createCommonjsModule(function (module) {
 /*
@@ -75513,6 +77218,1938 @@ var sha256 = createCommonjsModule(function (module) {
 });
 
 var sha256$1 = interopDefault(sha256);
+
+var _buffer;
+var _slowbuffer;
+var _INSPECT_MAX_BYTES;
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,___mod,_expor_){
+'use strict'
+
+_expor_.toByteArray = toByteArray
+_expor_.fromByteArray = fromByteArray
+
+var lookup = []
+var revLookup = []
+var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
+
+function init () {
+  var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+  for (var i = 0, len = code.length; i < len; ++i) {
+    lookup[i] = code[i]
+    revLookup[code.charCodeAt(i)] = i
+  }
+
+  revLookup['-'.charCodeAt(0)] = 62
+  revLookup['_'.charCodeAt(0)] = 63
+}
+
+init()
+
+function toByteArray (b64) {
+  var i, j, l, tmp, placeHolders, arr
+  var len = b64.length
+
+  if (len % 4 > 0) {
+    throw new Error('Invalid string. Length must be a multiple of 4')
+  }
+
+  // the number of equal signs (place holders)
+  // if there are two placeholders, than the two characters before it
+  // represent one byte
+  // if there is only one, then the three characters before it represent 2 bytes
+  // this is just a cheap hack to not do indexOf twice
+  placeHolders = b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
+
+  // base64 is 4/3 + up to two characters of the original data
+  arr = new Arr(len * 3 / 4 - placeHolders)
+
+  // if there are placeholders, only get up to the last complete 4 chars
+  l = placeHolders > 0 ? len - 4 : len
+
+  var L = 0
+
+  for (i = 0, j = 0; i < l; i += 4, j += 3) {
+    tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
+    arr[L++] = (tmp >> 16) & 0xFF
+    arr[L++] = (tmp >> 8) & 0xFF
+    arr[L++] = tmp & 0xFF
+  }
+
+  if (placeHolders === 2) {
+    tmp = (revLookup[b64.charCodeAt(i)] << 2) | (revLookup[b64.charCodeAt(i + 1)] >> 4)
+    arr[L++] = tmp & 0xFF
+  } else if (placeHolders === 1) {
+    tmp = (revLookup[b64.charCodeAt(i)] << 10) | (revLookup[b64.charCodeAt(i + 1)] << 4) | (revLookup[b64.charCodeAt(i + 2)] >> 2)
+    arr[L++] = (tmp >> 8) & 0xFF
+    arr[L++] = tmp & 0xFF
+  }
+
+  return arr
+}
+
+function tripletToBase64 (num) {
+  return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
+}
+
+function encodeChunk (uint8, start, end) {
+  var tmp
+  var output = []
+  for (var i = start; i < end; i += 3) {
+    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+    output.push(tripletToBase64(tmp))
+  }
+  return output.join('')
+}
+
+function fromByteArray (uint8) {
+  var tmp
+  var len = uint8.length
+  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
+  var output = ''
+  var parts = []
+  var maxChunkLength = 16383 // must be multiple of 3
+
+  // go through the array every three bytes, we'll deal with trailing stuff later
+  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
+    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
+  }
+
+  // pad the end with zeros, but make sure to not forget the extra bytes
+  if (extraBytes === 1) {
+    tmp = uint8[len - 1]
+    output += lookup[tmp >> 2]
+    output += lookup[(tmp << 4) & 0x3F]
+    output += '=='
+  } else if (extraBytes === 2) {
+    tmp = (uint8[len - 2] << 8) + (uint8[len - 1])
+    output += lookup[tmp >> 10]
+    output += lookup[(tmp >> 4) & 0x3F]
+    output += lookup[(tmp << 2) & 0x3F]
+    output += '='
+  }
+
+  parts.push(output)
+
+  return parts.join('')
+}
+
+},{}],2:[function(_dereq_,___mod,_expor_){
+(function (global){
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+/* eslint-disable no-proto */
+
+'use strict'
+
+var base64 = _dereq_('base64-js')
+var ieee754 = _dereq_('ieee754')
+var isArray = _dereq_('isarray')
+
+_expor_.Buffer = Buffer
+_expor_.SlowBuffer = SlowBuffer
+_expor_.INSPECT_MAX_BYTES = 50
+
+/**
+ * If `Buffer.TYPED_ARRAY_SUPPORT`:
+ *   === true    Use Uint8Array implementation (fastest)
+ *   === false   Use Object implementation (most compatible, even IE6)
+ *
+ * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
+ * Opera 11.6+, iOS 4.2+.
+ *
+ * Due to various browser bugs, sometimes the Object implementation will be used even
+ * when the browser supports typed arrays.
+ *
+ * Note:
+ *
+ *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
+ *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
+ *
+ *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
+ *
+ *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
+ *     incorrect length in some situations.
+
+ * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
+ * get the Object implementation, which is slower but behaves correctly.
+ */
+Buffer.TYPED_ARRAY_SUPPORT = global.TYPED_ARRAY_SUPPORT !== undefined
+  ? global.TYPED_ARRAY_SUPPORT
+  : typedArraySupport()
+
+/*
+ * Export kMaxLength after typed array support is determined.
+ */
+_expor_.kMaxLength = kMaxLength()
+
+function typedArraySupport () {
+  try {
+    var arr = new Uint8Array(1)
+    arr.__proto__ = {__proto__: Uint8Array.prototype, foo: function () { return 42 }}
+    return arr.foo() === 42 && // typed array instances can be augmented
+        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
+        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
+  } catch (e) {
+    return false
+  }
+}
+
+function kMaxLength () {
+  return Buffer.TYPED_ARRAY_SUPPORT
+    ? 0x7fffffff
+    : 0x3fffffff
+}
+
+function createBuffer (that, length) {
+  if (kMaxLength() < length) {
+    throw new RangeError('Invalid typed array length')
+  }
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    that = new Uint8Array(length)
+    that.__proto__ = Buffer.prototype
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    if (that === null) {
+      that = new Buffer(length)
+    }
+    that.length = length
+  }
+
+  return that
+}
+
+/**
+ * The Buffer constructor returns instances of `Uint8Array` that have their
+ * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
+ * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
+ * and the `Uint8Array` methods. Square bracket notation works as expected -- it
+ * returns a single octet.
+ *
+ * The `Uint8Array` prototype remains unmodified.
+ */
+
+function Buffer (arg, encodingOrOffset, length) {
+  if (!Buffer.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer)) {
+    return new Buffer(arg, encodingOrOffset, length)
+  }
+
+  // Common case.
+  if (typeof arg === 'number') {
+    if (typeof encodingOrOffset === 'string') {
+      throw new Error(
+        'If encoding is specified then the first argument must be a string'
+      )
+    }
+    return allocUnsafe(this, arg)
+  }
+  return from(this, arg, encodingOrOffset, length)
+}
+
+Buffer.poolSize = 8192 // not used by this implementation
+
+// TODO: Legacy, not needed anymore. Remove in next major version.
+Buffer._augment = function (arr) {
+  arr.__proto__ = Buffer.prototype
+  return arr
+}
+
+function from (that, value, encodingOrOffset, length) {
+  if (typeof value === 'number') {
+    throw new TypeError('"value" argument must not be a number')
+  }
+
+  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
+    return fromArrayBuffer(that, value, encodingOrOffset, length)
+  }
+
+  if (typeof value === 'string') {
+    return fromString(that, value, encodingOrOffset)
+  }
+
+  return fromObject(that, value)
+}
+
+/**
+ * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
+ * if value is a number.
+ * Buffer.from(str[, encoding])
+ * Buffer.from(array)
+ * Buffer.from(buffer)
+ * Buffer.from(arrayBuffer[, byteOffset[, length]])
+ **/
+Buffer.from = function (value, encodingOrOffset, length) {
+  return from(null, value, encodingOrOffset, length)
+}
+
+if (Buffer.TYPED_ARRAY_SUPPORT) {
+  Buffer.prototype.__proto__ = Uint8Array.prototype
+  Buffer.__proto__ = Uint8Array
+  if (typeof Symbol !== 'undefined' && Symbol.species &&
+      Buffer[Symbol.species] === Buffer) {
+    // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
+    Object.defineProperty(Buffer, Symbol.species, {
+      value: null,
+      configurable: true
+    })
+  }
+}
+
+function assertSize (size) {
+  if (typeof size !== 'number') {
+    throw new TypeError('"size" argument must be a number')
+  }
+}
+
+function alloc (that, size, fill, encoding) {
+  assertSize(size)
+  if (size <= 0) {
+    return createBuffer(that, size)
+  }
+  if (fill !== undefined) {
+    // Only pay attention to encoding if it's a string. This
+    // prevents accidentally sending in a number that would
+    // be interpretted as a start offset.
+    return typeof encoding === 'string'
+      ? createBuffer(that, size).fill(fill, encoding)
+      : createBuffer(that, size).fill(fill)
+  }
+  return createBuffer(that, size)
+}
+
+/**
+ * Creates a new filled Buffer instance.
+ * alloc(size[, fill[, encoding]])
+ **/
+Buffer.alloc = function (size, fill, encoding) {
+  return alloc(null, size, fill, encoding)
+}
+
+function allocUnsafe (that, size) {
+  assertSize(size)
+  that = createBuffer(that, size < 0 ? 0 : checked(size) | 0)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) {
+    for (var i = 0; i < size; ++i) {
+      that[i] = 0
+    }
+  }
+  return that
+}
+
+/**
+ * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
+ * */
+Buffer.allocUnsafe = function (size) {
+  return allocUnsafe(null, size)
+}
+/**
+ * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
+ */
+Buffer.allocUnsafeSlow = function (size) {
+  return allocUnsafe(null, size)
+}
+
+function fromString (that, string, encoding) {
+  if (typeof encoding !== 'string' || encoding === '') {
+    encoding = 'utf8'
+  }
+
+  if (!Buffer.isEncoding(encoding)) {
+    throw new TypeError('"encoding" must be a valid string encoding')
+  }
+
+  var length = byteLength(string, encoding) | 0
+  that = createBuffer(that, length)
+
+  that.write(string, encoding)
+  return that
+}
+
+function fromArrayLike (that, array) {
+  var length = checked(array.length) | 0
+  that = createBuffer(that, length)
+  for (var i = 0; i < length; i += 1) {
+    that[i] = array[i] & 255
+  }
+  return that
+}
+
+function fromArrayBuffer (that, array, byteOffset, length) {
+  array.byteLength // this throws if `array` is not a valid ArrayBuffer
+
+  if (byteOffset < 0 || array.byteLength < byteOffset) {
+    throw new RangeError('\'offset\' is out of bounds')
+  }
+
+  if (array.byteLength < byteOffset + (length || 0)) {
+    throw new RangeError('\'length\' is out of bounds')
+  }
+
+  if (byteOffset === undefined && length === undefined) {
+    array = new Uint8Array(array)
+  } else if (length === undefined) {
+    array = new Uint8Array(array, byteOffset)
+  } else {
+    array = new Uint8Array(array, byteOffset, length)
+  }
+
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    that = array
+    that.__proto__ = Buffer.prototype
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    that = fromArrayLike(that, array)
+  }
+  return that
+}
+
+function fromObject (that, obj) {
+  if (Buffer.isBuffer(obj)) {
+    var len = checked(obj.length) | 0
+    that = createBuffer(that, len)
+
+    if (that.length === 0) {
+      return that
+    }
+
+    obj.copy(that, 0, 0, len)
+    return that
+  }
+
+  if (obj) {
+    if ((typeof ArrayBuffer !== 'undefined' &&
+        obj.buffer instanceof ArrayBuffer) || 'length' in obj) {
+      if (typeof obj.length !== 'number' || isnan(obj.length)) {
+        return createBuffer(that, 0)
+      }
+      return fromArrayLike(that, obj)
+    }
+
+    if (obj.type === 'Buffer' && isArray(obj.data)) {
+      return fromArrayLike(that, obj.data)
+    }
+  }
+
+  throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.')
+}
+
+function checked (length) {
+  // Note: cannot use `length < kMaxLength` here because that fails when
+  // length is NaN (which is otherwise coerced to zero.)
+  if (length >= kMaxLength()) {
+    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
+                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
+  }
+  return length | 0
+}
+
+function SlowBuffer (length) {
+  if (+length != length) { // eslint-disable-line eqeqeq
+    length = 0
+  }
+  return Buffer.alloc(+length)
+}
+
+Buffer.isBuffer = function isBuffer (b) {
+  return !!(b != null && b._isBuffer)
+}
+
+Buffer.compare = function compare (a, b) {
+  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
+    throw new TypeError('Arguments must be Buffers')
+  }
+
+  if (a === b) return 0
+
+  var x = a.length
+  var y = b.length
+
+  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
+    if (a[i] !== b[i]) {
+      x = a[i]
+      y = b[i]
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+}
+
+Buffer.isEncoding = function isEncoding (encoding) {
+  switch (String(encoding).toLowerCase()) {
+    case 'hex':
+    case 'utf8':
+    case 'utf-8':
+    case 'ascii':
+    case 'binary':
+    case 'base64':
+    case 'raw':
+    case 'ucs2':
+    case 'ucs-2':
+    case 'utf16le':
+    case 'utf-16le':
+      return true
+    default:
+      return false
+  }
+}
+
+Buffer.concat = function concat (list, length) {
+  if (!isArray(list)) {
+    throw new TypeError('"list" argument must be an Array of Buffers')
+  }
+
+  if (list.length === 0) {
+    return Buffer.alloc(0)
+  }
+
+  var i
+  if (length === undefined) {
+    length = 0
+    for (i = 0; i < list.length; ++i) {
+      length += list[i].length
+    }
+  }
+
+  var buffer = Buffer.allocUnsafe(length)
+  var pos = 0
+  for (i = 0; i < list.length; ++i) {
+    var buf = list[i]
+    if (!Buffer.isBuffer(buf)) {
+      throw new TypeError('"list" argument must be an Array of Buffers')
+    }
+    buf.copy(buffer, pos)
+    pos += buf.length
+  }
+  return buffer
+}
+
+function byteLength (string, encoding) {
+  if (Buffer.isBuffer(string)) {
+    return string.length
+  }
+  if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
+      (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
+    return string.byteLength
+  }
+  if (typeof string !== 'string') {
+    string = '' + string
+  }
+
+  var len = string.length
+  if (len === 0) return 0
+
+  // Use a for loop to avoid recursion
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'ascii':
+      case 'binary':
+      case 'raw':
+      case 'raws':
+        return len
+      case 'utf8':
+      case 'utf-8':
+      case undefined:
+        return utf8ToBytes(string).length
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return len * 2
+      case 'hex':
+        return len >>> 1
+      case 'base64':
+        return base64ToBytes(string).length
+      default:
+        if (loweredCase) return utf8ToBytes(string).length // assume utf8
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+Buffer.byteLength = byteLength
+
+function slowToString (encoding, start, end) {
+  var loweredCase = false
+
+  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
+  // property of a typed array.
+
+  // This behaves neither like String nor Uint8Array in that we set start/end
+  // to their upper/lower bounds if the value passed is out of range.
+  // undefined is handled specially as per ECMA-262 6th Edition,
+  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
+  if (start === undefined || start < 0) {
+    start = 0
+  }
+  // Return early if start > this.length. Done here to prevent potential uint32
+  // coercion fail below.
+  if (start > this.length) {
+    return ''
+  }
+
+  if (end === undefined || end > this.length) {
+    end = this.length
+  }
+
+  if (end <= 0) {
+    return ''
+  }
+
+  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
+  end >>>= 0
+  start >>>= 0
+
+  if (end <= start) {
+    return ''
+  }
+
+  if (!encoding) encoding = 'utf8'
+
+  while (true) {
+    switch (encoding) {
+      case 'hex':
+        return hexSlice(this, start, end)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Slice(this, start, end)
+
+      case 'ascii':
+        return asciiSlice(this, start, end)
+
+      case 'binary':
+        return binarySlice(this, start, end)
+
+      case 'base64':
+        return base64Slice(this, start, end)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return utf16leSlice(this, start, end)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = (encoding + '').toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+
+// The property is used by `Buffer.isBuffer` and `is-buffer` (in Safari 5-7) to detect
+// Buffer instances.
+Buffer.prototype._isBuffer = true
+
+function swap (b, n, m) {
+  var i = b[n]
+  b[n] = b[m]
+  b[m] = i
+}
+
+Buffer.prototype.swap16 = function swap16 () {
+  var len = this.length
+  if (len % 2 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 16-bits')
+  }
+  for (var i = 0; i < len; i += 2) {
+    swap(this, i, i + 1)
+  }
+  return this
+}
+
+Buffer.prototype.swap32 = function swap32 () {
+  var len = this.length
+  if (len % 4 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 32-bits')
+  }
+  for (var i = 0; i < len; i += 4) {
+    swap(this, i, i + 3)
+    swap(this, i + 1, i + 2)
+  }
+  return this
+}
+
+Buffer.prototype.toString = function toString () {
+  var length = this.length | 0
+  if (length === 0) return ''
+  if (arguments.length === 0) return utf8Slice(this, 0, length)
+  return slowToString.apply(this, arguments)
+}
+
+Buffer.prototype.equals = function equals (b) {
+  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
+  if (this === b) return true
+  return Buffer.compare(this, b) === 0
+}
+
+Buffer.prototype.inspect = function inspect () {
+  var str = ''
+  var max = _expor_.INSPECT_MAX_BYTES
+  if (this.length > 0) {
+    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ')
+    if (this.length > max) str += ' ... '
+  }
+  return '<Buffer ' + str + '>'
+}
+
+Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
+  if (!Buffer.isBuffer(target)) {
+    throw new TypeError('Argument must be a Buffer')
+  }
+
+  if (start === undefined) {
+    start = 0
+  }
+  if (end === undefined) {
+    end = target ? target.length : 0
+  }
+  if (thisStart === undefined) {
+    thisStart = 0
+  }
+  if (thisEnd === undefined) {
+    thisEnd = this.length
+  }
+
+  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
+    throw new RangeError('out of range index')
+  }
+
+  if (thisStart >= thisEnd && start >= end) {
+    return 0
+  }
+  if (thisStart >= thisEnd) {
+    return -1
+  }
+  if (start >= end) {
+    return 1
+  }
+
+  start >>>= 0
+  end >>>= 0
+  thisStart >>>= 0
+  thisEnd >>>= 0
+
+  if (this === target) return 0
+
+  var x = thisEnd - thisStart
+  var y = end - start
+  var len = Math.min(x, y)
+
+  var thisCopy = this.slice(thisStart, thisEnd)
+  var targetCopy = target.slice(start, end)
+
+  for (var i = 0; i < len; ++i) {
+    if (thisCopy[i] !== targetCopy[i]) {
+      x = thisCopy[i]
+      y = targetCopy[i]
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+}
+
+function arrayIndexOf (arr, val, byteOffset, encoding) {
+  var indexSize = 1
+  var arrLength = arr.length
+  var valLength = val.length
+
+  if (encoding !== undefined) {
+    encoding = String(encoding).toLowerCase()
+    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
+        encoding === 'utf16le' || encoding === 'utf-16le') {
+      if (arr.length < 2 || val.length < 2) {
+        return -1
+      }
+      indexSize = 2
+      arrLength /= 2
+      valLength /= 2
+      byteOffset /= 2
+    }
+  }
+
+  function read (buf, i) {
+    if (indexSize === 1) {
+      return buf[i]
+    } else {
+      return buf.readUInt16BE(i * indexSize)
+    }
+  }
+
+  var foundIndex = -1
+  for (var i = byteOffset; i < arrLength; ++i) {
+    if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
+      if (foundIndex === -1) foundIndex = i
+      if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
+    } else {
+      if (foundIndex !== -1) i -= i - foundIndex
+      foundIndex = -1
+    }
+  }
+
+  return -1
+}
+
+Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
+  if (typeof byteOffset === 'string') {
+    encoding = byteOffset
+    byteOffset = 0
+  } else if (byteOffset > 0x7fffffff) {
+    byteOffset = 0x7fffffff
+  } else if (byteOffset < -0x80000000) {
+    byteOffset = -0x80000000
+  }
+  byteOffset >>= 0
+
+  if (this.length === 0) return -1
+  if (byteOffset >= this.length) return -1
+
+  // Negative offsets start from the end of the buffer
+  if (byteOffset < 0) byteOffset = Math.max(this.length + byteOffset, 0)
+
+  if (typeof val === 'string') {
+    val = Buffer.from(val, encoding)
+  }
+
+  if (Buffer.isBuffer(val)) {
+    // special case: looking for empty string/buffer always fails
+    if (val.length === 0) {
+      return -1
+    }
+    return arrayIndexOf(this, val, byteOffset, encoding)
+  }
+  if (typeof val === 'number') {
+    if (Buffer.TYPED_ARRAY_SUPPORT && Uint8Array.prototype.indexOf === 'function') {
+      return Uint8Array.prototype.indexOf.call(this, val, byteOffset)
+    }
+    return arrayIndexOf(this, [ val ], byteOffset, encoding)
+  }
+
+  throw new TypeError('val must be string, number or Buffer')
+}
+
+Buffer.prototype.includes = function includes (val, byteOffset, encoding) {
+  return this.indexOf(val, byteOffset, encoding) !== -1
+}
+
+function hexWrite (buf, string, offset, length) {
+  offset = Number(offset) || 0
+  var remaining = buf.length - offset
+  if (!length) {
+    length = remaining
+  } else {
+    length = Number(length)
+    if (length > remaining) {
+      length = remaining
+    }
+  }
+
+  // must be an even number of digits
+  var strLen = string.length
+  if (strLen % 2 !== 0) throw new Error('Invalid hex string')
+
+  if (length > strLen / 2) {
+    length = strLen / 2
+  }
+  for (var i = 0; i < length; ++i) {
+    var parsed = parseInt(string.substr(i * 2, 2), 16)
+    if (isNaN(parsed)) return i
+    buf[offset + i] = parsed
+  }
+  return i
+}
+
+function utf8Write (buf, string, offset, length) {
+  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
+}
+
+function asciiWrite (buf, string, offset, length) {
+  return blitBuffer(asciiToBytes(string), buf, offset, length)
+}
+
+function binaryWrite (buf, string, offset, length) {
+  return asciiWrite(buf, string, offset, length)
+}
+
+function base64Write (buf, string, offset, length) {
+  return blitBuffer(base64ToBytes(string), buf, offset, length)
+}
+
+function ucs2Write (buf, string, offset, length) {
+  return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length)
+}
+
+Buffer.prototype.write = function write (string, offset, length, encoding) {
+  // Buffer#write(string)
+  if (offset === undefined) {
+    encoding = 'utf8'
+    length = this.length
+    offset = 0
+  // Buffer#write(string, encoding)
+  } else if (length === undefined && typeof offset === 'string') {
+    encoding = offset
+    length = this.length
+    offset = 0
+  // Buffer#write(string, offset[, length][, encoding])
+  } else if (isFinite(offset)) {
+    offset = offset | 0
+    if (isFinite(length)) {
+      length = length | 0
+      if (encoding === undefined) encoding = 'utf8'
+    } else {
+      encoding = length
+      length = undefined
+    }
+  // legacy write(string, encoding, offset, length) - remove in v0.13
+  } else {
+    throw new Error(
+      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
+    )
+  }
+
+  var remaining = this.length - offset
+  if (length === undefined || length > remaining) length = remaining
+
+  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
+    throw new RangeError('Attempt to write outside buffer bounds')
+  }
+
+  if (!encoding) encoding = 'utf8'
+
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'hex':
+        return hexWrite(this, string, offset, length)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Write(this, string, offset, length)
+
+      case 'ascii':
+        return asciiWrite(this, string, offset, length)
+
+      case 'binary':
+        return binaryWrite(this, string, offset, length)
+
+      case 'base64':
+        // Warning: maxLength not taken into account in base64Write
+        return base64Write(this, string, offset, length)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return ucs2Write(this, string, offset, length)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+
+Buffer.prototype.toJSON = function toJSON () {
+  return {
+    type: 'Buffer',
+    data: Array.prototype.slice.call(this._arr || this, 0)
+  }
+}
+
+function base64Slice (buf, start, end) {
+  if (start === 0 && end === buf.length) {
+    return base64.fromByteArray(buf)
+  } else {
+    return base64.fromByteArray(buf.slice(start, end))
+  }
+}
+
+function utf8Slice (buf, start, end) {
+  end = Math.min(buf.length, end)
+  var res = []
+
+  var i = start
+  while (i < end) {
+    var firstByte = buf[i]
+    var codePoint = null
+    var bytesPerSequence = (firstByte > 0xEF) ? 4
+      : (firstByte > 0xDF) ? 3
+      : (firstByte > 0xBF) ? 2
+      : 1
+
+    if (i + bytesPerSequence <= end) {
+      var secondByte, thirdByte, fourthByte, tempCodePoint
+
+      switch (bytesPerSequence) {
+        case 1:
+          if (firstByte < 0x80) {
+            codePoint = firstByte
+          }
+          break
+        case 2:
+          secondByte = buf[i + 1]
+          if ((secondByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F)
+            if (tempCodePoint > 0x7F) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 3:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F)
+            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 4:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          fourthByte = buf[i + 3]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F)
+            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
+              codePoint = tempCodePoint
+            }
+          }
+      }
+    }
+
+    if (codePoint === null) {
+      // we did not generate a valid codePoint so insert a
+      // replacement char (U+FFFD) and advance only 1 byte
+      codePoint = 0xFFFD
+      bytesPerSequence = 1
+    } else if (codePoint > 0xFFFF) {
+      // encode to utf16 (surrogate pair dance)
+      codePoint -= 0x10000
+      res.push(codePoint >>> 10 & 0x3FF | 0xD800)
+      codePoint = 0xDC00 | codePoint & 0x3FF
+    }
+
+    res.push(codePoint)
+    i += bytesPerSequence
+  }
+
+  return decodeCodePointsArray(res)
+}
+
+// Based on http://stackoverflow.com/a/22747272/680742, the browser with
+// the lowest limit is Chrome, with 0x10000 args.
+// We go 1 magnitude less, for safety
+var MAX_ARGUMENTS_LENGTH = 0x1000
+
+function decodeCodePointsArray (codePoints) {
+  var len = codePoints.length
+  if (len <= MAX_ARGUMENTS_LENGTH) {
+    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
+  }
+
+  // Decode in chunks to avoid "call stack size exceeded".
+  var res = ''
+  var i = 0
+  while (i < len) {
+    res += String.fromCharCode.apply(
+      String,
+      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
+    )
+  }
+  return res
+}
+
+function asciiSlice (buf, start, end) {
+  var ret = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i] & 0x7F)
+  }
+  return ret
+}
+
+function binarySlice (buf, start, end) {
+  var ret = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i])
+  }
+  return ret
+}
+
+function hexSlice (buf, start, end) {
+  var len = buf.length
+
+  if (!start || start < 0) start = 0
+  if (!end || end < 0 || end > len) end = len
+
+  var out = ''
+  for (var i = start; i < end; ++i) {
+    out += toHex(buf[i])
+  }
+  return out
+}
+
+function utf16leSlice (buf, start, end) {
+  var bytes = buf.slice(start, end)
+  var res = ''
+  for (var i = 0; i < bytes.length; i += 2) {
+    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256)
+  }
+  return res
+}
+
+Buffer.prototype.slice = function slice (start, end) {
+  var len = this.length
+  start = ~~start
+  end = end === undefined ? len : ~~end
+
+  if (start < 0) {
+    start += len
+    if (start < 0) start = 0
+  } else if (start > len) {
+    start = len
+  }
+
+  if (end < 0) {
+    end += len
+    if (end < 0) end = 0
+  } else if (end > len) {
+    end = len
+  }
+
+  if (end < start) end = start
+
+  var newBuf
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    newBuf = this.subarray(start, end)
+    newBuf.__proto__ = Buffer.prototype
+  } else {
+    var sliceLen = end - start
+    newBuf = new Buffer(sliceLen, undefined)
+    for (var i = 0; i < sliceLen; ++i) {
+      newBuf[i] = this[i + start]
+    }
+  }
+
+  return newBuf
+}
+
+/*
+ * Need to make sure that buffer isn't trying to write out of bounds.
+ */
+function checkOffset (offset, ext, length) {
+  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
+  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
+}
+
+Buffer.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var val = this[offset]
+  var mul = 1
+  var i = 0
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul
+  }
+
+  return val
+}
+
+Buffer.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    checkOffset(offset, byteLength, this.length)
+  }
+
+  var val = this[offset + --byteLength]
+  var mul = 1
+  while (byteLength > 0 && (mul *= 0x100)) {
+    val += this[offset + --byteLength] * mul
+  }
+
+  return val
+}
+
+Buffer.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 1, this.length)
+  return this[offset]
+}
+
+Buffer.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  return this[offset] | (this[offset + 1] << 8)
+}
+
+Buffer.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  return (this[offset] << 8) | this[offset + 1]
+}
+
+Buffer.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return ((this[offset]) |
+      (this[offset + 1] << 8) |
+      (this[offset + 2] << 16)) +
+      (this[offset + 3] * 0x1000000)
+}
+
+Buffer.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset] * 0x1000000) +
+    ((this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    this[offset + 3])
+}
+
+Buffer.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var val = this[offset]
+  var mul = 1
+  var i = 0
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul
+  }
+  mul *= 0x80
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+
+  return val
+}
+
+Buffer.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var i = byteLength
+  var mul = 1
+  var val = this[offset + --i]
+  while (i > 0 && (mul *= 0x100)) {
+    val += this[offset + --i] * mul
+  }
+  mul *= 0x80
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+
+  return val
+}
+
+Buffer.prototype.readInt8 = function readInt8 (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 1, this.length)
+  if (!(this[offset] & 0x80)) return (this[offset])
+  return ((0xff - this[offset] + 1) * -1)
+}
+
+Buffer.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  var val = this[offset] | (this[offset + 1] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  var val = this[offset + 1] | (this[offset] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset]) |
+    (this[offset + 1] << 8) |
+    (this[offset + 2] << 16) |
+    (this[offset + 3] << 24)
+}
+
+Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset] << 24) |
+    (this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    (this[offset + 3])
+}
+
+Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, true, 23, 4)
+}
+
+Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, false, 23, 4)
+}
+
+Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, true, 52, 8)
+}
+
+Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, false, 52, 8)
+}
+
+function checkInt (buf, value, offset, ext, max, min) {
+  if (!Buffer.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
+  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+}
+
+Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+    checkInt(this, value, offset, byteLength, maxBytes, 0)
+  }
+
+  var mul = 1
+  var i = 0
+  this[offset] = value & 0xFF
+  while (++i < byteLength && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+    checkInt(this, value, offset, byteLength, maxBytes, 0)
+  }
+
+  var i = byteLength - 1
+  var mul = 1
+  this[offset + i] = value & 0xFF
+  while (--i >= 0 && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+  this[offset] = (value & 0xff)
+  return offset + 1
+}
+
+function objectWriteUInt16 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffff + value + 1
+  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; ++i) {
+    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
+      (littleEndian ? i : 1 - i) * 8
+  }
+}
+
+Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+  } else {
+    objectWriteUInt16(this, value, offset, true)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8)
+    this[offset + 1] = (value & 0xff)
+  } else {
+    objectWriteUInt16(this, value, offset, false)
+  }
+  return offset + 2
+}
+
+function objectWriteUInt32 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffffffff + value + 1
+  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; ++i) {
+    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff
+  }
+}
+
+Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset + 3] = (value >>> 24)
+    this[offset + 2] = (value >>> 16)
+    this[offset + 1] = (value >>> 8)
+    this[offset] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, true)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24)
+    this[offset + 1] = (value >>> 16)
+    this[offset + 2] = (value >>> 8)
+    this[offset + 3] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, false)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) {
+    var limit = Math.pow(2, 8 * byteLength - 1)
+
+    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+  }
+
+  var i = 0
+  var mul = 1
+  var sub = 0
+  this[offset] = value & 0xFF
+  while (++i < byteLength && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
+      sub = 1
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) {
+    var limit = Math.pow(2, 8 * byteLength - 1)
+
+    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+  }
+
+  var i = byteLength - 1
+  var mul = 1
+  var sub = 0
+  this[offset + i] = value & 0xFF
+  while (--i >= 0 && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
+      sub = 1
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+  if (value < 0) value = 0xff + value + 1
+  this[offset] = (value & 0xff)
+  return offset + 1
+}
+
+Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+  } else {
+    objectWriteUInt16(this, value, offset, true)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8)
+    this[offset + 1] = (value & 0xff)
+  } else {
+    objectWriteUInt16(this, value, offset, false)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+    this[offset + 2] = (value >>> 16)
+    this[offset + 3] = (value >>> 24)
+  } else {
+    objectWriteUInt32(this, value, offset, true)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  if (value < 0) value = 0xffffffff + value + 1
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24)
+    this[offset + 1] = (value >>> 16)
+    this[offset + 2] = (value >>> 8)
+    this[offset + 3] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, false)
+  }
+  return offset + 4
+}
+
+function checkIEEE754 (buf, value, offset, ext, max, min) {
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+  if (offset < 0) throw new RangeError('Index out of range')
+}
+
+function writeFloat (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert) {
+    checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
+  }
+  ieee754.write(buf, value, offset, littleEndian, 23, 4)
+  return offset + 4
+}
+
+Buffer.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
+  return writeFloat(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
+  return writeFloat(this, value, offset, false, noAssert)
+}
+
+function writeDouble (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert) {
+    checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
+  }
+  ieee754.write(buf, value, offset, littleEndian, 52, 8)
+  return offset + 8
+}
+
+Buffer.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
+  return writeDouble(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
+  return writeDouble(this, value, offset, false, noAssert)
+}
+
+// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
+Buffer.prototype.copy = function copy (target, targetStart, start, end) {
+  if (!start) start = 0
+  if (!end && end !== 0) end = this.length
+  if (targetStart >= target.length) targetStart = target.length
+  if (!targetStart) targetStart = 0
+  if (end > 0 && end < start) end = start
+
+  // Copy 0 bytes; we're done
+  if (end === start) return 0
+  if (target.length === 0 || this.length === 0) return 0
+
+  // Fatal error conditions
+  if (targetStart < 0) {
+    throw new RangeError('targetStart out of bounds')
+  }
+  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
+  if (end < 0) throw new RangeError('sourceEnd out of bounds')
+
+  // Are we oob?
+  if (end > this.length) end = this.length
+  if (target.length - targetStart < end - start) {
+    end = target.length - targetStart + start
+  }
+
+  var len = end - start
+  var i
+
+  if (this === target && start < targetStart && targetStart < end) {
+    // descending copy from end
+    for (i = len - 1; i >= 0; --i) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
+    // ascending copy from start
+    for (i = 0; i < len; ++i) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else {
+    Uint8Array.prototype.set.call(
+      target,
+      this.subarray(start, start + len),
+      targetStart
+    )
+  }
+
+  return len
+}
+
+// Usage:
+//    buffer.fill(number[, offset[, end]])
+//    buffer.fill(buffer[, offset[, end]])
+//    buffer.fill(string[, offset[, end]][, encoding])
+Buffer.prototype.fill = function fill (val, start, end, encoding) {
+  // Handle string cases:
+  if (typeof val === 'string') {
+    if (typeof start === 'string') {
+      encoding = start
+      start = 0
+      end = this.length
+    } else if (typeof end === 'string') {
+      encoding = end
+      end = this.length
+    }
+    if (val.length === 1) {
+      var code = val.charCodeAt(0)
+      if (code < 256) {
+        val = code
+      }
+    }
+    if (encoding !== undefined && typeof encoding !== 'string') {
+      throw new TypeError('encoding must be a string')
+    }
+    if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
+      throw new TypeError('Unknown encoding: ' + encoding)
+    }
+  } else if (typeof val === 'number') {
+    val = val & 255
+  }
+
+  // Invalid ranges are not set to a default, so can range check early.
+  if (start < 0 || this.length < start || this.length < end) {
+    throw new RangeError('Out of range index')
+  }
+
+  if (end <= start) {
+    return this
+  }
+
+  start = start >>> 0
+  end = end === undefined ? this.length : end >>> 0
+
+  if (!val) val = 0
+
+  var i
+  if (typeof val === 'number') {
+    for (i = start; i < end; ++i) {
+      this[i] = val
+    }
+  } else {
+    var bytes = Buffer.isBuffer(val)
+      ? val
+      : utf8ToBytes(new Buffer(val, encoding).toString())
+    var len = bytes.length
+    for (i = 0; i < end - start; ++i) {
+      this[i + start] = bytes[i % len]
+    }
+  }
+
+  return this
+}
+
+// HELPER FUNCTIONS
+// ================
+
+var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g
+
+function base64clean (str) {
+  // Node strips out invalid characters like \n and \t from the string, base64-js does not
+  str = stringtrim(str).replace(INVALID_BASE64_RE, '')
+  // Node converts strings with length < 2 to ''
+  if (str.length < 2) return ''
+  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
+  while (str.length % 4 !== 0) {
+    str = str + '='
+  }
+  return str
+}
+
+function stringtrim (str) {
+  if (str.trim) return str.trim()
+  return str.replace(/^\s+|\s+$/g, '')
+}
+
+function toHex (n) {
+  if (n < 16) return '0' + n.toString(16)
+  return n.toString(16)
+}
+
+function utf8ToBytes (string, units) {
+  units = units || Infinity
+  var codePoint
+  var length = string.length
+  var leadSurrogate = null
+  var bytes = []
+
+  for (var i = 0; i < length; ++i) {
+    codePoint = string.charCodeAt(i)
+
+    // is surrogate component
+    if (codePoint > 0xD7FF && codePoint < 0xE000) {
+      // last char was a lead
+      if (!leadSurrogate) {
+        // no lead yet
+        if (codePoint > 0xDBFF) {
+          // unexpected trail
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        } else if (i + 1 === length) {
+          // unpaired lead
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        }
+
+        // valid lead
+        leadSurrogate = codePoint
+
+        continue
+      }
+
+      // 2 leads in a row
+      if (codePoint < 0xDC00) {
+        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+        leadSurrogate = codePoint
+        continue
+      }
+
+      // valid surrogate pair
+      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
+    } else if (leadSurrogate) {
+      // valid bmp char, but last char was a lead
+      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+    }
+
+    leadSurrogate = null
+
+    // encode utf8
+    if (codePoint < 0x80) {
+      if ((units -= 1) < 0) break
+      bytes.push(codePoint)
+    } else if (codePoint < 0x800) {
+      if ((units -= 2) < 0) break
+      bytes.push(
+        codePoint >> 0x6 | 0xC0,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x10000) {
+      if ((units -= 3) < 0) break
+      bytes.push(
+        codePoint >> 0xC | 0xE0,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x110000) {
+      if ((units -= 4) < 0) break
+      bytes.push(
+        codePoint >> 0x12 | 0xF0,
+        codePoint >> 0xC & 0x3F | 0x80,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else {
+      throw new Error('Invalid code point')
+    }
+  }
+
+  return bytes
+}
+
+function asciiToBytes (str) {
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    // Node's code seems to be doing this and not & 0x7F..
+    byteArray.push(str.charCodeAt(i) & 0xFF)
+  }
+  return byteArray
+}
+
+function utf16leToBytes (str, units) {
+  var c, hi, lo
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    if ((units -= 2) < 0) break
+
+    c = str.charCodeAt(i)
+    hi = c >> 8
+    lo = c % 256
+    byteArray.push(lo)
+    byteArray.push(hi)
+  }
+
+  return byteArray
+}
+
+function base64ToBytes (str) {
+  return base64.toByteArray(base64clean(str))
+}
+
+function blitBuffer (src, dst, offset, length) {
+  for (var i = 0; i < length; ++i) {
+    if ((i + offset >= dst.length) || (i >= src.length)) break
+    dst[i + offset] = src[i]
+  }
+  return i
+}
+
+function isnan (val) {
+  return val !== val // eslint-disable-line no-self-compare
+}
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"base64-js":1,"ieee754":3,"isarray":4}],3:[function(_dereq_,___mod,_expor_){
+_expor_.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
+
+  i += d
+
+  e = s & ((1 << (-nBits)) - 1)
+  s >>= (-nBits)
+  nBits += eLen
+  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1)
+  e >>= (-nBits)
+  nBits += mLen
+  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen)
+    e = e - eBias
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+}
+
+_expor_.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+
+  value = Math.abs(value)
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0
+    e = eMax
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2)
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--
+      c *= 2
+    }
+    if (e + eBias >= 1) {
+      value += rt / c
+    } else {
+      value += rt * Math.pow(2, 1 - eBias)
+    }
+    if (value * c >= 2) {
+      e++
+      c /= 2
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0
+      e = eMax
+    } else if (e + eBias >= 1) {
+      m = (value * c - 1) * Math.pow(2, mLen)
+      e = e + eBias
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+      e = 0
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m
+  eLen += mLen
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128
+}
+
+},{}],4:[function(_dereq_,___mod,_expor_){
+var toString = {}.toString;
+
+___mod.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+},{}],5:[function(_dereq_,___mod,_expor_){
+var buf = _dereq_('buffer');
+_buffer = buf.Buffer;
+_slowbuffer = buf.SlowBuffer;
+_INSPECT_MAX_BYTES = buf._INSPECT_MAX_BYTES;
+
+},{"buffer":2}]},{},[5]);
 
 function makeLink(source, target) {
   var margin = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
@@ -75867,7 +79504,7 @@ function hashJson(obj) {
 
 function computeMerkleParent(left, right) {
   if (right) {
-    return sha256$1(Buffer.concat([new Buffer(left, 'hex'), new Buffer(right, 'hex')]));
+    return sha256$1(_buffer.concat([new _buffer(left, 'hex'), new _buffer(right, 'hex')]));
   }
   return left;
 }
@@ -76209,16 +79846,19 @@ function stMapValidator(MapValidatorService) {
     scope: {
       chainscript: '=?'
     },
-    template: '<h2>Validations</h2>\n<ul>\n    <st-promise-loader title=" \'Link Hashes\' " loading="loading" errors="errors.linkHash"></st-promise-loader>\n    <st-promise-loader title=" \'State Hashes\' " loading="loading" errors="errors.stateHash"></st-promise-loader>\n    <st-promise-loader title=" \'Merkle Path\' " loading="loading" errors="errors.merklePath"></st-promise-loader>\n    <st-promise-loader title=" \'Fossils\' " loading="loading" errors="errors.fossil"></st-promise-loader>\n</ul>\n',
+    template: '<h2>Validations</h2>\n<ul>\n    <st-promise-loader title=" \'Link Hashes\' " loading="loading" errors="errors.linkHash"></st-promise-loader>\n    <st-promise-loader title=" \'State Hashes\' " loading="loading" errors="errors.stateHash"></st-promise-loader>\n    <st-promise-loader title=" \'Merkle Path\' " loading="loading" errors="errors.merklePath"></st-promise-loader>\n    <st-promise-loader title=" \'Fossils\' " loading="loading" errors="errors.fossil"></st-promise-loader>\n</ul>\n{{ error }}\n',
     link: function link(scope) {
       scope.$watch('chainscript', function () {
         scope.error = null;
+
         if (angular$1.isDefined(scope.chainscript)) {
           scope.loading = true;
           MapValidatorService.validate(scope.chainscript).then(function (errors) {
+            console.log(scope.errors);
             scope.errors = errors;
             scope.loading = false;
           }).catch(function (error) {
+            console.log(error);
             scope.error = error.message;
             scope.loading = false;
           });
@@ -76252,9 +79892,12 @@ function stPromiseLoader($q) {
         scope.errorMessages = [];
         scope.success = false;
         scope.error = false;
+        console.log('watch errors: ' + scope.errors);
         if (scope.errors) {
+          console.log('watch errors: ' + scope.errors);
           scope.loadingErrors = true;
           $q.all(scope.errors).then(function (errs) {
+            console.log('errs: ' + errs);
             scope.errorMessages = errs.filter(Boolean);
             scope.loadingErrors = false;
             scope.success = scope.errorMessages.length === 0;
@@ -76381,6 +80024,7 @@ var MapExplorer = function () {
 
     this.$scope = $scope;
     this.displayed = 'state';
+    this.editors = [];
 
     $scope.$watch(function () {
       return _this.segment;
@@ -76392,6 +80036,7 @@ var MapExplorer = function () {
     });
 
     this.aceLoaded = function (_editor) {
+      _this.editors.push(_editor);
       AceConfigurationService.configure(_editor);
     };
   }
@@ -76407,6 +80052,11 @@ var MapExplorer = function () {
     key: 'display',
     value: function display(tab) {
       this.displayed = tab;
+
+      this.editors.forEach(function (editor) {
+        editor.resize();
+        editor.renderer.updateFull();
+      });
     }
   }, {
     key: 'close',
@@ -76432,11 +80082,11 @@ function filter() {
   }).join(', ');
 }
 
-var mapExplorer = angular$1.module('stratumn.angular-mapexplorer', ['ngAnimate', 'ngMaterial', 'ngAria', 'mdColorPicker', 'ui.drop']).directive('stMapExplorer', stMapExplorer).directive('stMerklePathTree', stMerklePathTree).directive('stMapValidator', stMapValidator).directive('stPromiseLoader', stPromiseLoader).directive('stTagColorPicker', stTagColorPicker).service('AceConfigurationService', AceConfigurationService).service('ChainTreeBuilderService', ChainTreeBuilderService).service('MapValidatorService', MapValidatorService).controller('MapExplorerController', MapExplorer).filter('functionArguments', function () {
+var mapExplorer = angular$1.module('stratumn.angular-mapexplorer', ['ngAnimate', 'material.components.autocomplete', 'material.components.button', 'material.components.icon', 'material.components.toolbar', 'material.components.progressCircular', 'ngAria', 'mdColorPicker', 'ui.drop', 'ui.ace']).directive('stMapExplorer', stMapExplorer).directive('stMerklePathTree', stMerklePathTree).directive('stMapValidator', stMapValidator).directive('stPromiseLoader', stPromiseLoader).directive('stTagColorPicker', stTagColorPicker).service('AceConfigurationService', AceConfigurationService).service('ChainTreeBuilderService', ChainTreeBuilderService).service('MapValidatorService', MapValidatorService).controller('MapExplorerController', MapExplorer).filter('functionArguments', function () {
   return filter;
 }).name;
 
-angular.module('angularMapexplorerDemo', ['ngRoute', 'ngAnimate', 'ngMaterial', mapExplorer, 'ui.ace']).config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+angular.module('angularMapexplorerDemo', ['ngSanitize', 'ngRoute', 'ngAnimate', 'ngMaterial', mapExplorer, 'ui.ace']).config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
   // can't use this with github pages / if don't have access to the server
   $locationProvider.html5Mode(false);
 
