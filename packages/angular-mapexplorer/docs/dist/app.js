@@ -79846,19 +79846,16 @@ function stMapValidator(MapValidatorService) {
     scope: {
       chainscript: '=?'
     },
-    template: '<h2>Validations</h2>\n<ul>\n    <st-promise-loader title=" \'Link Hashes\' " loading="loading" errors="errors.linkHash"></st-promise-loader>\n    <st-promise-loader title=" \'State Hashes\' " loading="loading" errors="errors.stateHash"></st-promise-loader>\n    <st-promise-loader title=" \'Merkle Path\' " loading="loading" errors="errors.merklePath"></st-promise-loader>\n    <st-promise-loader title=" \'Fossils\' " loading="loading" errors="errors.fossil"></st-promise-loader>\n</ul>\n{{ error }}\n',
+    template: '<h2>Validations</h2>\n<ul>\n    <st-promise-loader title=" \'Link Hashes\' " loading="loading" errors="errors.linkHash"></st-promise-loader>\n    <st-promise-loader title=" \'State Hashes\' " loading="loading" errors="errors.stateHash"></st-promise-loader>\n    <st-promise-loader title=" \'Merkle Path\' " loading="loading" errors="errors.merklePath"></st-promise-loader>\n    <st-promise-loader title=" \'Fossils\' " loading="loading" errors="errors.fossil"></st-promise-loader>\n</ul>\n',
     link: function link(scope) {
       scope.$watch('chainscript', function () {
         scope.error = null;
-
         if (angular$1.isDefined(scope.chainscript)) {
           scope.loading = true;
           MapValidatorService.validate(scope.chainscript).then(function (errors) {
-            console.log(scope.errors);
             scope.errors = errors;
             scope.loading = false;
           }).catch(function (error) {
-            console.log(error);
             scope.error = error.message;
             scope.loading = false;
           });
@@ -79879,7 +79876,7 @@ function stPromiseLoader($q) {
       loading: '=',
       title: '='
     },
-    template: '<li class="category" ng-class="[{ error: error, success: success }, (loading || loadingErrors) ? \'loading\' : \'\']">\n    <div layout="row">\n        <md-progress-circular ng-show="loading || loadingErrors" md-mode="indeterminate"></md-progress-circular>\n        <h3 flex="grow">{{title}}</h3>\n        <span flex="grow"></span>\n        <div class="errorCount" ng-show="error && !(loading || loadingErrors)" ng-click="toggleErrors()" flex="grow">\n            <ng-pluralize count="errorMessages.length"\n                          when="{\'0\': \'No errors\',\n                         \'one\': \'1 error\',\n                         \'other\': \'{} errors\'}">\n            </ng-pluralize>\n        </div>\n    </div>\n    <div ng-show="errorsShowed" class="errors">\n        <ul>\n            <li ng-repeat="err in errorMessages">{{ err }}</li>\n        </ul>\n    </div>\n</li>\n',
+    template: '<li class="category" ng-class="[{ error: error, success: success }, (loading || loadingErrors) ? \'loading\' : \'\']">\n    <div layout="row">\n        <md-progress-circular ng-show="loading || loadingErrors" md-mode="indeterminate" md-diameter="25"></md-progress-circular>\n        <h3 flex="grow">{{title}}</h3>\n        <span flex="grow"></span>\n        <div class="errorCount" ng-show="error && !(loading || loadingErrors)" ng-click="toggleErrors()" flex="grow">\n            <ng-pluralize count="errorMessages.length"\n                          when="{\'0\': \'No errors\',\n                         \'one\': \'1 error\',\n                         \'other\': \'{} errors\'}">\n            </ng-pluralize>\n        </div>\n    </div>\n    <div ng-show="errorsShowed" class="errors">\n        <ul>\n            <li ng-repeat="err in errorMessages">{{ err }}</li>\n        </ul>\n    </div>\n</li>\n',
     link: function link(scope) {
       scope.errorMessages = [];
       scope.loadingErrors = false;
@@ -79892,12 +79889,9 @@ function stPromiseLoader($q) {
         scope.errorMessages = [];
         scope.success = false;
         scope.error = false;
-        console.log('watch errors: ' + scope.errors);
         if (scope.errors) {
-          console.log('watch errors: ' + scope.errors);
           scope.loadingErrors = true;
           $q.all(scope.errors).then(function (errs) {
-            console.log('errs: ' + errs);
             scope.errorMessages = errs.filter(Boolean);
             scope.loadingErrors = false;
             scope.success = scope.errorMessages.length === 0;

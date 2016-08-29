@@ -126,7 +126,6 @@ function stMapValidator(MapValidatorService) {
     link: function link(scope) {
       scope.$watch('chainscript', function () {
         scope.error = null;
-
         if (angular.isDefined(scope.chainscript)) {
           scope.loading = true;
           MapValidatorService.validate(scope.chainscript).then(function (errors) {
@@ -153,7 +152,7 @@ function stPromiseLoader($q) {
       loading: '=',
       title: '='
     },
-    template: '<li class="category" ng-class="[{ error: error, success: success }, (loading || loadingErrors) ? \'loading\' : \'\']">\n    <div layout="row">\n        <md-progress-circular ng-show="loading || loadingErrors" md-mode="indeterminate"></md-progress-circular>\n        <h3 flex="grow">{{title}}</h3>\n        <span flex="grow"></span>\n        <div class="errorCount" ng-show="error && !(loading || loadingErrors)" ng-click="toggleErrors()" flex="grow">\n            <ng-pluralize count="errorMessages.length"\n                          when="{\'0\': \'No errors\',\n                         \'one\': \'1 error\',\n                         \'other\': \'{} errors\'}">\n            </ng-pluralize>\n        </div>\n    </div>\n    <div ng-show="errorsShowed" class="errors">\n        <ul>\n            <li ng-repeat="err in errorMessages">{{ err }}</li>\n        </ul>\n    </div>\n</li>\n',
+    template: '<li class="category" ng-class="[{ error: error, success: success }, (loading || loadingErrors) ? \'loading\' : \'\']">\n    <div layout="row">\n        <md-progress-circular ng-show="loading || loadingErrors" md-mode="indeterminate" md-diameter="25"></md-progress-circular>\n        <h3 flex="grow">{{title}}</h3>\n        <span flex="grow"></span>\n        <div class="errorCount" ng-show="error && !(loading || loadingErrors)" ng-click="toggleErrors()" flex="grow">\n            <ng-pluralize count="errorMessages.length"\n                          when="{\'0\': \'No errors\',\n                         \'one\': \'1 error\',\n                         \'other\': \'{} errors\'}">\n            </ng-pluralize>\n        </div>\n    </div>\n    <div ng-show="errorsShowed" class="errors">\n        <ul>\n            <li ng-repeat="err in errorMessages">{{ err }}</li>\n        </ul>\n    </div>\n</li>\n',
     link: function link(scope) {
       scope.errorMessages = [];
       scope.loadingErrors = false;
