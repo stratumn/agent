@@ -352,7 +352,7 @@ function filter() {
   }).join(', ');
 }
 
-var index = angular.module('stratumn.angular-mapexplorer', ['ngAnimate', 'material.components.autocomplete', 'material.components.button', 'material.components.icon', 'material.components.toolbar', 'material.components.progressCircular', 'ngAria', 'mdColorPicker', 'ui.drop', 'ui.ace']).directive('stMapExplorer', stMapExplorer).directive('stMerklePathTree', stMerklePathTree).directive('stMapValidator', stMapValidator).directive('stPromiseLoader', stPromiseLoader).directive('stTagColorPicker', stTagColorPicker).service('AceConfigurationService', AceConfigurationService).service('ChainTreeBuilderService', ChainTreeBuilderService).service('MapValidatorService', MapValidatorService).controller('MapExplorerController', MapExplorer).filter('functionArguments', function () {
+var index = angular.module('stratumn.angular-mapexplorer', ['ngAnimate', 'material.components.autocomplete', 'material.components.button', 'material.components.icon', 'material.components.toolbar', 'ngSanitize', 'material.components.progressCircular', 'ngAria', 'mdColorPicker', 'ui.drop', 'ui.ace']).directive('stMapExplorer', stMapExplorer).directive('stMerklePathTree', stMerklePathTree).directive('stMapValidator', stMapValidator).directive('stPromiseLoader', stPromiseLoader).directive('stTagColorPicker', stTagColorPicker).service('AceConfigurationService', AceConfigurationService).service('ChainTreeBuilderService', ChainTreeBuilderService).service('MapValidatorService', MapValidatorService).controller('MapExplorerController', MapExplorer).filter('functionArguments', function () {
   return filter;
 }).name;
 
