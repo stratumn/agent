@@ -1,4 +1,5 @@
 import sha256 from 'js-sha256';
+import { Buffer } from 'buffer';
 
 export default function computeMerkleParent(left, right) {
   if (right) {
