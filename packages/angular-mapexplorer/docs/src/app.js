@@ -11,7 +11,7 @@ import '../libs/angular-drop';
 import mapExplorer from '../../src/index';
 
 angular.module('angularMapexplorerDemo', [
-  'ngSanitize', 'ngRoute', 'ngAnimate', 'ngMaterial', mapExplorer, 'ui.ace'
+  'ngRoute', 'ngAnimate', 'ngMaterial', mapExplorer, 'ui.ace'
 ])
   .config(['$routeProvider', '$locationProvider',
     ($routeProvider, $locationProvider) => {

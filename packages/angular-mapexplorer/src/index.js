@@ -13,7 +13,7 @@ import functionArguments from './functionArguments.filter';
 
 export default angular.module('stratumn.angular-mapexplorer',
   ['ngAnimate', 'material.components.autocomplete', 'material.components.button',
-    'material.components.icon', 'material.components.toolbar',
+    'material.components.icon', 'material.components.toolbar', 'ngSanitize',
     'material.components.progressCircular', 'ngAria', 'mdColorPicker', 'ui.drop', 'ui.ace']
 )
   .directive('stMapExplorer', stMapExplorer)
