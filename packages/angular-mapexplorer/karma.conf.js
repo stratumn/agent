@@ -22,6 +22,8 @@ module.exports = function(config) {
       'bower_components/angular-aria/angular-aria.js',
       'bower_components/angular-material/angular-material.js',
       'bower_components/angular-sanitize/angular-sanitize.js',
+      'bower_components/ace-builds/src/ace.js',
+      'bower_components/angular-ui-ace/ui-ace.js',
       'bower_components/tinycolor/tinycolor.js',
       'bower_components/md-color-picker/dist/mdColorPicker.js',
       'bower_components/angular-drop/angular-drop.js',
