@@ -126,6 +126,7 @@ function stMapValidator(MapValidatorService) {
     link: function link(scope) {
       scope.$watch('chainscript', function () {
         scope.error = null;
+
         if (angular.isDefined(scope.chainscript)) {
           scope.loading = true;
           MapValidatorService.validate(scope.chainscript).then(function (errors) {

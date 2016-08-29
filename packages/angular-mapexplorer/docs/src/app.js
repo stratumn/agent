@@ -5,10 +5,13 @@ import 'angular-animate';
 import 'angular-material';
 import 'angular-ui-ace';
 import 'angular-route';
+import 'md-color-picker';
+import 'angular-sanitize';
+import '../libs/angular-drop';
 import mapExplorer from '../../src/index';
 
 angular.module('angularMapexplorerDemo', [
-  'ngRoute', 'ngAnimate', 'ngMaterial', mapExplorer, 'ui.ace'
+  'ngSanitize', 'ngRoute', 'ngAnimate', 'ngMaterial', mapExplorer, 'ui.ace'
 ])
   .config(['$routeProvider', '$locationProvider',
     ($routeProvider, $locationProvider) => {

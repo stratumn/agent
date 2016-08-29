@@ -21,7 +21,9 @@ export default {
       browser: true,
       jsnext: true
     }),
-    commonjs(),
+    commonjs({
+      exclude: ['node_modules/rollup-plugin-node-globals/**']
+    }),
     globals()
   ],
   format: 'umd',
