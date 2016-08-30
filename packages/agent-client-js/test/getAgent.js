@@ -8,7 +8,7 @@ describe('#getAgent', () => {
   afterEach(() => closeServer());
 
   it('loads an agent', () =>
-    getAgent('localhost:3333')
+    getAgent('http://localhost:3333')
       .then(agent => {
         agent.storeInfo.adapter.name.should.be.exactly('memory');
       })

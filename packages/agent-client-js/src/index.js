@@ -1,17 +1,7 @@
-import getAgent from './getAgent';
-import fromSegment from './fromSegment';
+export { default as getAgent } from './getAgent';
+export { default as fromSegment } from './fromSegment';
 
 // Deprecated.
-import getApplication from './getApplication';
-import loadLink from './loadLink';
-import config from './config';
-
-module.exports = {
-  getAgent,
-  fromSegment,
-
-  // Deprecated.
-  getApplication,
-  loadLink,
-  config
-};
+export { default as getApplication } from './getApplication';
+export { default as loadLink } from './loadLink';
+export { default as config } from './config';

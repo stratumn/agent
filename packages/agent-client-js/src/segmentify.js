@@ -1,6 +1,6 @@
-import request from 'superagent';
 import deprecated from './deprecated';
 import getBranches from './getBranches';
+import { post } from './request';
 
 export default function segmentify(agent, obj) {
   Object
@@ -9,27 +9,8 @@ export default function segmentify(agent, obj) {
     .forEach(key => {
       /*eslint-disable*/
       obj[key] = (...args) =>
-        new Promise((resolve, reject) => {
-          const url = `${agent.url}/segments/${obj.meta.linkHash}/${key}`;
-          /*eslint-enable*/
-
-          request
-            .post(url)
-            .send(args)
-            .end((err, res) => {
-              const error = (res.body.meta && res.body.meta.errorMessage)
-                ? new Error(res.body.meta.errorMessage)
-                : err;
-
-              if (error) {
-                error.status = res && res.statusCode;
-                reject(error);
-                return;
-              }
-
-              resolve(segmentify(agent, res.body));
-            });
-        });
+        post(`${agent.url}/segments/${obj.meta.linkHash}/${key}`, args)
+          .then(res => segmentify(agent, res.body))
     });
 
   /*eslint-disable*/

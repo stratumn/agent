@@ -30,7 +30,6 @@ describe('#getSegment', () => {
         throw new Error('should not resolve');
       })
       .catch(err => {
-        err.message.should.be.exactly('not found');
         err.status.should.be.exactly(404);
       })
   );
