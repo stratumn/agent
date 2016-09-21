@@ -3718,7 +3718,7 @@ var MerklePathTree = function () {
     classCallCheck(this, MerklePathTree);
 
     this.tree = d3Hierarchy.tree().size([width, height$1]);
-    this.svg = d3Selection.select(element.find('svg')[0]).attr('width', width + margin$1.right + margin$1.left).attr('height', height$1 + margin$1.top + margin$1.bottom);
+    this.svg = d3Selection.select(element).append('svg').attr('width', width + margin$1.right + margin$1.left).attr('height', height$1 + margin$1.top + margin$1.bottom);
     this.innerG = this.svg.append('g').attr('transform', function () {
       return translate(margin$1.top, margin$1.left);
     });

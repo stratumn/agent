@@ -11,7 +11,7 @@ const width = 400 - margin.left - margin.right;
 export default class MerklePathTree {
   constructor(element) {
     this.tree = tree().size([width, height]);
-    this.svg = select(element.find('svg')[0])
+    this.svg = select(element).append('svg')
       .attr('width', width + margin.right + margin.left)
       .attr('height', height + margin.top + margin.bottom);
     this.innerG = this.svg.append('g')
