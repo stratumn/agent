@@ -1,14 +1,20 @@
 {
   "name": "angular2-mapexplorer",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "angular-cli": {},
+  "main": "lib/angular2-mapexplorer.js",
+  "jsnext:main": "lib/angular2-mapexplorer.mjs",
   "scripts": {
     "start": "ng serve",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
     "pree2e": "webdriver-manager update",
-    "e2e": "protractor"
+    "e2e": "protractor",
+    "build:docs": "ng build --output-path docs",
+    "build:npm:umd": "rollup -c rollup.umd.config.js",
+    "build:npm:es": "rollup -c rollup.es.config.js",
+    "build:npm": "npm run build:npm:umd && npm run build:npm:es"
   },
   "private": true,
   "dependencies": {
@@ -45,6 +51,9 @@
     "karma-jasmine": "^1.0.2",
     "karma-remap-istanbul": "^0.2.1",
     "protractor": "4.0.5",
+    "rollup": "^0.36.0",
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "rollup-plugin-typescript": "^0.8.1",
     "ts-node": "1.2.1",
     "tslint": "3.13.0",
     "typescript": "2.0.2"
