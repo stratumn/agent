@@ -5,8 +5,8 @@
   },
   "apps": [
     {
-      "root": "src",
-      "outDir": "dist",
+      "root": "docs_src",
+      "outDir": "docs",
       "assets": "assets",
       "index": "index.html",
       "main": "main.ts",
