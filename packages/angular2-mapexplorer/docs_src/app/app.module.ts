@@ -9,7 +9,7 @@ import { MdProgressCircleModule } from '@angular2-material/progress-circle';
 import { MdToolbarModule } from '@angular2-material/toolbar';
 
 import { AppComponent } from './app.component';
-import { MapExplorerModule } from '../../src/map-explorer.module';
+import { Ng2MapExplorerModule } from '../../src/ng2-map-explorer.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +24,7 @@ import { MapExplorerModule } from '../../src/map-explorer.module';
     MdIconModule,
     MdProgressCircleModule,
     MdToolbarModule,
-    MapExplorerModule
+    Ng2MapExplorerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
