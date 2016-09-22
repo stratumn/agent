@@ -1,1 +1,49 @@
 /* You can add global styles to this file, and also import other style files */
+
+.node {
+    cursor: pointer;
+}
+
+.node polygon {
+    fill: #7BC0D2;
+}
+
+.node text {
+    font-family: 'RationalTWText-SemiBold', 'Roboto Mono', monospace;
+    font-size: 14px;
+    fill: #FFFFFF;
+}
+
+.node rect {
+    fill: #459FB7;
+}
+
+.textpath {
+    font-family: 'Gibson-Regular', 'Montserrat', sans-serif;
+    font-size: 14px;
+    fill: #C1C1C1;
+}
+
+.link {
+    stroke-width: 5px;
+    marker-end: url('#triangle');
+    fill: none;
+    stroke: #ccc;
+}
+
+.node.selected polygon {
+    fill: #3E3E3E;
+}
+
+.node.selected rect {
+    fill: #2E2E2E;
+}
+
+.merkle-path .node circle {
+    fill: #000;
+}
+
+.merkle-path .link {
+    stroke: #000;
+    stroke-width: 2px;
+}

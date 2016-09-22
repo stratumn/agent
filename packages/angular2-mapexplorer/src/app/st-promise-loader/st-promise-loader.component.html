@@ -1,0 +1,23 @@
+<li class="category" [ngClass]="{ error: error, success: success }" [class.loading]="loading || loadingErrors">
+    <div layout="row">
+        <md-progress-circle *ngIf="loading || loadingErrors" md-mode="indeterminate" md-diameter="25"></md-progress-circle>
+        <h3 flex="grow">{{title}}</h3>
+        <span flex="grow"></span>
+        <div class="errorCount" *ngIf="error && !(loading || loadingErrors)" (click)="toggleErrors()" flex="grow">
+            <!--
+              <ng-pluralize count="errorMessages.length"
+                          when="{'0': 'No errors',
+                         'one': '1 error',
+                         'other': '{} errors'}">
+              </ng-pluralize>
+            -->
+        </div>
+    </div>
+    <div ng-show="errorsShowed" class="errors">
+        <ul>
+            <li *ngFor="let err of errorMessages">
+              {{ err }}
+            </li>
+        </ul>
+    </div>
+</li>
