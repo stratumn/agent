@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { MdButtonModule } from '@angular2-material/button';
 import { MdIconModule } from '@angular2-material/icon';
 import { MdProgressCircleModule } from '@angular2-material/progress-circle';
@@ -21,6 +22,7 @@ import { StMerklePathTreeComponent } from './st-merkle-path-tree/st-merkle-path-
     StMerklePathTreeComponent
   ],
   imports: [
+    BrowserModule,
     MdButtonModule,
     MdIconModule,
     MdProgressCircleModule,
@@ -30,6 +32,10 @@ import { StMerklePathTreeComponent } from './st-merkle-path-tree/st-merkle-path-
     ChainTreeBuilderService,
     MapValidatorService
   ],
-  bootstrap: []
+  exports: [
+    StMapExplorerComponent,
+    StMapValidatorComponent,
+    StMerklePathTreeComponent
+  ]
 })
-export class MapExplorerModule { }
+export class Ng2MapExplorerModule { }
