@@ -1,0 +1,52 @@
+:host {
+    min-width: 25%;
+    padding-left: 15px;
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    margin: 1.5rem 0;
+    position: relative;
+}
+
+li:before {
+    content: " ";
+    background-size: cover;
+    background-image: url("../images/li_inactive.svg");
+    width: 1.5rem;
+    height: 1.5rem;
+    position: absolute;
+    left: -2rem;
+    top: 0.8em;
+}
+
+li.success:before {
+    background-image: url("../images/li_success.svg");
+}
+
+li.error:before {
+    background-image: url("../images/li_error.svg");
+}
+
+li.loading:before {
+    background-image: none;
+}
+
+li.loading {
+    margin-left: -25px;
+}
+
+md-progress-circular {
+    position: relative;
+    left: -20px;
+    margin: 0;
+}
+
+h3 {
+    font-family: 'Gibson-Regular', 'Montserrat', sans-serif;
+    font-size: 18px;
+    color: #7BD8CF;
+}

@@ -1,0 +1,90 @@
+<span class="error" *ngIf="error">{{error}}</span>
+<div class="segment-container" *ngIf="segment" flex>
+  <div class="title" layout="row">
+    <div class="header">
+      <h1>Segment</h1>
+      <h2>{{segment.meta.linkHash}}</h2>
+    </div>
+    <span flex></span>
+    <button md-button class="md-icon-button" aria-label="Close" (click)="close()">
+      <md-icon md-font-library="material-icons">close</md-icon>
+    </button>
+  </div>
+  <div layout="row" class="body">
+    <div class="menu">
+      <ul>
+        <li [ngClass]="{ active: displayed == 'state'}" (click)="display('state')">State</li>
+        <li [ngClass]="{ active: displayed == 'link' }" (click)="display('link')">Link</li>
+        <li [ngClass]="{ active: displayed == 'evidence' }" (click)="display('evidence')">Evidence</li>
+        <li [ngClass]="{ active: displayed == 'json' }" (click)="display('json')">JSON</li>
+      </ul>
+    </div>
+    <div class="content" flex="grow">
+      <pre *ngIf="displayed == 'state'" flex="grow">
+        {{ state() }}        
+      </pre>
+      <div *ngIf="displayed == 'link'" class="link">
+        <h4>Map ID</h4>
+        <p>{{segment.link.meta.mapId}}</p>
+
+        <h4>Agent Hash</h4>
+        <p>{{segment.link.meta.agentHash}}</p>
+
+        <h4>State Hash</h4>
+        <p>{{segment.link.meta.stateHash}}</p>
+
+        <h4>Previous Link hash</h4>
+        <p>{{segment.link.meta.prevLinkHash}}</p>
+
+        <h4>Action</h4>
+        <p>{{segment.link.meta.action}}({{segment.link.meta.arguments | functionArguments}})</p>
+      </div>
+      <div *ngIf="displayed == 'evidence'" layout-gt-sm="row" layout="column">
+        <div class="info">
+          <h4>State</h4>
+          <p>{{segment.meta.evidence.state}}</p>
+          <div *ngIf="segment.meta.evidence.state === 'COMPLETE'">
+            <h4>Bitcoin Transaction</h4>
+            <p>
+              {{segment.meta.evidence.transactions["bitcoin:main"]}}
+              <a target="_blank" [href]="transactionUrl(segment)">View transaction on Blockchain.info</a>
+            </p>
+
+            <h4>Merkle root</h4>
+            <p>{{segment.meta.evidence.merkleRoot}}</p>
+          </div>
+        </div>
+        <div class="merkle-path" *ngIf="segment.meta.evidence.state === 'COMPLETE'">
+          <h4>Merkle Path</h4>
+          <st-merkle-path-tree [merklePath]="segment.meta.evidence.merklePath"></st-merkle-path-tree>
+        </div>
+      </div>
+      <pre *ngIf="displayed == 'json'">
+        {{ segmentJSON() }}        
+      </pre>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading" layout="row" layout-sm="column" layout-align="space-around">
+    <md-progress-circle md-mode="indeterminate" md-diameter="80"></md-progress-circle>
+</div>
+
+<div class="scroll" #map>
+  <div *ngIf="!loading">
+    <!--
+    <div ng-show="tags && tags.length && options.showTagColorConfiguration" draggable id="tags-configuration">
+      <md-toolbar>
+        <div class="md-toolbar-tools">
+          <h4>Configure link tag color</h4>
+          <button md-button class="md-icon-button" aria-label="Close" ng-click="options.showTagColorConfiguration = false">
+            <md-icon md-font-library="material-icons">close</md-icon>
+          </button>
+        </div>
+      </md-toolbar>
+      <div class="content">
+        <st-tag-color-picker ng-repeat="tag in tags" tag="tag"></st-tag-color-picker>
+      </div>
+    </div>
+    -->
+  </div>  
+</div>
