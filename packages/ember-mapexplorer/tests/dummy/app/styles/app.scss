@@ -1,0 +1,97 @@
+@import 'mapexplorer-core';
+
+$brand-primary: #EC714A !default;
+
+.segment-container {
+
+  color: white;
+
+  .title {
+    background: #2E2E2E;
+    padding: 10px 100px;
+  }
+
+  .title md-icon {
+    color: white;
+  }
+
+  h1 {
+    margin-top: 0;
+    font-family: Gibson-SemiBold, 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    color: #CCCCCC;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    margin-bottom: 0;
+    font-family: Gibson-Light, 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+    color: #FFFFFF;
+    text-transform: none;
+  }
+
+  .body {
+    background: #3E3E3E;
+    padding: 0 100px;
+    max-height: 400px;
+    overflow-y: scroll;
+  }
+
+  li {
+    cursor: pointer;
+    font-family: 'Gibson-Regular', 'Montserrat', sans-serif;
+    font-size: 15px;
+    color: #CCCCCC;
+    margin: 20px 0;
+    width: 100px;
+  }
+
+  ul {
+    padding-left: 0;
+    padding-right: 5px;
+    list-style: none;
+  }
+
+  .ace_editor {
+    width: 100%;
+  }
+
+  .ace-tm .ace_gutter, .ace_scroller {
+    padding-top: 20px;
+  }
+
+  li.active {
+    color: $brand-primary;
+    border-bottom: 2px solid $brand-primary;
+  }
+
+  li {
+    outline: 0;
+  }
+
+  h4 {
+    font-family: Gibson-SemiBold, 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    color: #ADADAD;
+    text-transform: uppercase;
+    margin-bottom: 0;
+  }
+
+  p {
+    font-family: RationalTWText-Light, 'Roboto Mono', monospace;
+    font-size: 14px;
+    color: white;
+    margin-top: 0;
+  }
+
+  a {
+    font-family: 'Gibson-Regular', 'Montserrat', sans-serif;
+    font-size: 15px;
+    color: $brand-primary;
+    display: block;
+  }
+}

@@ -9,7 +9,7 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this.set('tree', new MapexplorerCore.MerklePathTree(this.$()));
+    this.set('tree', new mapexplorerCore.MerklePathTree(this.$()[0]));
 
     this.display();
   },

@@ -1,7 +1,7 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('map-explorer', 'Integration | Component | map explorer', {
+moduleForComponent('merkle-path-tree', 'Integration | Component | merkle path tree', {
   integration: true
 });
 
@@ -9,15 +9,15 @@ test('it renders', function(assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
-  this.render(hbs`{{map-explorer application="snake-eyes" mapId="57743311d6a22a8f2bd2bec1"}}`);
+  this.render(hbs`{{merkle-path-tree}}`);
 
   assert.equal(this.$().text().trim(), '');
 
   // Template block usage:
   this.render(hbs`
-    {{#map-explorer}}
+    {{#merkle-path-tree}}
       template block text
-    {{/map-explorer}}
+    {{/merkle-path-tree}}
   `);
 
   assert.equal(this.$().text().trim(), 'template block text');

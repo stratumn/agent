@@ -4,7 +4,6 @@ import layout from '../templates/components/map-explorer';
 export default Ember.Component.extend({
   layout,
 
-
   actions: {
     close() {
       this.set('segment', null);
@@ -27,7 +26,13 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this.set('builder', new mapexplorerCore.ChainTreeBuilder(this.$(), {
+    this.set('builder', new mapexplorerCore.ChainTreeBuilder(this.$()[0]));
+
+    this.get('builder').build({
+      id: this.get('mapId'),
+      application: this.get('application'),
+      chainscript: this.get('chainscript')
+    }, {
       onclick: (d, onHide) => {
         this.onHide = onHide;
         this.set('segment', d.data);
@@ -37,13 +42,8 @@ export default Ember.Component.extend({
         if (onSelectSegment) {
           onSelectSegment(this.get('segment'));
         }
-      }
-    }));
-
-    this.get('builder').build({
-      id: this.get('mapId'),
-      application: this.get('application'),
-      chainscript: this.get('chainscript')
+      },
+      onTag: (tag) => {}
     });
   }
 });

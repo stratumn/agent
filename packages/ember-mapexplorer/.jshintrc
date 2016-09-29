@@ -3,8 +3,7 @@
     "document",
     "window",
     "-Promise",
-    "d3",
-    "MapexplorerCore"
+    "mapexplorerCore"
   ],
   "browser": true,
   "boss": true,
