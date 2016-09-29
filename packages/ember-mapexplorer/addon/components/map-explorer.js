@@ -27,7 +27,7 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this.set('builder', new MapexplorerCore.ChainTreeBuilder(this.$(), {
+    this.set('builder', new mapexplorerCore.ChainTreeBuilder(this.$(), {
       onclick: (d, onHide) => {
         this.onHide = onHide;
         this.set('segment', d.data);
