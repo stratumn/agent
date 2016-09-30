@@ -139,7 +139,7 @@ var ChainTree = function () {
         root.y0 = 0;
         this.tree(root);
         root.each(function (node) {
-          node.y += options.arrowLength;
+          node.y += options.getArrowLength();
         });
       }
 

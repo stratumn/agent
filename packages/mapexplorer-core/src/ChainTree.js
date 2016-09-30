@@ -59,7 +59,7 @@ export default class ChainTree {
       root.x0 = computedHeight / 2;
       root.y0 = 0;
       this.tree(root);
-      root.each(node => { node.y += options.arrowLength; });
+      root.each(node => { node.y += options.getArrowLength(); });
     }
 
     if (options.zoomable) {
