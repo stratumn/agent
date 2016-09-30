@@ -20,7 +20,8 @@ module.exports = {
       skip: ['d3-hierarchy', 'd3-transition', 'd3-ease', 'd3-selection', 'd3-zoom', 'd3-array']
     }),
     commonjs({
-      exclude: ['node_modules/rollup-plugin-node-globals/**']
+      exclude: ['node_modules/rollup-plugin-node-globals/**',
+        'node_modules/process-es6/**', 'node_modules/buffer-es6/**']
     }),
     globals()
   ],

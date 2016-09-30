@@ -10,6 +10,9 @@ export const defaultOptions = {
   withArgs: false,
   duration: 750,
   verticalSpacing: 1.2,
+  polygon: { width: 78, height: 91 },
+  box: { width: this.polygon.width, height: 25 },
+  arrowLength: this.polygon.width,
   getSegmentText(node) {
     return compactHash(node.data.meta.linkHash);
   },

@@ -10,10 +10,6 @@ import { max } from 'd3-array';
 const margin = { top: 20, right: 120, bottom: 20, left: 120 };
 const height = 800 - margin.top - margin.bottom;
 
-const polygon = { width: 78, height: 91 };
-const box = { width: polygon.width, height: 25 };
-const arrowLength = polygon.width;
-
 export default class ChainTree {
   constructor(element) {
     this.tree = tree();
@@ -35,10 +31,11 @@ export default class ChainTree {
 
   _update(root, options) {
     const self = this;
+    const polygon = options.polygon;
     const nodes = root ? root.descendants() : [];
     const links = root ? root.links() : [];
     const maxDepth = max(nodes, x => x.depth) || 0;
-    const computedWidth = Math.max(maxDepth * (polygon.width + arrowLength), 500);
+    const computedWidth = Math.max(maxDepth * (polygon.width + options.arrowLength), 500);
     const treeTransition = transition()
       .duration(options.duration)
       .ease(easeLinear);
@@ -52,7 +49,7 @@ export default class ChainTree {
     this.tree.size([computedHeight, computedWidth]);
     this.svg
       .attr('width',
-        options.zoomable ? 1200 : computedWidth + margin.right + margin.left + arrowLength)
+        options.zoomable ? 1200 : computedWidth + margin.right + margin.left + options.arrowLength)
       .attr('height',
         (options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
 
@@ -61,7 +58,7 @@ export default class ChainTree {
       root.x0 = computedHeight / 2;
       root.y0 = 0;
       this.tree(root);
-      root.each(node => { node.y += arrowLength; });
+      root.each(node => { node.y += options.arrowLength; });
     }
 
     if (options.zoomable) {
@@ -76,7 +73,7 @@ export default class ChainTree {
       function key(d) { return d ? d.target.id : this.id; });
 
     link.enter().insert('text')
-      .attr('dx', polygon.width + 20)
+      .attr('dx', options.polygon.width + 20)
       .attr('dy', '-0.3em')
       .append('textPath')
       .attr('class', 'textpath')
@@ -123,9 +120,9 @@ export default class ChainTree {
       `${polygon.width / 2},${-polygon.height / 2} 0,${-polygon.height / 4}`);
 
     nodeEnter.append('rect')
-      .attr('y', -(box.height / 2))
+      .attr('y', -(options.box.height / 2))
       .attr('width', polygon.width)
-      .attr('height', box.height)
+      .attr('height', options.box.height)
       .style('fill-opacity', 1e-6);
 
     nodeEnter.append('text')
