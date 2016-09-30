@@ -112,7 +112,7 @@ export default class ChainTree {
           .classed('selected', true);
         options.onclick(d, () => {
           self.innerG.selectAll('g.node.selected').classed('selected', false);
-        });
+        }, this);
       });
 
     nodeEnter.append('polygon').attr('points',

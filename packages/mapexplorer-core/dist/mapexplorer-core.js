@@ -193,7 +193,7 @@ var ChainTree = function () {
         d3Selection.select(this).classed('selected', true);
         options.onclick(d, function () {
           self.innerG.selectAll('g.node.selected').classed('selected', false);
-        });
+        }, this);
       });
 
       nodeEnter.append('polygon').attr('points', '0,' + polygon.height / 4 + ' ' + polygon.width / 2 + ',' + polygon.height / 2 + ' ' + (polygon.width + ',' + polygon.height / 4 + ' ' + polygon.width + ',' + -polygon.height / 4 + ' ') + (polygon.width / 2 + ',' + -polygon.height / 2 + ' 0,' + -polygon.height / 4));
