@@ -116,13 +116,13 @@ var ChainTree = function () {
     key: '_update',
     value: function _update(root, options) {
       var self = this;
-      var polygon = options.polygon;
+      var polygon = options.polygonSize;
       var nodes = root ? root.descendants() : [];
       var links = root ? root.links() : [];
       var maxDepth = d3Array.max(nodes, function (x) {
         return x.depth;
       }) || 0;
-      var computedWidth = Math.max(maxDepth * (polygon.width + options.arrowLength), 500);
+      var computedWidth = Math.max(maxDepth * (polygon.width + options.getArrowLength()), 500);
       var treeTransition = d3Transition.transition().duration(options.duration).ease(d3Ease.easeLinear);
 
       var branchesCount = nodes.reduce(function (pre, cur) {
@@ -131,7 +131,7 @@ var ChainTree = function () {
       var computedHeight = branchesCount * polygon.height * options.verticalSpacing;
 
       this.tree.size([computedHeight, computedWidth]);
-      this.svg.attr('width', options.zoomable ? 1200 : computedWidth + margin.right + margin.left + options.arrowLength).attr('height', (options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
+      this.svg.attr('width', options.zoomable ? 1200 : computedWidth + margin.right + margin.left + options.getArrowLength()).attr('height', (options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
 
       // Compute the new tree layout.
       if (root) {
@@ -157,7 +157,7 @@ var ChainTree = function () {
         return d ? d.target.id : this.id;
       });
 
-      link.enter().insert('text').attr('dx', options.polygon.width + 20).attr('dy', '-0.3em').append('textPath').attr('class', 'textpath').attr('xlink:href', function (d) {
+      link.enter().insert('text').attr('dx', polygon.width + 20).attr('dy', '-0.3em').append('textPath').attr('class', 'textpath').attr('xlink:href', function (d) {
         return '#link-' + d.target.id;
       }).text(options.getLinkText);
 
@@ -198,7 +198,7 @@ var ChainTree = function () {
 
       nodeEnter.append('polygon').attr('points', '0,' + polygon.height / 4 + ' ' + polygon.width / 2 + ',' + polygon.height / 2 + ' ' + (polygon.width + ',' + polygon.height / 4 + ' ' + polygon.width + ',' + -polygon.height / 4 + ' ') + (polygon.width / 2 + ',' + -polygon.height / 2 + ' 0,' + -polygon.height / 4));
 
-      nodeEnter.append('rect').attr('y', -(options.box.height / 2)).attr('width', polygon.width).attr('height', options.box.height).style('fill-opacity', 1e-6);
+      nodeEnter.append('rect').attr('y', -(options.getBoxSize().height / 2)).attr('width', polygon.width).attr('height', options.getBoxSize().height).style('fill-opacity', 1e-6);
 
       nodeEnter.append('text').attr('dx', 12).attr('dy', 4).attr('text-anchor', 'begin').text(options.getSegmentText).style('fill-opacity', 1e-6);
 
@@ -1082,9 +1082,14 @@ var defaultOptions = {
   withArgs: false,
   duration: 750,
   verticalSpacing: 1.2,
-  polygon: { width: 78, height: 91 },
-  box: { width: undefined.polygon.width, height: 25 },
-  arrowLength: undefined.polygon.width,
+  polygonSize: { width: 78, height: 91 },
+  getBoxSize: function getBoxSize() {
+    var self = this;
+    return { width: self.polygonSize.width, height: 25 };
+  },
+  getArrowLength: function getArrowLength() {
+    return this.polygonSize.width;
+  },
   getSegmentText: function getSegmentText(node) {
     return compactHash(node.data.meta.linkHash);
   },

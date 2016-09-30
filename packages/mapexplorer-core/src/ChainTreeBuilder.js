@@ -10,9 +10,14 @@ export const defaultOptions = {
   withArgs: false,
   duration: 750,
   verticalSpacing: 1.2,
-  polygon: { width: 78, height: 91 },
-  box: { width: this.polygon.width, height: 25 },
-  arrowLength: this.polygon.width,
+  polygonSize: { width: 78, height: 91 },
+  getBoxSize() {
+    const self = this;
+    return { width: self.polygonSize.width, height: 25 };
+  },
+  getArrowLength() {
+    return this.polygonSize.width;
+  },
   getSegmentText(node) {
     return compactHash(node.data.meta.linkHash);
   },

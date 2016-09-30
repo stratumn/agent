@@ -31,11 +31,11 @@ export default class ChainTree {
 
   _update(root, options) {
     const self = this;
-    const polygon = options.polygon;
+    const polygon = options.polygonSize;
     const nodes = root ? root.descendants() : [];
     const links = root ? root.links() : [];
     const maxDepth = max(nodes, x => x.depth) || 0;
-    const computedWidth = Math.max(maxDepth * (polygon.width + options.arrowLength), 500);
+    const computedWidth = Math.max(maxDepth * (polygon.width + options.getArrowLength()), 500);
     const treeTransition = transition()
       .duration(options.duration)
       .ease(easeLinear);
@@ -49,7 +49,8 @@ export default class ChainTree {
     this.tree.size([computedHeight, computedWidth]);
     this.svg
       .attr('width',
-        options.zoomable ? 1200 : computedWidth + margin.right + margin.left + options.arrowLength)
+        options.zoomable ? 1200 : computedWidth + margin.right + margin.left +
+        options.getArrowLength())
       .attr('height',
         (options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
 
@@ -73,7 +74,7 @@ export default class ChainTree {
       function key(d) { return d ? d.target.id : this.id; });
 
     link.enter().insert('text')
-      .attr('dx', options.polygon.width + 20)
+      .attr('dx', polygon.width + 20)
       .attr('dy', '-0.3em')
       .append('textPath')
       .attr('class', 'textpath')
@@ -120,9 +121,9 @@ export default class ChainTree {
       `${polygon.width / 2},${-polygon.height / 2} 0,${-polygon.height / 4}`);
 
     nodeEnter.append('rect')
-      .attr('y', -(options.box.height / 2))
+      .attr('y', -(options.getBoxSize().height / 2))
       .attr('width', polygon.width)
-      .attr('height', options.box.height)
+      .attr('height', options.getBoxSize().height)
       .style('fill-opacity', 1e-6);
 
     nodeEnter.append('text')

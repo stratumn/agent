@@ -74,7 +74,7 @@ Default: 1.2
 ```
 Vertical space factor between segment polygon
 
-##### polygon
+##### polygonSize
 ```
 Default: 
     {
@@ -86,23 +86,23 @@ Default:
 Object with width and height properties that gives the size (in pixels) of the polygon representing 
 a segment.
 
-##### arrowLength
+##### getArrowLength()
 ```
-Default: this.polygon.width
+Default: () => this.polygonSize.width
 ```
 
-Length (in pixels) of the transition arrow.
+Function that returns the length (in pixels) of the transition arrow.
 
 #### box
 ```
 Default: 
-    {
-        width: this.polygon.width,
+    () => return {
+        width: this.polygonSize.width,
         height: 25
     }
 ```
 
-Object with width and height properties that gives the size (in pixels) of the box containing the 
+Function that return an object with width and height properties that gives the size (in pixels) of the box containing the 
 segment text.
 
 ##### getSegmentText(node)
