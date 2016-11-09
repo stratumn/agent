@@ -886,13 +886,41 @@ function getError(req, err) {
 
 var httpplease = interopDefault(index$1);
 
+function deprecated(oldFunc, newFunc) {
+  if (!newFunc) {
+    console.warn("WARNING: " + oldFunc + " is deprecated.");
+  } else {
+    console.warn("WARNING: " + oldFunc + " is deprecated. Please use " + newFunc + " instead.");
+  }
+}
+
+/**
+ * Makes a query string.
+ * @param {object} obj - an object of keys
+ * @returns {string} a query string
+ */
+function makeQueryString(obj) {
+  var parts = Object.keys(obj).reduce(function (curr, key) {
+    var val = Array.isArray(obj[key]) ? obj[key].join('+') : obj[key];
+    curr.push(encodeURIComponent(key) + '=' + encodeURIComponent(val));
+    return curr;
+  }, []);
+
+  if (parts.length) {
+    return '?' + parts.join('&');
+  }
+
+  return '';
+}
+
 var request = httpplease.use(json$1);
 
 function send(method, url, args) {
   return new Promise(function (resolve, reject) {
     request({ method: method, url: url, body: args }, function (err, res) {
-      var error = err || res.body && res.body.meta && res.body.meta.errorMessage;
-      if (error) {
+      if (err) {
+        var error = err && err.body && err.body.meta && err.body.meta.errorMessage ? new Error(err.body.meta.errorMessage) : err;
+        error.status = err.status;
         reject(error);
       } else {
         resolve(res);
@@ -909,14 +937,27 @@ function post(url, args) {
   return send('POST', url, args);
 }
 
-var config = {
-  baseUrl: 'https://stratumn.rocks',
-  applicationUrl: 'https://%s.stratumn.rocks'
-};
+function findSegments(agent) {
+  var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-function linkify(app, obj) {
-  Object.keys(app.agentInfo.functions).filter(function (key) {
-    return ['init', 'catchAll'].indexOf(key) < 0;
+  return get$1(agent.url + '/segments' + makeQueryString(opts)).then(function (res) {
+    return res.body.map(function (obj) {
+      return segmentify(agent, obj);
+    });
+  });
+}
+
+function getBranches(agent, prevLinkHash) {
+  var tags = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
+
+  deprecated('Agent#getBranches(agent, prevLinkHash, tags = [])', 'Agent#findSegments(agent, filter)');
+
+  return findSegments(agent, { prevLinkHash: prevLinkHash, tags: tags });
+}
+
+function segmentify(agent, obj) {
+  Object.keys(agent.agentInfo.actions).filter(function (key) {
+    return ['init'].indexOf(key) < 0;
   }).forEach(function (key) {
     /*eslint-disable*/
     obj[key] = function () {
@@ -924,11 +965,8 @@ function linkify(app, obj) {
         args[_key] = arguments[_key];
       }
 
-      var url = config.applicationUrl.replace('%s', app.name) + '/links/' + obj.meta.linkHash + '/' + key;
-      /*eslint-enable*/
-
-      return post(url, args).then(function (res) {
-        return linkify(app, res.body);
+      return post(agent.url + '/segments/' + obj.meta.linkHash + '/' + key, args).then(function (res) {
+        return segmentify(agent, res.body);
       });
     };
   });
@@ -937,106 +975,108 @@ function linkify(app, obj) {
   obj.getPrev = function () {
     /*eslint-enable*/
     if (obj.link.meta.prevLinkHash) {
-      return app.getLink(obj.link.meta.prevLinkHash);
+      return agent.getSegment(obj.link.meta.prevLinkHash);
     }
 
     return Promise.resolve(null);
   };
 
-  /*eslint-disable*/
-  obj.getBranches = function (tags) {
-    /*eslint-enable*/
-    return app.getBranches(obj.meta.linkHash, tags);
-  };
-
+  // Deprecated.
   /*eslint-disable*/
   obj.load = function () {
     /*eslint-enable*/
-    return app.getLink(obj.meta.linkHash);
+    deprecated('segment#load()');
+    return Promise.resolve(segmentify(agent, {
+      link: JSON.parse(JSON.stringify(obj.link)),
+      meta: JSON.parse(JSON.stringify(obj.meta))
+    }));
+  };
+
+  // Deprecated.
+  /*eslint-disable*/
+  obj.getBranches = function () {
+    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    /*eslint-enable*/
+    return getBranches.apply(undefined, [agent, obj.meta.linkHash].concat(args));
   };
 
   return obj;
 }
 
-function createMap(app) {
-  var url = config.applicationUrl.replace('%s', app.name) + '/maps';
-
+function createMap(agent) {
   for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     args[_key - 1] = arguments[_key];
   }
 
-  return post(url, args).then(function (res) {
-    return linkify(app, res.body);
+  return post(agent.url + '/segments', args).then(function (res) {
+    return segmentify(agent, res.body);
   });
 }
 
-function getLink(app, linkHash) {
-  var url = config.applicationUrl.replace('%s', app.name) + '/links/' + linkHash;
-
-  return get$1(url).then(function (res) {
-    return linkify(app, res.body);
+function getSegment(agent, linkHash) {
+  return get$1(agent.url + '/segments/' + linkHash).then(function (res) {
+    return segmentify(agent, res.body);
   });
 }
 
-function getMap(app, mapId) {
+function getMapIds(agent) {
+  var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+  return get$1(agent.url + '/maps' + makeQueryString(opts)).then(function (res) {
+    return res.body;
+  });
+}
+
+function getLink(agent, hash) {
+  deprecated('Agent#getLink(agent, hash)', 'Agent#getSegment(agent, hash)');
+
+  return getSegment(agent, hash);
+}
+
+function getMap(agent, mapId) {
   var tags = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
 
-  var query = '';
+  deprecated('getMap(agent, mapId, tags = [])', 'findSegments(agent, filter)');
 
-  if (tags && tags.length) {
-    query = '?tags=' + tags.join('&tags=');
-  }
+  return findSegments(agent, { mapId: mapId, tags: tags });
+}
 
-  var url = config.applicationUrl.replace('%s', app.name) + '/maps/' + mapId + query;
-
+// Deprecated.
+function getAgent(url) {
   return get$1(url).then(function (res) {
-    return res.body.map(function (link) {
-      return linkify(app, link);
-    });
+    var agent = res.body;
+
+    agent.url = url;
+    agent.createMap = createMap.bind(null, agent);
+    agent.getSegment = getSegment.bind(null, agent);
+    agent.findSegments = findSegments.bind(null, agent);
+    agent.getMapIds = getMapIds.bind(null, agent);
+
+    // Deprecated.
+    agent.getBranches = getBranches.bind(null, agent);
+    agent.getLink = getLink.bind(null, agent);
+    agent.getMap = getMap.bind(null, agent);
+
+    return agent;
   });
 }
 
-function getBranches(app, linkHash) {
-  var tags = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
-
-  var query = '';
-
-  if (tags && tags.length) {
-    query = '?tags=' + tags.join('&tags=');
-  }
-
-  var url = config.applicationUrl.replace('%s', app.name) + '/branches/' + linkHash + query;
-
-  return get$1(url).then(function (res) {
-    return res.body.map(function (link) {
-      return linkify(app, link);
-    });
+function fromSegment(obj) {
+  return getAgent(obj.meta.agentUrl || obj.meta.applicationLocation).then(function (agent) {
+    var segment = segmentify(agent, obj);
+    return { agent: agent, segment: segment };
   });
 }
 
-function getApplication(appName, appLocation) {
-  var url = appLocation || config.applicationUrl.replace('%s', appName);
+function loadLink(obj) {
+  deprecated('loadLink(obj)', 'fromSegment(obj)');
 
-  return get$1(url).then(function (res) {
-    var app = res.body;
-
-    app.url = url;
-    app.createMap = createMap.bind(null, app);
-    app.getLink = getLink.bind(null, app);
-    app.getMap = getMap.bind(null, app);
-    app.getBranches = getBranches.bind(null, app);
-
-    return app;
-  });
-}
-
-function loadLink(segment) {
-  return getApplication(segment.meta.application, segment.meta.applicationLocation).then(function (app) {
-    var url = segment.meta.linkLocation;
-
-    return get$1(url).then(function (res) {
-      return linkify(app, res.body);
-    });
+  return fromSegment(obj).then(function (_ref) {
+    var segment = _ref.segment;
+    return segment;
   });
 }
 
@@ -1113,7 +1153,7 @@ var ChainTreeBuilder = function () {
       var _this = this;
 
       this.onTag = options.onTag;
-      if (map.id && map.application) {
+      if (map.id && map.applicationUrl) {
         return this._load(map).then(function (segments) {
           return _this._display(segments, options);
         });
@@ -1143,12 +1183,8 @@ var ChainTreeBuilder = function () {
   }, {
     key: '_load',
     value: function _load(map) {
-      return getApplication(map.application).then(function (app) {
-        return app.getMap(map.id);
-      }).then(function (res) {
-        return Promise.all(res.map(function (link) {
-          return link.load();
-        }));
+      return getAgent(map.applicationUrl).then(function (app) {
+        return app.findSegments({ mapId: map.id });
       }).catch(function (res) {
         return console.log(res);
       });

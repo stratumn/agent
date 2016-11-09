@@ -4,7 +4,7 @@ import resolveLinks from './resolveLinks';
 import wrap from './wrap';
 import parseIfJson from './parseIfJson';
 import tagsSet from './tagsSet';
-import { getApplication } from 'stratumn-sdk';
+import { getAgent } from 'stratumn-sdk';
 
 export const defaultOptions = {
   withArgs: false,
@@ -36,7 +36,7 @@ export default class ChainTreeBuilder {
 
   build(map, options) {
     this.onTag = options.onTag;
-    if (map.id && map.application) {
+    if (map.id && map.applicationUrl) {
       return this._load(map).then(segments => this._display(segments, options));
     } else if (map.chainscript && map.chainscript.length) {
       try {
@@ -60,9 +60,8 @@ export default class ChainTreeBuilder {
   }
 
   _load(map) {
-    return getApplication(map.application)
-      .then(app => app.getMap(map.id))
-      .then(res => Promise.all(res.map(link => link.load())))
+    return getAgent(map.applicationUrl)
+      .then(app => app.findSegments({ mapId: map.id }))
       .catch(res => console.log(res));
   }
 }
