@@ -1,16 +1,16 @@
 {{#if segment}}
     <div class="segment-container">
-        <div class="title" layout="row">
+        <div class="layout-row title">
             <div>
                 <h1>Segment</h1>
                 <h2>{{segment.meta.linkHash}}</h2>
             </div>
-            <span flex></span>
+            <span class="flex"></span>
           {{#paper-button onClick=(action "close")}}
             {{paper-icon "close"}}
           {{/paper-button}}
         </div>
-        <div layout="row" class="body">
+        <div class="body layout-row">
             <div class="menu">
                 <ul>
                     <li {{action "show" "state"}} class="{{if stateShowed 'active'}}">State</li>
@@ -19,7 +19,7 @@
                     <li {{action "show" "json"}} class="{{if jsonShowed 'active'}}">JSON</li>
                 </ul>
             </div>
-            <div class="content" flex-grow>
+            <div class="content" class="flex">
                 {{#if stateShowed}}
                     <pre>{{ json segment.link.state }}</pre>
                 {{/if}}
@@ -43,7 +43,7 @@
                   </div>
                 {{/if}}
                 {{#if evidenceShowed}}
-                  <div layout="row">
+                  <div class="layout-row">
                       <div class="info">
                           <h4>State</h4>
                           <p>{{segment.meta.evidence.state}}</p>
