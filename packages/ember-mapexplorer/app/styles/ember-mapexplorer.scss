@@ -1,5 +1,10 @@
 $brand-primary: #EC714A !default;
 
+#triangle-container {
+  // get the svg that contains the arrow out of the flow
+  position: absolute;
+}
+
 .segment-container {
 
   color: white;
