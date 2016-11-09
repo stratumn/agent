@@ -1,4 +1,3 @@
-/* global MapexplorerCore */
 import Ember from 'ember';
 import layout from '../templates/components/map-explorer';
 
@@ -31,7 +30,7 @@ export default Ember.Component.extend({
 
     this.get('builder').build({
       id: this.get('mapId'),
-      application: this.get('application'),
+      applicationUrl: this.get('applicationUrl'),
       chainscript: this.get('chainscript')
     }, {
       onclick: (d, onHide) => {
