@@ -7,7 +7,7 @@ export default function stMapExplorer(ChainTreeBuilderService) {
   return {
     restrict: 'E',
     scope: {
-      application: '=?',
+      applicationUrl: '=?',
       mapId: '=?',
       chainscript: '=?',
       refresh: '=',
@@ -47,7 +47,7 @@ export default function stMapExplorer(ChainTreeBuilderService) {
           });
       };
 
-      scope.$watchGroup(['application', 'mapId', 'refresh', 'chainscript'], update);
+      scope.$watchGroup(['applicationUrl', 'mapId', 'refresh', 'chainscript'], update);
       scope.$watch('options', update, true);
     }
   };
