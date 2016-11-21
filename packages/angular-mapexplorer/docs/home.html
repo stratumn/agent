@@ -21,12 +21,12 @@
                   </div>
                   <st-map-explorer chainscript="home.json" refresh="0" name=" 'first' "></st-map-explorer>
               </md-tab>
-              <md-tab label="Stratumn Application" md-active="home.application && home.mapId">
+              <md-tab label="Stratumn Application" md-active="home.applicationUrl && home.mapId">
                   <div ng-hide="home.segmentShowed['second']">
-                      <md-content layout="row" class="form" ng-hide="home.application && home.mapId">
+                      <md-content layout="row" class="form" ng-hide="home.applicationUrl && home.mapId">
                           <div layout="column" flex="40">
-                              <label>Application</label>
-                              <input ng-model="home.applicationInput">
+                              <label>Application URL</label>
+                              <input ng-model="home.applicationUrlInput">
                           </div>
                           <div layout="column" flex="40">
                               <label>Map ID</label>
@@ -36,10 +36,10 @@
                               Generate Map
                           </md-button>
                       </md-content>
-                      <md-content layout="row" class="form" ng-show="home.application && home.mapId">
+                      <md-content layout="row" class="form" ng-show="home.applicationUrl && home.mapId">
                           <div layout="column" flex="grow">
                               <label>Application</label>
-                              <span>{{home.application}}</span>
+                              <span>{{home.applicationUrl}}</span>
                           </div>
                           <div layout="column" flex="grow">
                               <label>Map ID</label>
@@ -57,10 +57,10 @@
                       </md-content>
                   </div>
 
-                  <div class="tip" ng-hide="home.application && home.mapId" layout>
+                  <div class="tip" ng-hide="home.applicationUrl && home.mapId" layout>
                       <span flex>Enter a Stratumn application name and Chain Map ID</span>
                   </div>
-                  <st-map-explorer ng-show="home.application && home.mapId" application="home.application" map-id="home.mapId" refresh="home.counter" name=" 'second' "></st-map-explorer>
+                  <st-map-explorer ng-show="home.applicationUrl && home.mapId" application-url="home.applicationUrl" map-id="home.mapId" refresh="home.counter" name=" 'second' "></st-map-explorer>
               </md-tab>
           </md-tabs>
       </md-content>

@@ -12,7 +12,7 @@ export default class ChainTreeBuilderService {
   build(builder, map, options) {
     return this.$q.when(builder.build({
       id: map.mapId,
-      application: map.application,
+      applicationUrl: map.applicationUrl,
       chainscript: map.chainscript
     }, options));
   }

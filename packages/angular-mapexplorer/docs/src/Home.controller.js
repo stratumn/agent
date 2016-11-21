@@ -3,7 +3,7 @@ export default class HomeController {
   constructor($scope, $routeParams, AceConfigurationService) {
     this.$scope = $scope;
     this.mapId = $routeParams.mapId;
-    this.application = $routeParams.application;
+    this.applicationUrl = $routeParams.applicationUrl;
     this.counter = 0;
     this.segmentShowed = {};
 
@@ -26,13 +26,13 @@ export default class HomeController {
   }
 
   generateMap() {
-    this.application = this.applicationInput;
+    this.applicationUrl = this.applicationUrlInput;
     this.mapId = this.mapIdInput;
   }
 
   edit() {
-    this.applicationInput = this.application;
-    this.application =  null;
+    this.applicationUrlInput = this.applicationUrl;
+    this.applicationUrl = null;
     this.mapIdInput = this.mapId;
     this.mapId = null;
   }

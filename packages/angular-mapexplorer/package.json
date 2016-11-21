@@ -1,6 +1,6 @@
 {
   "name": "angular-mapexplorer",
-  "version": "0.1.3",
+  "version": "1.0.0-alpha",
   "description": "",
   "author": "Stratumn Team",
   "license": "MIT",
@@ -68,7 +68,7 @@
     "angular-route": "^1.5.8",
     "angular-sanitize": "^1.5.8",
     "angular-ui-ace": "^0.2.3",
-    "mapexplorer-core": "^0.1.1",
+    "mapexplorer-core": "1.0.0-alpha",
     "md-color-picker": "^0.2.6"
   }
 }
