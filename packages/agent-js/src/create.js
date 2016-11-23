@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import uuid from 'node-uuid';
+import uuid from 'uuid';
 import { mockAgent } from 'stratumn-mock-agent';
 import getActionsInfo from './getActionsInfo';
 import hashJson from './hashJson';
