@@ -33,16 +33,7 @@ export default Ember.Component.extend({
       applicationUrl: this.get('applicationUrl'),
       chainscript: this.get('chainscript')
     }, {
-      onclick: (d, onHide) => {
-        this.onHide = onHide;
-        this.set('segment', d.data);
-        this.set('evidenceComplete', this.get('segment').meta.evidence.state === 'COMPLETE');
-
-        const onSelectSegment = this.get('onSelectSegment');
-        if (onSelectSegment) {
-          onSelectSegment(this.get('segment'));
-        }
-      },
+      onclick: this.onClick.bind(this),
       onTag: (tag) => {}
     });
   },
@@ -54,7 +45,23 @@ export default Ember.Component.extend({
     const chainscript = this.get('chainscript');
 
     if (chainscript) {
-      this.get('builder').chainTree.display(chainscript);
+      let builder = this.get('builder');
+      builder.chainTree.display(chainscript, {
+        ...mapexplorerCore.defaultOptions,
+        onclick: this.onClick.bind(this),
+        onTag: (tag) => {}
+      });
+    }
+  },
+
+  onClick(d, onHide) {
+    this.onHide = onHide;
+    this.set('segment', d.data);
+    this.set('evidenceComplete', this.get('segment').meta.evidence.state === 'COMPLETE');
+
+    const onSelectSegment = this.get('onSelectSegment');
+    if (onSelectSegment) {
+      onSelectSegment(this.get('segment'));
     }
   }
 
