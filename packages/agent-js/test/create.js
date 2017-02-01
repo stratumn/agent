@@ -71,13 +71,12 @@ describe('Agent', () => {
         })
     );
 
-    it('should call the #didAppend() event', () => {
+    it('should call the #didSave() event', () => {
       let callCount = 0;
       actions.events = {
-        didAppend(s) {
+        didSave(s) {
           callCount++;
           s.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
-          this.state.should.deepEqual({ a: 1, b: 2, c: 3 });
         }
       };
       return agent
@@ -110,16 +109,15 @@ describe('Agent', () => {
       )
     );
 
-    it('should call the #didAppend() event', () =>
+    it('should call the #didSave() event', () =>
       agent
         .createMap(1, 2, 3)
         .then(segment1 => {
           let callCount = 0;
           actions.events = {
-            didAppend(s) {
+            didSave(s) {
               callCount++;
               s.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
-              this.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
             }
           };
           return agent

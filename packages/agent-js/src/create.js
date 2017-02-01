@@ -31,11 +31,12 @@ const COMPLETE = 'COMPLETE';
  * Creates an agent.
  * @param {object} actions - the action functions
  * @param {StoreClient} storeClient - the store client
- * @param {fossilizerClient} [fossilizerClient] - the fossilizer client
+ * @param {FossilizerClient} [fossilizerClient] - the fossilizer client
  * @param {object} [opts] - options
  * @param {object} [opts.agentUrl] - agent root url
  * @param {object} [opts.evidenceCallbackUrl] - evidence callback root url
  * @param {string} [opts.salt] - a unique salt
+ * @param {number} [opts.reconnectTimeout=5000] - web socket reconnect timeout in milliseconds
  * @returns {Client} a store HTTP client
  */
 export default function create(actions, storeClient, fossilizerClient, opts = {}) {
@@ -59,17 +60,22 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
   function saveSegment(segment1) {
     return storeClient
       .saveSegment(segment1)
-      .then(fossilizeSegment)
-      .then(segment2 => {
-        // Call didAppend event if present.
-        if (typeof actions.events === 'object' &&
-            typeof actions.events.didAppend === 'function') {
-          mockAgent(actions, segment2.link).events.didAppend(segment2);
-        }
-
-        return segment2;
-      });
+      .then(fossilizeSegment);
   }
+
+  // Set up events.
+  storeClient.on('open', () => console.log('store: web socket open'));
+  storeClient.on('close', () => console.log('store: web socket closed'));
+  storeClient.on('error', err => console.error(`store: ${err.stack}`));
+  storeClient.on('message', msg => {
+    const name = msg.type;
+    if (typeof actions.events === 'object' && typeof actions.events[name] === 'function') {
+      actions.events[name](msg.data);
+    }
+  });
+
+  // Connect to store web socket.
+  storeClient.connect(opts.reconnectTimeout || 5000);
 
   return {
     /**

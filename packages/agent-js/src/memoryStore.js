@@ -16,6 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import EventEmitter from 'events';
+
 /**
  * Creates a memory store, for testing only.
  * @returns {Client} a memory store
@@ -23,7 +25,13 @@
 export default function memoryStore() {
   const segments = {};
 
-  return {
+  const emitter = Object.assign(new EventEmitter(), {
+    /**
+     * Does nothing since memory store doesn't use a web socket.
+     */
+    connect() {
+    },
+
     /**
      * Gets information about the store.
      * @returns {Promise} a promise that resolve with the information
@@ -45,6 +53,11 @@ export default function memoryStore() {
      */
     saveSegment(segment) {
       segments[segment.meta.linkHash] = JSON.parse(JSON.stringify(segment));
+      emitter.emit('message', {
+        type: 'didSave',
+        data: JSON.parse(JSON.stringify(segment))
+      });
+      emitter.emit.bind(emitter, 'didSave', JSON.parse(JSON.stringify(segment)));
       return Promise.resolve(segment);
     },
 
@@ -178,5 +191,7 @@ export default function memoryStore() {
 
       return Promise.resolve(a);
     }
-  };
+  });
+
+  return emitter;
 }

@@ -16,17 +16,53 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import EventEmitter from 'events';
 import request from 'superagent';
+import WebSocket from 'ws';
 import makeQueryString from './makeQueryString';
 import handleResponse from './handleResponse';
 
 /**
  * Creates a store HTTP client.
+ *
+ * The client is an EventEmitter and emits the following events:
+ *   - 'open': the web socket connection was open
+ *   - 'close': the web socket connection was closed
+ *   - 'error': a web socket error occured
+ *   - 'message': any message from web socket
+ *   - 'didSave': a segment was saved
+ *
  * @param {string} url - the base URL of the store
  * @returns {Client} a store HTTP client
  */
 export default function storeHttpClient(url) {
-  return {
+  // Web socket URL.
+  const wsUrl = `${url.replace(/^http/, 'ws')}/websocket`;
+
+  // Web socket instance.
+  let ws = null;
+
+  // Use event emitter instance as base object.
+  const emitter = new EventEmitter();
+
+  function connect(reconnectTimeout) {
+    ws = new WebSocket(wsUrl);
+    ws.on('open', emitter.emit.bind(emitter, 'open'));
+    ws.on('close', (...args) => {
+      ws.removeAllListeners();
+      emitter.emit('close', ...args);
+      setTimeout(connect.bind(null, reconnectTimeout), reconnectTimeout);
+    });
+    ws.on('error', emitter.emit.bind(emitter, 'error'));
+    ws.on('message', str => {
+      // Emit both event for message and event for message type.
+      const msg = JSON.parse(str);
+      emitter.emit('message', msg);
+      emitter.emit(msg.type, msg.data);
+    });
+  }
+
+  return Object.assign(emitter, {
     /**
      * Gets information about the store.
      * @returns {Promise} a promise that resolve with the information
@@ -37,6 +73,17 @@ export default function storeHttpClient(url) {
           .get(`${url}/`)
           .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
       });
+    },
+
+    /**
+     * Connects to the web socket and starts emitting events.
+     * @param {number} reconnectTimeout - time to wait to reconnect in milliseconds
+     */
+    connect(reconnectTimeout) {
+      if (ws) {
+        return;
+      }
+      connect(reconnectTimeout);
     },
 
     /**
@@ -111,5 +158,5 @@ export default function storeHttpClient(url) {
           .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
       });
     }
-  };
+  });
 }
