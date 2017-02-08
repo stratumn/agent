@@ -1,0 +1,29 @@
+{
+  "name": "indigo-block-explorer",
+  "version": "0.0.0",
+  "description": "BlockExplorer",
+  "main": "dist/indigo-block-explorer.min.js",
+  "homepage": "https://github.com/Stratumn/blockexplorer",
+  "authors": [
+    "Stratumn"
+  ],
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "react",
+    "react-component"
+  ],
+  "license": "MIT",
+  "ignore": [
+    ".editorconfig",
+    ".gitignore",
+    "package.json",
+    "src",
+    "node_modules",
+    "example",
+    "test"
+  ]
+}
