@@ -1,30 +1,50 @@
 {
-  "name": "explorer",
+  "name": "indigo-block-explorer",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --inline --content-base public --port 8081",
-    "build": "webpack"
+  "description": "BlockExplorer",
+  "main": "lib/BlockExplorer.js",
+  "author": "Stratumn",
+  "homepage": "https://github.com/Stratumn/blockexplorer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Stratumn/blockexplorer.git"
   },
-  "author": "",
-  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Stratumn/blockexplorer/issues"
+  },
   "dependencies": {
-    "babel-core": "^6.13.2",
-    "babel-loader": "^6.2.5",
-    "babel-plugin-transform-class-properties": "^6.11.5",
-    "babel-preset-es2015": "^6.13.2",
-    "babel-preset-react": "^6.11.1",
-    "copy-webpack-plugin": "^3.0.1",
-    "jquery": "^3.1.0",
-    "material-ui": "^0.15.4",
-    "react": "^15.3.1",
-    "react-dom": "^15.3.1",
-    "react-tap-event-plugin": "^1.0.0",
-    "tweetnacl": "^0.14.3",
-    "tweetnacl-util": "^0.13.3",
-    "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.14.1"
-  }
+    "classnames": "^2.1.2",
+    "fifo-array": "^0.1.2",
+    "material-ui": "^0.16.7",
+    "react-tap-event-plugin": "^2.0.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^4.1.3",
+    "eslint": "^1.6.0",
+    "eslint-plugin-react": "^3.5.1",
+    "gulp": "^3.9.0",
+    "react": "^15.4.2",
+    "react-component-gulp-tasks": "^0.7.6",
+    "react-dom": "^15.4.2"
+  },
+  "peerDependencies": {
+    "react": "^15.4.2"
+  },
+  "browserify-shim": {
+    "react": "global:React"
+  },
+  "scripts": {
+    "build": "gulp clean && NODE_ENV=production gulp build",
+    "examples": "gulp dev:server",
+    "lint": "eslint ./; true",
+    "publish:site": "NODE_ENV=production gulp publish:examples",
+    "release": "NODE_ENV=production gulp release",
+    "start": "gulp dev",
+    "test": "echo \"no tests yet\" && exit 0",
+    "watch": "gulp watch:lib"
+  },
+  "keywords": [
+    "react",
+    "react-component"
+  ]
 }
