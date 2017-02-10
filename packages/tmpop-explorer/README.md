@@ -1,11 +1,10 @@
-# BlockExplorer
+# Indigo Explorer
 
-__COMPONENT DESCRIPTION GOES HERE__
-
+A block explorer for the indigo blockchain.
 
 ## Demo & Examples
 
-Live demo: [Stratumn.github.io/blockexplorer](http://Stratumn.github.io/blockexplorer/)
+Live demo: [stratumn.github.io/indigoexplorer](http://Stratumn.github.io/indigoexplorer/)
 
 To build the examples locally, run:
 
@@ -19,33 +18,28 @@ Then open [`localhost:8000`](http://localhost:8000) in a browser.
 
 ## Installation
 
-The easiest way to use indigo-block-explorer is to install it from NPM and include it in your own React build process (using [Browserify](http://browserify.org), [Webpack](http://webpack.github.io/), etc).
+The easiest way to use indigo-explorer is to install it from NPM and include it in your own React build process (using [Browserify](http://browserify.org), [Webpack](http://webpack.github.io/), etc).
 
-You can also use the standalone build by including `dist/indigo-block-explorer.js` in your page. If you use this, make sure you have already included React, and it is available as a global variable.
+You can also use the standalone build by including `dist/indigo-explorer.js` in your page. If you use this, make sure you have already included React, and it is available as a global variable.
 
 ```
-npm install indigo-block-explorer --save
+npm install indigo-explorer --save
 ```
 
 
 ## Usage
 
-__EXPLAIN USAGE HERE__
+Include the react component in your application:
 
 ```
-var BlockExplorer = require('indigo-block-explorer');
+var IndigoExplorer = require('indigo-explorer');
 
-<BlockExplorer>Example</BlockExplorer>
+<IndigoExplorer remote="127.0.0.1:46657"/>
 ```
 
 ### Properties
 
-* __DOCUMENT PROPERTIES HERE__
-
-### Notes
-
-__ADDITIONAL USAGE NOTES__
-
+* `remote`: the address used to contact the Indigo Node.
 
 ## Development (`src`, `lib` and the build process)
 
@@ -55,7 +49,6 @@ To build, watch and serve the examples (which will also watch the component sour
 
 ## License
 
-__PUT LICENSE HERE__
+SEE LICENSE FILE
 
 Copyright (c) 2017 Stratumn.
-
