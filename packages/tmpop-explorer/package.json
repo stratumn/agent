@@ -1,17 +1,17 @@
 {
-  "name": "indigo-block-explorer",
-  "version": "1.0.0",
-  "description": "BlockExplorer",
+  "name": "indigo-explorer",
+  "version": "0.1.0",
+  "description": "IndigoExplorer",
   "main": "lib/IndigoExplorer.js",
   "author": "Stratumn",
   "license": "SEE LICENSE file",
-  "homepage": "https://github.com/Stratumn/blockexplorer",
+  "homepage": "https://github.com/Stratumn/indigoexplorer",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Stratumn/blockexplorer.git"
+    "url": "https://github.com/Stratumn/indigoexplorer.git"
   },
   "bugs": {
-    "url": "https://github.com/Stratumn/blockexplorer/issues"
+    "url": "https://github.com/Stratumn/indigoexplorer/issues"
   },
   "dependencies": {
     "bluebird": "^3.4.7",

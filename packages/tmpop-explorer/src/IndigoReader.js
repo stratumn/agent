@@ -97,8 +97,6 @@ export default class IndigoReader {
 	}
 
 	_sendRequest(endpoint, args = {}) {
-		console.log(`http://${this.remote}/${endpoint}?${encodeData(args)}`);
-		
 		return http.get(`http://${this.remote}/${endpoint}?${encodeData(args)}`)
 			.then(res => {
 				if (res.body.error != ''){

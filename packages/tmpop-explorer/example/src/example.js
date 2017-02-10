@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var IndigoExplorer = require('indigo-block-explorer');
+var IndigoExplorer = require('indigo-explorer');
 
 var App = React.createClass({
 	render () {
