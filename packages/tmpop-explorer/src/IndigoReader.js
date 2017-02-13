@@ -62,7 +62,7 @@ export default class IndigoReader {
 		return this._sendRequest('blockchain', { minHeight, maxHeight });
 	}	
 
-	susbcribe(handler) {
+	subscribe(handler) {
 		this.subscriptionHandlers.push(handler);		
 	}
 

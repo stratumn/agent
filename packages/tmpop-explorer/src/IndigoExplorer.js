@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
-import App from './containers/App';
+import Layout from './containers/Layout';
 import BlockContainer from './containers/BlockContainer';
 import Index from './containers/Index';
 import IndigoReader from './IndigoReader';
@@ -16,7 +16,7 @@ export default class IndigoExplorer extends Component {
 		return(
 			<IndigoReaderProvider reader={this.indigoReader}>
 				<Router history={browserHistory}>
-					<Route path="/" component={App}>
+					<Route path="/" component={Layout}>
 						<IndexRoute component={Index} />
 						<Route path="blocks/:height" component={BlockContainer} />						
 					</Route>
