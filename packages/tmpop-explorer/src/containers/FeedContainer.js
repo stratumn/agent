@@ -25,7 +25,7 @@ export default class FeedContainer extends Component {
 	}
 
 	componentDidMount() {
-		this.reader.susbcribe(this.handleBlock);
+		this.reader.subscribe(this.handleBlock);
 	}	
 
 	componentWillUnmount() {

@@ -17,16 +17,25 @@ export default class BlockContainer extends Component {
 		this.setState({ block: block });
 	}
 
+	componentWillReceiveProps(nextProps) {
+		this.height = nextProps.params.height;
+		this._fetch();
+	}
+
 	componentDidMount() {
-		this.reader.getBlock(this.height)
-			.then(this.handleBlockReceived)
-			.catch(err => console.log(err));
+		this._fetch();
 	}
 
 	render() {
 		return (
 			<Block block={this.state.block} />
 		);
+	}
+
+	_fetch() {
+		this.reader.getBlock(this.height)
+			.then(this.handleBlockReceived)
+			.catch(err => console.log(err));
 	}
 }
 
