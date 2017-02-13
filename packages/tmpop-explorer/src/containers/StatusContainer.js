@@ -3,7 +3,6 @@ import Status from '../components/Status';
 import IndigoReader from '../IndigoReader';
 
 export default class StatusContainer extends Component {
-
 	constructor(props, context) {
 		super(props, context);
 
@@ -28,7 +27,6 @@ export default class StatusContainer extends Component {
 	}	
 
 	componentWillUnmount() {
-		console.log('will unmount');
 		clearTimeout(this.timer);
 	}
 

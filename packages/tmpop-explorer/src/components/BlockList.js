@@ -2,18 +2,7 @@ import React from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import { Link } from 'react-router';
 
-class BlockList extends React.Component {
-	constructor(props) {
-		super(props);
-
-		this.handleRowSelection = this.handleRowSelection.bind(this);
-	}
-
-	handleRowSelection(selectedRows) {
-		const height = this.props.blocks[selectedRows[0]].header.height;
-		browserHistory.push();
-	}
-
+export default class BlockList extends React.Component {
 	render() {
 		const rowsBlocks = this.props.blocks.map((block) => {
 			return (
@@ -52,5 +41,3 @@ class BlockList extends React.Component {
 BlockList.propTypes = {
 	blocks: React.PropTypes.array
 };
-
-export default BlockList;

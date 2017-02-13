@@ -3,8 +3,6 @@ import { Table, TableBody, TableHeaderColumn, TableRow, TableRowColumn } from 'm
 import CircularProgress from 'material-ui/CircularProgress';
 
 export default class Status extends Component {
-
-
 	render() {
 		const status = this.props.status;
 		if (status) {
@@ -50,9 +48,7 @@ export default class Status extends Component {
 			);
 		}
 		return <CircularProgress />;
-
 	}
-
 }
 
 Status.propTypes = {

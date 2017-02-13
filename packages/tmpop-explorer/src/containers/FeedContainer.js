@@ -4,7 +4,6 @@ import IndigoReader from '../IndigoReader';
 import FifoArray from 'fifo-array';
 
 export default class FeedContainer extends Component {
-
 	constructor(props, context) {
 		super(props, context);
 

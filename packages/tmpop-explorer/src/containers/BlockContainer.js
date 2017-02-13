@@ -3,7 +3,6 @@ import Block from '../components/Block';
 import IndigoReader from '../IndigoReader';
 
 export default class BlockContainer extends Component {
-
 	constructor(props, context) {
 		super(props, context);
 
@@ -15,7 +14,6 @@ export default class BlockContainer extends Component {
 	}
 
 	handleBlockReceived(block) {
-		console.log(block);
 		this.setState({ block: block });
 	}
 
