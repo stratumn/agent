@@ -5,7 +5,6 @@ import CircularProgress from 'material-ui/CircularProgress';
 import Radium, { Style } from 'radium';
 
 class Block extends Component {
-
 	getRules() {
 		return {
 			'td, th': {
@@ -132,7 +131,6 @@ class Block extends Component {
 					</div>
 				</div>
 			);
-
 		}
 		return <CircularProgress />;
 	}
