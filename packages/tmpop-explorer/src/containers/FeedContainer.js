@@ -18,9 +18,6 @@ export default class FeedContainer extends Component {
 	}
 
 	handleBlock(block) {
-		if (block.data.txs.length > 0) {
-			console.log(JSON.stringify(block, undefined, 2));
-		}
 		this.setState(prevState => {
 			prevState.transactions.push(...block.data.txs);
 			prevState.blocks.push(block);

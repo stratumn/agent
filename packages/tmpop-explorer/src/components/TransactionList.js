@@ -7,7 +7,7 @@ export default class TransactionList extends Component {
 		const rowsTransactions = this.props.transactions.map((tx) => {
 			return (				
 				<TableRow key={tx.data.meta.linkHash}>
-					<TableRowColumn><Link to={`/blocks/tx.block.header.height`}>{tx.block.header.height}</Link></TableRowColumn>
+					<TableRowColumn><Link to={`/blocks/${tx.block.header.height}`}>{tx.block.header.height}</Link></TableRowColumn>
 					<TableRowColumn>{tx.data.meta.linkHash}</TableRowColumn>
 					<TableRowColumn>{tx.data.link.meta.mapId}</TableRowColumn>
 					<TableRowColumn>{tx.data.link.meta.stateHash}</TableRowColumn>				
