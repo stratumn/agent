@@ -37,7 +37,7 @@ const COMPLETE = 'COMPLETE';
  * @param {object} [opts.evidenceCallbackUrl] - evidence callback root url
  * @param {string} [opts.salt] - a unique salt
  * @param {number} [opts.reconnectTimeout=5000] - web socket reconnect timeout in milliseconds
- * @returns {Client} a store HTTP client
+ * @returns {Agent} an agent
  */
 export default function create(actions, storeClient, fossilizerClient, opts = {}) {
   const agentInfo = { actions: getActionsInfo(actions) };
@@ -212,7 +212,7 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
         return Promise.reject(err);
       }
 
-      // Not atomic. Not an issue at the moment, but could it
+      // Not atomic. Not an issue at the moment, but it could
       // become one in the future, for instance if there can be
       // more than one fossilizers? Could it be solved by adding
       // an insertEvidence route to stores?
