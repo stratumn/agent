@@ -31,7 +31,7 @@
     "client"
   ],
   "author": "Stratumn Team",
-  "license": "MIT",
+  "license": "MPL-2.0",
   "bugs": {
     "url": "https://github.com/stratumn/stratumn-sdk-js/issues"
   },
