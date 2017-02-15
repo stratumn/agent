@@ -19,9 +19,11 @@
 import uuid from 'uuid';
 import { mockAgent } from 'stratumn-mock-agent';
 import getActionsInfo from './getActionsInfo';
+import getPluginsInfo from './getPluginsInfo';
 import hashJson from './hashJson';
 import makeQueryString from './makeQueryString';
 import generateSecret from './generateSecret';
+import getDefinedFilters from './getDefinedFilters';
 
 const QUEUED = 'QUEUED';
 const DISABLED = 'DISABLED';
@@ -33,14 +35,16 @@ const COMPLETE = 'COMPLETE';
  * @param {StoreClient} storeClient - the store client
  * @param {FossilizerClient} [fossilizerClient] - the fossilizer client
  * @param {object} [opts] - options
- * @param {object} [opts.agentUrl] - agent root url
- * @param {object} [opts.evidenceCallbackUrl] - evidence callback root url
+ * @param {string} [opts.agentUrl] - agent root url
+ * @param {string} [opts.evidenceCallbackUrl] - evidence callback root url
  * @param {string} [opts.salt] - a unique salt
  * @param {number} [opts.reconnectTimeout=5000] - web socket reconnect timeout in milliseconds
+ * @param {Plugins[]} [opts.plugins] - a list of agent plugins
  * @returns {Agent} an agent
  */
 export default function create(actions, storeClient, fossilizerClient, opts = {}) {
-  const agentInfo = { actions: getActionsInfo(actions) };
+  const plugins = opts.plugins || [];
+  const agentInfo = { actions: getActionsInfo(actions), pluginsInfo: getPluginsInfo(plugins) };
 
   function fossilizeSegment(segment) {
     if (fossilizerClient) {
@@ -57,9 +61,9 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
     return segment;
   }
 
-  function saveSegment(segment1) {
+  function saveSegment(segment) {
     return storeClient
-      .saveSegment(segment1)
+      .saveSegment(segment)
       .then(fossilizeSegment);
   }
 
@@ -70,12 +74,21 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
   storeClient.on('message', msg => {
     const name = msg.type;
     if (typeof actions.events === 'object' && typeof actions.events[name] === 'function') {
-      actions.events[name](msg.data);
+      const segment = msg.data;
+      if (getDefinedFilters(plugins).every(filter => filter(segment))) {
+        actions.events[name](segment);
+      }
     }
   });
 
   // Connect to store web socket.
   storeClient.connect(opts.reconnectTimeout || 5000);
+
+  function applyPlugins(method, ...args) {
+    plugins.forEach(plugin =>
+      (plugin[method] && plugin[method](...args))
+    );
+  }
 
   return {
     /**
@@ -107,17 +120,11 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
       return mockAgent(actions, initialLink)
         .init(...args)
         .catch(err => {
-          /*eslint-disable*/
           err.status = 400;
-          /*eslint-enable*/
           throw err;
         })
-        .then(l => {
-          const link = l;
-
-          link.meta.stateHash = hashJson(link.state);
-          link.meta.action = 'init';
-          link.meta.arguments = args;
+        .then(link => {
+          applyPlugins('didCreateLink', link, 'init', args);
 
           const linkHash = hashJson(link);
 
@@ -126,12 +133,9 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
             evidence: { state: fossilizerClient ? QUEUED : DISABLED }
           };
 
-          if (opts.agentUrl) {
-            meta.agentUrl = opts.agentUrl;
-            meta.segmentUrl = `${opts.agentUrl}/segments/${linkHash}`;
-          }
-
           const segment = { link, meta };
+
+          applyPlugins('didCreateSegment', segment, 'init', args);
 
           return saveSegment(segment);
         });
@@ -156,27 +160,19 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
         .then(segment => {
           const initialLink = segment.link;
 
-          delete initialLink.meta.stateHash;
-          delete initialLink.meta.prevLinkHash;
-          delete initialLink.meta.action;
-          delete initialLink.meta.arguments;
+          applyPlugins('willCreate', initialLink, action, args);
 
+          delete initialLink.meta.prevLinkHash;
           initialLink.meta.prevLinkHash = prevLinkHash;
 
           return mockAgent(actions, initialLink)[action](...args)
             .catch(err => {
-              /*eslint-disable*/
               err.status = 400;
-              /*eslint-enable*/
               throw err;
             });
         })
-        .then(l => {
-          const link = l;
-
-          link.meta.stateHash = hashJson(link.state);
-          link.meta.action = action;
-          link.meta.arguments = args;
+        .then(link => {
+          applyPlugins('didCreateLink', link, action, args);
 
           const linkHash = hashJson(link);
 
@@ -185,12 +181,9 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
             evidence: { state: fossilizerClient ? QUEUED : DISABLED }
           };
 
-          if (opts.agentUrl) {
-            meta.agentUrl = opts.agentUrl;
-            meta.segmentUrl = `${opts.agentUrl}/segments/${linkHash}`;
-          }
-
           const segment = { link, meta };
+
+          applyPlugins('didCreateSegment', segment, action, args);
 
           return saveSegment(segment);
         });
@@ -241,7 +234,9 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
      * @param {string} linkHash - the link hash
      * @returns {Promise} a promise that resolve with the segment
      */
-    getSegment: storeClient.getSegment.bind(storeClient),
+    getSegment(linkHash) {
+      return storeClient.getSegment(linkHash, getDefinedFilters(plugins));
+    },
 
     /**
      * Finds segments.
@@ -253,7 +248,9 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
      * @param {string[]} [opts.tags] - an array of tags the segments must have
      * @returns {Promise} a promise that resolve with the segments
      */
-    findSegments: storeClient.findSegments.bind(storeClient),
+    findSegments(options) {
+      return storeClient.findSegments(options, getDefinedFilters(plugins));
+    },
 
     /**
      * Gets map IDs.

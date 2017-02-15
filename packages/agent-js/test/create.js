@@ -22,6 +22,13 @@ import hashJson from '../src/hashJson';
 import generateSecret from '../src/generateSecret';
 import { memoryStoreInfo } from './fixtures';
 
+const plugins = [
+  {
+    name: 'T',
+    description: 'D'
+  }
+];
+
 const actions = {
   init(a, b, c) { this.append({ a, b, c }); },
   action(d) { this.state.d = d; this.append(); }
@@ -32,7 +39,7 @@ describe('Agent', () => {
   let agent;
 
   beforeEach(() => {
-    agent = create(actions, memoryStore(), null, { agentUrl: 'http://localhost' });
+    agent = create(actions, memoryStore(), null, { plugins });
   });
   afterEach(() => {
     delete actions.events;
@@ -48,7 +55,11 @@ describe('Agent', () => {
             actions: {
               init: { args: ['a', 'b', 'c'] },
               action: { args: ['d'] }
-            }
+            },
+            pluginsInfo: [{
+              name: 'T',
+              description: 'D'
+            }]
           }
         }))
     );
@@ -61,13 +72,8 @@ describe('Agent', () => {
         .then(segment => {
           segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
           segment.link.meta.mapId.should.be.a.String();
-          segment.link.meta.stateHash.should.be.exactly(hashJson({ a: 1, b: 2, c: 3 }));
-          segment.link.meta.action.should.be.exactly('init');
-          segment.link.meta.arguments.should.deepEqual([1, 2, 3]);
           segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
           segment.meta.evidence.should.deepEqual({ state: 'DISABLED' });
-          segment.meta.agentUrl.should.be.exactly('http://localhost');
-          segment.meta.segmentUrl.should.be.exactly(`http://localhost/segments/${segment.meta.linkHash}`);
         })
     );
 
@@ -96,14 +102,9 @@ describe('Agent', () => {
             .createSegment(segment1.meta.linkHash, 'action', 4)
             .then(segment2 => {
               segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
-              segment2.link.meta.stateHash.should.be.exactly(hashJson({ a: 1, b: 2, c: 3, d: 4 }));
-              segment2.link.meta.action.should.be.exactly('action');
-              segment2.link.meta.arguments.should.deepEqual([4]);
               segment2.link.meta.prevLinkHash.should.be.exactly(segment1.meta.linkHash);
               segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
               segment2.meta.evidence.should.deepEqual({ state: 'DISABLED' });
-              segment2.meta.agentUrl.should.be.exactly('http://localhost');
-              segment2.meta.segmentUrl.should.be.exactly(`http://localhost/segments/${segment2.meta.linkHash}`);
             })
         )
       )
@@ -140,12 +141,7 @@ describe('Agent', () => {
             .then(segment2 => {
               segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
               segment2.link.meta.mapId.should.be.a.String();
-              segment2.link.meta.stateHash.should.be.exactly(hashJson({ a: 1, b: 2, c: 3 }));
-              segment2.link.meta.action.should.be.exactly('init');
-              segment2.link.meta.arguments.should.deepEqual([1, 2, 3]);
               segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
-              segment2.meta.agentUrl.should.be.exactly('http://localhost');
-              segment2.meta.segmentUrl.should.be.exactly(`http://localhost/segments/${segment2.meta.linkHash}`);
               segment2.meta.evidence.should.deepEqual({ state: 'COMPLETE', test: true });
             });
         })

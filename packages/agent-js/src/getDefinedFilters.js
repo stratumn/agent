@@ -16,27 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/**
- * Handles an HTTP response from a store or fossilizer.
- * If there is an error and the response has an error, it will reject
- * with an appropriate error. Otherwise it resolves with the response
- * body.
- * @param {Error} err - an error
- * @param {http.Response} res - an HTTP response
- * @returns {Promise} a promise that resolve with the response body
- */
-export default function handleResponse(err, res) {
-  return new Promise((resolve, reject) => {
-    let error = err;
-    if (res && res.body && res.body.error) {
-      error = new Error(res.body.error);
-    }
-
-    if (error) {
-      error.status = res ? res.statusCode : 500;
-      reject(error);
-    } else {
-      resolve(res.body);
-    }
-  });
+export default function (plugins) {
+  return plugins.map(p => p.filterSegment).filter(n => n);
 }

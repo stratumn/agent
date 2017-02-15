@@ -56,6 +56,16 @@ describe('StoreHttpClient', () => {
           err.message.should.be.exactly('not found');
         })
     );
+
+    it('applies the filters', () =>
+      storeHttpClient('http://localhost')
+        .getSegment('test', [segment => (segment.meta.linkHash !== 'test')])
+        .then(() => { throw new Error('should not resolve'); })
+        .catch(err => {
+          err.statusCode.should.be.exactly(404);
+          err.message.should.be.exactly('not found');
+        })
+    );
   });
 
   describe('#deleteSegment()', () => {
@@ -70,7 +80,10 @@ describe('StoreHttpClient', () => {
     it('resolves with the segments', () =>
       storeHttpClient('http://localhost')
         .findSegments()
-        .then(body => body.should.deepEqual([{ link: { state: { query: '' } } }]))
+        .then(body => {
+          body.should.have.length(2);
+          body[0].should.deepEqual({ link: { state: { query: '', filtered: 0 } } });
+        })
     );
 
     it('sends a query', () =>
@@ -85,6 +98,15 @@ describe('StoreHttpClient', () => {
         .then(body => body[0].link.state.query.should.be.exactly(
           'mapId=map&prevLinkHash=hash&tags=tag1%2Btag2&offset=20&limit=10'
         ))
+    );
+
+    it('applies the filters', () =>
+      storeHttpClient('http://localhost')
+        .findSegments(null, [segment => segment.link.state.filtered === 1])
+        .then(body => {
+          body.should.have.length(1);
+          body[0].link.state.filtered.should.be.exactly(1);
+        })
     );
   });
 

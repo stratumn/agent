@@ -48,7 +48,10 @@ export default function mockStoreHttpServer(mock) {
 
   mock.get('http://localhost/segments', () => ({
     status: 200,
-    body: [{ link: { state: { query: '' } } }]
+    body: [
+      { link: { state: { query: '', filtered: 0 } } },
+      { link: { state: { query: '', filtered: 1 } } }
+    ]
   }));
 
   mock.get('http://localhost/segments?:query', req => ({

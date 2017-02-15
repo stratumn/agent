@@ -105,12 +105,24 @@ export default function storeHttpClient(url) {
      * @param {string} linkHash - the link hash
      * @returns {Promise} a promise that resolve with the segment
      */
-    getSegment(linkHash) {
-      return new Promise((resolve, reject) => {
+    getSegment(linkHash, filters = []) {
+      return new Promise((resolve, reject) =>
         request
           .get(`${url}/segments/${linkHash}`)
-          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
-      });
+          .end((err, res) => handleResponse(err, res)
+            .then(s => {
+              if (filters.every(filter => filter(s))) {
+                resolve(s);
+              } else {
+                const error = {
+                  message: 'not found',
+                  statusCode: 404
+                };
+                throw error;
+              }
+            })
+            .catch(reject))
+      );
     },
 
     /**
@@ -136,11 +148,18 @@ export default function storeHttpClient(url) {
      * @param {string[]} [opts.tags] - an array of tags the segments must have
      * @returns {Promise} a promise that resolve with the segments
      */
-    findSegments(opts) {
+    findSegments(opts, filters = []) {
       return new Promise((resolve, reject) => {
         request
           .get(`${url}/segments${makeQueryString(opts || {})}`)
-          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
+          .end((err, res) => handleResponse(err, res)
+            .then(segments => {
+              let s = segments;
+              filters.forEach(f => (s = s.filter(f)));
+              resolve(s);
+            })
+            .catch(reject)
+          );
       });
     },
 
