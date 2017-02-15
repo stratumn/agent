@@ -1,7 +1,8 @@
 {
   "name": "angular2-mapexplorer",
   "version": "0.1.0",
-  "license": "MIT",
+  "author": "Stratumn team",
+  "license": "MPL-2.0",
   "angular-cli": {},
   "main": "lib/angular2-mapexplorer.js",
   "jsnext:main": "lib/angular2-mapexplorer.mjs",
