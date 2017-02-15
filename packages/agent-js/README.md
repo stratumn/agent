@@ -6,9 +6,9 @@ This NodeJS module exposes functions to create Stratumn agents using Javascript.
 [![codecov](https://codecov.io/gh/stratumn/agent-js/branch/master/graph/badge.svg)](https://codecov.io/gh/stratumn/agent-js)
 [![Build Status](https://david-dm.org/stratumn/agent-js.svg)](https://david-dm.org/stratumn/agent-js) 
 
-Copyright 2016 Stratumn SAS
+Copyright 2017 Stratumn SAS
 
-Unless otherwise noted, the Stratumn Agent Javascript Library source files are distributed under the GNU LGPLv3 found in the LICENSE file.
+Unless otherwise noted, the Stratumn Agent Javascript Library source files are distributed under the Mozilla Public License 2.0 found in the LICENSE file.
 
 ## Creating an HTTP server for an agent
 
