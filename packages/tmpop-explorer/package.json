@@ -5,13 +5,13 @@
   "main": "lib/IndigoExplorer.js",
   "author": "Stratumn",
   "license": "SEE LICENSE file",
-  "homepage": "https://github.com/Stratumn/indigoexplorer",
+  "homepage": "https://github.com/stratumn/indigo-explorer",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Stratumn/indigoexplorer.git"
+    "url": "https://github.com/stratumn/indigo-explorer.git"
   },
   "bugs": {
-    "url": "https://github.com/Stratumn/indigoexplorer/issues"
+    "url": "https://github.com/stratumn/indigo-explorer/issues"
   },
   "dependencies": {
     "bluebird": "^3.4.7",
