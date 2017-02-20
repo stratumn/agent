@@ -1,9 +1,9 @@
 {
-  "name": "stratumn-sdk",
+  "name": "stratumn-agent-client",
   "version": "1.5.0",
-  "description": "Stratumn SDK for Javascript",
-  "main": "lib/stratumn-sdk.js",
-  "jsnext:main": "lib/stratumn-sdk.mjs",
+  "description": "Stratumn Indigo agent client library",
+  "main": "lib/stratumn-agent-client.js",
+  "jsnext:main": "lib/stratumn-agent-client.mjs",
   "scripts": {
     "test": "mocha --compilers js:babel-core/register --recursive --require babel-polyfill --require should 2> /dev/null",
     "test:cov": "babel-node ./node_modules/isparta/bin/isparta cover ./node_modules/mocha/bin/_mocha -- --recursive --require should --require should 2> /dev/null",
@@ -18,11 +18,11 @@
     "version": "npm run build:all",
     "postversion": "git push && git push --tags && npm run clean",
     "prepublish": "npm run clean && npm run build:all",
-    "postpublish": "aws s3 cp dist/stratumn-sdk.js s3://stratumn-libs/stratumn-sdk.js --region 'eu-west-1' && aws s3 cp dist/stratumn-sdk.min.js s3://stratumn-libs/stratumn-sdk.min.js --region 'eu-west-1' && aws s3 cp dist/stratumn-sdk.js s3://stratumn-libs/stratumn-sdk-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/stratumn-sdk.min.js s3://stratumn-libs/stratumn-sdk-${npm_package_version}.min.js --region 'eu-west-1'"
+    "postpublish": "aws s3 cp dist/stratumn-agent-client.js s3://stratumn-libs/stratumn-agent-client.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.min.js s3://stratumn-libs/stratumn-agent-client.min.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.js s3://stratumn-libs/stratumn-agent-client-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.min.js s3://stratumn-libs/stratumn-agent-client-${npm_package_version}.min.js --region 'eu-west-1'"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stratumn/stratumn-sdk-js.git"
+    "url": "https://github.com/stratumn/agent-client-js.git"
   },
   "keywords": [
     "stratumn",
@@ -33,9 +33,9 @@
   "author": "Stratumn Team",
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/stratumn/stratumn-sdk-js/issues"
+    "url": "https://github.com/stratumn/agent-client-js/issues"
   },
-  "homepage": "https://github.com/stratumn/stratumn-sdk-js",
+  "homepage": "https://github.com/stratumn/agent-client-js",
   "devDependencies": {
     "babel-cli": "^6.5.1",
     "babel-core": "^6.5.2",

@@ -13,6 +13,6 @@ config.plugins.push(
 );
 
 config.format = 'umd';
-config.dest = 'dist/stratumn-sdk.js';
+config.dest = 'dist/stratumn-agent-client.js';
 
 export default config;

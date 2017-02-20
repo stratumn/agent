@@ -1,8 +1,8 @@
 # Stratumn SDK for Javascript [ALPHA - incompatible with production]
 
-[![Build Status](https://travis-ci.org/stratumn/stratumn-sdk-js.svg?branch=alpha)](https://travis-ci.org/stratumn/stratumn-sdk-js)
-[![codecov](https://codecov.io/gh/stratumn/stratumn-sdk-js/branch/alpha/graph/badge.svg)](https://codecov.io/gh/stratumn/stratumn-sdk-js/branch/alpha)
-[![Build Status](https://david-dm.org/stratumn/stratumn-sdk-js.svg?branch=alpha)](https://david-dm.org/stratumn/stratumn-sdk-js) 
+[![Build Status](https://travis-ci.org/stratumn/agent-client-js.svg?branch=alpha)](https://travis-ci.org/stratumn/agent-client-js)
+[![codecov](https://codecov.io/gh/stratumn/agent-client-js/branch/alpha/graph/badge.svg)](https://codecov.io/gh/stratumn/agent-client-js/branch/alpha)
+[![Build Status](https://david-dm.org/stratumn/agent-client-js.svg?branch=alpha)](https://david-dm.org/stratumn/agent-client-js) 
 
 ## Installation
 
@@ -12,25 +12,25 @@
 <!-- Polyfill for browser compatibility -->
 <script src="https://libs.stratumn.com/babel-polyfill.min.js"></script>
 <!-- Actual Stratumn SDK -->
-<script src="https://libs.stratumn.com/stratumn-sdk.min.js"></script>
+<script src="https://libs.stratumn.com/stratumn-agent-client.min.js"></script>
 ```
 
-If you want a specific version, include `https://libs.stratumn.com/stratumn-sdk-{version}.min.js` instead (for instance `https://libs.stratumn.com/stratumn-sdk-1.0.2.min.js`).
+If you want a specific version, include `https://libs.stratumn.com/stratumn-agent-client-{version}.min.js` instead (for instance `https://libs.stratumn.com/stratumn-agent-client-1.0.2.min.js`).
 
 ### Bower
 
 ```
-$ bower install stratumn-sdk
+$ bower install stratumn-agent-client
 ```
 
 ### Node.js
 
 ```
-$ npm install stratumn-sdk@alpha
+$ npm install stratumn-agent-client@alpha
 ```
 
 ```javascript
-var StratumnSDK = require('stratumn-sdk');
+var StratumnSDK = require('stratumn-agent-client');
 ```
 
 ## Quickstart

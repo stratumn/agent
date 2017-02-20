@@ -1,7 +1,7 @@
 {
-  "name": "stratumn-sdk",
-  "description": "Stratumn SDK for Javascript",
-  "main": "dist/stratumn-sdk.js",
+  "name": "stratumn-agent-client",
+  "description": "Stratumn Indigo agent client library",
+  "main": "dist/stratumn-agent-client.js",
   "authors": [
     "Stratumn Team"
   ],
@@ -12,7 +12,7 @@
     "blockchain",
     "client"
   ],
-  "homepage": "https://github.com/stratumn/stratumn-sdk-js",
+  "homepage": "https://github.com/stratumn/agent-client-js",
   "ignore": [
     "**/.*",
     "node_modules",
