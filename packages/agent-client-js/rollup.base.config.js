@@ -9,5 +9,5 @@ export default {
   ],
   sourceMap: true,
   entry: 'src/index.js',
-  moduleName: 'StratumnSDK'
+  moduleName: 'AgentClient'
 };

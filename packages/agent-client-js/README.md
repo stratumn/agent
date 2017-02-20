@@ -30,13 +30,13 @@ $ npm install stratumn-agent-client@alpha
 ```
 
 ```javascript
-var StratumnSDK = require('stratumn-agent-client');
+var AgentClient = require('stratumn-agent-client');
 ```
 
 ## Quickstart
 
 ```javascript
-StratumnSDK.getAgent('http://localhost:3000')
+AgentClient.getAgent('http://localhost:3000')
   .then(function(agent) {
     console.log(agent);
     // Create a new map, you can pass arguments to init
@@ -57,12 +57,12 @@ StratumnSDK.getAgent('http://localhost:3000')
 
 ## Reference
 
-### StratumnSDK#getAgent(url)
+### AgentClient#getAgent(url)
 
 Returns a promise that resolves with an agent client.
 
 ```javascript
-StratumnSDK
+AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
     console.log(agent);
@@ -72,12 +72,12 @@ StratumnSDK
   });
 ```
 
-### StratumnSDK#fromSegment(rawSegment)
+### AgentClient#fromSegment(rawSegment)
 
 Returns a promise that resolves with the agent and segment from a given raw object.
 
 ```javascript
-StratumnSDK
+AgentClient
   .fromSegment(someRawSegment)
   .then(function(res) {
     console.log(res.agent);
@@ -93,7 +93,7 @@ StratumnSDK
 Returns a promise that resolves with a the first segment of a map.
 
 ```javascript
-StratumnSDK
+AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
     return agent.createMap('A new map');
@@ -111,7 +111,7 @@ StratumnSDK
 Returns a promise that resolves with an existing segment.
 
 ```javascript
-StratumnSDK
+AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
     return agent.getSegment('aee5427');
@@ -137,7 +137,7 @@ Available options are:
 - `tags`: return segments that contains all the tags (array)
 
 ```javascript
-StratumnSDK
+AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
     return agent.findSegments({ tags: ['tag1', 'tag2'], offset: 20, limit: 10 });
@@ -160,7 +160,7 @@ Available options are:
 - `limit`: limit number of returned map ID
 
 ```javascript
-StratumnSDK
+AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
     return agent.findSegments({ offset: 20, limit: 10 });
@@ -178,7 +178,7 @@ StratumnSDK
 Returns a promise that resolves with the previous segment.
 
 ```javascript
-StratumnSDK
+AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
     return agent.getSegment('aee5427');
@@ -199,7 +199,7 @@ StratumnSDK
 Executes an action and returns a promise that resolves with a new segment.
 
 ```javascript
-StratumnSDK
+AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
     return agent.getSegment('aee5427');
