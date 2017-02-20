@@ -1,7 +1,7 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 	typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	(factory((global.AgentClient = global.AgentClient || {})));
+	(factory((global.StratumnAgentClient = global.StratumnAgentClient || {})));
 }(this, (function (exports) { 'use strict';
 
 /*
