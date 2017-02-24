@@ -26,7 +26,7 @@
     "client"
   ],
   "author": "Stratumn Team",
-  "license": "lgpl-3.0",
+  "license": "mpl-2.0",
   "bugs": {
     "url": "https://github.com/stratumn/agent-js/issues"
   },
