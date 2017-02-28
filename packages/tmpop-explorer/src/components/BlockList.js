@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import { Link } from 'react-router';
 
 export default class BlockList extends React.Component {
+	constructor(props, context) {
+		super(props, context);
+		this.path = context.path;		
+	}
+
 	render() {
 		const rowsBlocks = this.props.blocks.map((block) => {
 			return (
 				<TableRow key={block.header.last_commit_hash}>
 					<TableRowColumn style={{width: '100px'}}>
-						<Link to={`/blocks/${block.header.height}`}>{block.header.height}</Link>
+						<Link to={`${this.path}/blocks/${block.header.height}`}>{block.header.height}</Link>
 					</TableRowColumn>
 					<TableRowColumn style={{width: '240px'}}>{block.header.time}</TableRowColumn>
 					<TableRowColumn style={{width: '400px', fontFamily: 'Roboto Mono, Monospace'}}>{block.header.last_commit_hash}</TableRowColumn>
@@ -39,5 +44,9 @@ export default class BlockList extends React.Component {
 }
 
 BlockList.propTypes = {
-	blocks: React.PropTypes.array
+	blocks: PropTypes.array
+};
+
+BlockList.contextTypes = {
+	path: PropTypes.string,
 };

@@ -1,32 +1,43 @@
 import React, { Component } from 'react';
+
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 import Layout from './containers/Layout';
 import BlockContainer from './containers/BlockContainer';
 import Index from './containers/Index';
 import IndigoReader from './IndigoReader';
 import IndigoReaderProvider from './containers/IndigoReaderProvider';
+import IndigoPathProvider from './containers/IndigoPathProvider';
 
 export default class IndigoExplorer extends Component {
-	constructor(props) {
-		super(props);
-		this.indigoReader = new IndigoReader(this.props.remote);
-	}	
+  constructor(props) {
+    super(props);
+    this.indigoReader = new IndigoReader(this.props.route.remote);
+		this.rootPath = this.props.route.mount;
+		this.linkPath = this.rootPath;
 
-	render(){
-		return(
-			<IndigoReaderProvider reader={this.indigoReader}>
-				<Router history={browserHistory}>
-					<Route path="/" component={Layout}>
-						<IndexRoute component={Index} />
-						<Route path="blocks/:height" component={BlockContainer} />						
-					</Route>
-				</Router>
-			</IndigoReaderProvider>
-		);
-	}
+		if (this.linkPath.slice(-1) == '/') {
+			this.linkPath = this.linkPath.slice(0, -1);
+		}
+  }
+
+  render() {
+    const routes = (
+      <IndigoReaderProvider reader={this.indigoReader}>
+        <IndigoPathProvider path={this.linkPath}>
+          <Router history={browserHistory}>
+            <Route path={this.rootPath} component={Layout}>
+              <IndexRoute component={Index} />
+              <Route path='blocks/:height' component={BlockContainer} />						
+            </Route>
+				  </Router>
+        </IndigoPathProvider>
+      </IndigoReaderProvider>
+    );
+
+    return routes;
+  }
 }
 
 IndigoExplorer.propTypes = {
-	remote: React.PropTypes.string.isRequired,
+  route: React.PropTypes.object.isRequired,
 };
-
