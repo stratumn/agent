@@ -44,5 +44,5 @@ BlockContainer.contextTypes = {
 };
 
 BlockContainer.propTypes = {
-	params: PropTypes.object,
+	params: PropTypes.object.isRequired,
 };
