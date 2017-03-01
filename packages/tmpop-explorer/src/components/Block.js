@@ -116,12 +116,16 @@ class Block extends Component {
 									</TableRow>
 								</TableHeader>
 								<TableBody displayRowCheckbox={false}>
-									{block.last_commit.precommits.map(precommit =>
-										<TableRow key={precommit.validator_address}>
-											<TableRowColumn>{precommit.validator_address}</TableRowColumn>
-											<TableRowColumn>{precommit.signature}</TableRowColumn>
-										</TableRow>
-									)}						
+									{block.last_commit.precommits.map(precommit => {
+										if (precommit) {
+											return (
+                        <TableRow key={precommit.validator_address}>
+                          <TableRowColumn>{precommit.validator_address}</TableRowColumn>
+                          <TableRowColumn>{precommit.signature}</TableRowColumn>
+                        </TableRow>
+                      );
+										}
+                  })}						
 								</TableBody>
 							</Table>
 						</div>
