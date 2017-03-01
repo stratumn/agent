@@ -1,6 +1,6 @@
 {
   "name": "indigo-explorer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "IndigoExplorer",
   "main": "lib/IndigoExplorer.js",
   "author": "Stratumn",
