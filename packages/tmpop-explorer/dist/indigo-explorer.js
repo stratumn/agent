@@ -33852,20 +33852,22 @@ var Block = (function (_Component) {
 									_materialUiTable.TableBody,
 									{ displayRowCheckbox: false },
 									block.last_commit.precommits.map(function (precommit) {
-										return _react2['default'].createElement(
-											_materialUiTable.TableRow,
-											{ key: precommit.validator_address },
-											_react2['default'].createElement(
-												_materialUiTable.TableRowColumn,
-												null,
-												precommit.validator_address
-											),
-											_react2['default'].createElement(
-												_materialUiTable.TableRowColumn,
-												null,
-												precommit.signature
-											)
-										);
+										if (precommit) {
+											return _react2['default'].createElement(
+												_materialUiTable.TableRow,
+												{ key: precommit.validator_address },
+												_react2['default'].createElement(
+													_materialUiTable.TableRowColumn,
+													null,
+													precommit.validator_address
+												),
+												_react2['default'].createElement(
+													_materialUiTable.TableRowColumn,
+													null,
+													precommit.signature
+												)
+											);
+										}
 									})
 								)
 							)
