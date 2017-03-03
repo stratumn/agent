@@ -49,6 +49,7 @@ To build, watch and serve the examples (which will also watch the component sour
 
 ## License
 
-SEE LICENSE FILE
-
 Copyright (c) 2017 Stratumn.
+
+Unless otherwise noted, the source files are distributed under the Mozilla Public
+License 2.0 found in the LICENSE file.
