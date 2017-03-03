@@ -34,12 +34,26 @@ Include the react component in your application:
 ```
 var IndigoExplorer = require('indigo-explorer');
 
-<IndigoExplorer remote="127.0.0.1:46657"/>
+// OR with ES6 import
+import IndigoExplorer from 'react-mapexplorer';
+
+<IndigoExplorer remote="localhost:46657"/>
 ```
+
+If your application already uses a router, the indigo explorer can also be "mounted":
+
+```
+<Router history={browserHistory}>
+	<Route path='/blockexplorer*' mount='/blockexplorer' component={IndigoExplorer} remote="localhost:46657"/>
+</Router>
+```
+
+Note: the path should always end with * so that subroutes work. Make sure it doesn't conflict with your application.
 
 ### Properties
 
-* `remote`: the address used to contact the Indigo Node.
+* `remote`: the address used to contact the Indigo Node (mandatory).
+* `mount`: the mountpoint for the indigo explorer in your routing scheme (mandatory if included as a route).
 
 ## Development (`src`, `lib` and the build process)
 

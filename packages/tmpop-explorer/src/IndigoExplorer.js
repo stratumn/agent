@@ -6,7 +6,7 @@
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 import Layout from './containers/Layout';
 import BlockContainer from './containers/BlockContainer';
@@ -18,11 +18,20 @@ import IndigoPathProvider from './containers/IndigoPathProvider';
 export default class IndigoExplorer extends Component {
   constructor(props) {
     super(props);
-    this.indigoReader = new IndigoReader(this.props.route.remote);
-		this.rootPath = this.props.route.mount;
+    const isMounted = !!this.props.route;
+
+    const remote = isMounted ? this.props.route.remote : this.props.remote;
+
+    if (!remote) {
+      throw new Error('Missing indigo remote definition');
+    }
+
+    this.indigoReader = new IndigoReader(remote);
+
+		this.rootPath = isMounted ? this.props.route.mount : '/';
 		this.linkPath = this.rootPath;
 
-		if (this.linkPath.slice(-1) == '/') {
+		if (this.linkPath.slice(-1) === '/') {
 			this.linkPath = this.linkPath.slice(0, -1);
 		}
   }
@@ -46,5 +55,6 @@ export default class IndigoExplorer extends Component {
 }
 
 IndigoExplorer.propTypes = {
-  route: React.PropTypes.object.isRequired,
+  remote: PropTypes.string,
+  route: PropTypes.object,
 };
