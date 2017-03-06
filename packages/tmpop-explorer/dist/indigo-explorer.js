@@ -32291,6 +32291,14 @@ function extend() {
 
 },{}],376:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -32344,11 +32352,20 @@ var IndigoExplorer = (function (_Component) {
     _classCallCheck(this, IndigoExplorer);
 
     _get(Object.getPrototypeOf(IndigoExplorer.prototype), 'constructor', this).call(this, props);
-    this.indigoReader = new _IndigoReader2['default'](this.props.route.remote);
-    this.rootPath = this.props.route.mount;
+    var isMounted = !!this.props.route;
+
+    var remote = isMounted ? this.props.route.remote : this.props.remote;
+
+    if (!remote) {
+      throw new Error('Missing indigo remote definition');
+    }
+
+    this.indigoReader = new _IndigoReader2['default'](remote);
+
+    this.rootPath = isMounted ? this.props.route.mount : '/';
     this.linkPath = this.rootPath;
 
-    if (this.linkPath.slice(-1) == '/') {
+    if (this.linkPath.slice(-1) === '/') {
       this.linkPath = this.linkPath.slice(0, -1);
     }
   }
@@ -32385,12 +32402,21 @@ var IndigoExplorer = (function (_Component) {
 exports['default'] = IndigoExplorer;
 
 IndigoExplorer.propTypes = {
-  route: _react2['default'].PropTypes.object.isRequired
+  remote: _react.PropTypes.string,
+  route: _react.PropTypes.object
 };
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./IndigoReader":377,"./containers/BlockContainer":384,"./containers/Index":386,"./containers/IndigoPathProvider":387,"./containers/IndigoReaderProvider":388,"./containers/Layout":389,"react-router":326}],377:[function(require,module,exports){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -32558,6 +32584,14 @@ module.exports = exports['default'];
 
 },{"./hexToString":391,"bluebird":20,"httpplease":140,"httpplease-promises":138,"httpplease/plugins/jsonresponse":148}],378:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -32898,6 +32932,14 @@ module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./TransactionList":383,"material-ui/CircularProgress":203,"material-ui/Table":215,"radium":262}],379:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -33034,6 +33076,14 @@ module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"material-ui/Table":215,"react-router":326}],380:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -33097,6 +33147,14 @@ module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./BlockList":379,"./TransactionList":383}],381:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -33170,6 +33228,14 @@ module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"material-ui/TextField":221,"react-router":326}],382:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -33343,6 +33409,14 @@ module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"material-ui/CircularProgress":203,"material-ui/Table":215}],383:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -33481,6 +33555,14 @@ module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"material-ui/Table":215,"react-router":326}],384:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -33571,6 +33653,14 @@ module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../IndigoReader":377,"../components/Block":378}],385:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -33673,6 +33763,14 @@ module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../IndigoReader":377,"../components/Feed":380,"fifo-array":118}],386:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -33731,6 +33829,14 @@ module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./FeedContainer":385,"./StatusContainer":390}],387:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -33787,6 +33893,14 @@ module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],388:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -33849,6 +33963,14 @@ module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../IndigoReader":377}],389:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -33936,6 +34058,14 @@ module.exports = exports['default'];
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../components/SearchInput":381,"material-ui/styles/MuiThemeProvider":230,"react-router":326}],390:[function(require,module,exports){
 (function (global){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -34028,6 +34158,14 @@ module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../IndigoReader":377,"../components/Status":382}],391:[function(require,module,exports){
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {

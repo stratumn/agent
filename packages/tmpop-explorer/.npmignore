@@ -1,3 +1,5 @@
+.editorconfig
+
 # Logs
 logs
 *.log
@@ -13,6 +15,12 @@ coverage
 coverage.html
 .cover*
 
-# Example build directory
-example/dist
+# Example
+example
 .publish
+
+# Docker app
+app
+
+# Bower build
+dist
