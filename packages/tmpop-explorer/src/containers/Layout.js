@@ -15,7 +15,6 @@ export default class App extends Component {
 	constructor(props, context) {
 		super(props, context);
 		this.path = context.path;
-		console.log(this.path);
 	}
 
 	render() {

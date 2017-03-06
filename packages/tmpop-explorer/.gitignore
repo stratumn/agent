@@ -22,6 +22,11 @@ node_modules
 example/dist
 .publish
 
+# App build directories
+app/node_modules
+app/dist
+
+
 # Editor and other tmp files
 *.swp
 *.un~
