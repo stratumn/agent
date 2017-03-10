@@ -32353,14 +32353,16 @@ var IndigoExplorer = (function (_Component) {
 
     _get(Object.getPrototypeOf(IndigoExplorer.prototype), 'constructor', this).call(this, props);
     var isMounted = !!this.props.route;
+    var properties = isMounted ? this.props.route : this.props;
 
-    var remote = isMounted ? this.props.route.remote : this.props.remote;
+    var remote = properties.remote;
+    var secure = properties.secure;
 
     if (!remote) {
       throw new Error('Missing indigo remote definition');
     }
 
-    this.indigoReader = new _IndigoReader2['default'](remote);
+    this.indigoReader = new _IndigoReader2['default'](remote, secure);
 
     this.rootPath = isMounted ? this.props.route.mount : '/';
     this.linkPath = this.rootPath;
@@ -32403,7 +32405,8 @@ exports['default'] = IndigoExplorer;
 
 IndigoExplorer.propTypes = {
   remote: _react.PropTypes.string,
-  route: _react.PropTypes.object
+  route: _react.PropTypes.object,
+  secure: _react.PropTypes.bool
 };
 module.exports = exports['default'];
 
@@ -32461,10 +32464,16 @@ var IndigoReader = (function () {
 	function IndigoReader(remote) {
 		var _this = this;
 
+		var secure = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
 		_classCallCheck(this, IndigoReader);
 
-		this.remote = remote;
-		this.wsUrl = 'ws://' + this.remote + '/websocket';
+		var transferProtocol = secure ? 'https' : 'http';
+		this.indigoUrl = transferProtocol + '://' + remote + '/';
+
+		var wsPrefix = secure ? 'wss' : 'ws';
+		this.wsUrl = wsPrefix + '://' + remote + '/websocket';
+
 		this.subscriptionHandlers = [];
 		var ws = new WebSocket(this.wsUrl);
 
@@ -32567,7 +32576,7 @@ var IndigoReader = (function () {
 		value: function _sendRequest(endpoint) {
 			var args = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-			return http.get('http://' + this.remote + '/' + endpoint + '?' + encodeData(args)).then(function (res) {
+			return http.get('' + this.indigoUrl + endpoint + '?' + encodeData(args)).then(function (res) {
 				if (res.body.error != '') {
 					return _bluebird2['default'].reject(new Error(res.body.error));
 				}
@@ -34009,7 +34018,6 @@ var App = (function (_Component) {
 
 		_get(Object.getPrototypeOf(App.prototype), 'constructor', this).call(this, props, context);
 		this.path = context.path;
-		console.log(this.path);
 	}
 
 	_createClass(App, [{
