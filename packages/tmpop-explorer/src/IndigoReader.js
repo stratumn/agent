@@ -21,9 +21,13 @@ function encodeData(data) {
 }   
 
 export default class IndigoReader {
-	constructor(remote) {
-		this.remote = remote;
-		this.wsUrl = `ws://${this.remote}/websocket`;
+	constructor(remote, secure = false) {
+		const transferProtocol = secure ? 'https' : 'http';
+    this.indigoUrl = `${transferProtocol}://${remote}/`;
+
+    const wsPrefix = secure ? 'wss' : 'ws';
+		this.wsUrl = `${wsPrefix}://${remote}/websocket`;
+
 		this.subscriptionHandlers = [];
 		const ws = new WebSocket(this.wsUrl);
 
@@ -104,8 +108,8 @@ export default class IndigoReader {
 		return block;
 	}
 
-	_sendRequest(endpoint, args = {}) {
-		return http.get(`http://${this.remote}/${endpoint}?${encodeData(args)}`)
+	_sendRequest(endpoint, args = {}) {    
+		return http.get(`${this.indigoUrl}${endpoint}?${encodeData(args)}`)
 			.then(res => {
 				if (res.body.error != ''){
 					return Promise.reject(new Error(res.body.error));
