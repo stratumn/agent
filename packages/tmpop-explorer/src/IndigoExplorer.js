@@ -19,14 +19,16 @@ export default class IndigoExplorer extends Component {
   constructor(props) {
     super(props);
     const isMounted = !!this.props.route;
+    const properties = isMounted ? this.props.route : this.props;
 
-    const remote = isMounted ? this.props.route.remote : this.props.remote;
+    const remote = properties.remote;
+    const secure = properties.secure;
 
     if (!remote) {
       throw new Error('Missing indigo remote definition');
     }
 
-    this.indigoReader = new IndigoReader(remote);
+    this.indigoReader = new IndigoReader(remote, secure);
 
 		this.rootPath = isMounted ? this.props.route.mount : '/';
 		this.linkPath = this.rootPath;
@@ -57,4 +59,5 @@ export default class IndigoExplorer extends Component {
 IndigoExplorer.propTypes = {
   remote: PropTypes.string,
   route: PropTypes.object,
+  secure: PropTypes.bool,
 };
