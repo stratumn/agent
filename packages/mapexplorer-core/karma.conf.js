@@ -12,11 +12,12 @@ module.exports = function(config) {
     basePath: '',
 
     // frameworks to use
-    frameworks: ['mocha', 'should', 'sinon'],
+    frameworks: ['mocha', 'should'],
 
 
     // list of files / patterns to load in the browser
     files: [
+      'test/integration/init.js',
       'bower_components/babel-polyfill/browser-polyfill.js',
       'bower_components/d3/d3.js',
       'dist/mapexplorer-core.js',
@@ -24,6 +25,7 @@ module.exports = function(config) {
     ],
 
     preprocessors: {
+      'test/integration/init.js': ['rollup'],
       'test/integration/*.test.js': ['rollup']
     },
 
@@ -103,7 +105,7 @@ module.exports = function(config) {
     singleRun: false
   });
 
-  if (process.env.TRAVIS){
+  if (process.env.TRAVIS) {
     config.set({
       browsers: ['TravisCI_Chrome', 'PhantomJS'],
       customLaunchers: {

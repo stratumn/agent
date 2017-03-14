@@ -1,8 +1,4 @@
 import { SegmentValidator } from 'mapexplorer-core';
-import _2a4
-  from '../fixtures/2a443211e871f58a6ee5a93e62ce36cac2ddfc0f05a6bec1e7b11aa8d5e4cf38.json';
-import _d25
-  from '../fixtures/d25a285b50204e1b0ca7472035d73cae93faea06ddac120800dd6aacca006688.json';
 
 import validSegment from '../fixtures/validSegment.json';
 import invalidSegment from '../fixtures/invalidSegment.json';
@@ -11,11 +7,7 @@ import invalidMerklePathParent from '../fixtures/invalidMerklePathParent.json';
 import invalidMerkleRoot from '../fixtures/invalidMerkleRoot.json';
 import invalidFossil from '../fixtures/invalidFossil.json';
 
-
 describe('SegmentValidator', () => {
-
-  let server;
-
   function validate(segment) {
     const errors = {
       linkHash: [],
@@ -26,19 +18,6 @@ describe('SegmentValidator', () => {
     new SegmentValidator(segment).validate(errors);
     return errors;
   }
-
-  beforeEach(() => {
-    server = sinon.fakeServer.create();
-    server.respondWith('GET',
-      'https://api.blockcypher.com/v1/btc/main/txs/2a443211e871f58a6ee5a93e62ce36cac2ddfc0f05a6bec1e7b11aa8d5e4cf38',
-      [200, { 'Content-type': 'application/json' }, _2a4.toString()]);
-
-    server.respondWith('GET',
-      'https://api.blockcypher.com/v1/btc/main/txs/d25a285b50204e1b0ca7472035d73cae93faea06ddac120800dd6aacca006688',
-      [200, { 'Content-type': 'application/json' }, _d25.toString()]);
-  });
-
-  afterEach(() => server.restore());
 
   describe('With a valid segment', () => {
     it('validates', (done) => {
@@ -101,10 +80,12 @@ describe('SegmentValidator', () => {
 
   describe('With a invalid fossil', () => {
     it('validates the fossil', (done) => {
-      Promise.all(validate(invalidFossil).fossil).then(res => {
+      Promise.all(validate(invalidFossil).fossil)
+      .then(res => {
         res[0].should.eql('Merkle root not found in transaction data');
         done();
-      });
+      })
+      .catch(done);
     });
   });
 });

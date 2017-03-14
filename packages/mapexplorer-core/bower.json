@@ -27,6 +27,6 @@
   ],
   "dependencies": {
     "d3": "^4.1.1",
-    "stratumn-sdk": "alpha"
+    "stratumn-agent-client": "alpha"
   }
 }

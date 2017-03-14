@@ -95,7 +95,8 @@ export default class SegmentValidator {
 
     const p = new Promise((resolve, reject) =>
       httpplease.get(`https://api.blockcypher.com/v1/btc/main/txs/${txId}`, (err, res) =>
-        (err ? reject(err) : resolve(res)))
+        (err ? reject(err) : resolve(res))
+      )
     );
     blockCypherCache[txId] = p;
     return p;

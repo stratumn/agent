@@ -4,7 +4,7 @@ import resolveLinks from './resolveLinks';
 import wrap from './wrap';
 import parseIfJson from './parseIfJson';
 import tagsSet from './tagsSet';
-import { getAgent } from 'stratumn-sdk';
+import { getAgent } from 'stratumn-agent-client';
 
 export const defaultOptions = {
   withArgs: false,
@@ -61,7 +61,7 @@ export default class ChainTreeBuilder {
 
   _load(map) {
     return getAgent(map.applicationUrl)
-      .then(app => app.findSegments({ mapId: map.id }))
+      .then(app => app.findSegments({ mapId: map.id, limit: -1 }))
       .catch(res => console.log(res));
   }
 }

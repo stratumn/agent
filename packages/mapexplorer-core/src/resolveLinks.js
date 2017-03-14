@@ -1,5 +1,5 @@
 import merge from 'deepmerge';
-import { loadLink } from 'stratumn-sdk';
+import { loadLink } from 'stratumn-agent-client';
 
 export default function resolveLinks(segments) {
   return Promise.all(segments.map(segment => {
