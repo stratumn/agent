@@ -1,4 +1,4 @@
-# Stratumn SDK for Javascript [ALPHA - incompatible with production]
+# Agent client for Javascript [ALPHA - incompatible with production]
 
 [![Build Status](https://travis-ci.org/stratumn/agent-client-js.svg?branch=alpha)](https://travis-ci.org/stratumn/agent-client-js)
 [![codecov](https://codecov.io/gh/stratumn/agent-client-js/branch/alpha/graph/badge.svg)](https://codecov.io/gh/stratumn/agent-client-js/branch/alpha)
