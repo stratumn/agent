@@ -47,6 +47,41 @@ function makeQueryString(obj) {
   return '';
 }
 
+/*
+    Copyright (C) 2017  Stratumn SAS
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
+/**
+ * Calls a function that returns a Promise until a condition is reached
+ * @param {function} condition - while condition is true body will keep being called
+ * @param {function} body - a function that is repeatedly called while condition is true
+ * @returns {Promise} a Promise that resolves when the condition is no longer true
+ */
+function promiseWhile(condition, body) {
+  return new Promise(function (resolve, reject) {
+    function loop() {
+      body().then(function () {
+        // When the result of calling `condition` is no longer true, we are
+        // done.
+        if (!condition()) {
+          resolve();
+        } else {
+          loop();
+        }
+      }).catch(reject);
+    }
+
+    // Start running the loop in the next tick so that this function is
+    // completely async. It would be unexpected if `body` was called
+    // synchronously the first time.
+    setImmediate(loop);
+  });
+}
+
 function interopDefault(ex) {
 	return ex && typeof ex === 'object' && 'default' in ex ? ex['default'] : ex;
 }
@@ -671,6 +706,129 @@ function post(url, args) {
   return send('POST', url, args);
 }
 
+var asyncGenerator = function () {
+  function AwaitValue(value) {
+    this.value = value;
+  }
+
+  function AsyncGenerator(gen) {
+    var front, back;
+
+    function send(key, arg) {
+      return new Promise(function (resolve, reject) {
+        var request = {
+          key: key,
+          arg: arg,
+          resolve: resolve,
+          reject: reject,
+          next: null
+        };
+
+        if (back) {
+          back = back.next = request;
+        } else {
+          front = back = request;
+          resume(key, arg);
+        }
+      });
+    }
+
+    function resume(key, arg) {
+      try {
+        var result = gen[key](arg);
+        var value = result.value;
+
+        if (value instanceof AwaitValue) {
+          Promise.resolve(value.value).then(function (arg) {
+            resume("next", arg);
+          }, function (arg) {
+            resume("throw", arg);
+          });
+        } else {
+          settle(result.done ? "return" : "normal", result.value);
+        }
+      } catch (err) {
+        settle("throw", err);
+      }
+    }
+
+    function settle(type, value) {
+      switch (type) {
+        case "return":
+          front.resolve({
+            value: value,
+            done: true
+          });
+          break;
+
+        case "throw":
+          front.reject(value);
+          break;
+
+        default:
+          front.resolve({
+            value: value,
+            done: false
+          });
+          break;
+      }
+
+      front = front.next;
+
+      if (front) {
+        resume(front.key, front.arg);
+      } else {
+        back = null;
+      }
+    }
+
+    this._invoke = send;
+
+    if (typeof gen.return !== "function") {
+      this.return = undefined;
+    }
+  }
+
+  if (typeof Symbol === "function" && Symbol.asyncIterator) {
+    AsyncGenerator.prototype[Symbol.asyncIterator] = function () {
+      return this;
+    };
+  }
+
+  AsyncGenerator.prototype.next = function (arg) {
+    return this._invoke("next", arg);
+  };
+
+  AsyncGenerator.prototype.throw = function (arg) {
+    return this._invoke("throw", arg);
+  };
+
+  AsyncGenerator.prototype.return = function (arg) {
+    return this._invoke("return", arg);
+  };
+
+  return {
+    wrap: function (fn) {
+      return function () {
+        return new AsyncGenerator(fn.apply(this, arguments));
+      };
+    },
+    await: function (value) {
+      return new AwaitValue(value);
+    }
+  };
+}();
+
+var toConsumableArray = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
+
 /*
     Copyright (C) 2017  Stratumn SAS
 
@@ -679,14 +837,35 @@ function post(url, args) {
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-function findSegments(agent) {
-    var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+var DEFAULT_BATCH_SIZE = 20;
 
-    return get(agent.url + '/segments' + makeQueryString(opts)).then(function (res) {
-        return res.body.map(function (obj) {
-            return segmentify(agent, obj);
-        });
+function findSegments(agent) {
+  var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  var options = Object.assign({}, opts);
+  if (opts.limit === -1) {
+    options.limit = options.batchSize || DEFAULT_BATCH_SIZE;
+    delete options.batchSize;
+    options.offset = 0;
+    var segments = [];
+
+    return promiseWhile(function () {
+      return segments.length === options.limit;
+    }, function () {
+      return findSegments(agent, options).then(function (newSegments) {
+        segments.push.apply(segments, toConsumableArray(newSegments));
+        options.offset += options.limit;
+      });
+    }).then(function () {
+      return segments;
     });
+  }
+
+  return get(agent.url + '/segments' + makeQueryString(opts)).then(function (res) {
+    return res.body.map(function (obj) {
+      return segmentify(agent, obj);
+    });
+  });
 }
 
 /*
