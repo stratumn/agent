@@ -34,7 +34,7 @@ export default Ember.Component.extend({
       chainscript: this.get('chainscript')
     }, {
       onclick: this.onClick.bind(this),
-      onTag: (tag) => {}
+      onTag: () => {}
     });
   },
 
@@ -47,9 +47,11 @@ export default Ember.Component.extend({
     if (chainscript) {
       let builder = this.get('builder');
       builder.chainTree.display(chainscript, {
+        // jshint ignore:start
         ...mapexplorerCore.defaultOptions,
+        // jshint ignore:end
         onclick: this.onClick.bind(this),
-        onTag: (tag) => {}
+        onTag: () => {}
       });
     }
   },
