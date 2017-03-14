@@ -6,6 +6,8 @@
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
+import 'setImmediate';
+
 /**
  * Calls a function that returns a Promise until a condition is reached
  * @param {function} condition - while condition is true body will keep being called

@@ -62,6 +62,7 @@
   },
   "dependencies": {
     "httpplease": "^0.16.4",
+    "setimmediate": "^1.0.5",
     "xmlhttprequest": "~1.7.0"
   }
 }
