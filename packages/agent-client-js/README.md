@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/stratumn/agent-client-js.svg?branch=alpha)](https://travis-ci.org/stratumn/agent-client-js)
 [![codecov](https://codecov.io/gh/stratumn/agent-client-js/branch/alpha/graph/badge.svg)](https://codecov.io/gh/stratumn/agent-client-js/branch/alpha)
-[![Build Status](https://david-dm.org/stratumn/agent-client-js.svg?branch=alpha)](https://david-dm.org/stratumn/agent-client-js) 
+[![Build Status](https://david-dm.org/stratumn/agent-client-js.svg?branch=alpha)](https://david-dm.org/stratumn/agent-client-js)
 
 ## Installation
 
@@ -131,7 +131,8 @@ Returns a promise that resolves with existing segments.
 Available options are:
 
 - `offset`: offset of first returned segments
-- `limit`: limit number of returned segments
+- `limit`: limit number of returned segments, if -1 load all segments
+- `batchSize`: size of each batch when loading all segments (default 20)
 - `mapId`: return segments with specified map ID
 - `prevLinkHash`: return segments with specified previous link hash
 - `tags`: return segments that contains all the tags (array)
