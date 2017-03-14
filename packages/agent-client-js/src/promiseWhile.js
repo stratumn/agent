@@ -6,7 +6,7 @@
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-import 'setImmediate';
+import 'setimmediate';
 
 /**
  * Calls a function that returns a Promise until a condition is reached
