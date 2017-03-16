@@ -6,14 +6,15 @@
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 import { Link } from 'react-router';
 
 export default class SearchInput extends Component {
-	constructor(props) {
-		super(props);
+	constructor(props, context) {
+		super(props, context);
 		
+    this.path = context.path;
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.state = { height: null };
 	}
@@ -31,8 +32,12 @@ export default class SearchInput extends Component {
 		return (
 			<div>
 				<TextField hintText="Block Height" onChange={this.handleInputChange} />
-				<Link to={`/blocks/${this.state.height}`} style={style}>Search</Link>
+				<Link to={`${this.path}/blocks/${this.state.height}`} style={style}>Search</Link>
 			</div>
 		);
 	}
 }
+
+SearchInput.contextTypes = {
+	path: PropTypes.string,
+};

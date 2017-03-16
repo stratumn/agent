@@ -13,7 +13,7 @@ import { Link } from 'react-router';
 export default class BlockList extends React.Component {
 	constructor(props, context) {
 		super(props, context);
-		this.path = context.path;		
+		this.path = context.path;
 	}
 
 	render() {
