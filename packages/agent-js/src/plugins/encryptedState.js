@@ -18,8 +18,11 @@ export default function ({ encryptState, decryptState }) {
 
     didCreateLink(link) {
       link.meta.stateHash = hashJson(link.state);
-      link.state = encryptState(link);
-      link.meta.encryptedState = true;
+      return Promise.resolve(encryptState(link))
+        .then(state => {
+          link.state = state;
+          link.meta.encryptedState = true;
+        });
     },
 
     willCreate(initialLink) {
@@ -36,14 +39,15 @@ export default function ({ encryptState, decryptState }) {
 
     decrypt(link) {
       const expectedFingerpint = link.meta.stateHash;
-      const decryptedState = decryptState(link, expectedFingerpint);
-
-      if (decryptedState && expectedFingerpint === hashJson(decryptedState)) {
-        link.state = decryptedState;
-        delete link.meta.encryptedState;
-        return true;
-      }
-      return false;
+      return Promise.resolve(decryptState(link, expectedFingerpint))
+        .then(decryptedState => {
+          if (decryptedState && expectedFingerpint === hashJson(decryptedState)) {
+            link.state = decryptedState;
+            delete link.meta.encryptedState;
+            return true;
+          }
+          return false;
+        });
     }
   };
 }

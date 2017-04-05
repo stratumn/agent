@@ -11,6 +11,8 @@ import request from 'superagent';
 import WebSocket from 'ws';
 import makeQueryString from './makeQueryString';
 import handleResponse from './handleResponse';
+import filterAsync from './filterAsync';
+import intersectArrays from './intersectArrays';
 
 /**
  * Creates a store HTTP client.
@@ -96,13 +98,18 @@ export default function storeHttpClient(url) {
      * @returns {Promise} a promise that resolve with the segment
      */
     getSegment(linkHash, filters = []) {
+      let segment;
       return new Promise((resolve, reject) =>
         request
           .get(`${url}/segments/${linkHash}`)
           .end((err, res) => handleResponse(err, res)
             .then(s => {
-              if (filters.every(filter => filter(s))) {
-                resolve(s);
+              segment = s;
+              return Promise.all(filters.map(filter => filter(s)));
+            })
+            .then(results => {
+              if (results.every(r => r)) {
+                resolve(segment);
               } else {
                 const error = {
                   message: 'not found',
@@ -112,7 +119,7 @@ export default function storeHttpClient(url) {
               }
             })
             .catch(reject))
-      );
+        );
     },
 
     /**
@@ -140,14 +147,19 @@ export default function storeHttpClient(url) {
      */
     findSegments(opts, filters = []) {
       return new Promise((resolve, reject) => {
+        let segments;
         request
           .get(`${url}/segments${makeQueryString(opts || {})}`)
           .end((err, res) => handleResponse(err, res)
-            .then(segments => {
-              let s = segments;
-              filters.forEach(f => (s = s.filter(f)));
-              resolve(s);
+            .then(s => {
+              segments = s;
+              return Promise.all(filters.map(f => filterAsync(segments, f)));
             })
+            .then(filteredArrays => {
+              filteredArrays.push(segments);
+              return intersectArrays(filteredArrays);
+            })
+            .then(filtered => resolve(filtered))
             .catch(reject)
           );
       });

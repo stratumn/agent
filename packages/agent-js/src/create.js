@@ -75,9 +75,10 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
   storeClient.connect(opts.reconnectTimeout || 5000);
 
   function applyPlugins(method, ...args) {
-    plugins.forEach(plugin =>
-      (plugin[method] && plugin[method](...args))
-    );
+    // execute all plugins sequentially
+    return plugins.reduce(
+      (cur, plugin) => cur.then(() => Promise.resolve(plugin[method] && plugin[method](...args))),
+      Promise.resolve());
   }
 
   return {
@@ -106,6 +107,8 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
      */
     createMap(...args) {
       const initialLink = { meta: { mapId: uuid.v4() } };
+      let link;
+      let segment;
 
       return mockAgent(actions, initialLink)
         .init(...args)
@@ -113,9 +116,11 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
           err.status = 400;
           throw err;
         })
-        .then(link => {
-          applyPlugins('didCreateLink', link, 'init', args);
-
+        .then(l => {
+          link = l;
+          return applyPlugins('didCreateLink', link, 'init', args);
+        })
+        .then(() => {
           const linkHash = hashJson(link);
 
           const meta = {
@@ -123,12 +128,13 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
             evidence: { state: fossilizerClient ? QUEUED : DISABLED }
           };
 
-          const segment = { link, meta };
+          segment = { link, meta };
 
-          applyPlugins('didCreateSegment', segment, 'init', args);
-
-          return saveSegment(segment);
-        });
+          return applyPlugins('didCreateSegment', segment, 'init', args);
+        })
+        .then(
+          () => saveSegment(segment)
+        );
     },
 
     /**
@@ -145,13 +151,18 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
         return Promise.reject(err);
       }
 
+      let initialLink;
+      let createdLink;
+      let segment;
+
       return storeClient
         .getSegment(prevLinkHash)
-        .then(segment => {
-          const initialLink = segment.link;
+        .then(s => {
+          initialLink = s.link;
 
-          applyPlugins('willCreate', initialLink, action, args);
-
+          return applyPlugins('willCreate', initialLink, action, args);
+        })
+        .then(() => {
           delete initialLink.meta.prevLinkHash;
           initialLink.meta.prevLinkHash = prevLinkHash;
 
@@ -162,21 +173,22 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
             });
         })
         .then(link => {
-          applyPlugins('didCreateLink', link, action, args);
-
-          const linkHash = hashJson(link);
+          createdLink = link;
+          return applyPlugins('didCreateLink', link, action, args);
+        })
+        .then(() => {
+          const linkHash = hashJson(createdLink);
 
           const meta = {
             linkHash,
             evidence: { state: fossilizerClient ? QUEUED : DISABLED }
           };
 
-          const segment = { link, meta };
+          segment = { link: createdLink, meta };
 
-          applyPlugins('didCreateSegment', segment, action, args);
-
-          return saveSegment(segment);
-        });
+          return applyPlugins('didCreateSegment', segment, action, args);
+        })
+        .then(() => saveSegment(segment));
     },
 
     /**

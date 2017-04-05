@@ -47,7 +47,7 @@ pluginTest(encryptedState(dummyEncryption), {
 
 describe('encryptedState', () => {
   describe('#filterSegment()', () => {
-    it('accepts only segment it can decrypt', () => {
+    it('accepts only segment it can decrypt', done => {
       state = 'dummy';
       const eState = '';
       const s1 = {
@@ -58,8 +58,16 @@ describe('encryptedState', () => {
       };
       const s2 = { link: { state: {}, meta: {} } };
 
-      encryptedState(dummyEncryption).filterSegment(s1).should.be.ok();
-      encryptedState(dummyEncryption).filterSegment(s2).should.not.be.ok();
+      encryptedState(dummyEncryption).filterSegment(s1)
+      .then(result => result.should.be.ok())
+      .then(() =>
+        encryptedState(dummyEncryption).filterSegment(s2)
+      )
+      .then(result => {
+        result.should.not.be.ok();
+        done();
+      })
+      .catch(done);
     });
   });
 });

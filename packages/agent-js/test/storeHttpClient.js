@@ -18,7 +18,9 @@ describe('StoreHttpClient', () => {
     it('resolves with the store info', () =>
       storeHttpClient('http://localhost')
         .getInfo()
-        .then(body => body.should.deepEqual({ name: 'mock' }))
+        .then(body =>
+          body.should.deepEqual({ name: 'mock' })
+        )
     );
   });
 
@@ -26,7 +28,9 @@ describe('StoreHttpClient', () => {
     it('resolves with the segment', () =>
       storeHttpClient('http://localhost')
         .saveSegment({ link: { state: { test: true } } })
-        .then(body => body.should.deepEqual({ link: { state: { test: true } } }))
+        .then(body =>
+          body.should.deepEqual({ link: { state: { test: true } } })
+        )
     );
   });
 
@@ -34,7 +38,9 @@ describe('StoreHttpClient', () => {
     it('resolves with the segment', () =>
       storeHttpClient('http://localhost')
         .getSegment('test')
-        .then(body => body.should.deepEqual({ meta: { linkHash: 'test' } }))
+        .then(body =>
+          body.should.deepEqual({ meta: { linkHash: 'test' } })
+        )
     );
 
     it('rejects if there is an error', () =>
@@ -62,7 +68,9 @@ describe('StoreHttpClient', () => {
     it('resolves with the deleted segment', () =>
       storeHttpClient('http://localhost')
         .deleteSegment('test')
-        .then(body => body.should.deepEqual({ meta: { linkHash: 'test' } }))
+        .then(body =>
+          body.should.deepEqual({ meta: { linkHash: 'test' } })
+        )
     );
   });
 
@@ -85,15 +93,18 @@ describe('StoreHttpClient', () => {
           offset: 20,
           limit: 10
         })
-        .then(body => body[0].link.state.query.should.be.exactly(
-          'mapId=map&prevLinkHash=hash&tags=tag1%2Btag2&offset=20&limit=10'
-        ))
+        .then(body =>
+          body[0].link.state.query.should.be.exactly(
+          'mapId=map&prevLinkHash=hash&tags=tag1%2Btag2&offset=20&limit=10')
+        )
     );
 
     it('applies the filters', () =>
       storeHttpClient('http://localhost')
         .findSegments(null, [segment => segment.link.state.filtered === 1])
         .then(body => {
+          console.log('BLAH');
+          console.log(JSON.stringify(body));
           body.should.have.length(1);
           body[0].link.state.filtered.should.be.exactly(1);
         })
@@ -104,13 +115,17 @@ describe('StoreHttpClient', () => {
     it('resolves with the map IDs', () =>
       storeHttpClient('http://localhost')
         .getMapIds()
-        .then(body => body.should.deepEqual(['mapId']))
+        .then(body => {
+          body.should.deepEqual(['mapId']);
+        })
     );
 
     it('sends a query', () =>
       storeHttpClient('http://localhost')
         .getMapIds({ offset: 20, limit: 10 })
-        .then(body => body[0].should.be.exactly('offset=20&limit=10'))
+        .then(body => {
+          body[0].should.be.exactly('offset=20&limit=10');
+        })
     );
   });
 });
