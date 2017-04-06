@@ -103,8 +103,6 @@ describe('StoreHttpClient', () => {
       storeHttpClient('http://localhost')
         .findSegments(null, [segment => segment.link.state.filtered === 1])
         .then(body => {
-          console.log('BLAH');
-          console.log(JSON.stringify(body));
           body.should.have.length(1);
           body[0].link.state.filtered.should.be.exactly(1);
         })
