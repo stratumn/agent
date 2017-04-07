@@ -8,6 +8,18 @@
 
 import hashJson from '../hashJson';
 
+/**
+ * Creates a plugin that encrypts the state before it is saved.
+ * @param {object} scheme - The encryption scheme
+ * @param {function} scheme.encryptState - A function that takes a link as input and returns either:
+ * - the encrypted state
+ * - a Promise that resolves with the encrypted state
+ * @param {function} scheme.decryptState - A function that takes a link and the expected
+ * fingerprint of the decrypted state and returns either:
+ * - the decrypted state
+ * - a Promise that resolves with the decrypted state
+ * @returns {object} an agent plugin
+ */
 export default function ({ encryptState, decryptState }) {
   return {
 

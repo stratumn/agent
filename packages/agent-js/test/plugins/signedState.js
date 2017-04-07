@@ -22,7 +22,7 @@ const dummySigning = {
     return signature;
   },
 
-  verifySignature(s) {
+  verifySignature(segment, s) {
     return (signature === s);
   }
 };

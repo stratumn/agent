@@ -11,11 +11,12 @@ import hashJson from '../hashJson';
 /**
  * Creates a plugin that signs the state before it is saved.
  * @param {object} scheme - The signature scheme
- * @param {function} scheme.signState - A function that takes a hash as input and returns either:
+ * @param {function} scheme.signState - A function that takes a link and the state hash as input
+ * and returns either:
  * - the signed hash
  * - a Promise that resolves with the signed hash
- * @param {function} scheme.verifySignature - A function that takes a signature and a hash as input
- * and returns either:
+ * @param {function} scheme.verifySignature - A function that takes a link a signature and a hash
+ * as input and returns either:
  * - a boolean that states wether the signature has been verified
  * - a Promise that resolves with such a boolean
  * @returns {object} an agent plugin
@@ -30,7 +31,7 @@ export default function ({ signState, verifySignature }) {
 
     didCreateLink(link) {
       link.meta.stateHash = hashJson(link.state);
-      Promise.resolve(signState(link.meta.stateHash))
+      Promise.resolve(signState(link, link.meta.stateHash))
         .then(signature => {
           link.meta.stateSignature = signature;
         });
@@ -38,7 +39,7 @@ export default function ({ signState, verifySignature }) {
 
     filterSegment(segment) {
       return Promise.resolve(
-        verifySignature(segment.link.meta.stateSignature, segment.link.meta.stateHash)
+        verifySignature(segment, segment.link.meta.stateSignature, segment.link.meta.stateHash)
       );
     }
   };
