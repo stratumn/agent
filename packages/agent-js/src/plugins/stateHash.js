@@ -12,7 +12,7 @@ export default {
 
   name: 'State Hash',
 
-  description: 'Computes and adds the hash of the state in meta',
+  description: 'Computes and adds the hash of the state in meta.',
 
   didCreateLink(link) {
     link.meta.stateHash = hashJson(link.state);

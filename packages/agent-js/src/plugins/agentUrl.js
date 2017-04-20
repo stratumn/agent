@@ -10,7 +10,7 @@ export default function (agentUrl) {
   return {
     name: 'Agent URL',
 
-    description: 'Saves in segment meta the URL that can be used to retrieve a segment',
+    description: 'Saves in segment meta the URL that can be used to retrieve a segment.',
 
     didCreateSegment(segment) {
       const meta = segment.meta;

@@ -10,6 +10,7 @@ import create from './create';
 import fossilizerHttpClient from './fossilizerHttpClient';
 import httpServer from './httpServer';
 import memoryStore from './memoryStore';
+import plugins from './plugins';
 import storeHttpClient from './storeHttpClient';
 
 module.exports = {
@@ -17,5 +18,6 @@ module.exports = {
   fossilizerHttpClient,
   httpServer,
   memoryStore,
-  storeHttpClient
+  plugins,
+  storeHttpClient,
 };

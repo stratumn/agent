@@ -15,6 +15,7 @@ Unless otherwise noted, the Stratumn Agent Javascript Library source files are d
 ```javascript
 var express = require('express');
 var Agent = require('stratumn-agent');
+var plugins = Agent.plugins;
 
 // Load actions.
 // Assumes your actions are in ./lib/actions.
@@ -32,7 +33,7 @@ var fossilizerHttpClient = Agent.fossilizerHttpClient(process.env.STRATUMN_FOSSI
 var agent = Agent.create(actions, storeHttpClient, fossilizerHttpClient, {
   agentUrl: 'http://localhost:3000',               // the agent needs to know its root URL,
   salt: process.env.STRATUMN_SALT || Math.random() // change to a unique salt
-  plugins: ['localTime']                           // pick any plugins from src/plugins or develop your own - order matters
+  plugins: [plugins.localTime]                           // pick any plugins from src/plugins or develop your own - order matters
 });
 
 // Creates an HTTP server for the agent with CORS enabled.
@@ -76,3 +77,12 @@ is called whenever a new segment has been computed from a new link. It take the 
 is called when segments are retrieved by the agent from the underlying storage. It should return `true` if the plugins accepts the segment, `false` otherwise.
 
 All methods are optional. They can either be synchronous or return a Promise.
+
+### Available plugins:
+
+- `actionArgs`: Saves the action and its arguments in link meta information.
+- `agentUrl`: Saves in segment meta the URL that can be used to retrieve a segment.
+- `encryptedState`: Encrypts the state before the segment is saved. Filters out segment that cannot be decrypted.
+- `localTime`: Saves the local timestamp in the link meta information.
+- `signedState`: Signs the state before the segment is saved. Filters out segments whose signature is invalid.
+- `stateHash`: Computes and adds the hash of the state in meta.
