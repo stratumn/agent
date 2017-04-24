@@ -32,7 +32,9 @@ export default function ({ encryptState, decryptState }) {
       link.meta.stateHash = hashJson(link.state);
       return Promise.resolve(encryptState(link))
         .then(state => {
-          link.state = state;
+          link.state = {
+            encrypted: state
+          };
           link.meta.encryptedState = true;
         });
     },

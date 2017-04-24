@@ -11,7 +11,7 @@ import encryptedState from '../../src/plugins/encryptedState';
 import hashJson from '../../src/hashJson';
 
 function test(segment) {
-  segment.link.state.should.equal(1);
+  segment.link.state.should.eql({ encrypted: 1 });
   return segment.link.meta.encryptedState.should.be.ok;
 }
 
