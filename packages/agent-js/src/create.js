@@ -65,9 +65,14 @@ export default function create(actions, storeClient, fossilizerClient, opts = {}
     const name = msg.type;
     if (typeof actions.events === 'object' && typeof actions.events[name] === 'function') {
       const segment = msg.data;
-      if (getDefinedFilters(plugins).every(filter => filter(segment))) {
-        actions.events[name](segment);
-      }
+      getDefinedFilters(plugins).reduce(
+        (cur, filter) => cur.then(ok => Promise.resolve(ok && filter(segment))),
+        Promise.resolve(true)
+      ).then(ok => {
+        if (ok) {
+          actions.events[name](segment);
+        }
+      });
     }
   });
 
