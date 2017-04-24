@@ -7,5 +7,5 @@
 */
 
 export default function (plugins) {
-  return plugins.reverse().map(p => p.filterSegment).filter(n => n);
+  return plugins.reverse().map(p => p.filterSegment && p.filterSegment.bind(p)).filter(n => n);
 }

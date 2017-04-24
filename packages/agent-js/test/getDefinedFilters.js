@@ -19,7 +19,7 @@ describe('#getDefinedFilters()', () => {
     const plugins = [p1, p2];
 
     const filtered = getDefinedFilters(plugins);
-    filtered.should.containEql(p1.filterSegment);
+    filtered.should.containEql(p1.filterSegment.bind(p1));
     filtered.should.have.length(1);
   });
 });
