@@ -107,6 +107,18 @@ describe('StoreHttpClient', () => {
           body[0].link.state.filtered.should.be.exactly(1);
         })
     );
+
+    it('applies the filters sequentially', () =>
+      storeHttpClient('http://localhost')
+        .findSegments(null, [segment =>
+          new Promise((resolve) => {
+            segment.link.state.filtered = 1;
+            resolve(true);
+          }), segment => Promise.resolve(segment.link.state.filtered === 1)])
+        .then(body => {
+          body.should.have.length(2);
+        })
+    );
   });
 
   describe('#getMapIds()', () => {

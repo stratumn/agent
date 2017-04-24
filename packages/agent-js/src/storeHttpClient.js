@@ -154,7 +154,7 @@ export default function storeHttpClient(url) {
           .get(`${url}/segments${makeQueryString(opts || {})}`)
           .end((err, res) => handleResponse(err, res)
             .then(s => filters.reduce(
-                (cur, f) => cur.then(sgmts => Promise.resolve(filterAsync(sgmts, f))),
+                (cur, f) => cur.then(sgmts => filterAsync(sgmts, f)),
                 Promise.resolve(s)
               )
             )
