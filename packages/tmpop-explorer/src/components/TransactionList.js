@@ -13,27 +13,26 @@ import { Link } from 'react-router';
 export default class TransactionList extends Component {
 	render() {
 		const rowsTransactions = this.props.transactions.map((tx) => {
+      const segment = tx.data.segment;
 			return (				
-				<TableRow key={tx.data.meta.linkHash}>
+				<TableRow key={segment.meta.linkHash}>
 					<TableRowColumn><Link to={`/blocks/${tx.block.header.height}`}>{tx.block.header.height}</Link></TableRowColumn>
-					<TableRowColumn>{tx.data.meta.linkHash}</TableRowColumn>
-					<TableRowColumn>{tx.data.link.meta.mapId}</TableRowColumn>
-					<TableRowColumn>{tx.data.link.meta.stateHash}</TableRowColumn>				
-					<TableRowColumn>{tx.data.link.meta.action}</TableRowColumn>				
+					<TableRowColumn>{segment.meta.linkHash}</TableRowColumn>
+					<TableRowColumn>{segment.link.meta.mapId}</TableRowColumn>
+					<TableRowColumn>{JSON.stringify(segment.link.state, undefined, 2)}</TableRowColumn>
 				</TableRow>
 			);
 		});
 		return (
 			<div>
 				<h1>Transactions</h1>
-				<Table selectable={false} >
+				<Table selectable={false} style={{ tableLayout: 'auto' }} fixedHeader={false}>
 					<TableHeader displaySelectAll={false} adjustForCheckbox={false}>
 					<TableRow>
 						<TableHeaderColumn>Block Height</TableHeaderColumn>
 						<TableHeaderColumn>Link Hash</TableHeaderColumn>
 						<TableHeaderColumn>Map Id</TableHeaderColumn>
-						<TableHeaderColumn>State Hash</TableHeaderColumn>
-						<TableHeaderColumn>Action</TableHeaderColumn>
+						<TableHeaderColumn>State</TableHeaderColumn>
 					</TableRow>
 					</TableHeader>
 					<TableBody displayRowCheckbox={false}>

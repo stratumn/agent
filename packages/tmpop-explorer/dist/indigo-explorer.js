@@ -32863,7 +32863,7 @@ var Block = (function (_Component) {
 							{ style: styles.margin },
 							_react2['default'].createElement(
 								_materialUiTable.Table,
-								{ selectable: false },
+								{ selectable: false, style: { tableLayout: 'auto' }, fixedHeader: false },
 								_react2['default'].createElement(
 									_materialUiTable.TableHeader,
 									{ displaySelectAll: false, adjustForCheckbox: false },
@@ -33193,11 +33193,12 @@ var _reactRouter = require('react-router');
 var SearchInput = (function (_Component) {
 	_inherits(SearchInput, _Component);
 
-	function SearchInput(props) {
+	function SearchInput(props, context) {
 		_classCallCheck(this, SearchInput);
 
-		_get(Object.getPrototypeOf(SearchInput.prototype), 'constructor', this).call(this, props);
+		_get(Object.getPrototypeOf(SearchInput.prototype), 'constructor', this).call(this, props, context);
 
+		this.path = context.path;
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.state = { height: null };
 	}
@@ -33221,7 +33222,7 @@ var SearchInput = (function (_Component) {
 				_react2['default'].createElement(_materialUiTextField2['default'], { hintText: 'Block Height', onChange: this.handleInputChange }),
 				_react2['default'].createElement(
 					_reactRouter.Link,
-					{ to: '/blocks/' + this.state.height, style: style },
+					{ to: this.path + '/blocks/' + this.state.height, style: style },
 					'Search'
 				)
 			);
@@ -33232,6 +33233,10 @@ var SearchInput = (function (_Component) {
 })(_react.Component);
 
 exports['default'] = SearchInput;
+
+SearchInput.contextTypes = {
+	path: _react.PropTypes.string
+};
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -33463,9 +33468,10 @@ var TransactionList = (function (_Component) {
 		key: 'render',
 		value: function render() {
 			var rowsTransactions = this.props.transactions.map(function (tx) {
+				var segment = tx.data.segment;
 				return _react2['default'].createElement(
 					_materialUiTable.TableRow,
-					{ key: tx.data.meta.linkHash },
+					{ key: segment.meta.linkHash },
 					_react2['default'].createElement(
 						_materialUiTable.TableRowColumn,
 						null,
@@ -33478,22 +33484,17 @@ var TransactionList = (function (_Component) {
 					_react2['default'].createElement(
 						_materialUiTable.TableRowColumn,
 						null,
-						tx.data.meta.linkHash
+						segment.meta.linkHash
 					),
 					_react2['default'].createElement(
 						_materialUiTable.TableRowColumn,
 						null,
-						tx.data.link.meta.mapId
+						segment.link.meta.mapId
 					),
 					_react2['default'].createElement(
 						_materialUiTable.TableRowColumn,
 						null,
-						tx.data.link.meta.stateHash
-					),
-					_react2['default'].createElement(
-						_materialUiTable.TableRowColumn,
-						null,
-						tx.data.link.meta.action
+						JSON.stringify(segment.link.state, undefined, 2)
 					)
 				);
 			});
@@ -33507,7 +33508,7 @@ var TransactionList = (function (_Component) {
 				),
 				_react2['default'].createElement(
 					_materialUiTable.Table,
-					{ selectable: false },
+					{ selectable: false, style: { tableLayout: 'auto' }, fixedHeader: false },
 					_react2['default'].createElement(
 						_materialUiTable.TableHeader,
 						{ displaySelectAll: false, adjustForCheckbox: false },
@@ -33532,12 +33533,7 @@ var TransactionList = (function (_Component) {
 							_react2['default'].createElement(
 								_materialUiTable.TableHeaderColumn,
 								null,
-								'State Hash'
-							),
-							_react2['default'].createElement(
-								_materialUiTable.TableHeaderColumn,
-								null,
-								'Action'
+								'State'
 							)
 						)
 					),

@@ -112,7 +112,7 @@ class Block extends Component {
 							</TableBody>
 						</Table>
 						<div style={styles.margin}>
-							<Table selectable={false}>
+							<Table selectable={false} style={{ tableLayout: 'auto' }} fixedHeader={false}>
 								<TableHeader displaySelectAll={false} adjustForCheckbox={false}>
 									<TableRow>
 										<TableHeaderColumn>Signatures</TableHeaderColumn>
