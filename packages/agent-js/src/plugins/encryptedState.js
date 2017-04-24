@@ -40,11 +40,13 @@ export default function ({ encryptState, decryptState }) {
     },
 
     willCreate(initialLink) {
-      const decrypted = this.decrypt(initialLink);
-      if (!decrypted) {
-        throw new Error(`State could not be decrypted from link ${initialLink}`);
-      }
-      delete initialLink.meta.stateHash;
+      return this.decrypt(initialLink)
+        .then(decrypted => {
+          if (!decrypted) {
+            throw new Error(`State could not be decrypted from link ${initialLink}`);
+          }
+          delete initialLink.meta.stateHash;
+        });
     },
 
     filterSegment(segment) {
