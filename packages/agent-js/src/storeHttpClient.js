@@ -12,7 +12,6 @@ import WebSocket from 'ws';
 import makeQueryString from './makeQueryString';
 import handleResponse from './handleResponse';
 import filterAsync from './filterAsync';
-import intersectArrays from './intersectArrays';
 
 /**
  * Creates a store HTTP client.
@@ -105,10 +104,14 @@ export default function storeHttpClient(url) {
           .end((err, res) => handleResponse(err, res)
             .then(s => {
               segment = s;
-              return Promise.all(filters.map(filter => filter(s)));
+
+              return filters.reduce(
+                (cur, filter) => cur.then(ok => Promise.resolve(ok && filter(s))),
+                Promise.resolve(true)
+              );
             })
-            .then(results => {
-              if (results.every(r => r)) {
+            .then(ok => {
+              if (ok) {
                 resolve(segment);
               } else {
                 const error = {
@@ -147,18 +150,14 @@ export default function storeHttpClient(url) {
      */
     findSegments(opts, filters = []) {
       return new Promise((resolve, reject) => {
-        let segments;
         request
           .get(`${url}/segments${makeQueryString(opts || {})}`)
           .end((err, res) => handleResponse(err, res)
-            .then(s => {
-              segments = s;
-              return Promise.all(filters.map(f => filterAsync(segments, f)));
-            })
-            .then(filteredArrays => {
-              filteredArrays.push(segments);
-              return intersectArrays(filteredArrays);
-            })
+            .then(s => filters.reduce(
+                (cur, f) => cur.then(sgmts => Promise.resolve(filterAsync(sgmts, f))),
+                Promise.resolve(s)
+              )
+            )
             .then(filtered => resolve(filtered))
             .catch(reject)
           );

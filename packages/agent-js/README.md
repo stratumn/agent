@@ -33,7 +33,7 @@ var fossilizerHttpClient = Agent.fossilizerHttpClient(process.env.STRATUMN_FOSSI
 var agent = Agent.create(actions, storeHttpClient, fossilizerHttpClient, {
   agentUrl: 'http://localhost:3000',               // the agent needs to know its root URL,
   salt: process.env.STRATUMN_SALT || Math.random() // change to a unique salt
-  plugins: [plugins.localTime]                           // pick any plugins from src/plugins or develop your own - order matters
+  plugins: [plugins.localTime]                     // pick any plugins from src/plugins or develop your own - order matters
 });
 
 // Creates an HTTP server for the agent with CORS enabled.
@@ -75,6 +75,7 @@ is called whenever a new segment has been computed from a new link. It take the 
 
 - `filterSegment(segment)`
 is called when segments are retrieved by the agent from the underlying storage. It should return `true` if the plugins accepts the segment, `false` otherwise.
+Filters are applied sequentially in the reverse order they are defined.
 
 All methods are optional. They can either be synchronous or return a Promise.
 
