@@ -8,6 +8,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 import { Link } from 'react-router';
 
 export default class SearchInput extends Component {
@@ -24,15 +25,10 @@ export default class SearchInput extends Component {
 	}
 
 	render() {
-		const style = {
-			border: '1px solid black',
-			padding: '5px',
-		};
-
 		return (
 			<div>
 				<TextField hintText="Block Height" onChange={this.handleInputChange} />
-				<Link to={`${this.path}/blocks/${this.state.height}`} style={style}>Search</Link>
+        <Link to={`${this.path}/blocks/${this.state.height}`} className='button'>Search</ Link>
 			</div>
 		);
 	}
