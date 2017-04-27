@@ -58,8 +58,8 @@ describe('StoreHttpClient', () => {
         .getSegment('test', [segment => (segment.meta.linkHash !== 'test')])
         .then(() => { throw new Error('should not resolve'); })
         .catch(err => {
-          err.statusCode.should.be.exactly(404);
-          err.message.should.be.exactly('not found');
+          err.statusCode.should.be.exactly(403);
+          err.message.should.be.exactly('forbidden');
         })
     );
   });

@@ -114,11 +114,10 @@ export default function storeHttpClient(url) {
               if (ok) {
                 resolve(segment);
               } else {
-                const error = {
-                  message: 'not found',
-                  statusCode: 404
-                };
-                throw error;
+                const error = new Error('forbidden');
+                error.status = 403;
+                error.statusCode = 403;
+                reject(error);
               }
             })
             .catch(reject))
