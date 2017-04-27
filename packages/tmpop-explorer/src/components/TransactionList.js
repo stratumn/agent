@@ -17,9 +17,10 @@ export default class TransactionList extends Component {
 			return (				
 				<TableRow key={segment.meta.linkHash}>
 					<TableRowColumn><Link to={`/blocks/${tx.block.header.height}`}>{tx.block.header.height}</Link></TableRowColumn>
-					<TableRowColumn>{segment.meta.linkHash}</TableRowColumn>
-					<TableRowColumn>{segment.link.meta.mapId}</TableRowColumn>
-					<TableRowColumn>{JSON.stringify(segment.link.state, undefined, 2)}</TableRowColumn>
+					<TableRowColumn style={{ maxWidth: 500, overflowX: 'scroll' }}><pre>{JSON.stringify(segment.link, undefined, 2)}</pre>
+          </TableRowColumn>
+          <TableRowColumn style={{ maxWidth: 500, overflowX: 'scroll' }}><pre>{JSON.stringify(segment.meta, undefined, 2)}</pre>
+          </TableRowColumn>
 				</TableRow>
 			);
 		});
@@ -30,9 +31,8 @@ export default class TransactionList extends Component {
 					<TableHeader displaySelectAll={false} adjustForCheckbox={false}>
 					<TableRow>
 						<TableHeaderColumn>Block Height</TableHeaderColumn>
-						<TableHeaderColumn>Link Hash</TableHeaderColumn>
-						<TableHeaderColumn>Map Id</TableHeaderColumn>
-						<TableHeaderColumn>State</TableHeaderColumn>
+						<TableHeaderColumn>Link</TableHeaderColumn>
+            <TableHeaderColumn>Meta</TableHeaderColumn>
 					</TableRow>
 					</TableHeader>
 					<TableBody displayRowCheckbox={false}>
