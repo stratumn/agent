@@ -63,7 +63,6 @@ To build, watch and serve the examples (which will also watch the component sour
 
 ## License
 
-Copyright (c) 2017 Stratumn.
+Copyright 2017 Stratumn SAS. All rights reserved.
 
-Unless otherwise noted, the source files are distributed under the Mozilla Public
-License 2.0 found in the LICENSE file.
+Unless otherwise noted, the Stratumn Agent Javascript Library source files are distributed under the Apache License 2.0 found in the LICENSE file.
