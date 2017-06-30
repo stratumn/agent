@@ -13,18 +13,3 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
-import React, { Component } from 'react';
-import StatusContainer from './StatusContainer';
-import FeedContainer from './FeedContainer';
-
-export default class Index extends Component {
-	render() {
-		return (
-			<div>
-				<StatusContainer />
-				<FeedContainer />
-			</div>
-		);
-	}
-}
