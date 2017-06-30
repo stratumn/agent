@@ -1,8 +1,8 @@
-# Agent client for Javascript [ALPHA - incompatible with production]
+# Agent client for Javascript
 
-[![Build Status](https://travis-ci.org/stratumn/agent-client-js.svg?branch=alpha)](https://travis-ci.org/stratumn/agent-client-js)
-[![codecov](https://codecov.io/gh/stratumn/agent-client-js/branch/alpha/graph/badge.svg)](https://codecov.io/gh/stratumn/agent-client-js/branch/alpha)
-[![Build Status](https://david-dm.org/stratumn/agent-client-js.svg?branch=alpha)](https://david-dm.org/stratumn/agent-client-js)
+[![Build Status](https://travis-ci.org/stratumn/agent-client-js.svg?branch=master)](https://travis-ci.org/stratumn/agent-client-js)
+[![codecov](https://codecov.io/gh/stratumn/agent-client-js/branch/master/graph/badge.svg)](https://codecov.io/gh/stratumn/agent-client-js/branch/master)
+[![Build Status](https://david-dm.org/stratumn/agent-client-js.svg?branch=master)](https://david-dm.org/stratumn/agent-client-js)
 
 ## Installation
 
@@ -26,7 +26,7 @@ $ bower install stratumn-agent-client
 ### Node.js
 
 ```
-$ npm install stratumn-agent-client@alpha
+$ npm install stratumn-agent-client@master
 ```
 
 ```javascript
