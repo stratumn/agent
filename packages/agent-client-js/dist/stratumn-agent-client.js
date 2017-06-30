@@ -5,11 +5,19 @@
 }(this, (function (exports) { 'use strict';
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 function deprecated(oldFunc, newFunc) {
@@ -21,11 +29,19 @@ function deprecated(oldFunc, newFunc) {
 }
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 /**
@@ -249,11 +265,19 @@ var setImmediate$1 = createCommonjsModule(function (module) {
 interopDefault(setImmediate$1);
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 /**
@@ -868,11 +892,19 @@ function getError(req, err) {
 var httpplease = interopDefault(index);
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 var request = httpplease.use(json$1);
@@ -1023,11 +1055,19 @@ var toConsumableArray = function (arr) {
 };
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 var DEFAULT_BATCH_SIZE = 20;
@@ -1062,11 +1102,19 @@ function findSegments(agent) {
 }
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 function getBranches(agent, prevLinkHash) {
@@ -1078,11 +1126,19 @@ function getBranches(agent, prevLinkHash) {
 }
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 function segmentify(agent, obj) {
@@ -1137,89 +1193,137 @@ function segmentify(agent, obj) {
 }
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 function createMap(agent) {
-    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-    }
+  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    args[_key - 1] = arguments[_key];
+  }
 
-    return post(agent.url + '/segments', args).then(function (res) {
-        return segmentify(agent, res.body);
-    });
+  return post(agent.url + '/segments', args).then(function (res) {
+    return segmentify(agent, res.body);
+  });
 }
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 function getSegment(agent, linkHash) {
-    return get(agent.url + '/segments/' + linkHash).then(function (res) {
-        return segmentify(agent, res.body);
-    });
+  return get(agent.url + '/segments/' + linkHash).then(function (res) {
+    return segmentify(agent, res.body);
+  });
 }
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 function getMapIds(agent) {
-    var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    return get(agent.url + '/maps' + makeQueryString(opts)).then(function (res) {
-        return res.body;
-    });
+  return get(agent.url + '/maps' + makeQueryString(opts)).then(function (res) {
+    return res.body;
+  });
 }
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 function getLink(agent, hash) {
-    deprecated('Agent#getLink(agent, hash)', 'Agent#getSegment(agent, hash)');
+  deprecated('Agent#getLink(agent, hash)', 'Agent#getSegment(agent, hash)');
 
-    return getSegment(agent, hash);
+  return getSegment(agent, hash);
 }
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 function getMap(agent, mapId) {
-    var tags = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+  var tags = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
-    deprecated('getMap(agent, mapId, tags = [])', 'findSegments(agent, filter)');
+  deprecated('getMap(agent, mapId, tags = [])', 'findSegments(agent, filter)');
 
-    return findSegments(agent, { mapId: mapId, tags: tags });
+  return findSegments(agent, { mapId: mapId, tags: tags });
 }
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 // Deprecated.
@@ -1243,11 +1347,19 @@ function getAgent(url) {
 }
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 function fromSegment(obj) {
@@ -1258,47 +1370,71 @@ function fromSegment(obj) {
 }
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 // Deprecated.
 var config = {
-    applicationUrl: 'https://%s.stratumn.rocks'
+  applicationUrl: 'https://%s.stratumn.rocks'
 };
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 function getApplication(name, url) {
-    deprecated('getApplication(name, url)', 'getAgent(url)');
+  deprecated('getApplication(name, url)', 'getAgent(url)');
 
-    return getAgent(url || config.applicationUrl.replace('%s', name));
+  return getAgent(url || config.applicationUrl.replace('%s', name));
 }
 
 /*
-    Copyright (C) 2017  Stratumn SAS
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 function loadLink(obj) {
-    deprecated('loadLink(obj)', 'fromSegment(obj)');
+  deprecated('loadLink(obj)', 'fromSegment(obj)');
 
-    return fromSegment(obj).then(function (_ref) {
-        var segment = _ref.segment;
-        return segment;
-    });
+  return fromSegment(obj).then(function (_ref) {
+    var segment = _ref.segment;
+    return segment;
+  });
 }
 
 exports.getAgent = getAgent;
