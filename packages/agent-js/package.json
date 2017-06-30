@@ -13,7 +13,8 @@
     "preversion": "npm run clean && npm run check",
     "version": "npm run build:lib",
     "postversion": "git push && git push --tags && npm run clean",
-    "prepublish": "npm run clean && npm run build:lib"
+    "prepublish": "npm run clean && npm run build:lib",
+    "update-license-headers": "./update-license-headers.sh"
   },
   "repository": {
     "type": "git",
@@ -26,7 +27,7 @@
     "client"
   ],
   "author": "Stratumn Team",
-  "license": "mpl-2.0",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/stratumn/agent-js/issues"
   },

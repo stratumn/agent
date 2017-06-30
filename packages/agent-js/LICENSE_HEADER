@@ -13,19 +13,3 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
-import create from './create';
-import fossilizerHttpClient from './fossilizerHttpClient';
-import httpServer from './httpServer';
-import memoryStore from './memoryStore';
-import plugins from './plugins';
-import storeHttpClient from './storeHttpClient';
-
-module.exports = {
-  create,
-  fossilizerHttpClient,
-  httpServer,
-  memoryStore,
-  plugins,
-  storeHttpClient,
-};
