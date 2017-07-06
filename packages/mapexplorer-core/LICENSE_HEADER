@@ -13,11 +13,3 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
-import { stratify } from 'd3-hierarchy';
-
-export default function parseChainscript(chainscript) {
-  return stratify()
-      .id(d => d.meta.linkHash)
-      .parentId(d => d.link.meta.prevLinkHash)(chainscript);
-}

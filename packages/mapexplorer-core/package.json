@@ -16,7 +16,8 @@
     "build:bower": "rollup -c rollup.bower.config.js",
     "build": "npm run build:npm && npm run build:bower",
     "watch": "rollup -c rollup.bower.config.js -w",
-    "prepublish": "npm run build:npm"
+    "prepublish": "npm run build:npm",
+    "update-license-headers": "./update-license-headers.sh"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,7 @@
     "chainscript"
   ],
   "author": "Stratumn Team",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/stratumn/mapexplorer-core/issues"
   },
