@@ -3,7 +3,7 @@
   "version": "1.0.0-alpha",
   "description": "",
   "author": "Stratumn Team",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "homepage": "",
   "main": "lib/angular-mapexplorer.js",
   "jsnext:main": "lib/angular-mapexplorer.mjs",
@@ -54,7 +54,8 @@
     "build:npm:umd": "rollup -c rollup.umd.config.js",
     "build:bower": "rollup -c rollup.bower.config.js",
     "build:demo": "rollup -c rollup.bower.demo.config.js",
-    "build": "npm run build:npm && npm run build:bower"
+    "build": "npm run build:npm && npm run build:bower",
+    "update-license-headers": "./update-license-headers.sh"
   },
   "repository": {
     "type": "git",
