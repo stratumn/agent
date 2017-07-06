@@ -2,7 +2,7 @@
   "name": "angular2-mapexplorer",
   "version": "0.1.0",
   "author": "Stratumn team",
-  "license": "MPL-2.0",
+  "license": "Apache-2.0",
   "angular-cli": {},
   "main": "lib/angular2-mapexplorer.js",
   "jsnext:main": "lib/angular2-mapexplorer.mjs",
@@ -15,7 +15,8 @@
     "build:docs": "ng build --output-path docs",
     "build:npm:umd": "rollup -c rollup.umd.config.js",
     "build:npm:es": "rollup -c rollup.es.config.js",
-    "build:npm": "npm run build:npm:umd && npm run build:npm:es"
+    "build:npm": "npm run build:npm:umd && npm run build:npm:es",
+    "update-license-headers": "./update-license-headers.sh"
   },
   "private": true,
   "dependencies": {
