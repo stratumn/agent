@@ -8,7 +8,7 @@
   "main": "lib/angular-mapexplorer.js",
   "jsnext:main": "lib/angular-mapexplorer.mjs",
   "devDependencies": {
-    "angular-mocks": "^1.5.8",
+    "angular-mocks": "^1.6.5",
     "babel-cli": "^6.5.1",
     "babel-core": "^6.5.2",
     "babel-eslint": "^6.0.0",
@@ -62,12 +62,12 @@
     "url": "https://github.com/stratumn/angular-mapexplorer"
   },
   "dependencies": {
-    "angular": "^1.5.8",
-    "angular-animate": "^1.5.8",
-    "angular-aria": "^1.5.8",
+    "angular": "^1.6.5",
+    "angular-animate": "^1.6.5",
+    "angular-aria": "^1.6.5",
     "angular-material": "^1.1.0",
-    "angular-route": "^1.5.8",
-    "angular-sanitize": "^1.5.8",
+    "angular-route": "^1.6.5",
+    "angular-sanitize": "^1.6.5",
     "angular-ui-ace": "^0.2.3",
     "mapexplorer-core": "1.0.0-alpha",
     "md-color-picker": "^0.2.6"
