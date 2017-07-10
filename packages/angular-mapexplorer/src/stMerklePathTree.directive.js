@@ -22,10 +22,14 @@ export default function stMerklePathTree() {
     scope: {
       merklePath: '='
     },
-    template: '<svg></svg>',
+    template: '<div></div>',
     link: (scope, element) => {
-      const merklePathTree = new MerklePathTree(element);
-      scope.$watch('merklePath', () => merklePathTree.display(scope.merklePath));
+      scope.$watch('merklePath', () => {
+        const merklePathTree = new MerklePathTree(element[0]);
+        if (scope.merklePath) {
+          merklePathTree.display(scope.merklePath);
+        }
+      });
     }
   };
 }

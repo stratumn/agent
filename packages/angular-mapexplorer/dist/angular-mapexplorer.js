@@ -28,11 +28,13 @@ function stMerklePathTree() {
     scope: {
       merklePath: '='
     },
-    template: '<svg></svg>',
+    template: '<div></div>',
     link: function link(scope, element) {
-      var merklePathTree = new mapexplorerCore.MerklePathTree(element);
       scope.$watch('merklePath', function () {
-        return merklePathTree.display(scope.merklePath);
+        var merklePathTree = new mapexplorerCore.MerklePathTree(element[0]);
+        if (scope.merklePath) {
+          merklePathTree.display(scope.merklePath);
+        }
       });
     }
   };

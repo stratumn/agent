@@ -69,7 +69,7 @@
     "angular-route": "^1.6.5",
     "angular-sanitize": "^1.6.5",
     "angular-ui-ace": "^0.2.3",
-    "mapexplorer-core": "1.0.0-alpha",
+    "mapexplorer-core": "^1.1.2",
     "md-color-picker": "^0.2.6"
   }
 }

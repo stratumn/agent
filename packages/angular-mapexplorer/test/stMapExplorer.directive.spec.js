@@ -1,32 +1,16 @@
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
 import chainscript from './fixtures/chainscript.json';
 
 describe('st-map-explorer', () => {
   let element;
   let scope;
-  let compile;
+  let $compile;
   let ChainTreeBuilderService;
 
-  beforeEach(angular.mock.module('stratumn.angular-mapexplorer'));
+  beforeEach(module('stratumn.angular-mapexplorer'));
 
-  beforeEach(inject((_$rootScope_,_$compile_, _ChainTreeBuilderService_) => {
+  beforeEach(inject((_$rootScope_, _$compile_, _ChainTreeBuilderService_) => {
     const $rootScope = _$rootScope_;
-    compile = _$compile_;
+    $compile = _$compile_;
     ChainTreeBuilderService = _ChainTreeBuilderService_;
 
     scope = $rootScope.$new();
@@ -38,7 +22,7 @@ describe('st-map-explorer', () => {
 
   const compileElement = (content) => {
     element = angular.element(content);
-    compile(element)(scope);
+    $compile(element)(scope);
   };
 
   describe('with a chainscript', () => {
