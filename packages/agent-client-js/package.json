@@ -59,7 +59,7 @@
     "rollup-plugin-uglify": "^1.0.1",
     "rollup-pluginutils": "^1.5.1",
     "should": "^8.2.2",
-    "stratumn-agent": "^0.12.3"
+    "stratumn-agent": "^0.15.0"
   },
   "dependencies": {
     "httpplease": "^0.16.4",
