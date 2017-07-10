@@ -16,7 +16,7 @@
     "build:bower": "rollup -c rollup.bower.config.js",
     "build": "npm run build:npm && npm run build:bower",
     "watch": "rollup -c rollup.bower.config.js -w",
-    "prepublish": "npm run build:npm",
+    "prepublishOnly": "npm run build:npm",
     "update-license-headers": "./update-license-headers.sh"
   },
   "repository": {
