@@ -4,7 +4,7 @@
     "ember": "~2.7.0",
     "ember-cli-shims": "0.1.1",
     "ember-qunit-notifications": "0.1.0",
-    "mapexplorer-core": "alpha",
+    "mapexplorer-core": "^1.2.0",
     "hammer.js": "^2.0.8",
     "matchMedia": "0.2.0"
   }
