@@ -28,13 +28,5 @@ test('it renders', function(assert) {
   this.render(hbs`{{merkle-path-tree}}`);
 
   assert.equal(this.$().text().trim(), '');
-
-  // Template block usage:
-  this.render(hbs`
-    {{#merkle-path-tree}}
-      template block text
-    {{/merkle-path-tree}}
-  `);
-
-  assert.equal(this.$().text().trim(), 'template block text');
+  assert.equal(this.$().find('svg').length, 1);
 });

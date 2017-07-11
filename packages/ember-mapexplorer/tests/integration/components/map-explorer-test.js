@@ -28,13 +28,5 @@ test('it renders', function(assert) {
   this.render(hbs`{{map-explorer application="snake-eyes" mapId="57743311d6a22a8f2bd2bec1"}}`);
 
   assert.equal(this.$().text().trim(), '');
-
-  // Template block usage:
-  this.render(hbs`
-    {{#map-explorer}}
-      template block text
-    {{/map-explorer}}
-  `);
-
-  assert.equal(this.$().text().trim(), 'template block text');
+  assert.equal(this.$().find('svg').length, 2);
 });
