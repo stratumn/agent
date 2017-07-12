@@ -2,7 +2,7 @@
   "name": "indigo-explorer",
   "version": "0.1.0",
   "description": "IndigoExplorer",
-  "main": "dist/indigo-explorer.min.js",
+  "main": "dist/indigo-explorer.js",
   "homepage": "https://github.com/stratumn/indigoexplorer",
   "authors": [
     "Stratumn Team"
