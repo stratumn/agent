@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "dependencies": {
     "express": "^4.14.0",
-    "indigo-explorer": "0.5.1",
+    "indigo-explorer": "0.6.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },
