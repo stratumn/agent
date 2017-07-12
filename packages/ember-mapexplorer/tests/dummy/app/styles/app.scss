@@ -1,14 +1,14 @@
 @import 'mapexplorer-core';
 @import 'ember-paper';
 
-$brand-primary: #EC714A !default;
+$brand-primary: #2BE4A6 !default;
 
 .segment-container {
 
   color: white;
 
   .title {
-    background: #2E2E2E;
+    background: $segment-secondary-color;
     padding: 10px 100px;
   }
 
@@ -35,7 +35,7 @@ $brand-primary: #EC714A !default;
   }
 
   .body {
-    background: #3E3E3E;
+    background: $segment-primary-color;
     padding: 0 100px;
     max-height: 400px;
     overflow-y: scroll;
