@@ -50,7 +50,7 @@
     "test": "echo \"no tests yet\" && exit 0",
     "watch": "gulp watch:lib",
     "update-license-headers": "./update-license-headers.sh",
-    "version:app": "sed -i '' \"s/\\\"indigo-explorer\\\": \\\".*\\\"/\\\"indigo-explorer\\\": \\\"$npm_package_version\\\"/g\" ./app/package.json",
+    "version:app": "sed -i '' \"s/\\\"indigo-explorer\\\": \\\".*\\\"/\\\"indigo-explorer\\\": \\\"^$npm_package_version\\\"/g\" ./app/package.json",
     "version": "npm run version:app && git add ./app/package.json",
     "env": "echo $npm_package_version"
   },
