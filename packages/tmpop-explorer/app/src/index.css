@@ -14,21 +14,34 @@
   limitations under the License.
 */
 
-body {
-	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-	font-size: 14px;
-	color: #333;
-	margin: 0;
-	padding: 0;
+@fontface {
+	font-family: 'Roboto';
+	src: url('https://fonts.googleapis.com/css?family=Roboto:400,500');
 }
 
+body {
+	font-family: 'Roboto', Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	color: #ffffff;
+	margin: 0;
+	padding: 0;
+	background: #f1f1f1;
+}
+
+#app {
+	width: 100%;
+}
 a {
-	color: #08c;
+	color: #12286E;
 	text-decoration: none;
 }
 
 a:hover {
 	text-decoration: underline;
+}
+
+a.github-link {
+	float: right;
 }
 
 .container {
@@ -54,6 +67,7 @@ h1, h2, h3, h4, h5, h6 {
 label {
 	color: #999;
 	display: inline-block;
+	text-align: left;
 	font-size: 0.85em;
 	font-weight: bold;
 	margin: 1em 0;
@@ -65,3 +79,11 @@ label {
 	font-style: italic;
 	color: #999;
 }
+
+table {
+	background: #ffffff;
+}
+th {
+	height: 30px;
+}
+

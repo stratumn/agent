@@ -17,6 +17,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var IndigoExplorer = require('indigo-explorer');
+import './index.css'
 
 var App = React.createClass({
 	render () {
