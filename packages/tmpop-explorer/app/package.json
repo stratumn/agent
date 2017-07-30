@@ -12,7 +12,7 @@
     "less": "^2.7.2"
   },
   "scripts": {
-    "start": "node express",
+    "start": "react-scripts start",
     "build": "react-scripts build && lessc src/index.less build/index.css",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
