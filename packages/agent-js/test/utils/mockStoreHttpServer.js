@@ -14,19 +14,45 @@
   limitations under the License.
 */
 
+import querystring from 'querystring';
+
 export default function mockStoreHttpServer(mock) {
   mock.get('http://localhost', () => ({
     status: 200,
     body: { name: 'mock' }
   }));
 
-  mock.post('http://localhost/segments', req => ({
-    status: 200,
-    body: req.body
-  }));
+  mock.post('http://localhost/segments', req => {
+    if (!req.body.meta.process) {
+      return {
+        status: 403,
+        statusCode: 403,
+        message: '\'process\' is required in segment.meta.process'
+      };
+    }
+    return {
+      status: 200,
+      body: req.body
+    };
+  });
+
+  mock.del('http://localhost/segments?:query', req => {
+    const parsedParams = querystring.parse(req.params.query);
+    if (!parsedParams.process) {
+      return {
+        status: 403,
+        statusCode: 403,
+        message: 'param \'process\' is required'
+      };
+    }
+    return {
+      status: 200,
+      body: { meta: parsedParams }
+    };
+  });
 
   mock.get('http://localhost/segments/:linkHash', req => {
-    if (req.params.linkHash === 'notFound') {
+    if (req.params.linkHash === 'notFound?process=test') {
       return {
         status: 404,
         statusCode: 404,
@@ -35,35 +61,57 @@ export default function mockStoreHttpServer(mock) {
     }
     return {
       status: 200,
-      body: { meta: { linkHash: req.params.linkHash } }
+      body:
+      { meta: { linkHash: req.params.linkHash }, link: { state: { query: '', filtered: 0 } } }
     };
   });
 
-  mock.del('http://localhost/segments/:linkHash', req => ({
-    status: 200,
-    body: { meta: { linkHash: req.params.linkHash } }
-  }));
+  mock.get('http://localhost/segments?:query', req => {
+    const parsedParams = querystring.parse(req.params.query);
+    if (!parsedParams.process) {
+      return {
+        status: 403,
+        statusCode: 403,
+        message: 'param \'process\' is required'
+      };
+    } else if (parsedParams.linkHash === 'notFound') {
+      return {
+        status: 404,
+        statusCode: 404,
+        message: 'not found'
+      };
+    } else if (parsedParams.mapId === 'map') {
+      return {
+        status: 200,
+        body: [{ link: { state: { query: req.params.query } } }]
+      };
+    } else if (parsedParams.process === 'testFilter') {
+      return {
+        status: 200,
+        body: { link: { state: { query: req.params.query } }, meta: { linkHash: 'linkHash' } }
+      };
+    }
+    return {
+      status: 200,
+      body: [
+        { meta: parsedParams, link: { state: { query: '', filtered: 0 } } },
+        { link: { state: { query: '', filtered: 1 } } }
+      ]
+    };
+  });
 
-  mock.get('http://localhost/segments', () => ({
-    status: 200,
-    body: [
-      { link: { state: { query: '', filtered: 0 } } },
-      { link: { state: { query: '', filtered: 1 } } }
-    ]
-  }));
-
-  mock.get('http://localhost/segments?:query', req => ({
-    status: 200,
-    body: [{ link: { state: { query: req.params.query } } }]
-  }));
-
-  mock.get('http://localhost/maps', () => ({
-    status: 200,
-    body: ['mapId']
-  }));
-
-  mock.get('http://localhost/maps?:query', req => ({
-    status: 200,
-    body: [req.params.query]
-  }));
+  mock.get('http://localhost/maps?:query', req => {
+    const parsedParams = querystring.parse(req.params.query);
+    if (!parsedParams.process) {
+      return {
+        status: 403,
+        statusCode: 403,
+        message: 'param \'process\' is required'
+      };
+    }
+    return {
+      status: 200,
+      body: [{ meta: parsedParams, query: req.params.query }]
+    };
+  });
 }

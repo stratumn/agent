@@ -4,6 +4,7 @@
       "value": "one"
     },
     "meta": {
+      "process": "first",
       "mapId": "one",
       "priority": 1
     }

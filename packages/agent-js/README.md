@@ -21,23 +21,28 @@ var plugins = Agent.plugins;
 // Assumes your actions are in ./lib/actions.
 var actions = require('./lib/actions');
 
-// Create an HTTP store client to save segments.
+// Creates an HTTP store client to save segments.
 // Assumes an HTTP store server is available on env.STRATUMN_STORE_URL or http://store:5000.
 var storeHttpClient = Agent.storeHttpClient(process.env.STRATUMN_STORE_URL || 'http://store:5000');
 
-// Create an HTTP fossilizer client to fossilize segments.
+// Creates an HTTP fossilizer client to fossilize segments.
 // Assumes an HTTP fossilizer server is available on env.STRATUMN_FOSSILIZER_URL or http://fossilizer:6000.
 var fossilizerHttpClient = Agent.fossilizerHttpClient(process.env.STRATUMN_FOSSILIZER_URL || 'http://fossilizer:6000');
 
-// Create an agent from the actions, the store client, and the fossilizer client.
-var agent = Agent.create(actions, storeHttpClient, fossilizerHttpClient, {
-  agentUrl: 'http://localhost:3000',               // the agent needs to know its root URL,
-  salt: process.env.STRATUMN_SALT || Math.random() // change to a unique salt
+// Creates an agent
+var agent = Agent.create({
+    agentUrl: 'http://localhost:3000',               // the agent needs to know its root URL,·
+});
+
+// Adds a process from a name, its actions, the store client, and the fossilizer client.
+// As many processes as one needs can be added. A different storeHttpClient and fossilizerHttpClient may be used.
+agent.addProcess("my_first_process", actions, storeHttpClient, fossilizerHttpClient, {
+  salt: process.env.STRATUMN_SALT || Math.random(), // change to a unique salt
   plugins: [plugins.localTime]                     // pick any plugins from src/plugins or develop your own - order matters
 });
 
 // Creates an HTTP server for the agent with CORS enabled.
-var agentHttpServer = Agent.httpServer(agent, { cors: {} });
+var agentHttpServer = agent.httpServer({ cors: {} });
 
 // Create the Express server.
 var app = express();
@@ -50,6 +55,12 @@ app.use('/', agentHttpServer);
 // Start the server.
 app.listen(3000, function() {
   console.log('Listening on :' + this.address().port);
+});
+
+// You can also add processes on-the-fly after the server has started listening
+agent.addProcess("my_second_process", actions, storeHttpClient, fossilizerHttpClient, {
+  salt: process.env.STRATUMN_SALT || Math.random()
+  plugins: [plugins.localTime]
 });
 ```
 

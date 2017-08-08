@@ -4,6 +4,7 @@
       "value": "three"
     },
     "meta": {
+      "process": "second",
       "mapId": "two",
       "tags": [
         "two"

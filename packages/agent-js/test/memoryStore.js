@@ -42,13 +42,13 @@ describe('MemoryStore', () => {
     it('resolves with the segment', () =>
       store
         .saveSegment(segment1)
-        .then(() => store.getSegment('segment1'))
+        .then(sg => store.getSegment('first', 'segment1'))
         .then(body => body.should.deepEqual(segment1))
     );
 
     it('rejects if there is an error', () =>
       store
-        .getSegment('notFound')
+        .getSegment('notFound', 'test')
         .then(() => { throw new Error('should not resolve'); })
         .catch(err => {
           err.status.should.be.exactly(404);
@@ -86,31 +86,31 @@ describe('MemoryStore', () => {
 
     it('resolves with the segments', () =>
       store
-        .findSegments()
-        .then(body => body.should.deepEqual([segment3, segment2, segment1]))
+        .findSegments('first')
+        .then(body => body.should.deepEqual([segment2, segment1]))
     );
 
     it('paginages', () =>
       store
-        .findSegments({ offset: 1, limit: 1 })
-        .then(body => body.should.deepEqual([segment2]))
+        .findSegments('first', { offset: 1, limit: 1 })
+        .then(body => body.should.deepEqual([segment1]))
     );
 
     it('filters by map ID', () =>
       store
-        .findSegments({ mapId: 'one' })
+        .findSegments('first', { mapId: 'one' })
         .then(body => body.should.deepEqual([segment2, segment1]))
     );
 
     it('filters previous link hash', () =>
       store
-        .findSegments({ prevLinkHash: 'segment1' })
+        .findSegments('first', { prevLinkHash: 'segment1' })
         .then(body => body.should.deepEqual([segment2]))
     );
 
     it('filters by tags', () =>
       store
-        .findSegments({ tags: ['one', 'two'] })
+        .findSegments('first', { tags: ['one', 'two'] })
         .then(body => body.should.deepEqual([segment2]))
     );
   });
@@ -125,13 +125,13 @@ describe('MemoryStore', () => {
 
     it('resolves with the map IDs', () =>
       store
-        .getMapIds()
-        .then(body => body.should.deepEqual(['one', 'two']))
+        .getMapIds('first')
+        .then(body => body.should.deepEqual(['one']))
     );
 
     it('sends a query', () =>
       store
-        .getMapIds({ offset: 0, limit: 1 })
+        .getMapIds('first', { offset: 0, limit: 1 })
         .then(body => body.should.deepEqual(['one']))
     );
   });

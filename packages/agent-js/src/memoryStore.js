@@ -61,12 +61,12 @@ export default function memoryStore() {
 
     /**
      * Gets a segment.
+     * @param {String} process - process from which we want to get the segments
      * @param {string} linkHash - the link hash
      * @returns {Promise} a promise that resolve with the segment
      */
-    getSegment(linkHash) {
+    getSegment(process, linkHash) {
       const segment = segments[linkHash];
-
       if (!segment) {
         const err = new Error('not found');
         err.status = 404;
@@ -97,27 +97,33 @@ export default function memoryStore() {
 
     /**
      * Finds segments.
+     * @param {String} process - process from which we want to get the segments
      * @param {object} [opts] - filtering options
      * @param {number} [opts.offset] - offset of the first segment to return
      * @param {number} [opts.limit] - maximum number of segments to return
-     * @param {string} [opts.mapId] - a map ID the segments must have
+     * @param {string[]} [opts.mapIds] - an array of map IDs the segments must have
      * @param {string} [opts.prevLinkHash] - a previous link hash the segments must have
      * @param {string[]} [opts.tags] - an array of tags the segments must have
      * @returns {Promise} a promise that resolve with the segments
      */
-    findSegments(opts = {}) {
+    findSegments(process, opts = {}) {
       let a = [];
 
       Object.keys(segments).forEach(linkHash => {
         const segment = segments[linkHash];
 
-        if (opts.mapId && segment.link.meta.mapId !== opts.mapId) {
+        if (segment.link.meta.process !== process) {
+          return;
+        }
+
+        if (opts.mapIds && opts.mapIds.indexOf(segment.link.meta.mapId) < 0) {
           return;
         }
 
         if (opts.prevLinkHash && segment.link.meta.prevLinkHash !== opts.prevLinkHash) {
           return;
         }
+
 
         if (opts.tags) {
           const segmentTags = segment.link.meta.tags;
@@ -165,17 +171,20 @@ export default function memoryStore() {
 
     /**
      * Gets map IDs.
+     * @param {String} process - process from which we want to get the segments
      * @param {object} [opts] - pagination options
      * @param {number} [opts.offset] - offset of the first map ID to return
      * @param {number} [opts.limit] - maximum number of map IDs to return
      * @returns {Promise} a promise that resolve with the map IDs
      */
-    getMapIds(opts = {}) {
+    getMapIds(process, opts = {}) {
       const m = {};
+      const filteredSegments = Object.values(segments).filter(s => s.link.meta.process === process);
 
-      Object.keys(segments).forEach(linkHash => {
-        m[segments[linkHash].link.meta.mapId] = true;
+      filteredSegments.forEach(s => {
+        m[segments[s.meta.linkHash].link.meta.mapId] = true;
       });
+
 
       let a = Object.keys(m);
 

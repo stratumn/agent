@@ -19,10 +19,10 @@ import memoryStore from '../../src/memoryStore';
 
 export default function (plugin, assertions1) {
   const assertions = Object.assign({
-    '#init()': () => {},
-    '#action()': () => {},
-    '#createMap()': () => {},
-    '#createSegment()': () => {},
+    '#init()': () => { },
+    '#action()': () => { },
+    '#createMap()': () => { },
+    '#createSegment()': () => { },
   }, assertions1);
 
   const actions = {
@@ -38,9 +38,11 @@ export default function (plugin, assertions1) {
 
   describe(`Agent With Plugin ${plugin.name}`, () => {
     let agent;
+    let process;
 
     beforeEach(() => {
-      agent = create(actions, memoryStore(), null, { plugins: [plugin] });
+      agent = create(actions, memoryStore(), null, { agentUrl: 'http://localhost' });
+      process = agent.addProcess('basic', actions, memoryStore(), null, { plugins: [plugin] });
     });
     afterEach(() => {
       delete actions.events;
@@ -48,7 +50,7 @@ export default function (plugin, assertions1) {
 
     describe('#createMap()', () => {
       it('creates a Map', () =>
-        agent
+        process
           .createMap(1, 2, 3)
           .then(assertions['#createMap()'])
       );
@@ -56,14 +58,14 @@ export default function (plugin, assertions1) {
 
     describe('#createSegment()', () => {
       it('creates a segment', () =>
-        agent
+        process
           .createMap(1, 2, 3)
           .then(segment1 => (
-            agent
+            process
               .createSegment(segment1.meta.linkHash, 'action', 4)
               .then(assertions['#createSegment()'])
           )
-        )
+          )
       );
     });
   });

@@ -4,6 +4,7 @@
       "value": "two"
     },
     "meta": {
+      "process": "first",
       "mapId": "one",
       "prevLinkHash": "segment1",
       "tags": [

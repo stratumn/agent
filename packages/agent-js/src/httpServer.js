@@ -22,11 +22,11 @@ import parseArgs from './parseArgs';
 
 /**
  * Creates an HTTP server for an agent.
- * @param {Agent} agent - the agent instance
+ * @param {Agent} agent - the agent instance returned by Agent.create()
  * @param {object} [opts] - options
  * @param {object} [opts.cors] - CORS options
  * @param {object} [opts.salt] - salt used for callback URLs
- * @returns {express.Server} an express server
+ * @returns {express.Server} - an express server
  */
 export default function httpServer(agent, opts = {}) {
   const app = express();
@@ -34,7 +34,6 @@ export default function httpServer(agent, opts = {}) {
   app.disable('x-powered-by');
 
   app.use(bodyParser.json({ type: () => true, strict: false }));
-
   if (opts.cors) {
     const corsMiddleware = cors(opts.cors.opts);
     app.use(corsMiddleware);
@@ -48,118 +47,183 @@ export default function httpServer(agent, opts = {}) {
       .catch(next);
   });
 
-  app.post('/segments', (req, res, next) => {
+  app.get('/processes', (req, res, next) => {
+    try {
+      const processes = agent.getAllProcesses(req.query);
+      res.json(processes);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  app.get('/:process/remove', (req, res, next) => {
+    try {
+      const processes = agent.removeProcess(req.params.process);
+      res.json(processes);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  app.post('/:process/segments', (req, res, next) => {
+    /*eslint-disable*/
+    res.locals.renderErrorAsLink = true;
+    /*eslint-enable*/
+    try {
+      const process = agent.getProcess(req.params.process);
+      process.createMap(...parseArgs(req.body))
+        .then(res.json.bind(res))
+        .catch(next);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  app.post('/:process/segments/:linkHash/:action', (req, res, next) => {
     /*eslint-disable*/
     res.locals.renderErrorAsLink = true;
     /*eslint-enable*/
 
-    agent
-      .createMap(...parseArgs(req.body))
-      .then(res.json.bind(res))
-      .catch(next);
+    try {
+      const process = agent.getProcess(req.params.process);
+      process.createSegment(req.params.linkHash, req.params.action, ...parseArgs(req.body))
+        .then(res.json.bind(res))
+        .catch(next);
+    } catch (err) {
+      next(err);
+    }
   });
 
-  app.post('/segments/:linkHash/:action', (req, res, next) => {
+  app.get('/:process/segments/:linkHash', (req, res, next) => {
+    try {
+      const process = agent.getProcess(req.params.process);
+      process.getSegment(req.params.linkHash)
+        .then(res.json.bind(res))
+        .catch(next);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  app.get('/:process/segments', (req, res, next) => {
+    try {
+      const process = agent.getProcess(req.params.process);
+      process.findSegments(req.query)
+        .then(res.json.bind(res))
+        .catch(next);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  app.post('/:process/evidence/:linkHash', (req, res, next) => {
+    try {
+      const process = agent.getProcess(req.params.process);
+      process.insertEvidence(req.params.linkHash, req.body, req.query.secret)
+        .then(res.json.bind(res))
+        .catch(next);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  app.get('/:process/maps', (req, res, next) => {
+    try {
+      const process = agent.getProcess(req.params.process);
+      process.getMapIds(req.query)
+        .then(res.json.bind(res))
+        .catch(next);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // Legacy
+  app.post('/:process/maps', (req, res, next) => {
     /*eslint-disable*/
     res.locals.renderErrorAsLink = true;
     /*eslint-enable*/
 
-    agent
-      .createSegment(req.params.linkHash, req.params.action, ...parseArgs(req.body))
-      .then(res.json.bind(res))
-      .catch(next);
-  });
-
-  app.get('/segments/:linkHash', (req, res, next) => {
-    agent
-      .getSegment(req.params.linkHash)
-      .then(res.json.bind(res))
-      .catch(next);
-  });
-
-  app.get('/segments', (req, res, next) => {
-    agent
-      .findSegments(req.query)
-      .then(res.json.bind(res))
-      .catch(next);
-  });
-
-  app.post('/evidence/:linkHash', (req, res, next) => {
-    agent
-      .insertEvidence(req.params.linkHash, req.body, req.query.secret)
-      .then(res.json.bind(res))
-      .catch(next);
-  });
-
-  app.get('/maps', (req, res, next) => {
-    agent
-      .getMapIds(req.query)
-      .then(res.json.bind(res))
-      .catch(next);
+    try {
+      const process = agent.getProcess(req.params.process);
+      process.createMap(...parseArgs(req.body))
+        .then(res.json.bind(res))
+        .catch(next);
+    } catch (err) {
+      next(err);
+    }
   });
 
   // Legacy
-  app.post('/maps', (req, res, next) => {
+  app.post('/:process/links/:linkHash/:action', (req, res, next) => {
     /*eslint-disable*/
     res.locals.renderErrorAsLink = true;
     /*eslint-enable*/
 
-    agent
-      .createMap(...parseArgs(req.body))
-      .then(res.json.bind(res))
-      .catch(next);
+    try {
+      const process = agent.getProcess(req.params.process);
+      process.createSegment(req.params.linkHash, req.params.action, ...parseArgs(req.body))
+        .then(res.json.bind(res))
+        .catch(next);
+    } catch (err) {
+      next(err);
+    }
   });
 
   // Legacy
-  app.post('/links/:linkHash/:action', (req, res, next) => {
-    /*eslint-disable*/
-    res.locals.renderErrorAsLink = true;
-    /*eslint-enable*/
-
-    agent
-      .createSegment(req.params.linkHash, req.params.action, ...parseArgs(req.body))
-      .then(res.json.bind(res))
-      .catch(next);
+  app.get('/:process/links/:linkHash', (req, res, next) => {
+    try {
+      const process = agent.getProcess(req.params.process);
+      process.getSegment(req.params.linkHash)
+        .then(res.json.bind(res))
+        .catch(next);
+    } catch (err) {
+      next(err);
+    }
   });
 
   // Legacy
-  app.get('/links/:linkHash', (req, res, next) => {
-    agent
-      .getSegment(req.params.linkHash)
-      .then(res.json.bind(res))
-      .catch(next);
+  app.get('/:process/links', (req, res, next) => {
+    try {
+      const process = agent.getProcess(req.params.process);
+      process.findSegments(req.query)
+        .then(res.json.bind(res))
+        .catch(next);
+    } catch (err) {
+      next(err);
+    }
   });
 
   // Legacy
-  app.get('/links', (req, res, next) => {
-    agent
-      .findSegments(req.query)
-      .then(res.json.bind(res))
-      .catch(next);
-  });
-
-  // Legacy
-  app.get('/maps/:id', (req, res, next) => {
+  app.get('/:process/maps/:id', (req, res, next) => {
     /*eslint-disable*/
     req.query.mapId = req.params.id;
     /*eslint-enable*/
 
-    agent
-      .findSegments(req.query)
-      .then(res.json.bind(res))
-      .catch(next);
+    try {
+      const process = agent.getProcess(req.params.process);
+      process.findSegments(req.query)
+        .then(res.json.bind(res))
+        .catch(next);
+    } catch (err) {
+      next(err);
+    }
   });
 
   // Legacy
-  app.get('/branches/:linkHash', (req, res, next) => {
+  app.get('/:process/branches/:linkHash', (req, res, next) => {
     /*eslint-disable*/
     req.query.prevLinkHash = req.params.linkHash;
     /*eslint-enable*/
 
-    agent
-      .findSegments(req.query)
-      .then(res.json.bind(res))
-      .catch(next);
+    try {
+      const process = agent.getProcess(req.params.process);
+      process.findSegments(req.query)
+        .then(res.json.bind(res))
+        .catch(next);
+    } catch (err) {
+      next(err);
+    }
   });
 
   app.use((req, res, next) => {

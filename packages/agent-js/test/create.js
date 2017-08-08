@@ -16,20 +16,12 @@
 
 import create from '../src/create';
 import memoryStore from '../src/memoryStore';
-import hashJson from '../src/hashJson';
-import generateSecret from '../src/generateSecret';
-import { memoryStoreInfo } from './fixtures';
-
-const plugins = [
-  {
-    name: 'T',
-    description: 'D'
-  }
-];
+import plugins from '../src/plugins';
+import Process from '../src/process.js';
 
 const actions = {
   init(a, b, c) { this.append({ a, b, c }); },
-  action(d) { this.state.d = d; this.append(); }
+  action(d) { this.state[Object.keys(this.state).length] = d; this.append(); }
 };
 
 // TODO: could be improved by using a dummy fossilizer.
@@ -37,147 +29,292 @@ describe('Agent', () => {
   let agent;
 
   beforeEach(() => {
-    agent = create(actions, memoryStore(), null, { plugins });
+    agent = create({ agentUrl: 'http://localhost' });
   });
+
   afterEach(() => {
     delete actions.events;
   });
 
-  describe('#getInfo()', () => {
-    it('resolves with the agent info', () =>
-      agent
-        .getInfo()
-        .then(info => info.should.deepEqual({
-          storeInfo: memoryStoreInfo,
-          agentInfo: {
-            actions: {
-              init: { args: ['a', 'b', 'c'] },
-              action: { args: ['d'] }
-            },
-            pluginsInfo: [{
-              name: 'T',
-              description: 'D'
-            }]
-          }
-        }))
-    );
-  });
 
-  describe('#createMap()', () => {
-    it('resolves with the first segment', () =>
-      agent
-        .createMap(1, 2, 3)
-        .then(segment => {
-          segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
-          segment.link.meta.mapId.should.be.a.String();
-          segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
-          segment.meta.evidence.should.deepEqual({ state: 'DISABLED' });
-        })
-    );
-
-    it('should call the #didSave() event', () => {
-      let callCount = 0;
-      actions.events = {
-        didSave(s) {
-          callCount++;
-          s.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
-        }
-      };
-      return agent
-        .createMap(1, 2, 3)
-        .then(() => {
-          callCount.should.be.exactly(1);
+  describe('#getInfo', () => {
+    it('returns a Promise resolving with each process information', () => {
+      agent.addProcess('basic', actions, memoryStore(), null);
+      agent.addProcess('basic2', actions, memoryStore(), null);
+      return agent.getInfo()
+        .then(infos => {
+          infos.processes.should.be.an.Object();
+          Object.keys(infos.processes).length.should.be.exactly(2);
+          Object.values(infos.processes)[0].should.be.an.Object();
+          Object.values(infos.processes)[0].name.should.be.a.String();
         });
     });
   });
 
-  describe('#createSegment()', () => {
-    it('resolves with the new segment', () =>
-      agent
-        .createMap(1, 2, 3)
-        .then(segment1 => (
-          agent
-            .createSegment(segment1.meta.linkHash, 'action', 4)
-            .then(segment2 => {
-              segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
-              segment2.link.meta.prevLinkHash.should.be.exactly(segment1.meta.linkHash);
-              segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
-              segment2.meta.evidence.should.deepEqual({ state: 'DISABLED' });
-            })
-        )
-      )
-    );
+  describe('#addProcess', () => {
+    it('resolves with the newly created process', () => {
+      const process = agent.addProcess(
+        'basic',
+        actions,
+        memoryStore(),
+        null,
+        {
+          plugins: [plugins.stateHash, plugins.localTime],
+          salt: '30d3460fabed01abc3196b0d41b8fc98b672de6501ae2886bd1d9fb70a53f86a'
+        });
+      process.name.should.be.exactly('basic');
+      process.salt.should.be.
+        exactly('30d3460fabed01abc3196b0d41b8fc98b672de6501ae2886bd1d9fb70a53f86a');
+      process.plugins.should.deepEqual([plugins.stateHash, plugins.localTime]);
+      process.actions.should.deepEqual(actions);
+    });
 
-    it('should call the #didSave() event', () =>
-      agent
+    it('can span multiple processes', () => {
+      agent.addProcess('first', actions, memoryStore(), null);
+      agent.addProcess('second', actions, memoryStore(), null);
+      const processes = agent.getAllProcesses();
+      processes.length.should.be.exactly(2);
+    });
+
+    it('fails if process name already exists', () => {
+      agent.addProcess('basic', actions, memoryStore(), null);
+      try {
+        agent.addProcess('basic', actions);
+        throw new Error('should have failed');
+      } catch (err) {
+        err.message.should.be.exactly('already exists');
+        err.status.should.be.exactly(400);
+      }
+    });
+
+    it('fails if actions are undefined', () => {
+      try {
+        agent.addProcess('basic', undefined, memoryStore(), null);
+        throw new Error('should have failed');
+      } catch (err) {
+        err.message.should.be.exactly('action functions are empty');
+        err.status.should.be.exactly(400);
+      }
+    });
+
+    it('fails if actions are empty', () => {
+      try {
+        agent.addProcess('basic', {}, memoryStore(), null);
+        throw new Error('should have failed');
+      } catch (err) {
+        err.message.should.be.exactly('action functions are empty');
+        err.status.should.be.exactly(400);
+      }
+    });
+
+    it('calls the storeClient callbacks even if multiple processes are defined', () => {
+      let callCount = 0;
+      let foundSegments;
+      actions.events = {
+        didSave() {
+          callCount++;
+        }
+      };
+
+      return agent.addProcess('first', actions, memoryStore(), null)
         .createMap(1, 2, 3)
-        .then(segment1 => {
-          let callCount = 0;
-          actions.events = {
-            didSave(s) {
-              callCount++;
-              s.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
-            }
-          };
-          return agent
-            .createSegment(segment1.meta.linkHash, 'action', 4)
-            .then(() => {
-              callCount.should.be.exactly(1);
-            });
+        .then(() =>
+          agent.addProcess('second', actions, memoryStore(), null)
+            .createMap('a', 'b', 'c'))
+        .then(() =>
+          agent.findSegments('first'))
+        .then(sgmts1 => {
+          foundSegments = sgmts1;
+          return agent.findSegments('second');
         })
-    );
+        .then(sgmts2 => {
+          foundSegments.concat(sgmts2).length.should.be.exactly(2);
+          callCount.should.be.exactly(2);
+        });
+    });
+
+    it('calls the storeClient callbacks even if multiple processes are using the same store',
+      () => {
+        let callCount = 0;
+        actions.events = {
+          didSave() {
+            callCount++;
+          }
+        };
+        const store = memoryStore();
+        let foundSegments;
+
+        return agent.addProcess('first', actions, store, null)
+          .createMap(1, 2, 3)
+          .then(() =>
+            agent.addProcess('second', actions, store, null)
+              .createMap('a', 'b', 'c'))
+          .then(() =>
+            agent.findSegments('first'))
+          .then(sgmts1 => {
+            foundSegments = sgmts1;
+            return agent.findSegments('second');
+          })
+          .then(sgmts2 => {
+            foundSegments.concat(sgmts2).length.should.be.exactly(2);
+            callCount.should.be.exactly(2);
+          });
+      });
   });
 
-  describe('#insertEvidence()', () => {
-    it('resolves with the updated segment', () =>
-      agent
-        .createMap(1, 2, 3)
-        .then(segment1 => {
-          const secret = generateSecret(segment1.meta.linkHash, '');
-          return agent
-            .insertEvidence(segment1.meta.linkHash, { test: true }, secret)
-            .then(segment2 => {
-              segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
-              segment2.link.meta.mapId.should.be.a.String();
-              segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
-              segment2.meta.evidence.should.deepEqual({ state: 'COMPLETE', test: true });
-            });
-        })
-    );
+  describe('#getProcess', () => {
+    it('returns a Process', () => {
+      agent.addProcess('basic', actions, memoryStore(), null);
+      const p = agent.getProcess('basic');
+      p.should.be.an.instanceOf(Process);
+    });
 
-    it('fails if the secret is incorrect', () =>
-      agent
+    it('fails if trying to get a non-existent process', () => {
+      agent.addProcess('basic', actions, memoryStore(), null);
+      try {
+        agent.getProcess('fake');
+      } catch (err) {
+        err.status.should.be.exactly(404);
+        err.message.should.be.exactly('process \'fake\' does not exist');
+      }
+    });
+  });
+
+  describe('#removeProcess', () => {
+    it('removes an existing process', () => {
+      agent.addProcess('first', actions, memoryStore(), null);
+      const processes = agent.getAllProcesses();
+      processes.length.should.be.exactly(1);
+      agent.removeProcess('first').length.should.be.exactly(0);
+    });
+
+    it('fails if trying to remove a non-existent process', () => {
+      try {
+        agent.removeProcess('first');
+        throw new Error('should have failed');
+      } catch (err) {
+        err.message.should.be.exactly('process \'first\' does not exist');
+        err.status.should.be.exactly(404);
+      }
+    });
+  });
+
+  describe('#getAllProcesses', () => {
+    it('returns every process created by the agent', () => {
+      agent.addProcess('basic', actions, memoryStore(), null);
+      agent.addProcess('basic2', actions, memoryStore(), null);
+      const processes = agent.getAllProcesses();
+      processes.length.should.be.exactly(2);
+      for (const p of processes) {
+        p.name.should.be.oneOf(['basic', 'basic2']);
+      }
+    });
+  });
+
+  describe('#findSegments', () => {
+    it('finds segments matching a set of criterias on all processes', () => {
+      const p1 = agent.addProcess('basic', actions, memoryStore(), null);
+      const p2 = agent.addProcess('basic2', actions, memoryStore(), null);
+
+      return p1.createMap(1, 2, 3)
+        .then(s1 =>
+          p1.createSegment(s1.meta.linkHash, 'action', 5))
+        .then(() =>
+          agent.findSegments('basic'))
+        .then(segments =>
+          segments.length.should.be.exactly(2)
+        )
+        .then(() =>
+          p2.createMap(4, 5, 6))
+        .then(s1 =>
+          p2.createSegment(s1.meta.linkHash, 'action', 5))
+        .then(() =>
+          agent.findSegments('basic2'))
+        .then(segments =>
+          segments.length.should.be.exactly(2)
+        )
+        .then(() =>
+          agent.findSegments('none'))
+        .then(() => { throw new Error('Should have failed'); })
+        .catch(err => {
+          err.message.should.be.exactly('process \'none\' does not exist');
+          err.status.should.be.exactly(404);
+        });
+    });
+
+    it('finds the right amount of segments when using the same store for 2+ processes', () => {
+      const store = memoryStore();
+      return agent.addProcess('first', actions, store, null)
         .createMap(1, 2, 3)
-        .then(segment1 =>
-          agent
-            .insertEvidence(segment1.meta.linkHash, { test: true }, 'wrong secret')
-            .then(() => { throw new Error('should have failed'); })
-            .catch(err => {
-              err.message.should.be.exactly('unauthorized');
-              err.status.should.be.exactly(401);
-            })
+        .then(() =>
+          agent.addProcess('second', actions, store, null)
+            .createMap('a', 'b', 'c'))
+        .then(() =>
+          agent.findSegments('first'))
+        .then(segments =>
+          segments.length.should.be.exactly(1))
+        .then(() =>
+          agent.findSegments('second'))
+        .then(segments =>
+          segments.length.should.be.exactly(1));
+    });
+
+    it('only finds the segments of a given process when specified', () => {
+      const store = memoryStore();
+      return agent.addProcess('first', actions, store, null)
+        .createMap(1, 2, 3)
+        .then(() =>
+          agent.addProcess('second', actions, store, null)
+            .createMap('a', 'b', 'c'))
+        .then(() =>
+          agent.findSegments('second'))
+        .then(segments =>
+          segments.length.should.be.exactly(1)
+        );
+    });
+  });
+
+  describe('#getMapIds', () => {
+    it('returns the map ids of a processes', () =>
+      agent.addProcess('basic', actions, memoryStore(), null)
+        .createMap(1, 2, 3)
+        .then(() =>
+          agent.addProcess('basic2', actions, memoryStore(), null)
+            .createMap('a', 'b', 'c'))
+        .then(() =>
+          agent.getMapIds('basic'))
+        .then(mapIds => {
+          mapIds.length.should.be.exactly(1);
+          mapIds[0].should.be.an.instanceOf(String);
+        }));
+
+    it('throw an error for a non-existent process', () =>
+      agent.getMapIds('none')
+        .then(() => (new Error('should have failed')))
+        .catch(err =>
+          err.status.should.be.exactly(404)
         )
     );
 
-    it('should call the #didFossilize() event', () =>
-      agent
+    it('returns the good amount of map ids when using one store for multiple processes', () => {
+      const store = memoryStore();
+      return agent.addProcess('first', actions, store, null)
         .createMap(1, 2, 3)
-        .then(segment => {
-          let callCount = 0;
-          actions.events = {
-            didFossilize(s) {
-              callCount++;
-              s.meta.evidence.should.deepEqual({ state: 'COMPLETE', test: true });
-              this.state.should.deepEqual({ a: 1, b: 2, c: 3 });
-            }
-          };
-          const secret = generateSecret(segment.meta.linkHash, '');
-          return agent
-            .insertEvidence(segment.meta.linkHash, { test: true }, secret)
-            .then(() => {
-              callCount.should.be.exactly(1);
-            });
-        })
-    );
+        .then(() =>
+          agent.addProcess('second', actions, store, null)
+            .createMap('a', 'b', 'c'))
+        .then(() =>
+          agent.getMapIds('first'))
+        .then(mapIds => {
+          mapIds.length.should.be.exactly(1);
+        });
+    });
+  });
+
+  describe('#httpServer', () => {
+    it('returns an instance of httpServer', () => {
+      agent.addProcess('basic', actions, memoryStore(), null);
+      return agent.httpServer();
+    });
   });
 });

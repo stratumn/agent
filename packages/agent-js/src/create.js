@@ -14,266 +14,183 @@
   limitations under the License.
 */
 
-import uuid from 'uuid';
-import { mockAgent } from 'stratumn-mock-agent';
-import getActionsInfo from './getActionsInfo';
-import getPluginsInfo from './getPluginsInfo';
-import hashJson from './hashJson';
-import makeQueryString from './makeQueryString';
-import generateSecret from './generateSecret';
+import httpServer from './httpServer.js';
+import Process from './process.js';
 import getDefinedFilters from './getDefinedFilters';
-
-const QUEUED = 'QUEUED';
-const DISABLED = 'DISABLED';
-const COMPLETE = 'COMPLETE';
 
 /**
  * Creates an agent.
- * @param {object} actions - the action functions
- * @param {StoreClient} storeClient - the store client
- * @param {FossilizerClient} [fossilizerClient] - the fossilizer client
- * @param {object} [opts] - options
- * @param {string} [opts.agentUrl] - agent root url
- * @param {string} [opts.evidenceCallbackUrl] - evidence callback root url
- * @param {string} [opts.salt] - a unique salt
- * @param {number} [opts.reconnectTimeout=5000] - web socket reconnect timeout in milliseconds
- * @param {Plugins[]} [opts.plugins] - a list of agent plugins
- * @returns {Agent} an agent
+ * @param {object} options - options
+ * @param {string} [options.agentUrl] - agent root url
+ * @param {string} [options.evidenceCallbackUrl] - evidence callback root url
+ * @returns {Agent} - an agent
  */
-export default function create(actions, storeClient, fossilizerClient, opts = {}) {
-  const plugins = opts.plugins || [];
-  const agentInfo = { actions: getActionsInfo(actions), pluginsInfo: getPluginsInfo(plugins) };
+export default function create(options) {
+  const processes = Object();
+  const storeClients = [];
 
-  function fossilizeSegment(segment) {
-    if (fossilizerClient) {
-      const linkHash = segment.meta.linkHash;
-      const secret = generateSecret(linkHash, opts.salt || '');
-      let callbackUrl = `${opts.evidenceCallbackUrl || opts.agentUrl}/evidence/${linkHash}`;
-      callbackUrl += makeQueryString({ secret });
+  function connectStoreClient(storeClient, reconnectTimeout = 5000) {
+    storeClients.push(storeClient);
+    // Set up events.
+    storeClient.on('open', () => console.log('store: web socket open'));
+    storeClient.on('close', () => console.log('store: web socket closed'));
+    storeClient.on('error', err => console.error(`store: ${err.stack}`));
+    storeClient.on('message', msg => {
+      const eventName = msg.type;
+      const process = processes[msg.data.link.meta.process];
+      if (typeof process === 'object'
+        && typeof process.actions.events === 'object'
+        && typeof process.actions.events[eventName] === 'function') {
+        const segment = msg.data;
+        getDefinedFilters(process.plugins).reduce(
+          (cur, filter) => cur.then(ok => Promise.resolve(ok && filter(segment))),
+          Promise.resolve(true)
+        ).then(ok => {
+          if (ok) {
+            process.actions.events[eventName](segment);
+          }
+        });
+      }
+    });
 
-      return fossilizerClient
-        .fossilize(linkHash, callbackUrl)
-        .then(() => segment);
-    }
-
-    return segment;
+    // Connect to store web socket.
+    storeClient.connect(reconnectTimeout);
   }
 
-  function saveSegment(segment) {
-    return storeClient
-      .saveSegment(segment)
-      .then(fossilizeSegment);
-  }
-
-  // Set up events.
-  storeClient.on('open', () => console.log('store: web socket open'));
-  storeClient.on('close', () => console.log('store: web socket closed'));
-  storeClient.on('error', err => console.error(`store: ${err.stack}`));
-  storeClient.on('message', msg => {
-    const name = msg.type;
-    if (typeof actions.events === 'object' && typeof actions.events[name] === 'function') {
-      const segment = msg.data;
-      getDefinedFilters(plugins).reduce(
-        (cur, filter) => cur.then(ok => Promise.resolve(ok && filter(segment))),
-        Promise.resolve(true)
-      ).then(ok => {
-        if (ok) {
-          actions.events[name](segment);
-        }
-      });
+  function addProcess(processName, actions, storeClient, fossilizerClient, opts) {
+    const updatedOpts = Object.assign(opts, options);
+    const p = new Process(processName, actions, storeClient, fossilizerClient, updatedOpts);
+    processes[processName] = p;
+    if (storeClients.indexOf(storeClient) < 0) {
+      connectStoreClient(storeClient, opts.reconnectTimeout);
     }
-  });
-
-  // Connect to store web socket.
-  storeClient.connect(opts.reconnectTimeout || 5000);
-
-  function applyPlugins(method, ...args) {
-    // execute all plugins sequentially
-    return plugins.reduce(
-      (cur, plugin) => cur.then(() => Promise.resolve(plugin[method] && plugin[method](...args))),
-      Promise.resolve());
+    return p;
   }
 
   return {
     /**
-     * Gets information about the agent.
-     * @returns {Promise} a promise that resolve with the information
-     */
+    * Gets information about each process created by the agent.
+    * @returns {Promise} - a promise resolving with the processes' info (indexed by process name)
+    */
     getInfo() {
-      return storeClient
-        .getInfo()
-        .then(storeInfo => {
-          if (fossilizerClient) {
-            return fossilizerClient
-              .getInfo()
-              .then(fossilizerInfo => ({ agentInfo, storeInfo, fossilizerInfo }));
-          }
-
-          return { agentInfo, storeInfo };
-        });
+      const processesInfo = Object.values(processes).map(p => p.getInfo());
+      return Promise.all(processesInfo)
+        .then(res => res.reduce((map, process) => {
+          map[process.name] = process;
+          return map;
+        }, {}))
+        .then(map => ({ processes: map }));
     },
 
     /**
-     * Creates the first segment of a map, calling the #init() function of the agent.
-     * @param {...} args - the arguments to pass to the init function
-     * @returns {Promise} a promise that resolve with the segment
+     * Creates a process.
+     * @param {String} processName - name for the process
+     * @param {object} actions - the action functions
+     * @param {StoreClient} storeClient - the store client
+     * @param {FossilizerClient} [fossilizerClient] - the fossilizer client
+     * @param {object} [opts] - options
+     * @param {string} [opts.salt] - a unique salt
+     * @param {number} [opts.reconnectTimeout=5000] - web socket reconnect timeout in milliseconds
+     * @param {Plugins[]} [opts.plugins] - a list of agent plugins
+     * @returns {Process} - the newly created Process
      */
-    createMap(...args) {
-      const initialLink = { meta: { mapId: uuid.v4() } };
-      let link;
-      let segment;
-
-      return mockAgent(actions, initialLink)
-        .init(...args)
-        .catch(err => {
-          err.status = 400;
-          throw err;
-        })
-        .then(l => {
-          link = l;
-          return applyPlugins('didCreateLink', link, 'init', args);
-        })
-        .then(() => {
-          const linkHash = hashJson(link);
-
-          const meta = {
-            linkHash,
-            evidence: { state: fossilizerClient ? QUEUED : DISABLED }
-          };
-
-          segment = { link, meta };
-
-          return applyPlugins('didCreateSegment', segment, 'init', args);
-        })
-        .then(
-          () => saveSegment(segment)
-        );
+    addProcess(processName, actions, storeClient, fossilizerClient, opts = {}) {
+      if (processes[processName]) {
+        const err = new Error('already exists');
+        err.status = 400;
+        throw err;
+      }
+      if (!actions || Object.keys(actions).length === 0) {
+        const err = new Error('action functions are empty');
+        err.status = 400;
+        throw err;
+      }
+      return addProcess(processName, actions, storeClient, fossilizerClient, opts);
     },
 
     /**
-     * Appends a segment to a map.
-     * @param {string} prevLinkHash - the previous link hash
-     * @param {string} action - the name of the transition function to call
-     * @param {...} args - the arguments to pass to the transition function
-     * @returns {Promise} a promise that resolve with the segment
-     */
-    createSegment(prevLinkHash, action, ...args) {
-      if (!actions[action]) {
-        const err = new Error('not found');
+     * Returns an existing process.
+     * @param {String} processName - name for the process
+     * @returns {Process} - a process
+    */
+    getProcess(processName) {
+      if (!processes[processName]) {
+        const err = new Error(`process '${processName}' does not exist`);
         err.status = 404;
-        return Promise.reject(err);
+        throw err;
       }
-
-      let initialLink;
-      let createdLink;
-      let segment;
-
-      return storeClient
-        .getSegment(prevLinkHash)
-        .then(s => {
-          initialLink = s.link;
-
-          return applyPlugins('willCreate', initialLink, action, args);
-        })
-        .then(() => {
-          delete initialLink.meta.prevLinkHash;
-          initialLink.meta.prevLinkHash = prevLinkHash;
-
-          return mockAgent(actions, initialLink)[action](...args)
-            .catch(err => {
-              err.status = 400;
-              throw err;
-            });
-        })
-        .then(link => {
-          createdLink = link;
-          return applyPlugins('didCreateLink', link, action, args);
-        })
-        .then(() => {
-          const linkHash = hashJson(createdLink);
-
-          const meta = {
-            linkHash,
-            evidence: { state: fossilizerClient ? QUEUED : DISABLED }
-          };
-
-          segment = { link: createdLink, meta };
-
-          return applyPlugins('didCreateSegment', segment, action, args);
-        })
-        .then(() => saveSegment(segment));
+      return processes[processName];
     },
 
     /**
-     * Inserts evidence.
-     * @param {string} linkHash - the link hash
-     * @param {object} evidence - evidence to insert
-     * @param {strint} secret - a secret
-     * @returns {Promise} a promise that resolve with the segment
-     */
-    insertEvidence(linkHash, evidence, secret) {
-      const expected = generateSecret(linkHash, opts.salt || '');
-
-      if (secret !== expected) {
-        const err = new Error('unauthorized');
-        err.status = 401;
-        return Promise.reject(err);
+     * Removes a process.
+     * @param {String} processName - name for the process
+     * @returns {Array} - a an Array containing the updated processes
+    */
+    removeProcess(processName) {
+      if (!processes[processName]) {
+        const err = new Error(`process '${processName}' does not exist`);
+        err.status = 404;
+        throw err;
       }
-
-      // Not atomic. Not an issue at the moment, but it could
-      // become one in the future, for instance if there can be
-      // more than one fossilizers? Could it be solved by adding
-      // an insertEvidence route to stores?
-      return storeClient
-        .getSegment(linkHash)
-        .then(segment => {
-          Object.assign(segment.meta.evidence, evidence, {
-            state: COMPLETE
-          });
-
-          return storeClient.saveSegment(segment);
-        })
-        .then(segment => {
-          // Call didFossilize event if present.
-          if (typeof actions.events === 'object' &&
-              typeof actions.events.didFossilize === 'function') {
-            mockAgent(actions, segment.link).events.didFossilize(segment);
-          }
-
-          return segment;
-        });
+      delete processes[processName];
+      return Object.values(processes);
+    },
+    /**
+    * Returns the processes.
+    * @returns {Array} - an array containing all the processes
+    */
+    getAllProcesses() {
+      return Object.values(processes);
     },
 
     /**
-     * Gets a segment.
-     * @param {string} linkHash - the link hash
-     * @returns {Promise} a promise that resolve with the segment
-     */
-    getSegment(linkHash) {
-      return storeClient.getSegment(linkHash, getDefinedFilters(plugins));
-    },
-
-    /**
-     * Finds segments.
+     * Finds segments maching a set of given criterias on a single process.
+     * @param {string} processName - name of the process from which we want the segments
      * @param {object} [opts] - filtering options
      * @param {number} [opts.offset] - offset of the first segment to return
      * @param {number} [opts.limit] - maximum number of segments to return
-     * @param {string} [opts.mapId] - a map ID the segments must have
+     * @param {string[]} [opts.mapIds] - an array of map IDs the segments must have
      * @param {string} [opts.prevLinkHash] - a previous link hash the segments must have
      * @param {string[]} [opts.tags] - an array of tags the segments must have
-     * @returns {Promise} a promise that resolve with the segments
+     * @returns {Promise} - a promise that resolve with the segments
      */
-    findSegments(options) {
-      return storeClient.findSegments(options, getDefinedFilters(plugins));
+    findSegments(processName, opts = {}) {
+      if (!processes[processName]) {
+        const err = new Error(`process '${processName}' does not exist`);
+        err.status = 404;
+        return Promise.reject(err);
+      }
+      return processes[processName].findSegments(opts);
     },
 
     /**
      * Gets map IDs.
+     * @param {string} processName - name of the process from which we want the segments
      * @param {object} [opts] - pagination options
      * @param {number} [opts.offset] - offset of the first map ID to return
      * @param {number} [opts.limit] - maximum number of map IDs to return
-     * @returns {Promise} a promise that resolve with the map IDs
+     * @returns {Promise} - a promise that resolve with the map IDs
      */
-    getMapIds: storeClient.getMapIds.bind(storeClient)
+    getMapIds(processName, opts = {}) {
+      if (!processes[processName]) {
+        const err = new Error(`process '${processName}' does not exist`);
+        err.status = 404;
+        return Promise.reject(err);
+      }
+      return processes[processName].getMapIds(opts);
+    },
+
+    /**
+    * Initialize and return an http server for the agent.
+    * @param {object} [opts] - options
+    * @param {object} [opts.cors] - CORS options
+    * @param {object} [opts.salt] - salt used for callback URLs
+    * @returns {express.Server} - an express server
+    */
+    httpServer(opts = {}) {
+      return httpServer(this, opts);
+    }
+
   };
 }

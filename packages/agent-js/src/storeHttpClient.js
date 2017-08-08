@@ -87,6 +87,7 @@ export default function storeHttpClient(url) {
 
     /**
      * Creates or updates a segment.
+     * @param {string} process - name of the process from which we want the segments
      * @param {object} segment - the segment
      * @returns {Promise} a promise that resolve with the segment
      */
@@ -101,18 +102,18 @@ export default function storeHttpClient(url) {
 
     /**
      * Gets a segment.
+     * @param {string} process - name of the process from which we want the segments
      * @param {string} linkHash - the link hash
      * @returns {Promise} a promise that resolve with the segment
      */
-    getSegment(linkHash, filters = []) {
+    getSegment(process, linkHash, filters = []) {
       let segment;
       return new Promise((resolve, reject) =>
         request
-          .get(`${url}/segments/${linkHash}`)
+          .get(`${url}/segments/${linkHash}${makeQueryString({ process })}`)
           .end((err, res) => handleResponse(err, res)
             .then(s => {
               segment = s;
-
               return filters.reduce(
                 (cur, filter) => cur.then(ok => Promise.resolve(ok && filter(s))),
                 Promise.resolve(true)
@@ -129,42 +130,44 @@ export default function storeHttpClient(url) {
               }
             })
             .catch(reject))
-        );
+      );
     },
 
     /**
      * Deletes a segment.
+     * @param {string} process - name of the process from which we want the segments
      * @param {string} linkHash - the link hash
      * @returns {Promise} a promise that resolve with the segment
      */
-    deleteSegment(linkHash) {
+    deleteSegment(process, linkHash) {
       return new Promise((resolve, reject) => {
         request
-          .del(`${url}/segments/${linkHash}`)
+          .del(`${url}/segments${makeQueryString({ process, linkHash })}`)
           .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
       });
     },
 
     /**
      * Finds segments.
+     * @param {string} process - name of the process from which we want the segments
      * @param {object} [opts] - filtering options
      * @param {number} [opts.offset] - offset of the first segment to return
      * @param {number} [opts.limit] - maximum number of segments to return
-     * @param {string} [opts.mapId] - a map ID the segments must have
+     * @param {string[]} [opts.mapIds] - a map ID the segments must have
      * @param {string} [opts.prevLinkHash] - a previous link hash the segments must have
      * @param {string[]} [opts.tags] - an array of tags the segments must have
      * @returns {Promise} a promise that resolve with the segments
      */
-    findSegments(opts, filters = []) {
+    findSegments(process, opts, filters = []) {
+      const options = Object.assign({ process }, opts || {});
       return new Promise((resolve, reject) => {
         request
-          .get(`${url}/segments${makeQueryString(opts || {})}`)
+          .get(`${url}/segments${makeQueryString(options)}`)
           .end((err, res) => handleResponse(err, res)
             .then(s => filters.reduce(
-                (cur, f) => cur.then(sgmts => filterAsync(sgmts, f)),
-                Promise.resolve(s)
-              )
-            )
+              (cur, f) => cur.then(sgmts => filterAsync(sgmts, f)),
+              Promise.resolve(s)
+            ))
             .then(filtered => resolve(filtered))
             .catch(reject)
           );
@@ -173,16 +176,19 @@ export default function storeHttpClient(url) {
 
     /**
      * Gets map IDs.
+     * @param {string} process - name of the process from which we want the segments
      * @param {object} [opts] - pagination options
      * @param {number} [opts.offset] - offset of the first map ID to return
      * @param {number} [opts.limit] - maximum number of map IDs to return
      * @returns {Promise} a promise that resolve with the map IDs
      */
-    getMapIds(opts) {
+    getMapIds(process, opts) {
+      const options = Object.assign({ process }, opts || {});
       return new Promise((resolve, reject) => {
         request
-          .get(`${url}/maps${makeQueryString(opts || {})}`)
-          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
+          .get(`${url}/maps${makeQueryString(options)}`)
+          .end((err, res) =>
+            handleResponse(err, res).then(resolve).catch(reject));
       });
     }
   });
