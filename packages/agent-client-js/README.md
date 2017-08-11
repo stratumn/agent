@@ -26,7 +26,7 @@ $ bower install stratumn-agent-client
 ### Node.js
 
 ```
-$ npm install stratumn-agent-client@master
+$ npm install stratumn-agent-client
 ```
 
 ```javascript
