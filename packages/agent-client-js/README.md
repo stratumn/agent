@@ -39,8 +39,20 @@ var AgentClient = require('stratumn-agent-client');
 AgentClient.getAgent('http://localhost:3000')
   .then(function(agent) {
     console.log(agent);
+    // { processes: {
+    //    firstProcess: {
+    //      name: "first",
+    //      processInfo: {...}
+    //      storeInfo: {...}
+    //    },
+    //    secondProcess: {
+    //      ...
+    //    }
+    //  }
+    // } 
     // Create a new map, you can pass arguments to init
-    return agent.createMap('My conversation');
+    var firstProcess = agent.processes.firstProcess;
+    return firstProcess.createMap('My conversation');
   })
   .then(function(segment) {
     // You can call an action like a regular function
@@ -88,7 +100,7 @@ AgentClient
   });
 ```
 
-### Agent#createMap(...args)
+### Process#createMap(...args)
 
 Returns a promise that resolves with a the first segment of a map.
 
@@ -96,7 +108,8 @@ Returns a promise that resolves with a the first segment of a map.
 AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
-    return agent.createMap('A new map');
+    const process = agent.processes.firstProcess;
+    return process.createMap('A new map');
   })
   .then(function(segment) {
     console.log(segment);
@@ -106,7 +119,7 @@ AgentClient
   });
 ```
 
-### Agent#getSegment(linkHash)
+### Process#getSegment(linkHash)
 
 Returns a promise that resolves with an existing segment.
 
@@ -114,7 +127,8 @@ Returns a promise that resolves with an existing segment.
 AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
-    return agent.getSegment('aee5427');
+    const process = agent.processes.firstProcess;
+    return process.getSegment('aee5427');
   })
   .then(function(segment) {
     console.log(segment);
@@ -124,7 +138,7 @@ AgentClient
   });
 ```
 
-### Agent#findSegments(opts)
+### Process#findSegments(opts)
 
 Returns a promise that resolves with existing segments.
 
@@ -133,7 +147,7 @@ Available options are:
 - `offset`: offset of first returned segments
 - `limit`: limit number of returned segments, if -1 load all segments
 - `batchSize`: size of each batch when loading all segments (default 20)
-- `mapId`: return segments with specified map ID
+- `mapIds`: return segments with specified map ID
 - `prevLinkHash`: return segments with specified previous link hash
 - `tags`: return segments that contains all the tags (array)
 
@@ -141,7 +155,8 @@ Available options are:
 AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
-    return agent.findSegments({ tags: ['tag1', 'tag2'], offset: 20, limit: 10 });
+    const process = agent.processes.firstProcess;
+    return process.findSegments({ tags: ['tag1', 'tag2'], offset: 20, limit: 10 });
   })
   .then(function(segments) {
     console.log(segments);
@@ -151,7 +166,7 @@ AgentClient
   });
 ```
 
-### Agent#getMapIds(opts)
+### Process#getMapIds(opts)
 
 Returns a promise that resolves with existing map IDs.
 
@@ -164,7 +179,8 @@ Available options are:
 AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
-    return agent.findSegments({ offset: 20, limit: 10 });
+    const process = agent.processes.firstProcess;
+    return process.getMapIds({ offset: 20, limit: 10 });
   })
   .then(function(mapIDs) {
     console.log(mapIDs);
@@ -174,7 +190,7 @@ AgentClient
   });
 ```
 
-### Segment#getPrev()
+### Process#getPrev()
 
 Returns a promise that resolves with the previous segment.
 
@@ -182,7 +198,8 @@ Returns a promise that resolves with the previous segment.
 AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
-    return agent.getSegment('aee5427');
+    const process = agent.processes.firstProcess;
+    return process.getSegment('aee5427');
   })
   .then(function(segment) {
     return segment.getPrev();
@@ -195,7 +212,7 @@ AgentClient
   });
 ```
 
-### Segment#:actionName(...args)
+### Process#:actionName(...args)
 
 Executes an action and returns a promise that resolves with a new segment.
 
@@ -203,7 +220,8 @@ Executes an action and returns a promise that resolves with a new segment.
 AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
-    return agent.getSegment('aee5427');
+    const process = agent.processes.firstProcess;
+    return process.getSegment('aee5427');
   })
   .then(function(segment) {
     return segment.addMessage('Hello, World!');

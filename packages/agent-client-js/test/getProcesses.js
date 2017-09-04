@@ -17,31 +17,19 @@
 import getAgent from '../src/getAgent';
 import agentHttpServer from './utils/agentHttpServer';
 
-describe('#getLink', () => {
+describe('#getProcesses', () => {
 
   let closeServer;
   beforeEach(() => agentHttpServer(3333).then(c => { closeServer = c; }));
   afterEach(() => closeServer());
 
-  let agent;
-  let process;
-  beforeEach(() =>
-    getAgent('http://localhost:3333').then(res => {
-      agent = res;
-      process = agent.processes.first_process;
-      return;
-    })
-  );
-
-  // Deprecated
-  it('gets a segment', () =>
-    process
-      .createMap('hi there')
-      .then(segment =>
-        process.getLink(segment.meta.linkHash)
-      )
-      .then(segment => {
-        segment.link.state.title.should.be.exactly('hi there');
+  it('resolves with a list of all processes', () =>
+    getAgent('http://localhost:3333')
+      .then(agent =>
+        agent.getProcesses())
+      .then(processes => {
+        processes.length.should.be.exactly(3);
+        processes[0].name.should.be.exactly('first_process');
       })
   );
 

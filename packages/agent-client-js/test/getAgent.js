@@ -26,7 +26,9 @@ describe('#getAgent', () => {
   it('loads an agent', () =>
     getAgent('http://localhost:3333')
       .then(agent => {
-        agent.storeInfo.adapter.name.should.be.exactly('memory');
+        agent.url.should.be.exactly('http://localhost:3333');
+        Object.keys(agent.processes).length.should.be.exactly(3);
+        agent.processes.first_process.storeInfo.adapter.name.should.be.exactly('memory');
       })
   );
 

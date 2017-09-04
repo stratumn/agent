@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { memoryStore, create, httpServer } from 'stratumn-agent';
+import { memoryStore, create } from 'stratumn-agent';
 
 // Test actions
 const actions = {
@@ -66,10 +66,30 @@ const actions = {
   }
 };
 
+const actions2 = {
+  init(a, b, c) { this.append({ a, b, c }); },
+  action(d) { this.state.d = d; this.append(); },
+};
+
+const plugins = [
+  {
+    name: 'T',
+    description: 'D'
+  }
+];
+
 export default function agentHttpServer(port) {
   return new Promise(resolve => {
-    const agent = create(actions, memoryStore(), null, { agentUrl: `http://localhost:${port}` });
-    const server = httpServer(agent).listen(port, () => {
+    const agent = create({ agentUrl: `http://localhost:${port}` });
+    const commonStore = memoryStore();
+    agent.addProcess('first_process', actions, memoryStore(), null, {
+      plugins,
+      salt: ''
+    });
+    agent.addProcess('second_process', actions2, commonStore, null);
+    agent.addProcess('third_process', actions2, commonStore, null);
+
+    const server = agent.httpServer(agent, { cors: {} }).listen(port, () => {
       const close = () => new Promise(done => server.close(done));
       resolve(close);
     });

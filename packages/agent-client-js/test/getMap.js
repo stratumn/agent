@@ -24,16 +24,23 @@ describe('#getMap', () => {
   afterEach(() => closeServer());
 
   let agent;
+  let process;
   beforeEach(() =>
-    getAgent('http://localhost:3333').then(res => { agent = res; })
+    getAgent('http://localhost:3333').then(res => {
+      agent = res;
+      process = agent.processes.first_process;
+      return;
+    })
   );
 
   // Deprecated
   it('finds the segments', () =>
-    agent
-      .createMap('hi')
+    process
+      .createMap('blank')
+      .then(() =>
+        process.createMap('hi'))
       .then(segment => segment.addMessage('hello', 'bot'))
-      .then(segment => agent.getMap(segment.link.meta.mapId))
+      .then(segment => process.getMap(segment.link.meta.mapId))
       .then(segments => {
         segments.should.be.an.Array();
         segments.length.should.be.exactly(2);

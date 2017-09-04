@@ -1072,7 +1072,7 @@ var toConsumableArray = function (arr) {
 
 var DEFAULT_BATCH_SIZE = 20;
 
-function findSegments(agent) {
+function findSegments(process) {
   var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   var options = Object.assign({}, opts);
@@ -1085,7 +1085,7 @@ function findSegments(agent) {
     return promiseWhile(function () {
       return segments.length === options.limit;
     }, function () {
-      return findSegments(agent, options).then(function (newSegments) {
+      return findSegments(process, options).then(function (newSegments) {
         segments.push.apply(segments, toConsumableArray(newSegments));
         options.offset += options.limit;
       });
@@ -1093,10 +1093,9 @@ function findSegments(agent) {
       return segments;
     });
   }
-
-  return get(agent.url + '/segments' + makeQueryString(opts)).then(function (res) {
+  return get(process.prefixUrl + '/segments' + makeQueryString(opts)).then(function (res) {
     return res.body.map(function (obj) {
-      return segmentify(agent, obj);
+      return segmentify(process, obj);
     });
   });
 }
@@ -1141,8 +1140,8 @@ function getBranches(agent, prevLinkHash) {
   limitations under the License.
 */
 
-function segmentify(agent, obj) {
-  Object.keys(agent.agentInfo.actions).filter(function (key) {
+function segmentify(process, obj) {
+  Object.keys(process.processInfo.actions).filter(function (key) {
     return ['init'].indexOf(key) < 0;
   }).forEach(function (key) {
     /*eslint-disable*/
@@ -1151,8 +1150,8 @@ function segmentify(agent, obj) {
         args[_key] = arguments[_key];
       }
 
-      return post(agent.url + '/segments/' + obj.meta.linkHash + '/' + key, args).then(function (res) {
-        return segmentify(agent, res.body);
+      return post(process.prefixUrl + '/segments/' + obj.meta.linkHash + '/' + key, args).then(function (res) {
+        return segmentify(process, res.body);
       });
     };
   });
@@ -1161,7 +1160,7 @@ function segmentify(agent, obj) {
   obj.getPrev = function () {
     /*eslint-enable*/
     if (obj.link.meta.prevLinkHash) {
-      return agent.getSegment(obj.link.meta.prevLinkHash);
+      return process.getSegment(obj.link.meta.prevLinkHash);
     }
 
     return Promise.resolve(null);
@@ -1172,7 +1171,7 @@ function segmentify(agent, obj) {
   obj.load = function () {
     /*eslint-enable*/
     deprecated('segment#load()');
-    return Promise.resolve(segmentify(agent, {
+    return Promise.resolve(segmentify(process, {
       link: JSON.parse(JSON.stringify(obj.link)),
       meta: JSON.parse(JSON.stringify(obj.meta))
     }));
@@ -1186,7 +1185,7 @@ function segmentify(agent, obj) {
     }
 
     /*eslint-enable*/
-    return getBranches.apply(undefined, [agent, obj.meta.linkHash].concat(args));
+    return getBranches.apply(undefined, [process, obj.meta.linkHash].concat(args));
   };
 
   return obj;
@@ -1208,13 +1207,13 @@ function segmentify(agent, obj) {
   limitations under the License.
 */
 
-function createMap(agent) {
+function createMap(process) {
   for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     args[_key - 1] = arguments[_key];
   }
 
-  return post(agent.url + '/segments', args).then(function (res) {
-    return segmentify(agent, res.body);
+  return post(process.prefixUrl + '/segments', args).then(function (res) {
+    return segmentify(process, res.body);
   });
 }
 
@@ -1234,9 +1233,9 @@ function createMap(agent) {
   limitations under the License.
 */
 
-function getSegment(agent, linkHash) {
-  return get(agent.url + '/segments/' + linkHash).then(function (res) {
-    return segmentify(agent, res.body);
+function getSegment(process, linkHash) {
+  return get(process.prefixUrl + '/segments/' + linkHash).then(function (res) {
+    return segmentify(process, res.body);
   });
 }
 
@@ -1256,10 +1255,10 @@ function getSegment(agent, linkHash) {
   limitations under the License.
 */
 
-function getMapIds(agent) {
+function getMapIds(process) {
   var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-  return get(agent.url + '/maps' + makeQueryString(opts)).then(function (res) {
+  return get(process.prefixUrl + '/maps' + makeQueryString(opts)).then(function (res) {
     return res.body;
   });
 }
@@ -1280,10 +1279,10 @@ function getMapIds(agent) {
   limitations under the License.
 */
 
-function getLink(agent, hash) {
+function getLink(process, hash) {
   deprecated('Agent#getLink(agent, hash)', 'Agent#getSegment(agent, hash)');
 
-  return getSegment(agent, hash);
+  return getSegment(process, hash);
 }
 
 /*
@@ -1302,12 +1301,12 @@ function getLink(agent, hash) {
   limitations under the License.
 */
 
-function getMap(agent, mapId) {
+function getMap(process, mapId) {
   var tags = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
   deprecated('getMap(agent, mapId, tags = [])', 'findSegments(agent, filter)');
 
-  return findSegments(agent, { mapId: mapId, tags: tags });
+  return findSegments(process, { mapIds: mapId, tags: tags });
 }
 
 /*
@@ -1327,21 +1326,71 @@ function getMap(agent, mapId) {
 */
 
 // Deprecated.
+function processify(process, agentUrl) {
+  var updatedProcess = process;
+  updatedProcess.agentUrl = agentUrl;
+  updatedProcess.prefixUrl = agentUrl + '/' + process.name;
+  updatedProcess.createMap = createMap.bind(null, updatedProcess);
+  updatedProcess.getSegment = getSegment.bind(null, updatedProcess);
+  updatedProcess.findSegments = findSegments.bind(null, updatedProcess);
+  updatedProcess.getMapIds = getMapIds.bind(null, updatedProcess);
+
+  // Deprecated.
+  updatedProcess.getBranches = getBranches.bind(null, updatedProcess);
+  updatedProcess.getLink = getLink.bind(null, updatedProcess);
+  updatedProcess.getMap = getMap.bind(null, updatedProcess);
+
+  return updatedProcess;
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function getProcesses(agent) {
+  return get(agent.url + '/processes').then(function (res) {
+    return res.body.map(processify);
+  });
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
 function getAgent(url) {
   return get(url).then(function (res) {
     var agent = res.body;
-
     agent.url = url;
-    agent.createMap = createMap.bind(null, agent);
-    agent.getSegment = getSegment.bind(null, agent);
-    agent.findSegments = findSegments.bind(null, agent);
-    agent.getMapIds = getMapIds.bind(null, agent);
-
-    // Deprecated.
-    agent.getBranches = getBranches.bind(null, agent);
-    agent.getLink = getLink.bind(null, agent);
-    agent.getMap = getMap.bind(null, agent);
-
+    agent.getProcesses = getProcesses.bind(null, agent);
+    agent.processes = Object.values(agent.processes).reduce(function (map, p) {
+      var updatedMap = map;
+      updatedMap[p.name] = processify(p, agent.url);
+      return updatedMap;
+    }, {});
     return agent;
   });
 }
@@ -1364,8 +1413,11 @@ function getAgent(url) {
 
 function fromSegment(obj) {
   return getAgent(obj.meta.agentUrl || obj.meta.applicationLocation).then(function (agent) {
-    var segment = segmentify(agent, obj);
-    return { agent: agent, segment: segment };
+    if (!agent.processes[obj.link.meta.process]) {
+      throw new Error('process \'' + obj.link.meta.process + '\' not found');
+    }
+    var segment = segmentify(agent.processes[obj.link.meta.process], obj);
+    return { process: agent.processes[obj.link.meta.process], segment: segment };
   });
 }
 

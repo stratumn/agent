@@ -14,11 +14,10 @@
   limitations under the License.
 */
 
-import getSegment from './getSegment';
-import deprecated from './deprecated';
+import processify from './processify';
+import { get } from './request';
 
-export default function getLink(process, hash) {
-  deprecated('Agent#getLink(agent, hash)', 'Agent#getSegment(agent, hash)');
-
-  return getSegment(process, hash);
+export default function getProcesses(agent) {
+  return get(`${agent.url}/processes`)
+    .then(res => res.body.map(processify));
 }

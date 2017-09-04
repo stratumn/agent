@@ -24,15 +24,20 @@ describe('#getSegment', () => {
   afterEach(() => closeServer());
 
   let agent;
+  let process;
   beforeEach(() =>
-    getAgent('http://localhost:3333').then(res => { agent = res; })
+    getAgent('http://localhost:3333').then(res => {
+      agent = res;
+      process = agent.processes.first_process;
+      return;
+    })
   );
 
   it('gets a segment', () =>
-    agent
+    process
       .createMap('hi there')
       .then(segment =>
-        agent.getSegment(segment.meta.linkHash)
+        process.getSegment(segment.meta.linkHash)
       )
       .then(segment => {
         segment.link.state.title.should.be.exactly('hi there');
@@ -40,7 +45,7 @@ describe('#getSegment', () => {
   );
 
   it('rejects if the segment is not found', () =>
-    agent
+    process
       .getSegment('404')
       .then(() => {
         throw new Error('should not resolve');

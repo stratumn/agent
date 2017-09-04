@@ -21,7 +21,7 @@ import { get } from './request';
 
 const DEFAULT_BATCH_SIZE = 20;
 
-export default function findSegments(agent, opts = {}) {
+export default function findSegments(process, opts = {}) {
   const options = Object.assign({}, opts);
   if (opts.limit === -1) {
     options.limit = options.batchSize || DEFAULT_BATCH_SIZE;
@@ -31,14 +31,13 @@ export default function findSegments(agent, opts = {}) {
 
     return promiseWhile(
       () => segments.length === options.limit,
-      () => findSegments(agent, options)
-              .then(newSegments => {
-                segments.push(...newSegments);
-                options.offset += options.limit;
-              })
+      () => findSegments(process, options)
+        .then(newSegments => {
+          segments.push(...newSegments);
+          options.offset += options.limit;
+        })
     ).then(() => segments);
   }
-
-  return get(`${agent.url}/segments${makeQueryString(opts)}`)
-    .then(res => res.body.map(obj => segmentify(agent, obj)));
+  return get(`${process.prefixUrl}/segments${makeQueryString(opts)}`)
+    .then(res => res.body.map(obj => segmentify(process, obj)));
 }

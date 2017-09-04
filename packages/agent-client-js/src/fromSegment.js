@@ -20,7 +20,10 @@ import segmentify from './segmentify';
 export default function fromSegment(obj) {
   return getAgent(obj.meta.agentUrl || obj.meta.applicationLocation)
     .then(agent => {
-      const segment = segmentify(agent, obj);
-      return { agent, segment };
+      if (!agent.processes[obj.link.meta.process]) {
+        throw new Error(`process '${obj.link.meta.process}' not found`);
+      }
+      const segment = segmentify(agent.processes[obj.link.meta.process], obj);
+      return { process: agent.processes[obj.link.meta.process], segment };
     });
 }

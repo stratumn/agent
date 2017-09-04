@@ -24,17 +24,21 @@ describe('#getMapIds', () => {
   afterEach(() => closeServer());
 
   let agent;
-
+  let process;
   beforeEach(() =>
-    getAgent('http://localhost:3333').then(res => { agent = res; })
+    getAgent('http://localhost:3333').then(res => {
+      agent = res;
+      process = agent.processes.first_process;
+      return;
+    })
   );
 
   it('gets map IDs', () =>
-    agent
+    process
       .createMap('hi')
-      .then(() => agent.createMap('hi'))
-      .then(() => agent.createMap('hi'))
-      .then(() => agent.getMapIds())
+      .then(() => process.createMap('hi'))
+      .then(() => process.createMap('hi'))
+      .then(() => process.getMapIds())
       .then(mapIds => {
         mapIds.should.be.an.Array();
         mapIds.length.should.be.exactly(3);

@@ -30,7 +30,9 @@ describe('#getApplication', () => {
   it('loads an application', () =>
     getApplication('test')
       .then(agent => {
-        agent.storeInfo.adapter.name.should.be.exactly('memory');
+        agent.url.should.be.exactly('http://localhost:3333');
+        Object.keys(agent.processes).length.should.be.exactly(3);
+        agent.processes.first_process.storeInfo.adapter.name.should.be.exactly('memory');
       })
   );
 

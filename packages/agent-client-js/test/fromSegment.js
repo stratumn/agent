@@ -26,12 +26,22 @@ describe('#fromSegment', () => {
   afterEach(() => closeServer());
 
   const raw = JSON.parse(fs.readFileSync(join(__dirname, './fixtures/segment.json')));
+  const wrongRaw = JSON.parse(fs.readFileSync(join(__dirname, './fixtures/segment2.json')));
 
   it('loads a segment', () =>
     fromSegment(raw)
-      .then(({ agent, segment }) => {
-        agent.findSegments.should.be.a.Function();
+      .then(({ process, segment }) => {
+        process.findSegments.should.be.a.Function();
         segment.link.should.deepEqual(raw.link);
+      })
+  );
+
+
+  it('throws an error when process does not exist', () =>
+    fromSegment(wrongRaw)
+      .then(() => { throw new Error('Should have failed'); })
+      .catch(err => {
+        err.message.should.be.exactly('process \'undefined\' not found');
       })
   );
 

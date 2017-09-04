@@ -24,12 +24,17 @@ describe('#segmentify', () => {
   afterEach(() => closeServer());
 
   let agent;
+  let process;
   beforeEach(() =>
-    getAgent('http://localhost:3333').then(res => { agent = res; })
+    getAgent('http://localhost:3333').then(res => {
+      agent = res;
+      process = agent.processes.first_process;
+      return;
+    })
   );
 
   it('adds actions to the segment', () =>
-    agent
+    process
       .createMap('hi there')
       .then(segment1 =>
         segment1
@@ -42,7 +47,7 @@ describe('#segmentify', () => {
   );
 
   it('handles actions errors', () =>
-    agent
+    process
       .createMap('hi there')
       .then(segment1 =>
         segment1
@@ -58,7 +63,7 @@ describe('#segmentify', () => {
   );
 
   it('adds a #getPrev() method to the segment', () =>
-    agent
+    process
       .createMap('hi there')
       .then(segment1 =>
         segment1
@@ -77,7 +82,7 @@ describe('#segmentify', () => {
 
   // Deprecated
   it('adds a #load() method to the segment', () =>
-    agent
+    process
       .createMap('hi there')
       .then(segment1 =>
         segment1
@@ -91,7 +96,7 @@ describe('#segmentify', () => {
 
   // Deprecated
   it('adds a #getBranches() method to the segment', () =>
-    agent
+    process
       .createMap('hi there')
       .then(segment =>
         Promise

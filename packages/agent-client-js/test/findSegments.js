@@ -24,26 +24,31 @@ describe('#findSegments', () => {
   afterEach(() => closeServer());
 
   let agent;
+  let process;
   beforeEach(() =>
-    getAgent('http://localhost:3333').then(res => { agent = res; })
+    getAgent('http://localhost:3333').then(res => {
+      agent = res;
+      process = agent.processes.first_process;
+      return;
+    })
   );
 
   it('finds the segments', () =>
-    agent
+    process
       .createMap('hi')
-      .then(() => agent.createMap('hi'))
-      .then(() => agent.findSegments())
+      .then(() => process.createMap('hi'))
+      .then(() => process.findSegments())
       .then(segments => {
         segments.should.be.an.Array();
         segments.length.should.be.exactly(2);
       })
   );
 
-  it('applies the options', () =>
-    agent
+  it('applies the options mapId', () =>
+    process
       .createMap('hi')
-      .then(() => agent.createMap('hi'))
-      .then(segment => agent.findSegments({ mapId: segment.link.meta.mapId }))
+      .then(() => process.createMap('hi'))
+      .then(segment => process.findSegments({ mapIds: [segment.link.meta.mapId] }))
       .then(segments => {
         segments.should.be.an.Array();
         segments.length.should.be.exactly(1);
@@ -51,10 +56,10 @@ describe('#findSegments', () => {
   );
 
   it('loads all segments with a limit of -1', () =>
-    agent
+    process
       .createMap('hi')
-      .then(() => agent.createMap('hi'))
-      .then(() => agent.findSegments({ limit: -1, batchSize: 1 }))
+      .then(() => process.createMap('hi'))
+      .then(() => process.findSegments({ limit: -1, batchSize: 1 }))
       .then(segments => {
         segments.should.be.an.Array();
         segments.length.should.be.exactly(2);
@@ -62,10 +67,10 @@ describe('#findSegments', () => {
   );
 
   it('returns segmentified segments', () =>
-    agent
+    process
       .createMap('hi')
-      .then(() => agent.createMap('hi'))
-      .then(() => agent.findSegments())
+      .then(() => process.createMap('hi'))
+      .then(() => process.findSegments())
       .then(segments => {
         segments.forEach(segment => segment.getPrev.should.be.a.Function());
       })
