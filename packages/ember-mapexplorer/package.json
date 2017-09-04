@@ -1,6 +1,6 @@
 {
   "name": "ember-mapexplorer",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Ember addon that displays a Chain Map",
   "keywords": [
     "ember-addon"
