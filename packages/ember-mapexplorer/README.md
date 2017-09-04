@@ -27,9 +27,9 @@ You can also override default variables.
  
 ## Usage
 
-With an application and a map ID:
+With an agent Url and a map ID:
 ```
-{{map-explorer application="snake-eyes" mapId="57743311d6a22a8f2bd2bec1"}}
+{{map-explorer applicationUrl="http://localhost:4000" mapId="57743311d6a22a8f2bd2bec1"}}
 ```
 
 With a chainscript (a JSON string or the array of segments as a POJO):
