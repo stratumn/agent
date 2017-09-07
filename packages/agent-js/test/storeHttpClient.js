@@ -68,7 +68,11 @@ describe('StoreHttpClient', () => {
 
     it('applies the filters', () =>
       storeHttpClient('http://localhost')
-        .getSegment('testFilter', 'linkHash', [segment => (segment.meta.linkHash !== 'linkHash?process=testFilter')])
+        .getSegment(
+          'testFilter',
+          'linkHash',
+          [segment => (segment.meta.linkHash !== 'linkHash?process=testFilter')]
+        )
         .then(() => { throw new Error('should not resolve'); })
         .catch(err => {
           err.statusCode.should.be.exactly(403);

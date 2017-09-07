@@ -42,7 +42,7 @@ describe('MemoryStore', () => {
     it('resolves with the segment', () =>
       store
         .saveSegment(segment1)
-        .then(sg => store.getSegment('first', 'segment1'))
+        .then(() => store.getSegment('first', 'segment1'))
         .then(body => body.should.deepEqual(segment1))
     );
 

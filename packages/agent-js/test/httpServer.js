@@ -196,7 +196,11 @@ describe('HttpServer()', () => {
             return process.findSegments({ mapIds: [mapId] });
           }))
         .then(segments =>
-          testDeepEquals(supertest(server).get(`/${process.name}/segments?limit=20&mapIds=${mapId}`), 200, segments)
+          testDeepEquals(
+            supertest(server).get(`/${process.name}/segments?limit=20&mapIds=${mapId}`),
+            200,
+            segments
+          )
         );
     });
   });
