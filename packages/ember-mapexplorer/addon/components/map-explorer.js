@@ -62,7 +62,7 @@ export default Ember.Component.extend({
 
     if (chainscript) {
       let builder = this.get('builder');
-      builder.chainTree.display(chainscript, Object.extend(mapexplorerCore.defaultOptions, {
+      builder.chainTree.display(chainscript, Object.assign(mapexplorerCore.defaultOptions, {
         onclick: this.onClick.bind(this),
         onTag: () => {}
       }));
