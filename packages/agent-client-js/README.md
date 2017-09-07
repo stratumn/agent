@@ -49,7 +49,7 @@ AgentClient.getAgent('http://localhost:3000')
     //      ...
     //    }
     //  }
-    // } 
+    // }
     // Create a new map, you can pass arguments to init
     var firstProcess = agent.processes.firstProcess;
     return firstProcess.createMap('My conversation');
@@ -190,7 +190,7 @@ AgentClient
   });
 ```
 
-### Process#getPrev()
+### Segment#getPrev()
 
 Returns a promise that resolves with the previous segment.
 
@@ -212,7 +212,7 @@ AgentClient
   });
 ```
 
-### Process#:actionName(...args)
+### Segment#:actionName(...args)
 
 Executes an action and returns a promise that resolves with a new segment.
 
