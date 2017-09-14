@@ -1386,7 +1386,9 @@ function getAgent(url) {
     var agent = res.body;
     agent.url = url;
     agent.getProcesses = getProcesses.bind(null, agent);
-    agent.processes = Object.values(agent.processes).reduce(function (map, p) {
+    agent.processes = Object.keys(agent.processes).map(function (key) {
+      return agent.processes[key];
+    }).reduce(function (map, p) {
       var updatedMap = map;
       updatedMap[p.name] = processify(p, agent.url);
       return updatedMap;

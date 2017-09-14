@@ -24,11 +24,13 @@ export default function getAgent(url) {
       const agent = res.body;
       agent.url = url;
       agent.getProcesses = getProcesses.bind(null, agent);
-      agent.processes = Object.values(agent.processes).reduce((map, p) => {
-        const updatedMap = map;
-        updatedMap[p.name] = processify(p, agent.url);
-        return updatedMap;
-      }, {});
+      agent.processes = Object.keys(agent.processes)
+        .map(key => agent.processes[key])
+        .reduce((map, p) => {
+          const updatedMap = map;
+          updatedMap[p.name] = processify(p, agent.url);
+          return updatedMap;
+        }, {});
       return agent;
     });
 }
