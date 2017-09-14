@@ -14,14 +14,26 @@
   limitations under the License.
 */
 
-export default function mockFossilizerHttpServer(mock) {
+export default function mockFossilizerHttpServer(mock, process) {
+  let result;
   mock.get('http://localhost', () => ({
     status: 200,
     body: { name: 'mock' }
   }));
 
-  mock.post('http://localhost/fossils', req => ({
-    status: 200,
-    body: req.body
-  }));
+
+  mock.post('http://localhost/fossils', req => {
+    if (req.body.callbackUrl.indexOf('=') > 0) {
+      const secret = req.body.callbackUrl.substr(req.body.callbackUrl.indexOf('=') + 1);
+      return process.insertEvidence(req.body.data, { mockEvidence: result }, secret)
+        .then(() => ({
+          status: 200,
+          body: req.body
+        }));
+    }
+    return {
+      status: 200,
+      body: req.body
+    };
+  });
 }

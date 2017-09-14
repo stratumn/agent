@@ -15,11 +15,24 @@
 */
 
 import request from 'superagent';
+import create from '../src/create';
 import mocker from 'superagent-mocker';
 import fossilizerHttpClient from '../src/fossilizerHttpClient';
 import mockFossilizerHttpServer from './utils/mockFossilizerHttpServer';
+import memoryStore from '../src/memoryStore';
 
-mockFossilizerHttpServer(mocker(request));
+const actions = {
+  init(a, b, c) { this.append({ a, b, c }); },
+};
+
+const fossilizerClient = fossilizerHttpClient('http://localhost');
+const agent = create({ agentUrl: 'http://localhost:3000' });
+const process = agent.addProcess('basic', actions, memoryStore(), fossilizerClient,
+  {
+    salt: '',
+  });
+
+mockFossilizerHttpServer(mocker(request), process);
 
 describe('FossilizerHttpClient', () => {
   describe('#getInfo()', () => {
@@ -32,7 +45,7 @@ describe('FossilizerHttpClient', () => {
 
   describe('#fossilize()', () => {
     it('resolves with the response', () =>
-      fossilizerHttpClient('http://localhost')
+      fossilizerClient
         .fossilize('Hello, World!', 'http://localhost:3333')
         .then(body => body.should.deepEqual({
           data: 'Hello, World!',

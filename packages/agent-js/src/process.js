@@ -48,9 +48,9 @@ export default class Process {
     if (this.fossilizerClient) {
       const linkHash = segment.meta.linkHash;
       const secret = generateSecret(linkHash, this.salt || '');
-      let callbackUrl = `${this.evidenceCallbackUrl || this.agentUrl}/evidence/${linkHash}`;
+      let callbackUrl = `${this.evidenceCallbackUrl ||
+        this.agentUrl}/${this.name}/evidence/${linkHash}`;
       callbackUrl += makeQueryString({ secret });
-
       return this.fossilizerClient
         .fossilize(linkHash, callbackUrl)
         .then(() => segment);
@@ -59,7 +59,7 @@ export default class Process {
     return segment;
   }
 
-  saveSegment(segment) {
+  saveAndFossilize(segment) {
     return this.storeClient
       .saveSegment(segment)
       .then(this.fossilizeSegment.bind(this));
@@ -85,7 +85,7 @@ export default class Process {
           return this.fossilizerClient
             .getInfo()
             .then(fossilizerInfo =>
-              ({ process: this.name, processInfo, storeInfo, fossilizerInfo }));
+              ({ name: this.name, processInfo, storeInfo, fossilizerInfo }));
         }
         return { name: this.name, processInfo, storeInfo };
       });
@@ -122,7 +122,7 @@ export default class Process {
         segment = { link, meta };
         return this.applyPlugins('didCreateSegment', segment, 'init', args);
       })
-      .then(() => this.saveSegment(segment));
+      .then(() => this.saveAndFossilize(segment));
   }
 
   /**
@@ -174,7 +174,7 @@ export default class Process {
         segment = { link: createdLink, meta };
         return this.applyPlugins('didCreateSegment', segment, action, args);
       })
-      .then(() => this.saveSegment(segment));
+      .then(() => this.saveAndFossilize(segment));
   }
 
   /**
@@ -203,8 +203,7 @@ export default class Process {
         Object.assign(segment.meta.evidence, evidence, {
           state: COMPLETE
         });
-
-        return this.saveSegment(segment);
+        return this.storeClient.saveSegment(segment);
       })
       .then(segment => {
         // Call didFossilize event if present.
