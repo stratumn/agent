@@ -1,6 +1,6 @@
 {
   "name": "stratumn-agent-client",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Stratumn Indigo agent client library",
   "main": "lib/stratumn-agent-client.js",
   "jsnext:main": "lib/stratumn-agent-client.mjs",
