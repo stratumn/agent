@@ -66,6 +66,17 @@ describe('#findSegments', () => {
       })
   );
 
+  it('loads all segments with a limit of -1', () =>
+    process
+      .createMap('hi')
+      .then(() => process.createMap('hi'))
+      .then(() => process.findSegments({ limit: -1, batchSize: 2 }))
+      .then(segments => {
+        segments.should.be.an.Array();
+        segments.length.should.be.exactly(2);
+      })
+  );
+
   it('returns segmentified segments', () =>
     process
       .createMap('hi')

@@ -27,16 +27,18 @@ export default function findSegments(process, opts = {}) {
     options.limit = options.batchSize || DEFAULT_BATCH_SIZE;
     delete options.batchSize;
     options.offset = 0;
-    const segments = [];
+    let lastBatch = [];
+    const result = [];
 
     return promiseWhile(
-      () => segments.length === options.limit,
+      () => lastBatch.length === options.limit,
       () => findSegments(process, options)
         .then(newSegments => {
-          segments.push(...newSegments);
+          lastBatch = newSegments;
+          result.push(...newSegments);
           options.offset += options.limit;
         })
-    ).then(() => segments);
+    ).then(() => result);
   }
   return get(`${process.prefixUrl}/segments${makeQueryString(opts)}`)
     .then(res => res.body.map(obj => segmentify(process, obj)));
