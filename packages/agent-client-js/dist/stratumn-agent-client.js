@@ -1080,17 +1080,19 @@ function findSegments(process) {
     options.limit = options.batchSize || DEFAULT_BATCH_SIZE;
     delete options.batchSize;
     options.offset = 0;
-    var segments = [];
+    var lastBatch = [];
+    var result = [];
 
     return promiseWhile(function () {
-      return segments.length === options.limit;
+      return lastBatch.length === options.limit;
     }, function () {
       return findSegments(process, options).then(function (newSegments) {
-        segments.push.apply(segments, toConsumableArray(newSegments));
+        lastBatch = newSegments;
+        result.push.apply(result, toConsumableArray(newSegments));
         options.offset += options.limit;
       });
     }).then(function () {
-      return segments;
+      return result;
     });
   }
   return get(process.prefixUrl + '/segments' + makeQueryString(opts)).then(function (res) {
