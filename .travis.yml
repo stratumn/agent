@@ -13,7 +13,7 @@ before_script:
   - npm install -g bower
   - npm install -g codecov
   - cd packages/mapexplorer-core && bower install && cd -
-  - lerna boostrap
+  - lerna bootstrap
 script:
   - lerna run test:ci
   - codecov
