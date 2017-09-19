@@ -6,7 +6,7 @@
   "jsnext:main": "lib/stratumn-agent-client.mjs",
   "scripts": {
     "test": "mocha --compilers js:babel-core/register --recursive --require babel-polyfill --require should 2> /dev/null",
-    "test:cov": "babel-node ./node_modules/isparta/bin/isparta cover ./node_modules/mocha/bin/_mocha -- --recursive --require should --require should 2> /dev/null",
+    "test:ci": "babel-node ./node_modules/isparta/bin/isparta cover ./node_modules/mocha/bin/_mocha -- --recursive --require should --require should 2> /dev/null",
     "lint": "eslint src test",
     "check": "npm run lint && npm run test",
     "build:lib": "rollup -c rollup.es.config.js && rollup -c rollup.umd.config.js",

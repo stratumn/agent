@@ -2,7 +2,6 @@ language: node_js
 sudo: false
 node_js:
   - 4
-  - 5
   - 6
 before_install:
   - export CHROME_BIN=chromium-browser
@@ -10,7 +9,11 @@ before_install:
   - sh -e /etc/init.d/xvfb start
   - npm update -g
 before_script:
+  - npm install -g lerna
   - npm install -g bower
-  - bower install
+  - npm install -g codecov
+  - cd packages/mapexplorer-core && bower install && cd -
+  - lerna boostrap
 script:
-  - npm run test:ci
+  - lerna run test:ci
+  - codecov
