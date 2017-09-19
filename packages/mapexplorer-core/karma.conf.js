@@ -19,7 +19,6 @@ module.exports = function(config) {
     files: [
       'test/integration/init.js',
       'bower_components/babel-polyfill/browser-polyfill.js',
-      'bower_components/d3/d3.js',
       'dist/mapexplorer-core.js',
       'test/integration/*.test.js'
     ],
@@ -40,7 +39,7 @@ module.exports = function(config) {
           jsnext: true,
           browser: true,
           preferBuiltins: true,
-          skip: ['d3-selection', 'mapexplorer-core']
+          skip: ['mapexplorer-core']
         }),
         commonjs({
           // non-CommonJS modules will be ignored, but you can also
@@ -51,7 +50,6 @@ module.exports = function(config) {
         })
       ],
       globals: {
-        'd3-selection': 'd3',
         'mapexplorer-core': 'mapexplorerCore'
       },
       // will help to prevent conflicts between different tests entries

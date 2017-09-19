@@ -16,8 +16,7 @@ module.exports = {
     nodeResolve({
       jsnext: true,
       browser: true,
-      preferBuiltins: true,
-      skip: ['d3-hierarchy', 'd3-transition', 'd3-ease', 'd3-selection', 'd3-zoom', 'd3-array']
+      preferBuiltins: true
     }),
     commonjs({
       exclude: ['node_modules/rollup-plugin-node-globals/**',
@@ -27,14 +26,6 @@ module.exports = {
   ],
   format: 'umd',
   sourceMap: true,
-  globals: {
-    'd3-hierarchy': 'd3',
-    'd3-transition': 'd3',
-    'd3-ease': 'd3',
-    'd3-selection': 'd3',
-    'd3-zoom': 'd3',
-    'd3-array': 'd3'
-  },
   entry: 'src/index.js',
   dest: 'dist/mapexplorer-core.js',
   moduleName: 'mapexplorerCore'
