@@ -41,10 +41,10 @@ $ bower install mapexplorer-core
 ```javascript
 const builder = new MapexplorerCore.ChainTreeBuilder(element);
 
-// with an application and a mapId
+// with an agent URL and a mapId
 builder.build({
   id: myMapId,
-  application: myApplication
+  applicationUrl: myApplication
 }, options);
 
 // with a chainscript (JSON string of array of segment as POJO)
@@ -76,14 +76,14 @@ Vertical space factor between segment polygon
 
 ##### polygonSize
 ```
-Default: 
+Default:
     {
         width: 78,
         height: 91
     }
 ```
 
-Object with width and height properties that gives the size (in pixels) of the polygon representing 
+Object with width and height properties that gives the size (in pixels) of the polygon representing
 a segment.
 
 ##### getArrowLength()
@@ -95,18 +95,18 @@ Function that returns the length (in pixels) of the transition arrow.
 
 #### box
 ```
-Default: 
+Default:
     () => return {
         width: this.polygonSize.width,
         height: 25
     }
 ```
 
-Function that return an object with width and height properties that gives the size (in pixels) of the box containing the 
+Function that return an object with width and height properties that gives the size (in pixels) of the box containing the
 segment text.
 
 ##### getSegmentText(node)
-``` 
+```
 Default:  node => compactHash(node.data.meta.linkHash)
 ```
 
@@ -115,13 +115,13 @@ Function that returns the text displayed on a segment.
 
 
 ##### getLinkText(node)
-``` 
-Default: 
+```
+Default:
   function(node) {
     return node.target.data.link.meta.action +
         (this.withArgs ? `(${node.target.data.link.meta.arguments.join(', ')})` : '');
   }
-```      
+```
 
 Function that return the text displayed on a path between segments.
 
@@ -209,6 +209,8 @@ Test:
 ```
 $ npm test
 ```
+
+The integration tests use a build version of the library. Make sure you've run `npm run build` if you want your changes to be taken into account.
 
 Lint:
 
