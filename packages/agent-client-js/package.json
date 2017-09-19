@@ -6,7 +6,7 @@
   "jsnext:main": "lib/stratumn-agent-client.mjs",
   "scripts": {
     "test": "mocha --compilers js:babel-core/register --recursive --require babel-polyfill --require should 2> /dev/null",
-    "test:ci": "babel-node ./node_modules/isparta/bin/isparta cover ./node_modules/mocha/bin/_mocha -- --recursive --require should --require should 2> /dev/null",
+    "test:ci": "babel-node ./node_modules/isparta/bin/isparta cover ./node_modules/mocha/bin/_mocha -- --recursive --require should --require should",
     "lint": "eslint src test",
     "check": "npm run lint && npm run test",
     "build:lib": "rollup -c rollup.es.config.js && rollup -c rollup.umd.config.js",
@@ -50,6 +50,7 @@
     "eslint-config-airbnb": "^6.0.2",
     "eslint-plugin-react": "^4.1.0",
     "isparta": "^4.0.0",
+    "istanbul": "^0.4.4",
     "mocha": "^2.4.5",
     "rimraf": "^2.5.2",
     "rollup": "^0.34.10",
