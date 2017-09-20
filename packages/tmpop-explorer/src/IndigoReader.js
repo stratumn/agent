@@ -75,7 +75,7 @@ export default class IndigoReader {
 
 	getBlock(height) {
 		return this._sendRequest('block', { height })
-			.then(res => this._parseBlock(res[1].block));
+			.then(res => this._parseBlock(res.block));
 	}
 
 	getBlockchain(minHeight, maxHeight) {
@@ -94,10 +94,10 @@ export default class IndigoReader {
 	}
 
 	_parseEvent(event) {
-		const obj = JSON.parse(event.data);
+    const obj = JSON.parse(event.data);
 
-		if (obj.result[1].data) {
-			return this._parseBlock(obj.result[1].data[1].block);
+		if (obj.result.data) {
+			return this._parseBlock(obj.result.data.data.block);
 		}
 	}
 
