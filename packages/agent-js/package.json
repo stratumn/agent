@@ -13,8 +13,7 @@
     "preversion": "npm run clean && npm run check",
     "version": "npm run build:lib",
     "postversion": "git push && git push --tags && npm run clean",
-    "prepublish": "npm run clean && npm run build:lib",
-    "update-license-headers": "./update-license-headers.sh"
+    "prepublish": "npm run clean && npm run build:lib"
   },
   "repository": {
     "type": "git",

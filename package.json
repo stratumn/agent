@@ -1,5 +1,8 @@
 {
 	"devDependencies": {
 		"lerna": "^2.0.0"
+	},
+	"scripts": {
+		"update-license-headers": "./update-license-headers.sh"
 	}
 }

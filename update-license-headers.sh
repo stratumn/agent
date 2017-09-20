@@ -7,12 +7,12 @@ update-license-header() {
 }
 
 directories="src test"
-extensions="js"
+extensions="js less"
 
 for d in $directories; do
 	if [ -d "$d" ]; then
 		for e in $extensions; do
-			for f in $(find $d -name "*.$e"); do
+			for f in $(find packages -regex "packages/[^/]*/$d/.*\.$e"); do
 				update-license-header $f
 			done
 		done
