@@ -1,4 +1,4 @@
-# Stratumn agent for NodeJS [ALPHA - incompatible with production]
+# Stratumn agent for NodeJS
 
 This NodeJS module exposes functions to create Stratumn agents using Javascript.
 
