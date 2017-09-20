@@ -54,7 +54,7 @@ class Block extends Component {
 	}
 
 	render() {
-		const block = this.props.block;
+    const block = this.props.block;
 
 		if (block) {
 			const header = block.header;
@@ -137,7 +137,7 @@ class Block extends Component {
 											return (
                         <TableRow key={precommit.validator_address}>
                           <TableRowColumn>{precommit.validator_address}</TableRowColumn>
-                          <TableRowColumn>{precommit.signature}</TableRowColumn>
+                          <TableRowColumn>{precommit.signature.data}</TableRowColumn>
                         </TableRow>
                       );
 										}
