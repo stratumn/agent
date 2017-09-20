@@ -15,7 +15,7 @@
 */
 
 import uuid from 'uuid';
-import { mockAgent } from 'stratumn-mock-agent';
+import processify from './processify';
 import getActionsInfo from './getActionsInfo';
 import getPluginsInfo from './getPluginsInfo';
 import hashJson from './hashJson';
@@ -100,7 +100,7 @@ export default class Process {
     const initialLink = { meta: { mapId: uuid.v4() } };
     let link;
     let segment;
-    return mockAgent(this.actions, initialLink)
+    return processify(this.actions, initialLink)
       .init(...args)
       .catch(err => {
         err.status = 400;
@@ -152,7 +152,7 @@ export default class Process {
       .then(() => {
         delete initialLink.meta.prevLinkHash;
         initialLink.meta.prevLinkHash = prevLinkHash;
-        return mockAgent(this.actions, initialLink)[action](...args)
+        return processify(this.actions, initialLink)[action](...args)
           .catch(err => {
             err.status = 400;
             throw err;
@@ -209,7 +209,7 @@ export default class Process {
         // Call didFossilize event if present.
         if (typeof this.actions.events === 'object' &&
           typeof this.actions.events.didFossilize === 'function') {
-          mockAgent(this.actions, segment.link).events.didFossilize(segment);
+          processify(this.actions, segment.link).events.didFossilize(segment);
         }
 
         return segment;

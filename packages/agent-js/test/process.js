@@ -184,7 +184,8 @@ describe('Process', () => {
             .insertEvidence(segment.meta.linkHash, { test: true }, secret)
             .then(() => {
               callCount.should.be.exactly(1);
-            });
+            })
+            .catch(err => console.log(err));
         })
     );
   });
