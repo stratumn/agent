@@ -42,19 +42,21 @@ agent.addProcess("my_first_process", actions, storeHttpClient, fossilizerHttpCli
 });
 
 // Creates an HTTP server for the agent with CORS enabled.
-var agentHttpServer = agent.httpServer({ cors: {} });
+var agentHttpServer = Agent.httpServer(agent, { cors: {} });
 
 // Create the Express server.
-var app = express();
-
+const app = express();
 app.disable('x-powered-by');
 
 // Mount agent on the root path of the server.
 app.use('/', agentHttpServer);
 
-// Start the server.
-app.listen(3000, function() {
-  console.log('Listening on :' + this.address().port);
+// Create server by binding app and websocket connection
+const server = Agent.websocketServer(app, storeHttpClient);
+
+// Start the server
+server.listen(3000, () => {
+  console.log('Listening on ' + server.adress().port);
 });
 
 // You can also add processes on-the-fly after the server has started listening
@@ -69,7 +71,8 @@ agent.addProcess("my_second_process", actions, storeHttpClient, fossilizerHttpCl
 - `create` creates an agent instance.
 - `storeHttpClient` creates an instance to work with stores via HTTP.
 - `fossilizerHttpClient` creates an instance to work with fossilizers via HTTP.
-- `httpServer` creates an HTTP server for an agent.
+- `httpServer` creates an app for the agent
+- `websocketServer`bind websocket connection to app and returns server
 
 ## Plugins
 

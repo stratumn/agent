@@ -20,6 +20,7 @@ import httpServer from './httpServer';
 import memoryStore from './memoryStore';
 import plugins from './plugins';
 import storeHttpClient from './storeHttpClient';
+import websocketServer from './websocketServer';
 
 module.exports = {
   create,
@@ -28,4 +29,5 @@ module.exports = {
   memoryStore,
   plugins,
   storeHttpClient,
+  websocketServer,
 };
