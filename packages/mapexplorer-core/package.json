@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stratumn/mapexplorer-core.git"
+    "url": "https://github.com/stratumn/indigo-js.git"
   },
   "keywords": [
     "stratumn",
@@ -28,9 +28,9 @@
   "author": "Stratumn Team",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/stratumn/mapexplorer-core/issues"
+    "url": "https://github.com/stratumn/indigo-js/issues"
   },
-  "homepage": "https://github.com/stratumn/mapexplorer-core",
+  "homepage": "https://github.com/stratumn/indigo-js",
   "devDependencies": {
     "babel-cli": "^6.5.1",
     "babel-eslint": "^6.0.0",
