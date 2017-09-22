@@ -12,8 +12,9 @@
     "test": "npm run test:unit && npm run test:integration",
     "test:ci": "npm run test:unit && npm run test:integration:ci",
     "prebuild": "eslint src test",
-    "build": "rollup -c rollup.es.config.js && rollup -c rollup.umd.config.js",
-    "prepublishOnly": "npm run build"
+    "build": "rollup -c rollup.es.config.js && rollup -c rollup.umd.config.js && rollup -c rollup.browser.config.js && rollup -c rollup.browser.min.config.js",
+    "prepublishOnly": "npm run build",
+    "postpublish": "aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core.js --region 'eu-west-1' && aws s3 cp dist/mapexplorer-core.min.js s3://stratumn-libs/mapexplorer-core.min.js --region 'eu-west-1' && aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/mapexplorer-core.min.js s3://stratumn-libs/mapexplorer-core-${npm_package_version}.min.js --region 'eu-west-1'"
   },
   "repository": {
     "type": "git",
@@ -61,6 +62,7 @@
     "rollup-plugin-node-builtins": "^1.0.7",
     "rollup-plugin-node-globals": "^1.0.6",
     "rollup-plugin-node-resolve": "^2.0.0",
+    "rollup-plugin-uglify": "^2.0.1",
     "rollup-watch": "^2.5.0",
     "should": "^8.2.2",
     "xhr-mock": "^1.7.0",

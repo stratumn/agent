@@ -12,7 +12,7 @@
     "build": "rollup -c rollup.es.config.js && rollup -c rollup.umd.config.js",
     "clean": "rimraf lib coverage",
     "preversion": "npm run clean && npm run check",
-    "version": "npm run builda",
+    "version": "npm run build",
     "postversion": "git push && git push --tags && npm run clean",
     "prepublish": "npm run clean && npm run build",
     "postpublish": "aws s3 cp dist/stratumn-agent-client.js s3://stratumn-libs/stratumn-agent-client.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.min.js s3://stratumn-libs/stratumn-agent-client.min.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.js s3://stratumn-libs/stratumn-agent-client-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.min.js s3://stratumn-libs/stratumn-agent-client-${npm_package_version}.min.js --region 'eu-west-1'"

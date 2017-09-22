@@ -5,4 +5,4 @@ node_modules
 lib
 coverage
 _book
-.idea/
+dist

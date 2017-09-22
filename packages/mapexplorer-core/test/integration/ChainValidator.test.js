@@ -25,14 +25,14 @@ describe('ChainValidator', () => {
   }
 
   describe('With a valid map', () => {
-    it('validates the linkHash', () => {
-      return Promise.all(Object.values(validate(validMap)));
-    });
+    it('validates the linkHash', () =>
+      Promise.all(Object.values(validate(validMap)))
+    );
   });
 
   describe('With only a segment', () => {
-    it('validates the linkHash', () => {
-      return Promise.all(Object.values(validate(validSegment)));
-    });
+    it('validates the linkHash', () =>
+      Promise.all(Object.values(validate(validSegment)))
+    );
   });
 });
