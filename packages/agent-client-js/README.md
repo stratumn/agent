@@ -17,12 +17,6 @@
 
 If you want a specific version, include `https://libs.stratumn.com/stratumn-agent-client-{version}.min.js` instead (for instance `https://libs.stratumn.com/stratumn-agent-client-1.0.2.min.js`).
 
-### Bower
-
-```
-$ bower install stratumn-agent-client
-```
-
 ### Node.js
 
 ```

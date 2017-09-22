@@ -9,10 +9,7 @@
     "test:ci": "babel-node ./node_modules/isparta/bin/isparta cover ./node_modules/mocha/bin/_mocha -- --recursive --require should --require should",
     "lint": "eslint src test",
     "check": "npm run lint && npm run test",
-    "build:lib": "rollup -c rollup.es.config.js && rollup -c rollup.umd.config.js",
-    "build:bower": "rollup -c rollup.bower.config.js",
-    "build:bower:min": "rollup -c rollup.bower.min.config.js",
-    "build:all": "npm run build:lib && npm run build:bower && npm run build:bower:min",
+    "build": "rollup -c rollup.es.config.js && rollup -c rollup.umd.config.js",
     "clean": "rimraf lib coverage",
     "preversion": "npm run clean && npm run check",
     "version": "npm run build:all",
@@ -22,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stratumn/agent-client-js.git"
+    "url": "https://github.com/stratumn/indigo-js.git"
   },
   "keywords": [
     "stratumn",
@@ -33,9 +30,9 @@
   "author": "Stratumn Team",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/stratumn/agent-client-js/issues"
+    "url": "https://github.com/stratumn/indigo-js/issues"
   },
-  "homepage": "https://github.com/stratumn/agent-client-js",
+  "homepage": "https://github.com/stratumn/indigo-js",
   "devDependencies": {
     "babel-cli": "^6.5.1",
     "babel-core": "^6.5.2",
