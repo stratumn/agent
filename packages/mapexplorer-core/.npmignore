@@ -5,6 +5,5 @@ test
 coverage
 _book
 dist
-bower_components
 .idea
 

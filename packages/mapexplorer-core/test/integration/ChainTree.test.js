@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import { ChainTree } from 'mapexplorer-core';
-import { defaultOptions } from 'mapexplorer-core';
+import { ChainTree, defaultOptions } from '../../src/index';
 import { select, selectAll } from 'd3-selection';
 
 import validMap from '../fixtures/fullMap.json';

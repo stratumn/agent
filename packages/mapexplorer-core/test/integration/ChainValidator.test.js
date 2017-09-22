@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ChainValidator } from 'mapexplorer-core';
+import { ChainValidator } from '../../src/index';
 
 import validMap from '../fixtures/fullMap.json';
 import validSegment from '../fixtures/validSegment.json';
@@ -24,19 +24,15 @@ describe('ChainValidator', () => {
     return new ChainValidator(map).validate();
   }
 
-  describe('With a valid map', (done) => {
+  describe('With a valid map', () => {
     it('validates the linkHash', () => {
-      Object.values(validate(validMap)).forEach(type => {
-        Promise.all(type).then(done).catch(done);
-      });
+      return Promise.all(Object.values(validate(validMap)));
     });
   });
 
-  describe('With only a segment', (done) => {
+  describe('With only a segment', () => {
     it('validates the linkHash', () => {
-      Object.values(validate(validSegment)).forEach(type => {
-        Promise.all(type).then(done).catch(done);
-      });
+      return Promise.all(Object.values(validate(validSegment)));
     });
   });
 });

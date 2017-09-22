@@ -28,12 +28,6 @@ $ npm install mapexplorer-core
 var MapexplorerCore = require('mapexplorer-core');
 ```
 
-### Bower
-
-```
-$ bower install mapexplorer-core
-```
-
 ## Usage
 
 ### Display a map explorer

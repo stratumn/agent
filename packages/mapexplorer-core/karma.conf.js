@@ -5,6 +5,8 @@ var json = require('rollup-plugin-json');
 var commonjs = require('rollup-plugin-commonjs');
 var nodeResolve = require('rollup-plugin-node-resolve');
 var builtins = require('rollup-plugin-node-builtins');
+var globals = require('rollup-plugin-node-globals');
+
 
 module.exports = function(config) {
   config.set({
@@ -18,9 +20,8 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'test/integration/init.js',
-      'bower_components/babel-polyfill/browser-polyfill.js',
-      'dist/mapexplorer-core.js',
-      'test/integration/*.test.js'
+      'test/integration/*.test.js',
+      'node_modules/babel-polyfill/dist/polyfill.js'
     ],
 
     preprocessors: {
@@ -38,20 +39,18 @@ module.exports = function(config) {
         nodeResolve({
           jsnext: true,
           browser: true,
-          preferBuiltins: true,
-          skip: ['mapexplorer-core']
+          preferBuiltins: true
         }),
         commonjs({
           // non-CommonJS modules will be ignored, but you can also
           // specifically include/exclude files
           // include: 'node_modules/**',  // Default: undefined
           // exclude: [],
-          exclude: ['node_modules/rollup-plugin-node-globals/**']
-        })
+          exclude: ['node_modules/rollup-plugin-node-globals/**',
+          'node_modules/process-es6/**', 'node_modules/buffer-es6/**']
+        }),
+        globals()
       ],
-      globals: {
-        'mapexplorer-core': 'mapexplorerCore'
-      },
       // will help to prevent conflicts between different tests entries
       format: 'iife',
       sourceMap: 'inline'

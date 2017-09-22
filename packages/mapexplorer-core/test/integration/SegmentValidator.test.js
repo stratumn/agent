@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { SegmentValidator } from 'mapexplorer-core';
+import { SegmentValidator } from '../../src/index';
 
 import validSegment from '../fixtures/validSegment.json';
 import invalidSegment from '../fixtures/invalidSegment.json';
