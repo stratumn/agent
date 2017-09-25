@@ -1,28 +1,30 @@
 {
   "name": "ember-mapexplorer",
   "version": "1.8.0",
-  "description": "Ember addon that displays a Chain Map",
+  "description": "Ember addon that displays a Map Explorer",
   "keywords": [
     "ember-addon"
   ],
   "license": "Apache-2.0",
-  "author": "",
+  "author": "Stratumn team",
   "directories": {
     "doc": "doc",
     "test": "tests"
   },
-  "repository": "",
+  "repository": "https://github.com/stratumn/ember-mapexplorer",
   "scripts": {
     "build": "ember build",
     "start": "ember server",
     "test": "ember test",
-    "test:ci": "ember try:each",
     "update-license-headers": "./update-license-headers.sh"
   },
   "dependencies": {
+    "broccoli-funnel": "^2.0.1",
+    "broccoli-merge-trees": "^2.0.0",
     "ember-cli-babel": "^6.3.0",
     "ember-cli-htmlbars": "^2.0.1",
-    "ember-paper": "^1.0.0-beta.1"
+    "ember-paper": "^1.0.0-beta.1",
+    "mapexplorer-core": "^1.2.0"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.5",
@@ -41,7 +43,7 @@
     "ember-export-application-global": "^2.0.0",
     "ember-load-initializers": "^1.0.0",
     "ember-resolver": "^4.0.0",
-    "ember-welcome-page": "^3.0.0",
+    "ember-source": "~2.14.1",
     "jsonfile": "^3.0.1",
     "loader.js": "^4.2.3",
     "process-nextick-args": "^1.0.7"

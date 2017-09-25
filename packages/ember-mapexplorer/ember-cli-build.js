@@ -16,8 +16,10 @@ module.exports = function(defaults) {
     behave. You most likely want to be modifying `./index.js` or app's build file
   */
 
+  // console.log(app)
+
   app.options.sassOptions.includePaths.push(
-    app.bowerDirectory + '/mapexplorer-core/assets/stylesheets'
+    'node_modules/mapexplorer-core/assets/stylesheets'
   );
 
   return app.toTree();
