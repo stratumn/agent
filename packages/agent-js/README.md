@@ -61,7 +61,7 @@ server.listen(3000, () => {
 
 // You can also add processes on-the-fly after the server has started listening
 agent.addProcess("my_second_process", actions, storeHttpClient, fossilizerHttpClient, {
-  salt: process.env.STRATUMN_SALT || Math.random()
+  salt: process.env.STRATUMN_SALT || Math.random(),
   plugins: [plugins.localTime]
 });
 ```
