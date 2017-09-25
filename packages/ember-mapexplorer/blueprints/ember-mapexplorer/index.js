@@ -24,7 +24,7 @@ module.exports = {
   },
 
   afterInstall: function() {
-    return this.addBowerPackageToProject('mapexplorer-core', 'alpha')
+    return this.addPackageToProject('mapexplorer-core', 'alpha')
       .then(function () {
         return this.addPackageToProject('ember-cli-sass', 'latest');
       }.bind(this));
