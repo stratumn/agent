@@ -24,7 +24,6 @@ import generateSecret from './generateSecret';
 import getDefinedFilters from './getDefinedFilters';
 
 const QUEUED = 'QUEUED';
-const DISABLED = 'DISABLED';
 const COMPLETE = 'COMPLETE';
 
 export default class Process {
@@ -114,10 +113,8 @@ export default class Process {
       .then(() => {
         const linkHash = hashJson(link);
 
-        const meta = {
-          linkHash,
-          evidence: { state: this.fossilizerClient ? QUEUED : DISABLED }
-        };
+        const meta = Object.assign({ linkHash },
+          this.fossilizerClient ? { evidence: { state: QUEUED } } : {});
 
         segment = { link, meta };
         return this.applyPlugins('didCreateSegment', segment, 'init', args);
@@ -165,11 +162,8 @@ export default class Process {
       })
       .then(() => {
         const linkHash = hashJson(createdLink);
-
-        const meta = {
-          linkHash,
-          evidence: { state: this.fossilizerClient ? QUEUED : DISABLED }
-        };
+        const meta = Object.assign({ linkHash },
+          this.fossilizerClient ? { evidence: { state: QUEUED } } : {});
 
         segment = { link: createdLink, meta };
         return this.applyPlugins('didCreateSegment', segment, action, args);
@@ -244,12 +238,12 @@ export default class Process {
   }
 
   /**
- * Gets map IDs.
- * @param {object} [opts] - pagination options
- * @param {number} [opts.offset] - offset of the first map ID to return
- * @param {number} [opts.limit] - maximum number of map IDs to return
- * @returns {Promise} - a promise that resolve with the map IDs
- */
+  * Gets map IDs.
+  * @param {object} [opts] - pagination options
+  * @param {number} [opts.offset] - offset of the first map ID to return
+  * @param {number} [opts.limit] - maximum number of map IDs to return
+  * @returns {Promise} - a promise that resolve with the map IDs
+  */
   getMapIds(opts) {
     return this.storeClient.getMapIds(this.name, opts);
   }

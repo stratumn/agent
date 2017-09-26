@@ -82,7 +82,6 @@ describe('Process', () => {
           segment.link.meta.mapId.should.be.a.String();
           segment.link.meta.process.should.be.exactly('basic');
           segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
-          segment.meta.evidence.should.deepEqual({ state: 'DISABLED' });
         })
     );
 
@@ -115,7 +114,6 @@ describe('Process', () => {
           segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
           segment2.link.meta.prevLinkHash.should.be.exactly(sgmt1.meta.linkHash);
           segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
-          segment2.meta.evidence.should.deepEqual({ state: 'DISABLED' });
         });
     });
 
@@ -137,11 +135,37 @@ describe('Process', () => {
             });
         })
     );
+
+    it('sets the evidence state appropriately', () =>
+      process
+        .createMap(1, 2, 3)
+        .then(segment => {
+          segment.meta.should.deepEqual({ linkHash: segment.meta.linkHash });
+          return segment;
+        })
+        .then(prevSegment => {
+          // emulates a fossilizerClient
+          process.fossilizerClient = {
+            fossilize() {
+              return Promise.resolve(true);
+            }
+          };
+          return process.createSegment(prevSegment.meta.linkHash, 'action', 2);
+        })
+        .then(segment3 =>
+          segment3.meta.evidence.state.should.deepEqual('QUEUED')
+        )
+    );
   });
 
   describe('#insertEvidence()', () => {
-    it('resolves with the updated segment', () =>
-      process
+    it('resolves with the updated segment', () => {
+      process.fossilizerClient = {
+        fossilize() {
+          return Promise.resolve(true);
+        }
+      };
+      return process
         .createMap(1, 2, 3)
         .then(segment1 => {
           const secret = generateSecret(segment1.meta.linkHash, '');
@@ -152,7 +176,8 @@ describe('Process', () => {
               segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
               segment2.meta.evidence.should.deepEqual({ state: 'COMPLETE', test: true });
             });
-        })
+        });
+    }
     );
 
     it('fails if the secret is incorrect', () =>
@@ -167,8 +192,13 @@ describe('Process', () => {
         })
     );
 
-    it('should call the #didFossilize() event', () =>
-      process
+    it('should call the #didFossilize() event', () => {
+      process.fossilizerClient = {
+        fossilize() {
+          return Promise.resolve(true);
+        }
+      };
+      return process
         .createMap(1, 2, 3)
         .then(segment => {
           let callCount = 0;
@@ -186,7 +216,8 @@ describe('Process', () => {
               callCount.should.be.exactly(1);
             })
             .catch(err => console.log(err));
-        })
+        });
+    }
     );
   });
 });
