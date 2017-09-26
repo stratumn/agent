@@ -20,10 +20,11 @@ export default {
       browser: true,
       preferBuiltins: true,
       skip: ['angular', 'angular-animate', 'angular-material', 'angular-aria', 'md-color-picker',
-        'mapexplorer-core', 'angular-drop']
+        'angular-drop']
     }),
     commonjs({
-      exclude: ['node_modules/rollup-plugin-node-globals/**']
+      exclude: ['node_modules/rollup-plugin-node-globals/**',
+      'node_modules/process-es6/browser.js', 'node_modules/buffer-es6/index.js']
     }),
     globals()
   ],
