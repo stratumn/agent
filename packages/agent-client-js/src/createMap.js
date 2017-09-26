@@ -15,9 +15,8 @@
 */
 
 import segmentify from './segmentify';
-import { post } from './request';
 
 export default function createMap(process, ...args) {
-  return post(`${process.prefixUrl}/segments`, args)
-    .then(res => segmentify(process, res.body));
+  return this.createMap(process.name, ...args)
+    .then(res => segmentify.call(this, process, res.body));
 }

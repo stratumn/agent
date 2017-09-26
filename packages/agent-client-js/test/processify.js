@@ -15,28 +15,31 @@
 */
 
 import getAgent from '../src/getAgent';
-import agentHttpServer from './utils/agentHttpServer';
+import setUpData from './utils/testSetUp';
+import { withData } from 'leche';
 
-describe('#segmentify', () => {
+describe('#processify', () => {
 
-  let closeServer;
-  beforeEach(() => agentHttpServer(3333).then(c => { closeServer = c; }));
-  afterEach(() => closeServer());
+  withData(setUpData(), objectOrUrl => {
 
-  it('adds the helper functions to the process', () =>
-    getAgent('http://localhost:3333')
-      .then(agent => {
-        const testProcess = agent.processes.first_process;
-        testProcess.agentUrl.should.be.exactly('http://localhost:3333');
-        testProcess.prefixUrl.should.be.exactly('http://localhost:3333/first_process');
-        testProcess.createMap.should.be.a.Function();
-        testProcess.getSegment.should.be.a.Function();
-        testProcess.findSegments.should.be.a.Function();
-        testProcess.getMapIds.should.be.a.Function();
-        testProcess.getBranches.should.be.a.Function();
-        testProcess.getLink.should.be.a.Function();
-        testProcess.getMap.should.be.a.Function();
-      })
-  );
+    it('adds the helper functions to the process', () =>
+      getAgent(objectOrUrl)
+        .then(agent => {
+          const testProcess = agent.processes.first_process;
+          if (typeof objectOrUrl === 'string') {
+            testProcess.agentUrl.should.be.exactly('http://localhost:3333');
+            testProcess.prefixUrl.should.be.exactly('http://localhost:3333/first_process');
+          }
+          testProcess.createMap.should.be.a.Function();
+          testProcess.getSegment.should.be.a.Function();
+          testProcess.findSegments.should.be.a.Function();
+          testProcess.getMapIds.should.be.a.Function();
+          testProcess.getBranches.should.be.a.Function();
+          testProcess.getLink.should.be.a.Function();
+          testProcess.getMap.should.be.a.Function();
+        })
+    );
+
+  });
 
 });

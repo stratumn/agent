@@ -23,7 +23,7 @@ export default function fromSegment(obj) {
       if (!agent.processes[obj.link.meta.process]) {
         throw new Error(`process '${obj.link.meta.process}' not found`);
       }
-      const segment = segmentify(agent.processes[obj.link.meta.process], obj);
+      const segment = segmentify.call(this, agent.processes[obj.link.meta.process], obj);
       return { process: agent.processes[obj.link.meta.process], segment };
     });
 }

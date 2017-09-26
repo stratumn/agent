@@ -23,5 +23,5 @@ export default function getBranches(agent, prevLinkHash, tags = []) {
     'Agent#findSegments(agent, filter)'
   );
 
-  return findSegments(agent, { prevLinkHash, tags });
+  return findSegments.call(this, agent, { prevLinkHash, tags });
 }

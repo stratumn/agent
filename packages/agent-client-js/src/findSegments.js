@@ -15,9 +15,7 @@
 */
 
 import segmentify from './segmentify';
-import makeQueryString from './makeQueryString';
 import promiseWhile from './promiseWhile';
-import { get } from './request';
 
 const DEFAULT_BATCH_SIZE = 20;
 
@@ -32,7 +30,7 @@ export default function findSegments(process, opts = {}) {
 
     return promiseWhile(
       () => lastBatch.length === options.limit,
-      () => findSegments(process, options)
+      () => findSegments.call(this, process, options)
         .then(newSegments => {
           lastBatch = newSegments;
           result.push(...newSegments);
@@ -40,6 +38,6 @@ export default function findSegments(process, opts = {}) {
         })
     ).then(() => result);
   }
-  return get(`${process.prefixUrl}/segments${makeQueryString(opts)}`)
-    .then(res => res.body.map(obj => segmentify(process, obj)));
+  return this.findSegments(process.name, opts)
+    .then(res => res.body.map(obj => segmentify.call(this, process, obj)));
 }

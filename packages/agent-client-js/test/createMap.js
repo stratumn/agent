@@ -15,40 +15,40 @@
 */
 
 import getAgent from '../src/getAgent';
-import agentHttpServer from './utils/agentHttpServer';
+import setUpData from './utils/testSetUp';
+import { withData } from 'leche';
 
 describe('#createMap', () => {
-  let closeServer;
-  beforeEach(() => agentHttpServer(3333).then(c => { closeServer = c; }));
-  afterEach(() => closeServer());
 
-  let agent;
-  let process;
-  beforeEach(() =>
-    getAgent('http://localhost:3333').then(res => {
-      agent = res;
-      process = agent.processes.first_process;
-      return;
-    })
-  );
+  withData(setUpData(), objectOrUrl => {
+    let agent;
+    let process;
+    beforeEach(() =>
+      getAgent(objectOrUrl).then(res => {
+        agent = res;
+        process = agent.processes.first_process;
+        return;
+      })
+    );
 
-  it('creates a map', () =>
-    process
-      .createMap('Test')
-      .then(segment => {
-        segment.link.state.title.should.be.exactly('Test');
-      })
-  );
+    it('creates a map', () =>
+      process
+        .createMap('Test')
+        .then(segment => {
+          segment.link.state.title.should.be.exactly('Test');
+        })
+    );
 
-  it('handles error if arguments do not match those of "init" function', () =>
-    process
-      .createMap()
-      .then(() => {
-        throw new Error('it should have failed');
-      })
-      .catch(err => {
-        err.message.should.be.exactly('a title is required');
-        err.status.should.be.exactly(400);
-      })
-  );
+    it('handles error if arguments do not match those of "init" function', () =>
+      process
+        .createMap()
+        .then(() => {
+          throw new Error('it should have failed');
+        })
+        .catch(err => {
+          err.message.should.be.exactly('a title is required');
+          err.status.should.be.exactly(400);
+        })
+    );
+  });
 });

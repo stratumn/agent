@@ -15,76 +15,76 @@
 */
 
 import getAgent from '../src/getAgent';
-import agentHttpServer from './utils/agentHttpServer';
+import setUpData from './utils/testSetUp';
+import { withData } from 'leche';
 
 describe('#findSegments', () => {
 
-  let closeServer;
-  beforeEach(() => agentHttpServer(3333).then(c => { closeServer = c; }));
-  afterEach(() => closeServer());
-
-  let agent;
-  let process;
-  beforeEach(() =>
-    getAgent('http://localhost:3333').then(res => {
-      agent = res;
-      process = agent.processes.first_process;
-      return;
-    })
-  );
-
-  it('finds the segments', () =>
-    process
-      .createMap('hi')
-      .then(() => process.createMap('hi'))
-      .then(() => process.findSegments())
-      .then(segments => {
-        segments.should.be.an.Array();
-        segments.length.should.be.exactly(2);
+  withData(setUpData(), objectOrUrl => {
+    let agent;
+    let process;
+    beforeEach(() =>
+      getAgent(objectOrUrl).then(res => {
+        agent = res;
+        process = agent.processes.first_process;
+        return;
       })
-  );
+    );
 
-  it('applies the options mapId', () =>
-    process
-      .createMap('hi')
-      .then(() => process.createMap('hi'))
-      .then(segment => process.findSegments({ mapIds: [segment.link.meta.mapId] }))
-      .then(segments => {
-        segments.should.be.an.Array();
-        segments.length.should.be.exactly(1);
-      })
-  );
+    it('finds the segments', () =>
+      process
+        .createMap('hi')
+        .then(() => process.createMap('hi'))
+        .then(() => process.findSegments())
+        .then(segments => {
+          segments.should.be.an.Array();
+          segments.length.should.be.exactly(2);
+        })
+    );
 
-  it('loads all segments with a limit of -1', () =>
-    process
-      .createMap('hi')
-      .then(() => process.createMap('hi'))
-      .then(() => process.findSegments({ limit: -1, batchSize: 1 }))
-      .then(segments => {
-        segments.should.be.an.Array();
-        segments.length.should.be.exactly(2);
-      })
-  );
+    it('applies the options mapId', () =>
+      process
+        .createMap('hi')
+        .then(() => process.createMap('hi'))
+        .then(segment => process.findSegments({ mapIds: [segment.link.meta.mapId] }))
+        .then(segments => {
+          segments.should.be.an.Array();
+          segments.length.should.be.exactly(1);
+        })
+    );
 
-  it('loads all segments with a limit of -1', () =>
-    process
-      .createMap('hi')
-      .then(() => process.createMap('hi'))
-      .then(() => process.findSegments({ limit: -1, batchSize: 2 }))
-      .then(segments => {
-        segments.should.be.an.Array();
-        segments.length.should.be.exactly(2);
-      })
-  );
+    it('loads all segments with a limit of -1', () =>
+      process
+        .createMap('hi')
+        .then(() => process.createMap('hi'))
+        .then(() => process.findSegments({ limit: -1, batchSize: 1 }))
+        .then(segments => {
+          segments.should.be.an.Array();
+          segments.length.should.be.exactly(2);
+        })
+    );
 
-  it('returns segmentified segments', () =>
-    process
-      .createMap('hi')
-      .then(() => process.createMap('hi'))
-      .then(() => process.findSegments())
-      .then(segments => {
-        segments.forEach(segment => segment.getPrev.should.be.a.Function());
-      })
-  );
+    it('loads all segments with a limit of -1', () =>
+      process
+        .createMap('hi')
+        .then(() => process.createMap('hi'))
+        .then(() => process.findSegments({ limit: -1, batchSize: 2 }))
+        .then(segments => {
+          segments.should.be.an.Array();
+          segments.length.should.be.exactly(2);
+        })
+    );
+
+    it('returns segmentified segments', () =>
+      process
+        .createMap('hi')
+        .then(() => process.createMap('hi'))
+        .then(() => process.findSegments())
+        .then(segments => {
+          segments.forEach(segment => segment.getPrev.should.be.a.Function());
+        })
+    );
+  });
+
 
 });

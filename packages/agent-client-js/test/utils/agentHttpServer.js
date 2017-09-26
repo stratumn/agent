@@ -78,20 +78,55 @@ const plugins = [
   }
 ];
 
-export default function agentHttpServer(port) {
-  return new Promise(resolve => {
-    const agent = create({ agentUrl: `http://localhost:${port}` });
-    const commonStore = memoryStore();
-    agent.addProcess('first_process', actions, memoryStore(), null, {
-      plugins,
-      salt: ''
-    });
-    agent.addProcess('second_process', actions2, commonStore, null);
-    agent.addProcess('third_process', actions2, commonStore, null);
+function dummyAgent(port) {
+  const agent = create({ agentUrl: `http://localhost:${port}` });
+  const commonStore = memoryStore();
+  agent.addProcess('first_process', actions, memoryStore(), null, {
+    plugins,
+    salt: ''
+  });
+  agent.addProcess('second_process', actions2, commonStore, null);
+  agent.addProcess('third_process', actions2, commonStore, null);
+  return agent;
+}
 
+function _agentHttpServer(agent, port) {
+  return new Promise(resolve => {
     const server = agent.httpServer(agent, { cors: {} }).listen(port, () => {
       const close = () => new Promise(done => server.close(done));
       resolve(close);
     });
   });
 }
+
+function agentHttpServer(port) {
+  return _agentHttpServer(dummyAgent(port), port);
+}
+
+// function setUp() {
+//   const port = 3333;
+//   const agentUrl = `http://localhost:${port}`;
+//   let agent = dummyAgent(port);
+//   let closeServer;
+//   // return _agentHttpServer(agent, port)
+//   //   .then(c => ({
+//   //     closeServer: c,
+//   //     withData: {
+//   //       'agent object': [agent],
+//   //       'agent url': [agentUrl]
+//   //     }
+//   //   }));
+//   beforeEach(() => {agent = dummyAgent(port); console.log('before');});
+//   beforeEach(() => _agentHttpServer(agent, port).then(c => { closeServer = c; }));
+//   afterEach(() => {closeServer(); console.log('after');});
+//   return () => ({
+//     'agent object': [agent],
+//     'agent url': [agentUrl]
+//   });
+// }
+
+module.exports = {
+  dummyAgent,
+  agentHttpServer,
+  _agentHttpServer
+};

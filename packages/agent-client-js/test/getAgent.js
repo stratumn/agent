@@ -15,21 +15,23 @@
 */
 
 import getAgent from '../src/getAgent';
-import agentHttpServer from './utils/agentHttpServer';
+import setUpData from './utils/testSetUp';
+import { withData } from 'leche';
 
 describe('#getAgent', () => {
 
-  let closeServer;
-  beforeEach(() => agentHttpServer(3333).then(c => { closeServer = c; }));
-  afterEach(() => closeServer());
+  withData(setUpData(), objectOrUrl => {
 
-  it('loads an agent', () =>
-    getAgent('http://localhost:3333')
-      .then(agent => {
-        agent.url.should.be.exactly('http://localhost:3333');
-        Object.keys(agent.processes).length.should.be.exactly(3);
-        agent.processes.first_process.storeInfo.adapter.name.should.be.exactly('memory');
-      })
-  );
+    it('loads an agent', () =>
+      getAgent(objectOrUrl)
+        .then(agent => {
+          if (typeof objectOrUrl === 'string') {
+            agent.url.should.be.exactly('http://localhost:3333');
+          }
+          Object.keys(agent.processes).length.should.be.exactly(3);
+          agent.processes.first_process.storeInfo.adapter.name.should.be.exactly('memory');
+        })
+    );
+  });
 
 });

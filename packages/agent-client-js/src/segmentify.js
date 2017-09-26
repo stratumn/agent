@@ -16,7 +16,6 @@
 
 import deprecated from './deprecated';
 import getBranches from './getBranches';
-import { post } from './request';
 
 export default function segmentify(process, obj) {
   Object.keys(process.processInfo.actions)
@@ -24,8 +23,8 @@ export default function segmentify(process, obj) {
     .forEach(key => {
       /*eslint-disable*/
       obj[key] = (...args) => {
-        return post(`${process.prefixUrl}/segments/${obj.meta.linkHash}/${key}`, args)
-          .then(res => segmentify(process, res.body));
+        return this.createSegment(process.name, obj.meta.linkHash, key, ...args)
+          .then(res => segmentify.call(this, process, res.body));
       }
     });
 
@@ -44,7 +43,7 @@ export default function segmentify(process, obj) {
   obj.load = () => {
     /*eslint-enable*/
     deprecated('segment#load()');
-    return Promise.resolve(segmentify(process, {
+    return Promise.resolve(segmentify.call(this, process, {
       link: JSON.parse(JSON.stringify(obj.link)),
       meta: JSON.parse(JSON.stringify(obj.meta))
     }));
@@ -54,7 +53,7 @@ export default function segmentify(process, obj) {
   /*eslint-disable*/
   obj.getBranches = (...args) => {
     /*eslint-enable*/
-    return getBranches(process, obj.meta.linkHash, ...args);
+    return getBranches.call(this, process, obj.meta.linkHash, ...args);
   };
 
   return obj;

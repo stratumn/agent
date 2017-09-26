@@ -15,9 +15,8 @@
 */
 
 import segmentify from './segmentify';
-import { get } from './request';
 
 export default function getSegment(process, linkHash) {
-  return get(`${process.prefixUrl}/segments/${linkHash}`)
-    .then(res => segmentify(process, res.body));
+  return this.getSegment(process.name, linkHash)
+    .then(res => segmentify.call(this, process, res.body));
 }

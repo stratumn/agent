@@ -20,5 +20,5 @@ import deprecated from './deprecated';
 export default function getLink(process, hash) {
   deprecated('Agent#getLink(agent, hash)', 'Agent#getSegment(agent, hash)');
 
-  return getSegment(process, hash);
+  return getSegment.call(this, process, hash);
 }

@@ -20,5 +20,5 @@ import deprecated from './deprecated';
 export default function getMap(process, mapId, tags = []) {
   deprecated('getMap(agent, mapId, tags = [])', 'findSegments(agent, filter)');
 
-  return findSegments(process, { mapIds: mapId, tags });
+  return findSegments.call(this, process, { mapIds: mapId, tags });
 }
