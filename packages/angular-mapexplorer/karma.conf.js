@@ -27,8 +27,6 @@ module.exports = function(config) {
       'bower_components/tinycolor/tinycolor.js',
       'bower_components/md-color-picker/dist/mdColorPicker.js',
       'bower_components/angular-drop/angular-drop.js',
-      'bower_components/d3/d3.js',
-      'bower_components/mapexplorer-core/dist/mapexplorer-core.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'dist/angular-mapexplorer.js',
       'test/*.spec.js'
