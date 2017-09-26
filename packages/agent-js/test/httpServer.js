@@ -56,19 +56,26 @@ describe('HttpServer()', () => {
   let agent;
   let server;
   let process;
+  let mockFossilizer;
 
   beforeEach(() => {
     agent = create(actions, memoryStore(), null, { agentUrl: 'http://localhost' });
-    process = agent.addProcess('basic', actions, memoryStore(), null);
+    mockFossilizer = {
+      fossilize() {
+        return Promise.resolve(true);
+      }
+    };
+    process = agent.addProcess('basic', actions, memoryStore(), mockFossilizer);
     server = agent.httpServer();
   });
 
   describe('GET "/"', () => {
-    it('renders the agent info', () =>
-      agent
+    it('renders the agent info', () => {
+      process.fossilizerClient = null;
+      return agent
         .getInfo()
-        .then(info => testDeepEquals(supertest(server).get('/'), 200, info))
-    );
+        .then(info => testDeepEquals(supertest(server).get('/'), 200, info));
+    });
   });
 
   describe('GET "/processes"', () => {
@@ -116,7 +123,7 @@ describe('HttpServer()', () => {
         segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
         segment.link.meta.mapId.should.be.a.String();
         segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
-        segment.meta.evidence.should.deepEqual({ state: 'DISABLED' });
+        segment.meta.evidence.should.deepEqual({ state: 'QUEUED' });
       });
     });
 
@@ -130,7 +137,6 @@ describe('HttpServer()', () => {
         segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
         segment.link.meta.mapId.should.be.a.String();
         segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
-        segment.meta.evidence.should.deepEqual({ state: 'DISABLED' });
       });
     });
 
@@ -157,7 +163,7 @@ describe('HttpServer()', () => {
             segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
             segment2.link.meta.prevLinkHash.should.be.exactly(segment1.meta.linkHash);
             segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
-            segment2.meta.evidence.should.deepEqual({ state: 'DISABLED' });
+            segment2.meta.evidence.should.deepEqual({ state: 'QUEUED' });
           });
         })
     );
@@ -256,7 +262,7 @@ describe('HttpServer()', () => {
         segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
         segment.link.meta.mapId.should.be.a.String();
         segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
-        segment.meta.evidence.should.deepEqual({ state: 'DISABLED' });
+        segment.meta.evidence.should.deepEqual({ state: 'QUEUED' });
       });
     });
   });
@@ -275,7 +281,7 @@ describe('HttpServer()', () => {
             segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
             segment2.link.meta.prevLinkHash.should.be.exactly(segment1.meta.linkHash);
             segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
-            segment2.meta.evidence.should.deepEqual({ state: 'DISABLED' });
+            segment2.meta.evidence.should.deepEqual({ state: 'QUEUED' });
           });
         });
     });
