@@ -16,7 +16,7 @@
 
 import processify from './processify';
 
-export default function getProcesses() {
-  return this.getProcesses()
-    .then(res => res.body.map(processify.bind(this)));
+export default function getProcesses(adaptor) {
+  return adaptor.getProcesses()
+    .then(res => res.body.map(processify.bind(null, adaptor)));
 }

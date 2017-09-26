@@ -19,7 +19,7 @@ import promiseWhile from './promiseWhile';
 
 const DEFAULT_BATCH_SIZE = 20;
 
-export default function findSegments(process, opts = {}) {
+export default function findSegments(adaptor, process, opts = {}) {
   const options = Object.assign({}, opts);
   if (opts.limit === -1) {
     options.limit = options.batchSize || DEFAULT_BATCH_SIZE;
@@ -30,7 +30,7 @@ export default function findSegments(process, opts = {}) {
 
     return promiseWhile(
       () => lastBatch.length === options.limit,
-      () => findSegments.call(this, process, options)
+      () => findSegments(adaptor, process, options)
         .then(newSegments => {
           lastBatch = newSegments;
           result.push(...newSegments);
@@ -38,6 +38,6 @@ export default function findSegments(process, opts = {}) {
         })
     ).then(() => result);
   }
-  return this.findSegments(process.name, opts)
-    .then(res => res.body.map(obj => segmentify.call(this, process, obj)));
+  return adaptor.findSegments(process.name, opts)
+    .then(res => res.body.map(obj => segmentify(adaptor, process, obj)));
 }

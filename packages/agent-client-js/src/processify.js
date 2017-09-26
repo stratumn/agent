@@ -24,21 +24,21 @@ import getBranches from './getBranches';
 import getLink from './getLink';
 import getMap from './getMap';
 
-export default function processify(process) {
+export default function processify(adaptor, process) {
   const updatedProcess = process;
-  if (this.url) {
-    updatedProcess.agentUrl = this.url;
-    updatedProcess.prefixUrl = `${this.url}/${process.name}`;
+  if (adaptor.url) {
+    updatedProcess.agentUrl = adaptor.url;
+    updatedProcess.prefixUrl = `${adaptor.url}/${process.name}`;
   }
-  updatedProcess.createMap = createMap.bind(this, updatedProcess);
-  updatedProcess.getSegment = getSegment.bind(this, updatedProcess);
-  updatedProcess.findSegments = findSegments.bind(this, updatedProcess);
-  updatedProcess.getMapIds = getMapIds.bind(this, updatedProcess);
+  updatedProcess.createMap = createMap.bind(null, adaptor, updatedProcess);
+  updatedProcess.getSegment = getSegment.bind(null, adaptor, updatedProcess);
+  updatedProcess.findSegments = findSegments.bind(null, adaptor, updatedProcess);
+  updatedProcess.getMapIds = getMapIds.bind(null, adaptor, updatedProcess);
 
   // Deprecated.
-  updatedProcess.getBranches = getBranches.bind(this, updatedProcess);
-  updatedProcess.getLink = getLink.bind(this, updatedProcess);
-  updatedProcess.getMap = getMap.bind(this, updatedProcess);
+  updatedProcess.getBranches = getBranches.bind(null, adaptor, updatedProcess);
+  updatedProcess.getLink = getLink.bind(null, adaptor, updatedProcess);
+  updatedProcess.getMap = getMap.bind(null, adaptor, updatedProcess);
 
   return updatedProcess;
 }

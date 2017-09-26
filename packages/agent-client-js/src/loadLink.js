@@ -17,9 +17,9 @@
 import fromSegment from './fromSegment';
 import deprecated from './deprecated';
 
-export default function loadLink(obj) {
+export default function loadLink(adaptor, obj) {
   deprecated('loadLink(obj)', 'fromSegment(obj)');
 
-  return fromSegment(obj)
+  return fromSegment(adaptor, obj)
     .then(({ segment }) => segment);
 }

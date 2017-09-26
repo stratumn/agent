@@ -17,8 +17,8 @@
 import findSegments from './findSegments';
 import deprecated from './deprecated';
 
-export default function getMap(process, mapId, tags = []) {
+export default function getMap(adaptor, process, mapId, tags = []) {
   deprecated('getMap(agent, mapId, tags = [])', 'findSegments(agent, filter)');
 
-  return findSegments.call(this, process, { mapIds: mapId, tags });
+  return findSegments(adaptor, process, { mapIds: mapId, tags });
 }

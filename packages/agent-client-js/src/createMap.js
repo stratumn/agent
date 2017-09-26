@@ -16,7 +16,7 @@
 
 import segmentify from './segmentify';
 
-export default function createMap(process, ...args) {
-  return this.createMap(process.name, ...args)
-    .then(res => segmentify.call(this, process, res.body));
+export default function createMap(adaptor, process, ...args) {
+  return adaptor.createMap(process.name, ...args)
+    .then(res => segmentify(adaptor, process, res.body));
 }

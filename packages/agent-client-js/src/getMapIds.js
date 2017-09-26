@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-export default function getMapIds(process, opts = {}) {
-  return this.getMapIds(process.name, opts)
+export default function getMapIds(adaptor, process, opts = {}) {
+  return adaptor.getMapIds(process.name, opts)
     .then(res => res.body);
 }
