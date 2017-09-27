@@ -15,13 +15,11 @@
 */
 
 import getAgent from '../src/getAgent';
-import setUpData from './utils/testSetUp';
-import { withData } from 'leche';
+import { runTestsWithData } from './utils/testSetUp';
 
 describe('#getAgent', () => {
 
-  withData(setUpData(), objectOrUrl => {
-
+  runTestsWithData(objectOrUrl => {
     it('loads an agent', () =>
       getAgent(objectOrUrl)
         .then(agent => {

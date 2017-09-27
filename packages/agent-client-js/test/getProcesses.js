@@ -15,12 +15,11 @@
 */
 
 import getAgent from '../src/getAgent';
-import setUpData from './utils/testSetUp';
-import { withData } from 'leche';
+import { runTestsWithData } from './utils/testSetUp';
 
 describe('#getProcesses', () => {
 
-  withData(setUpData(), objectOrUrl => {
+  runTestsWithData(objectOrUrl => {
     it('resolves with a list of all processes', () =>
       getAgent(objectOrUrl)
         .then(agent =>

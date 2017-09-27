@@ -14,34 +14,23 @@
   limitations under the License.
 */
 
-import getAgent from '../src/getAgent';
-import setUpData from './utils/testSetUp';
-import { withData } from 'leche';
+import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#getMap', () => {
 
-  withData(setUpData(), objectOrUrl => {
-    let agent;
-    let process;
-    beforeEach(() =>
-      getAgent(objectOrUrl).then(res => {
-        agent = res;
-        process = agent.processes.first_process;
-        return;
-      })
-    );
+  runTestsWithDataAndAgent(process => {
     // Deprecated
     it('finds the segments', () =>
-      process
-        .createMap('blank')
-        .then(() =>
-          process.createMap('hi'))
-        .then(segment => segment.addMessage('hello', 'bot'))
-        .then(segment => process.getMap(segment.link.meta.mapId))
-        .then(segments => {
-          segments.should.be.an.Array();
-          segments.length.should.be.exactly(2);
-        })
+    process
+      .createMap('blank')
+      .then(() =>
+        process.createMap('hi'))
+      .then(segment => segment.addMessage('hello', 'bot'))
+      .then(segment => process.getMap(segment.link.meta.mapId))
+      .then(segments => {
+        segments.should.be.an.Array();
+        segments.length.should.be.exactly(2);
+      })
     );
   });
 

@@ -15,13 +15,11 @@
 */
 
 import getAgent from '../src/getAgent';
-import setUpData from './utils/testSetUp';
-import { withData } from 'leche';
+import { runTestsWithData } from './utils/testSetUp';
 
 describe('#processify', () => {
 
-  withData(setUpData(), objectOrUrl => {
-
+  runTestsWithData(objectOrUrl => {
     it('adds the helper functions to the process', () =>
       getAgent(objectOrUrl)
         .then(agent => {
@@ -39,7 +37,6 @@ describe('#processify', () => {
           testProcess.getMap.should.be.a.Function();
         })
     );
-
   });
 
 });
