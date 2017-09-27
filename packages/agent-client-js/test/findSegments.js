@@ -18,12 +18,12 @@ import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#findSegments', () => {
 
-  runTestsWithDataAndAgent(process => {
+  runTestsWithDataAndAgent(processCb => {
     it('finds the segments', () =>
-      process
+      processCb()
         .createMap('hi')
-        .then(() => process.createMap('hi'))
-        .then(() => process.findSegments())
+        .then(() => processCb().createMap('hi'))
+        .then(() => processCb().findSegments())
         .then(segments => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(2);
@@ -31,10 +31,10 @@ describe('#findSegments', () => {
     );
 
     it('applies the options mapId', () =>
-      process
+      processCb()
         .createMap('hi')
-        .then(() => process.createMap('hi'))
-        .then(segment => process.findSegments({ mapIds: [segment.link.meta.mapId] }))
+        .then(() => processCb().createMap('hi'))
+        .then(segment => processCb().findSegments({ mapIds: [segment.link.meta.mapId] }))
         .then(segments => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(1);
@@ -42,10 +42,10 @@ describe('#findSegments', () => {
     );
 
     it('loads all segments with a limit of -1', () =>
-      process
+      processCb()
         .createMap('hi')
-        .then(() => process.createMap('hi'))
-        .then(() => process.findSegments({ limit: -1, batchSize: 1 }))
+        .then(() => processCb().createMap('hi'))
+        .then(() => processCb().findSegments({ limit: -1, batchSize: 1 }))
         .then(segments => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(2);
@@ -53,10 +53,10 @@ describe('#findSegments', () => {
     );
 
     it('loads all segments with a limit of -1', () =>
-      process
+      processCb()
         .createMap('hi')
-        .then(() => process.createMap('hi'))
-        .then(() => process.findSegments({ limit: -1, batchSize: 2 }))
+        .then(() => processCb().createMap('hi'))
+        .then(() => processCb().findSegments({ limit: -1, batchSize: 2 }))
         .then(segments => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(2);
@@ -64,10 +64,10 @@ describe('#findSegments', () => {
     );
 
     it('returns segmentified segments', () =>
-      process
+      processCb()
         .createMap('hi')
-        .then(() => process.createMap('hi'))
-        .then(() => process.findSegments())
+        .then(() => processCb().createMap('hi'))
+        .then(() => processCb().findSegments())
         .then(segments => {
           segments.forEach(segment => segment.getPrev.should.be.a.Function());
         })

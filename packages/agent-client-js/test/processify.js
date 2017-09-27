@@ -19,12 +19,12 @@ import { runTestsWithData } from './utils/testSetUp';
 
 describe('#processify', () => {
 
-  runTestsWithData(objectOrUrl => {
+  runTestsWithData(objectOrUrlCb => {
     it('adds the helper functions to the process', () =>
-      getAgent(objectOrUrl)
+      getAgent(objectOrUrlCb())
         .then(agent => {
           const testProcess = agent.processes.first_process;
-          if (typeof objectOrUrl === 'string') {
+          if (typeof objectOrUrlCb() === 'string') {
             testProcess.agentUrl.should.be.exactly('http://localhost:3333');
             testProcess.prefixUrl.should.be.exactly('http://localhost:3333/first_process');
           }

@@ -18,9 +18,9 @@ import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#segmentify', () => {
 
-  runTestsWithDataAndAgent(process => {
+  runTestsWithDataAndAgent(processCb => {
     it('adds actions to the segment', () =>
-      process
+      processCb()
         .createMap('hi there')
         .then(segment1 =>
           segment1
@@ -33,7 +33,7 @@ describe('#segmentify', () => {
     );
 
     it('handles actions errors', () =>
-      process
+      processCb()
         .createMap('hi there')
         .then(segment1 =>
           segment1
@@ -49,7 +49,7 @@ describe('#segmentify', () => {
     );
 
     it('adds a #getPrev() method to the segment', () =>
-      process
+      processCb()
         .createMap('hi there')
         .then(segment1 =>
           segment1
@@ -68,7 +68,7 @@ describe('#segmentify', () => {
 
     // Deprecated
     it('adds a #load() method to the segment', () =>
-      process
+      processCb()
         .createMap('hi there')
         .then(segment1 =>
           segment1
@@ -82,7 +82,7 @@ describe('#segmentify', () => {
 
     // Deprecated
     it('adds a #getBranches() method to the segment', () =>
-      process
+      processCb()
         .createMap('hi there')
         .then(segment =>
           Promise

@@ -18,13 +18,13 @@ import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#getLink', () => {
 
-  runTestsWithDataAndAgent(process => {
+  runTestsWithDataAndAgent(processCb => {
     // Deprecated
     it('gets a segment', () =>
-      process
+      processCb()
         .createMap('hi there')
         .then(segment =>
-          process.getLink(segment.meta.linkHash)
+          processCb().getLink(segment.meta.linkHash)
         )
         .then(segment => {
           segment.link.state.title.should.be.exactly('hi there');

@@ -19,11 +19,11 @@ import { runTestsWithData } from './utils/testSetUp';
 
 describe('#getAgent', () => {
 
-  runTestsWithData(objectOrUrl => {
+  runTestsWithData(objectOrUrlCb => {
     it('loads an agent', () =>
-      getAgent(objectOrUrl)
+      getAgent(objectOrUrlCb())
         .then(agent => {
-          if (typeof objectOrUrl === 'string') {
+          if (typeof objectOrUrlCb() === 'string') {
             agent.url.should.be.exactly('http://localhost:3333');
           }
           Object.keys(agent.processes).length.should.be.exactly(3);

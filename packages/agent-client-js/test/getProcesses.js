@@ -19,9 +19,9 @@ import { runTestsWithData } from './utils/testSetUp';
 
 describe('#getProcesses', () => {
 
-  runTestsWithData(objectOrUrl => {
+  runTestsWithData(objectOrUrlCb => {
     it('resolves with a list of all processes', () =>
-      getAgent(objectOrUrl)
+      getAgent(objectOrUrlCb())
         .then(agent =>
           agent.getProcesses())
         .then(processes => {

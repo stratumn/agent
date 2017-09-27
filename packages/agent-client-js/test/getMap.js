@@ -18,15 +18,15 @@ import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#getMap', () => {
 
-  runTestsWithDataAndAgent(process => {
+  runTestsWithDataAndAgent(processCb => {
     // Deprecated
     it('finds the segments', () =>
-    process
+    processCb()
       .createMap('blank')
       .then(() =>
-        process.createMap('hi'))
+        processCb().createMap('hi'))
       .then(segment => segment.addMessage('hello', 'bot'))
-      .then(segment => process.getMap(segment.link.meta.mapId))
+      .then(segment => processCb().getMap(segment.link.meta.mapId))
       .then(segments => {
         segments.should.be.an.Array();
         segments.length.should.be.exactly(2);

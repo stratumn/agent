@@ -18,12 +18,12 @@ import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#getSegment', () => {
 
-  runTestsWithDataAndAgent(process => {
+  runTestsWithDataAndAgent(processCb => {
     it('gets a segment', () =>
-      process
+      processCb()
         .createMap('hi there')
         .then(segment =>
-          process.getSegment(segment.meta.linkHash)
+          processCb().getSegment(segment.meta.linkHash)
         )
         .then(segment => {
           segment.link.state.title.should.be.exactly('hi there');
@@ -31,7 +31,7 @@ describe('#getSegment', () => {
     );
 
     it('rejects if the segment is not found', () =>
-      process
+      processCb()
         .getSegment('404')
         .then(() => {
           throw new Error('should not resolve');

@@ -18,9 +18,9 @@ import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#createMap', () => {
 
-  runTestsWithDataAndAgent(process => {
+  runTestsWithDataAndAgent(processCb => {
     it('creates a map', () =>
-      process
+      processCb()
         .createMap('Test')
         .then(segment => {
           segment.link.state.title.should.be.exactly('Test');
@@ -28,7 +28,7 @@ describe('#createMap', () => {
     );
 
     it('handles error if arguments do not match those of "init" function', () =>
-      process
+      processCb()
         .createMap()
         .then(() => {
           throw new Error('it should have failed');

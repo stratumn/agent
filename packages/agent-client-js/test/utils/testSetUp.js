@@ -22,39 +22,34 @@ const agentUrl = `http://localhost:${port}`;
 let agentObj = 'http://not/a/url';
 let closeServer;
 
-beforeEach(() => {agentObj = dummyAgent(port); /* console.log('before', agentObj); */});
+beforeEach(() => {agentObj = dummyAgent(port);});
 beforeEach(() => _agentHttpServer(agentObj, port).then(c => { closeServer = c; }));
 afterEach(() => {closeServer();});
 
 const setUpData = () => {
   const res = {
-    'agent object': [agentObj],
-    'agent url': [agentUrl]
+    'agent object': [() => agentObj],
+    'agent url': [() => agentUrl]
   };
-  // console.log('in setup', res);
   return res;
 };
 
 const runTestsWithData = testFunction => {
-  it('', () => {
-    withData(setUpData(), testFunction);
-  });
+  withData(setUpData(), testFunction);
 };
 
 const runTestsWithDataAndAgent = testFunction => {
-  runTestsWithData(objectOrUrl => {
+  runTestsWithData(objectOrUrlCb => {
     let agent;
     let process;
     beforeEach(() =>
-      getAgent(objectOrUrl).then(res => {
+      getAgent(objectOrUrlCb()).then(res => {
         agent = res;
         process = agent.processes.first_process;
         return;
       })
     );
-    it('', () => {
-      testFunction(process);
-    });
+    testFunction(() => process);
   });
 };
 

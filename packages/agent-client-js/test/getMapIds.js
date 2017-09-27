@@ -18,13 +18,13 @@ import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#getMapIds', () => {
 
-  runTestsWithDataAndAgent(process => {
+  runTestsWithDataAndAgent(processCb => {
     it('gets map IDs', () =>
-      process
+      processCb()
         .createMap('hi')
-        .then(() => process.createMap('hi'))
-        .then(() => process.createMap('hi'))
-        .then(() => process.getMapIds())
+        .then(() => processCb().createMap('hi'))
+        .then(() => processCb().createMap('hi'))
+        .then(() => processCb().getMapIds())
         .then(mapIds => {
           mapIds.should.be.an.Array();
           mapIds.length.should.be.exactly(3);
