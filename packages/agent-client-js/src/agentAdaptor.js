@@ -56,7 +56,8 @@ class httpAdaptor {
 }
 
 
-const decorateBody = res => ({ body: res });
+// need to clone data as client will modify it!
+const decorateBody = res => ({ body: JSON.parse(JSON.stringify(res)) });
 
 class objectAdaptor {
   constructor(agent) {
