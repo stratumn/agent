@@ -47,6 +47,7 @@
     "eslint-plugin-react": "^4.1.0",
     "isparta": "^4.0.0",
     "istanbul": "0.4.4",
+    "leche": "^2.2.1",
     "mocha": "^2.4.5",
     "rimraf": "^2.5.2",
     "rollup": "^0.34.10",
