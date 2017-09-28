@@ -17,8 +17,11 @@
 import findSegments from './findSegments';
 import deprecated from './deprecated';
 
-export default function getMap(adaptor, process, mapId, tags = []) {
+export default function getMap(adaptor, process, mapId, tags = null) {
   deprecated('getMap(agent, mapId, tags = [])', 'findSegments(agent, filter)');
-
-  return findSegments(adaptor, process, { mapIds: mapId, tags });
+  const opts = { mapIds: mapId };
+  if (tags) {
+    opts.tags = tags;
+  }
+  return findSegments(adaptor, process, opts);
 }
