@@ -14,18 +14,15 @@
   limitations under the License.
 */
 
-import getAgent from './getAgent';
-import getAdaptor from './getAdaptor';
-import segmentify from './segmentify';
+import httpAdaptor from './httpAdaptor';
+import objectAdaptor from './objectAdaptor';
 
-export default function fromSegment(obj) {
-  return getAgent(obj.meta.agentUrl || obj.meta.applicationLocation)
-    .then(agent => {
-      if (!agent.processes[obj.link.meta.process]) {
-        throw new Error(`process '${obj.link.meta.process}' not found`);
-      }
-      const adaptor = getAdaptor(agent.url);
-      const segment = segmentify(adaptor, agent.processes[obj.link.meta.process], obj);
-      return { process: agent.processes[obj.link.meta.process], segment };
-    });
+export default function getAdaptor(objectOrUrl) {
+  if (typeof objectOrUrl === 'string') {
+    return new httpAdaptor(objectOrUrl);
+  } else if (typeof objectOrUrl === 'object') {
+    return new objectAdaptor(objectOrUrl);
+  }
+
+  throw new Error('The argument passed is neither a url or an object!');
 }

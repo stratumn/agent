@@ -16,23 +16,15 @@
 
 import getProcesses from './getProcesses';
 import processify from './processify';
-import httpAdaptor from './httpAdaptor';
-import objectAdaptor from './objectAdaptor';
+import getAdaptor from './getAdaptor';
 
 export default function getAgent(objectOrUrl) {
-  let adaptor;
-  if (typeof objectOrUrl === 'string') {
-    adaptor = new httpAdaptor(objectOrUrl);
-  } else if (typeof objectOrUrl === 'object') {
-    adaptor = new objectAdaptor(objectOrUrl);
-  } else {
-    return Promise.reject(new Error('The argument passed is neither a url or an object!'));
-  }
-  return adaptor.getInfo()
+  try {
+    const adaptor = getAdaptor(objectOrUrl);
+    return adaptor.getInfo()
     .then(res => {
       const agent = res.body;
       agent.url = adaptor.url;
-      agent.adaptor = adaptor;
       agent.getProcesses = getProcesses.bind(null, adaptor);
       agent.processes = Object.keys(agent.processes)
         .map(key => agent.processes[key])
@@ -43,4 +35,7 @@ export default function getAgent(objectOrUrl) {
         }, {});
       return agent;
     });
+  } catch (err) {
+    return Promise.reject(err);
+  }
 }

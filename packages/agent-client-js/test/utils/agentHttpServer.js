@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { memoryStore, create } from 'stratumn-agent';
+import { memoryStore, create, plugins } from 'stratumn-agent';
 
 // Test actions
 const actions = {
@@ -71,18 +71,18 @@ const actions2 = {
   action(d) { this.state.d = d; this.append(); },
 };
 
-const plugins = [
-  {
-    name: 'T',
-    description: 'D'
-  }
-];
-
 function testAgent(port) {
+  const agentUrl = `http://localhost:${port}`;
   const agent = create({ agentUrl: `http://localhost:${port}` });
   const commonStore = memoryStore();
   agent.addProcess('first_process', actions, memoryStore(), null, {
-    plugins,
+    plugins: [
+      plugins.agentUrl(agentUrl),
+      {
+        name: 'T',
+        description: 'D'
+      }
+    ],
     salt: ''
   });
   agent.addProcess('second_process', actions2, commonStore, null);

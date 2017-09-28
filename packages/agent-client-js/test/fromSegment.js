@@ -17,6 +17,7 @@
 import fs from 'fs';
 import { join } from 'path';
 import fromSegment from '../src/fromSegment';
+import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#fromSegment', () => {
 
@@ -39,5 +40,21 @@ describe('#fromSegment', () => {
         err.message.should.be.exactly('process \'undefined\' not found');
       })
   );
+
+  runTestsWithDataAndAgent(processCb => {
+    it('loads a segment that can execute actions', () =>
+      processCb()
+        .createMap('Hi')
+        .then(segment => fromSegment({ link: segment.link, meta: segment.meta }))
+        .then(({ process, segment }) => {
+          process.findSegments.should.be.a.Function();
+          segment.addMessage.should.be.a.Function();
+          return segment.addMessage('hello', 'bob');
+        })
+        .then(segment => {
+          segment.addMessage.should.be.a.Function();
+        })
+    );
+  });
 
 });
