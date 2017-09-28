@@ -22,22 +22,32 @@ const agentUrl = `http://localhost:${port}`;
 let agentObj = 'http://not/a/url';
 let closeServer;
 
+// will run before each 'it' test
 beforeEach(() => {agentObj = testAgent(port);});
 beforeEach(() => agentHttpServer(agentObj, port).then(c => { closeServer = c; }));
 afterEach(() => {closeServer();});
 
-const setUpData = () => {
-  const res = {
-    'agent object': [() => agentObj],
-    'agent url': [() => agentUrl]
-  };
-  return res;
+// defines the dataset over which to run all the tests
+// 1/ with an object agent
+// 2/ with a url pointing at a server agent
+// note that the data in the dataset is given as callbacks
+// this is because the leche withData function is evaluated
+// before beforeEach functions, hence the only way to delay
+// the retrieval of agentObj and agentUrl is to provide a callback
+const setUpData = {
+  'agent object': [() => agentObj],
+  'agent url': [() => agentUrl]
 };
 
+// will execute testFunction over each entry of the dataset
+// see https://github.com/box/leche
 const runTestsWithData = testFunction => {
-  withData(setUpData(), testFunction);
+  withData(setUpData, testFunction);
 };
 
+// will execute testFunction over each entry of the dataset
+// providing the process directly as a callback (avoids having
+// to duplicate this logic everywhere in the tests)
 const runTestsWithDataAndAgent = testFunction => {
   runTestsWithData(objectOrUrlCb => {
     let agent;
