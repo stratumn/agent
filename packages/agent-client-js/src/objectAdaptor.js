@@ -14,52 +14,10 @@
   limitations under the License.
 */
 
-import { get, post } from './request';
-import makeQueryString from './makeQueryString';
-
-class httpAdaptor {
-  constructor(url) {
-    this.agentUrl = url;
-  }
-
-  getInfo() {
-    return get(this.url);
-  }
-
-  getProcesses() {
-    return get(`${this.url}/processes`);
-  }
-
-  createMap(processName, ...args) {
-    return post(`${this.url}/${processName}/segments`, args);
-  }
-
-  getSegment(processName, linkHash) {
-    return get(`${this.url}/${processName}/segments/${linkHash}`);
-  }
-
-  findSegments(processName, opts = {}) {
-    return get(`${this.url}/${processName}/segments${makeQueryString(opts)}`);
-  }
-
-  getMapIds(processName, opts = {}) {
-    return get(`${this.url}/${processName}/maps${makeQueryString(opts)}`);
-  }
-
-  createSegment(processName, linkHash, action, ...args) {
-    return post(`${this.url}/${processName}/segments/${linkHash}/${action}`, args);
-  }
-
-  get url() {
-    return this.agentUrl;
-  }
-}
-
-
 // need to clone data as client will modify it!
 const decorateBody = res => ({ body: JSON.parse(JSON.stringify(res)) });
 
-class objectAdaptor {
+export default class objectAdaptor {
   constructor(agent) {
     this.agent = agent;
   }
@@ -132,5 +90,3 @@ class objectAdaptor {
     return null;
   }
 }
-
-module.exports = { httpAdaptor, objectAdaptor };

@@ -239,7 +239,7 @@ $ npm install
 Build:
 
 ```
-$ npm run build:all
+$ npm run build
 ```
 
 Test:

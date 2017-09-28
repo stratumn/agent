@@ -16,8 +16,8 @@
 
 import getProcesses from './getProcesses';
 import processify from './processify';
-import { httpAdaptor, objectAdaptor } from './agentAdaptor';
-// import { get } from './request';
+import httpAdaptor from './httpAdaptor';
+import objectAdaptor from './objectAdaptor';
 
 export default function getAgent(objectOrUrl) {
   let adaptor;
