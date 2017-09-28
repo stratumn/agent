@@ -65,11 +65,27 @@ AgentClient.getAgent('http://localhost:3000')
 
 ### AgentClient#getAgent(url)
 
-Returns a promise that resolves with an agent client.
+Returns a promise that resolves with an agent client targetting the agent server available at `url`.
 
 ```javascript
 AgentClient
   .getAgent('http://localhost:3000')
+  .then(function(agent) {
+    console.log(agent);
+  })
+  .catch(function(err) {
+    // Handle errors
+  });
+```
+
+### AgentClient#getAgent(obj)
+
+Returns a promise that resolves with an agent client targetting the agent object created previously.
+
+```javascript
+const agentObj = create();
+AgentClient
+  .getAgent(agentObj)
   .then(function(agent) {
     console.log(agent);
   })
