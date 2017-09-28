@@ -14,7 +14,7 @@
   limitations under the License.
 */
 import getAgent from '../../src/getAgent';
-import { dummyAgent, _agentHttpServer } from './agentHttpServer';
+import { testAgent, agentHttpServer } from './agentHttpServer';
 import { withData } from 'leche';
 
 const port = 3333;
@@ -22,8 +22,8 @@ const agentUrl = `http://localhost:${port}`;
 let agentObj = 'http://not/a/url';
 let closeServer;
 
-beforeEach(() => {agentObj = dummyAgent(port);});
-beforeEach(() => _agentHttpServer(agentObj, port).then(c => { closeServer = c; }));
+beforeEach(() => {agentObj = testAgent(port);});
+beforeEach(() => agentHttpServer(agentObj, port).then(c => { closeServer = c; }));
 afterEach(() => {closeServer();});
 
 const setUpData = () => {
@@ -55,6 +55,5 @@ const runTestsWithDataAndAgent = testFunction => {
 
 module.exports = {
   runTestsWithData,
-  runTestsWithDataAndAgent,
-  setUpData
+  runTestsWithDataAndAgent
 };

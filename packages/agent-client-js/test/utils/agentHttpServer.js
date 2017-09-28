@@ -78,7 +78,7 @@ const plugins = [
   }
 ];
 
-function dummyAgent(port) {
+function testAgent(port) {
   const agent = create({ agentUrl: `http://localhost:${port}` });
   const commonStore = memoryStore();
   agent.addProcess('first_process', actions, memoryStore(), null, {
@@ -90,7 +90,7 @@ function dummyAgent(port) {
   return agent;
 }
 
-function _agentHttpServer(agent, port) {
+function agentHttpServer(agent, port) {
   return new Promise(resolve => {
     const server = agent.httpServer(agent, { cors: {} }).listen(port, () => {
       const close = () => new Promise(done => server.close(done));
@@ -99,34 +99,7 @@ function _agentHttpServer(agent, port) {
   });
 }
 
-function agentHttpServer(port) {
-  return _agentHttpServer(dummyAgent(port), port);
-}
-
-// function setUp() {
-//   const port = 3333;
-//   const agentUrl = `http://localhost:${port}`;
-//   let agent = dummyAgent(port);
-//   let closeServer;
-//   // return _agentHttpServer(agent, port)
-//   //   .then(c => ({
-//   //     closeServer: c,
-//   //     withData: {
-//   //       'agent object': [agent],
-//   //       'agent url': [agentUrl]
-//   //     }
-//   //   }));
-//   beforeEach(() => {agent = dummyAgent(port); console.log('before');});
-//   beforeEach(() => _agentHttpServer(agent, port).then(c => { closeServer = c; }));
-//   afterEach(() => {closeServer(); console.log('after');});
-//   return () => ({
-//     'agent object': [agent],
-//     'agent url': [agentUrl]
-//   });
-// }
-
 module.exports = {
-  dummyAgent,
-  agentHttpServer,
-  _agentHttpServer
+  testAgent,
+  agentHttpServer
 };
