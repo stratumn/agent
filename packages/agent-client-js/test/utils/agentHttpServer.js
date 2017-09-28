@@ -92,7 +92,7 @@ function testAgent(port) {
 
 function agentHttpServer(agent, port) {
   return new Promise(resolve => {
-    const server = agent.httpServer(agent, { cors: {} }).listen(port, () => {
+    const server = agent.httpServer({ cors: {} }).listen(port, () => {
       const close = () => new Promise(done => server.close(done));
       resolve(close);
     });
