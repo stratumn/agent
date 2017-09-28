@@ -36,12 +36,16 @@ describe('#findSegments', () => {
         .then(() => processCb().createMap('hi'))
         .then(segment => segment.addMessage('hello', 'bob'))
         .then(segment => segment.addTag('myTag'))
+        .then(segment => segment.addTag('myTag2'))
+        .then(() => processCb().findSegments({ tags: ['myTag', 'myTag2'] }))
+        .then(segments => {
+          segments.should.be.an.Array();
+          segments.length.should.be.exactly(1);
+        })
         .then(() => processCb().findSegments({ tags: ['myTag'] }))
         .then(segments => {
           segments.should.be.an.Array();
-          // below does not work due to a bug in findSegments with tags..
-          // segments.length.should.be.exactly(1);
-          segments.length.should.be.oneOf(0, 1);
+          segments.length.should.be.exactly(2);
         })
     );
 

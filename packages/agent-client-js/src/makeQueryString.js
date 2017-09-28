@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { stringify } from 'qs';
 
 /**
  * Makes a query string.
@@ -20,15 +21,9 @@
  * @returns {string} a query string
  */
 export default function makeQueryString(obj) {
-  const parts = Object.keys(obj).reduce((curr, key) => {
-    const val = Array.isArray(obj[key]) ? obj[key].join('+') : obj[key];
-    curr.push(`${encodeURIComponent(key)}=${encodeURIComponent(val)}`);
-    return curr;
-  }, []);
-
-  if (parts.length) {
-    return `?${parts.join('&')}`;
+  const query = stringify(obj);
+  if (query.length) {
+    return `?${query}`;
   }
-
   return '';
 }
