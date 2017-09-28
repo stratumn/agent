@@ -30,6 +30,14 @@ describe('#getAgent', () => {
           agent.processes.first_process.storeInfo.adapter.name.should.be.exactly('memory');
         })
     );
+
+    it('fails to load an agent', () =>
+      getAgent()
+      .then(() => {throw new Error('Should not get an agent...');})
+      .catch(err => {
+        err.message.should.be.exactly('The argument passed is neither a url or an object!');
+      })
+    );
   });
 
 });

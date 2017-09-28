@@ -19,9 +19,7 @@ import deprecated from './deprecated';
 
 export default function getMap(adaptor, process, mapId, tags = null) {
   deprecated('getMap(agent, mapId, tags = [])', 'findSegments(agent, filter)');
-  const opts = { mapIds: mapId };
-  if (tags) {
-    opts.tags = tags;
-  }
+
+  const opts = tags ? { mapIds: mapId, tags } : { mapIds: mapId };
   return findSegments(adaptor, process, opts);
 }

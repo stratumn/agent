@@ -23,10 +23,7 @@ export default function getBranches(adaptor, agent, prevLinkHash, tags = null) {
     'Agent#findSegments(agent, filter)'
   );
 
-  const opts = { prevLinkHash };
-  if (tags) {
-    opts.tags = tags;
-  }
+  const opts = tags ? { prevLinkHash, tags } : { prevLinkHash };
 
   return findSegments(adaptor, agent, opts);
 }
