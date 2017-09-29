@@ -17,8 +17,8 @@
 import getSegment from './getSegment';
 import deprecated from './deprecated';
 
-export default function getLink(process, hash) {
+export default function getLink(adaptor, process, hash) {
   deprecated('Agent#getLink(agent, hash)', 'Agent#getSegment(agent, hash)');
 
-  return getSegment(process, hash);
+  return getSegment(adaptor, process, hash);
 }

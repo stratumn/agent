@@ -14,35 +14,22 @@
   limitations under the License.
 */
 
-import getAgent from '../src/getAgent';
-import agentHttpServer from './utils/agentHttpServer';
+import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#getLink', () => {
 
-  let closeServer;
-  beforeEach(() => agentHttpServer(3333).then(c => { closeServer = c; }));
-  afterEach(() => closeServer());
-
-  let agent;
-  let process;
-  beforeEach(() =>
-    getAgent('http://localhost:3333').then(res => {
-      agent = res;
-      process = agent.processes.first_process;
-      return;
-    })
-  );
-
-  // Deprecated
-  it('gets a segment', () =>
-    process
-      .createMap('hi there')
-      .then(segment =>
-        process.getLink(segment.meta.linkHash)
-      )
-      .then(segment => {
-        segment.link.state.title.should.be.exactly('hi there');
-      })
-  );
+  runTestsWithDataAndAgent(processCb => {
+    // Deprecated
+    it('gets a segment', () =>
+      processCb()
+        .createMap('hi there')
+        .then(segment =>
+          processCb().getLink(segment.meta.linkHash)
+        )
+        .then(segment => {
+          segment.link.state.title.should.be.exactly('hi there');
+        })
+    );
+  });
 
 });

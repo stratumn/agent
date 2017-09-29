@@ -14,12 +14,15 @@
   limitations under the License.
 */
 
-import findSegments from './findSegments';
-import deprecated from './deprecated';
+import httpAdaptor from './httpAdaptor';
+import objectAdaptor from './objectAdaptor';
 
-export default function getMap(adaptor, process, mapId, tags = null) {
-  deprecated('getMap(agent, mapId, tags = [])', 'findSegments(agent, filter)');
+export default function getAdaptor(objectOrUrl) {
+  if (typeof objectOrUrl === 'string') {
+    return new httpAdaptor(objectOrUrl);
+  } else if (typeof objectOrUrl === 'object') {
+    return new objectAdaptor(objectOrUrl);
+  }
 
-  const opts = tags ? { mapIds: mapId, tags } : { mapIds: mapId };
-  return findSegments(adaptor, process, opts);
+  throw new Error('The argument passed is neither a url or an object!');
 }

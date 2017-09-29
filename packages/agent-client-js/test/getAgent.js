@@ -15,21 +15,29 @@
 */
 
 import getAgent from '../src/getAgent';
-import agentHttpServer from './utils/agentHttpServer';
+import { runTestsWithData } from './utils/testSetUp';
 
 describe('#getAgent', () => {
 
-  let closeServer;
-  beforeEach(() => agentHttpServer(3333).then(c => { closeServer = c; }));
-  afterEach(() => closeServer());
+  runTestsWithData(objectOrUrlCb => {
+    it('loads an agent', () =>
+      getAgent(objectOrUrlCb())
+        .then(agent => {
+          if (typeof objectOrUrlCb() === 'string') {
+            agent.url.should.be.exactly('http://localhost:3333');
+          }
+          Object.keys(agent.processes).length.should.be.exactly(3);
+          agent.processes.first_process.storeInfo.adapter.name.should.be.exactly('memory');
+        })
+    );
 
-  it('loads an agent', () =>
-    getAgent('http://localhost:3333')
-      .then(agent => {
-        agent.url.should.be.exactly('http://localhost:3333');
-        Object.keys(agent.processes).length.should.be.exactly(3);
-        agent.processes.first_process.storeInfo.adapter.name.should.be.exactly('memory');
+    it('fails to load an agent', () =>
+      getAgent()
+      .then(() => {throw new Error('Should not get an agent...');})
+      .catch(err => {
+        err.message.should.be.exactly('The argument passed is neither a url or an object!');
       })
-  );
+    );
+  });
 
 });

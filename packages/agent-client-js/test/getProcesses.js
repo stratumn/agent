@@ -15,22 +15,20 @@
 */
 
 import getAgent from '../src/getAgent';
-import agentHttpServer from './utils/agentHttpServer';
+import { runTestsWithData } from './utils/testSetUp';
 
 describe('#getProcesses', () => {
 
-  let closeServer;
-  beforeEach(() => agentHttpServer(3333).then(c => { closeServer = c; }));
-  afterEach(() => closeServer());
-
-  it('resolves with a list of all processes', () =>
-    getAgent('http://localhost:3333')
-      .then(agent =>
-        agent.getProcesses())
-      .then(processes => {
-        processes.length.should.be.exactly(3);
-        processes[0].name.should.be.exactly('first_process');
-      })
-  );
+  runTestsWithData(objectOrUrlCb => {
+    it('resolves with a list of all processes', () =>
+      getAgent(objectOrUrlCb())
+        .then(agent =>
+          agent.getProcesses())
+        .then(processes => {
+          processes.length.should.be.exactly(3);
+          processes[0].name.should.be.exactly('first_process');
+        })
+    );
+  });
 
 });

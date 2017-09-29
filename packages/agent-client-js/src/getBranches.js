@@ -17,11 +17,13 @@
 import findSegments from './findSegments';
 import deprecated from './deprecated';
 
-export default function getBranches(agent, prevLinkHash, tags = []) {
+export default function getBranches(adaptor, agent, prevLinkHash, tags = null) {
   deprecated(
     'Agent#getBranches(agent, prevLinkHash, tags = [])',
     'Agent#findSegments(agent, filter)'
   );
 
-  return findSegments(agent, { prevLinkHash, tags });
+  const opts = tags ? { prevLinkHash, tags } : { prevLinkHash };
+
+  return findSegments(adaptor, agent, opts);
 }

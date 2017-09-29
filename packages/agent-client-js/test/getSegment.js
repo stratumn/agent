@@ -14,45 +14,32 @@
   limitations under the License.
 */
 
-import getAgent from '../src/getAgent';
-import agentHttpServer from './utils/agentHttpServer';
+import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#getSegment', () => {
 
-  let closeServer;
-  beforeEach(() => agentHttpServer(3333).then(c => { closeServer = c; }));
-  afterEach(() => closeServer());
+  runTestsWithDataAndAgent(processCb => {
+    it('gets a segment', () =>
+      processCb()
+        .createMap('hi there')
+        .then(segment =>
+          processCb().getSegment(segment.meta.linkHash)
+        )
+        .then(segment => {
+          segment.link.state.title.should.be.exactly('hi there');
+        })
+    );
 
-  let agent;
-  let process;
-  beforeEach(() =>
-    getAgent('http://localhost:3333').then(res => {
-      agent = res;
-      process = agent.processes.first_process;
-      return;
-    })
-  );
-
-  it('gets a segment', () =>
-    process
-      .createMap('hi there')
-      .then(segment =>
-        process.getSegment(segment.meta.linkHash)
-      )
-      .then(segment => {
-        segment.link.state.title.should.be.exactly('hi there');
-      })
-  );
-
-  it('rejects if the segment is not found', () =>
-    process
-      .getSegment('404')
-      .then(() => {
-        throw new Error('should not resolve');
-      })
-      .catch(err => {
-        err.status.should.be.exactly(404);
-      })
-  );
+    it('rejects if the segment is not found', () =>
+      processCb()
+        .getSegment('404')
+        .then(() => {
+          throw new Error('should not resolve');
+        })
+        .catch(err => {
+          err.status.should.be.exactly(404);
+        })
+    );
+  });
 
 });

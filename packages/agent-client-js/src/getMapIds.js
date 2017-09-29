@@ -14,10 +14,7 @@
   limitations under the License.
 */
 
-import makeQueryString from './makeQueryString';
-import { get } from './request';
-
-export default function getMapIds(process, opts = {}) {
-  return get(`${process.prefixUrl}/maps${makeQueryString(opts)}`)
+export default function getMapIds(adaptor, process, opts = {}) {
+  return adaptor.getMapIds(process.name, opts)
     .then(res => res.body);
 }
