@@ -12,4 +12,4 @@ ENV NODE_ENV production
 
 RUN npm run build
 
-CMD npm start
+CMD node express.js

@@ -18,9 +18,16 @@ let React;
 let ReactDOM;
 let IndigoExplorer;
 
-React = require('react');
-ReactDOM = require('react-dom');
-IndigoExplorer = require('indigo-explorer');
+if (process.env.NODE_ENV === 'development') {
+  // In development, use parent module.
+  React = require('../../node_modules/react');
+  ReactDOM = require('../../node_modules/react-dom');
+  IndigoExplorer = require('../../lib/IndigoExplorer');
+} else {
+  React = require('react');
+  ReactDOM = require('react-dom');
+  IndigoExplorer = require('indigo-explorer');
+}
 
 import './index.css';
 
