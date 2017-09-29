@@ -24,7 +24,7 @@ example/dist
 
 # App build directories
 app/node_modules
-app/dist
+app/build
 
 
 # Editor and other tmp files

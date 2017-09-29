@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "indigo-explorer-app",
   "version": "0.1.0",
   "dependencies": {
     "express": "^4.14.0",
