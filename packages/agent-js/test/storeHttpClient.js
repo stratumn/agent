@@ -114,7 +114,8 @@ describe('StoreHttpClient', () => {
           body.should.be.an.Array();
           body.length.should.be.exactly(1);
           body[0].link.state.query.should.be.exactly(
-            'process=one&mapId=map&prevLinkHash=hash&tags=tag1%2Btag2&offset=20&limit=10');
+            'process=one&mapId=map&prevLinkHash=hash' +
+            '&tags%5B%5D=tag1&tags%5B%5D=tag2&offset=20&limit=10');
         })
     );
 
