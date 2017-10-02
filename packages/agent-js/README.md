@@ -56,7 +56,7 @@ const server = Agent.websocketServer(app, storeHttpClient);
 
 // Start the server
 server.listen(3000, () => {
-  console.log('Listening on ' + server.adress().port);
+  console.log('Listening on ' + server.address().port);
 });
 
 // You can also add processes on-the-fly after the server has started listening

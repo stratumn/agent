@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { stringify } from 'qs';
 
 /**
  * Makes a query string.
@@ -20,15 +21,13 @@
  * @returns {string} a query string
  */
 export default function makeQueryString(obj) {
-  const parts = Object.keys(obj).reduce((curr, key) => {
-    const val = Array.isArray(obj[key]) ? obj[key].join('+') : obj[key];
-    curr.push(`${encodeURIComponent(key)}=${encodeURIComponent(val)}`);
-    return curr;
-  }, []);
-
-  if (parts.length) {
-    return `?${parts.join('&')}`;
+  // use brackets format for compatibility with GO:
+  // https://github.com/google/go-querystring
+  // see also conversation in:
+  // https://github.com/stratumn/indigo-js/pull/18
+  const query = stringify(obj, { arrayFormat: 'brackets' });
+  if (query.length) {
+    return `?${query}`;
   }
-
   return '';
 }
