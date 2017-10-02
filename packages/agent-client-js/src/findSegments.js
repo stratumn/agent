@@ -15,13 +15,11 @@
 */
 
 import segmentify from './segmentify';
-import makeQueryString from './makeQueryString';
 import promiseWhile from './promiseWhile';
-import { get } from './request';
 
 const DEFAULT_BATCH_SIZE = 20;
 
-export default function findSegments(process, opts = {}) {
+export default function findSegments(adaptor, process, opts = {}) {
   const options = Object.assign({}, opts);
   if (opts.limit === -1) {
     options.limit = options.batchSize || DEFAULT_BATCH_SIZE;
@@ -32,7 +30,7 @@ export default function findSegments(process, opts = {}) {
 
     return promiseWhile(
       () => lastBatch.length === options.limit,
-      () => findSegments(process, options)
+      () => findSegments(adaptor, process, options)
         .then(newSegments => {
           lastBatch = newSegments;
           result.push(...newSegments);
@@ -40,6 +38,6 @@ export default function findSegments(process, opts = {}) {
         })
     ).then(() => result);
   }
-  return get(`${process.prefixUrl}/segments${makeQueryString(opts)}`)
-    .then(res => res.body.map(obj => segmentify(process, obj)));
+  return adaptor.findSegments(process.name, opts)
+    .then(res => res.body.map(obj => segmentify(adaptor, process, obj)));
 }

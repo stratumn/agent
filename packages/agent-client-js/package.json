@@ -1,6 +1,6 @@
 {
   "name": "stratumn-agent-client",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Stratumn Indigo agent client library",
   "main": "lib/stratumn-agent-client.js",
   "jsnext:main": "lib/stratumn-agent-client.mjs",
@@ -47,6 +47,7 @@
     "eslint-plugin-react": "^4.1.0",
     "isparta": "^4.0.0",
     "istanbul": "0.4.4",
+    "leche": "^2.2.1",
     "mocha": "^2.4.5",
     "rimraf": "^2.5.2",
     "rollup": "^0.34.10",
@@ -56,7 +57,7 @@
     "rollup-plugin-uglify": "^1.0.1",
     "rollup-pluginutils": "^1.5.1",
     "should": "^8.2.2",
-    "stratumn-agent": "^0.16.0"
+    "stratumn-agent": "^0.17.0"
   },
   "dependencies": {
     "httpplease": "^0.16.4",

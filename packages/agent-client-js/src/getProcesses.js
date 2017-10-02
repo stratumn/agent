@@ -15,9 +15,8 @@
 */
 
 import processify from './processify';
-import { get } from './request';
 
-export default function getProcesses(agent) {
-  return get(`${agent.url}/processes`)
-    .then(res => res.body.map(processify));
+export default function getProcesses(adaptor) {
+  return adaptor.getProcesses()
+    .then(res => res.body.map(processify.bind(null, adaptor)));
 }

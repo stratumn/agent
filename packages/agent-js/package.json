@@ -1,6 +1,6 @@
 {
   "name": "stratumn-agent",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -31,6 +31,7 @@
     "url": "https://github.com/stratumn/agent-js/issues"
   },
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "body-parser": "^1.15.2",
     "canonical-json": "0.0.4",
     "cors": "^2.7.1",
@@ -39,8 +40,7 @@
     "stratumn-mock-agent": "^1.2.0",
     "superagent": "^2.1.0",
     "uuid": "^3.0.0",
-    "ws": "^2.0.0",
-    "babel-runtime": "^6.26.0"
+    "ws": "^2.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",

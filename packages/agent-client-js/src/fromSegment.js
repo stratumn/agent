@@ -15,6 +15,7 @@
 */
 
 import getAgent from './getAgent';
+import getAdaptor from './getAdaptor';
 import segmentify from './segmentify';
 
 export default function fromSegment(obj) {
@@ -23,7 +24,8 @@ export default function fromSegment(obj) {
       if (!agent.processes[obj.link.meta.process]) {
         throw new Error(`process '${obj.link.meta.process}' not found`);
       }
-      const segment = segmentify(agent.processes[obj.link.meta.process], obj);
+      const adaptor = getAdaptor(agent.url);
+      const segment = segmentify(adaptor, agent.processes[obj.link.meta.process], obj);
       return { process: agent.processes[obj.link.meta.process], segment };
     });
 }

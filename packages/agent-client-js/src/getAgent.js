@@ -16,21 +16,26 @@
 
 import getProcesses from './getProcesses';
 import processify from './processify';
-import { get } from './request';
+import getAdaptor from './getAdaptor';
 
-export default function getAgent(url) {
-  return get(url)
+export default function getAgent(objectOrUrl) {
+  try {
+    const adaptor = getAdaptor(objectOrUrl);
+    return adaptor.getInfo()
     .then(res => {
       const agent = res.body;
-      agent.url = url;
-      agent.getProcesses = getProcesses.bind(null, agent);
+      agent.url = adaptor.url;
+      agent.getProcesses = getProcesses.bind(null, adaptor);
       agent.processes = Object.keys(agent.processes)
         .map(key => agent.processes[key])
         .reduce((map, p) => {
           const updatedMap = map;
-          updatedMap[p.name] = processify(p, agent.url);
+          updatedMap[p.name] = processify(adaptor, p);
           return updatedMap;
         }, {});
       return agent;
     });
+  } catch (err) {
+    return Promise.reject(err);
+  }
 }
