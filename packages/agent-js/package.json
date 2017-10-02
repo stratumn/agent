@@ -36,6 +36,7 @@
     "canonical-json": "0.0.4",
     "cors": "^2.7.1",
     "express": "^4.14.0",
+    "qs": "^6.5.1",
     "request": "^2.73.0",
     "stratumn-mock-agent": "^1.2.0",
     "superagent": "^2.1.0",

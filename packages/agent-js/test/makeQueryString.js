@@ -25,7 +25,7 @@ describe('#makeQueryString()', () => {
     makeQueryString({}).should.be.exactly('');
   });
 
-  it('joins array elements with a comma', () => {
-    makeQueryString({ a: [1, 2, 'three'] }).should.be.exactly('?a=1%2B2%2Bthree');
+  it('uses bracket convention for arrays', () => {
+    makeQueryString({ a: [1, 2, 'three'] }).should.be.exactly('?a%5B%5D=1&a%5B%5D=2&a%5B%5D=three');
   });
 });
