@@ -46,30 +46,7 @@
                   </div>
                 {{/if}}
                 {{#if evidenceShowed}}
-                  <div class="layout-row">
-                      <div class="info">
-                          <h4>State</h4>
-                          <p>{{segment.meta.evidence.state}}</p>
-                          {{#if evidenceComplete}}
-                              <h4>Bitcoin Transaction</h4>
-                              <p>
-                                {{get segment.meta.evidence.transactions 'bitcoin:main'}}
-                                  <a target="_blank"
-                                     href="https://blockchain.info/tx/{{get segment.meta.evidence.transactions 'bitcoin:main'}}">View
-                                      transaction on Blockchain.info</a>
-                              </p>
-
-                              <h4>Merkle root</h4>
-                              <p>{{segment.meta.evidence.merkleRoot}}</p>
-                          {{/if}}
-                      </div>
-                      {{#if evidenceComplete}}
-                        <div class="merkle-path">
-                            <h4>Merkle Path</h4>
-                          {{merkle-path-tree merkle-path=segment.meta.evidence.merklePath}}
-                        </div>
-                      {{/if}}
-                  </div>
+                  {{component evidence-component evidence=segment.meta.evidence}}
                 {{/if}}
                 {{#if jsonShowed}}
                     <pre>{{json segment}}</pre>

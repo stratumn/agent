@@ -39,10 +39,12 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
     this.set('stateShowed', true);
+    this.set('evidence-component', 'bitcoin-component');
   },
 
   didInsertElement() {
     this.set('builder', new mapexplorerCore.ChainTreeBuilder(this.$()[0]));
+    this.detectEvidenceComponent();
 
     this.get('builder').build({
       id: this.get('mapId'),
@@ -57,6 +59,7 @@ export default Ember.Component.extend({
   didUpdateAttrs() {
     this._super(...arguments);
 
+
     // Temporary solution.
     const chainscript = this.get('chainscript');
 
@@ -66,17 +69,41 @@ export default Ember.Component.extend({
         onclick: this.onClick.bind(this),
         onTag: () => {}
       }));
+
+      this.detectEvidenceComponent(chainscript);
     }
   },
 
   onClick(d, onHide) {
     this.onHide = onHide;
     this.set('segment', d.data);
-    this.set('evidenceComplete', this.get('segment').meta.evidence.state === 'COMPLETE');
 
     const onSelectSegment = this.get('onSelectSegment');
     if (onSelectSegment) {
       onSelectSegment(this.get('segment'));
+    }
+  },
+
+  detectEvidenceComponent() {
+    const chainscript = this.get('chainscript');
+    if (chainscript && chainscript.length > 0) {
+      const evidence = JSON.parse(chainscript)[0].meta.evidence;
+      let transactionKey;
+      if (evidence.transactions) {
+        transactionKey = Object.keys(evidence.transactions)[0];
+      }
+      let component;
+      if (/bitcoin/.test(transactionKey)) {
+        component = 'bitcoin-evidence';
+      } else if (/TMPop/.test(transactionKey)) {
+        component = 'tmpop-evidence';
+      } else if (evidence.timestamp) {
+        component = 'dummy-evidence';
+      }
+
+      if (component) {
+        this.set('evidence-component', component);
+      }
     }
   }
 
