@@ -85,8 +85,11 @@ export default Ember.Component.extend({
   },
 
   detectEvidenceComponent() {
-    const chainscript = this.get('chainscript');
+    let chainscript = this.get('chainscript');
     if (chainscript && chainscript.length > 0) {
+      if (typeof(chainscript) !== 'object') {
+        chainscript = JSON.parse(chainscript);
+      }
       const evidence = JSON.parse(chainscript)[0].meta.evidence;
       let transactionKey;
       if (evidence.transactions) {
@@ -106,5 +109,4 @@ export default Ember.Component.extend({
       }
     }
   }
-
 });
