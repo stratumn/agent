@@ -1,0 +1,24 @@
+<div class="layout-row">
+  <div class="info">
+      <h4>State</h4>
+      <p>{{evidence.state}}</p>
+      {{#if evidenceComplete}}
+          <h4>Bitcoin Transaction</h4>
+          <p>
+            {{get evidence.transactions 'bitcoin:main'}}
+              <a target="_blank"
+                  href="https://blockchain.info/tx/{{get evidence.transactions 'bitcoin:main'}}">View
+                  transaction on Blockchain.info</a>
+          </p>
+
+          <h4>Merkle root</h4>
+          <p>{{evidence.merkleRoot}}</p>
+      {{/if}}
+  </div>
+  {{#if evidenceComplete}}
+    <div class="merkle-path">
+        <h4>Merkle Path</h4>
+      {{merkle-path-tree merkle-path=evidence.merklePath}}
+    </div>
+  {{/if}}
+</div>

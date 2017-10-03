@@ -1,0 +1,20 @@
+<div class="info">
+    <h4>State</h4>
+    <p>{{evidence.state}}</p>
+    {{#if evidenceComplete}}
+        <h4>Block #</h4>
+        <p>{{blockNumber}}</p>
+
+        <h4>App Hash</h4>
+        <p>{{evidence.originalHeader.app_hash}}</p>
+
+        <h4>Leaf Hash</h4>
+        <p>{{evidence.originalProof.LeafHash}}</p>
+
+        <h4>MerklePath</h4>
+        <pre>{{json evidence.originalProof}}</pre>
+    {{else}}
+        <h4>Block #</h4>
+        <p>{{blockNumber}}</p>
+    {{/if}}
+</div>
