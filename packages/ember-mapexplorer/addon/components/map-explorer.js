@@ -90,7 +90,7 @@ export default Ember.Component.extend({
       if (typeof(chainscript) !== 'object') {
         chainscript = JSON.parse(chainscript);
       }
-      const evidence = JSON.parse(chainscript)[0].meta.evidence;
+      const evidence = chainscript[0].meta.evidence;
       let transactionKey;
       if (evidence.transactions) {
         transactionKey = Object.keys(evidence.transactions)[0];
