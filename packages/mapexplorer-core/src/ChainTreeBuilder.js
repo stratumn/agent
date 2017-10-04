@@ -52,7 +52,7 @@ export default class ChainTreeBuilder {
 
   build(map, options) {
     this.onTag = options.onTag;
-    if (map.id && map.applicationUrl) {
+    if (map.id && map.agentUrl && map.process) {
       return this._load(map).then(segments => this._display(segments, options));
     } else if (map.chainscript && map.chainscript.length) {
       try {
@@ -76,8 +76,11 @@ export default class ChainTreeBuilder {
   }
 
   _load(map) {
-    return getAgent(map.applicationUrl)
-      .then(app => app.findSegments({ mapId: map.id, limit: -1 }))
+    return getAgent(map.agentUrl)
+      .then(agent => {
+        const process = agent.processes[map.process];
+        return process.findSegments({ mapIds: [map.id], limit: -1 });
+      })
       .catch(res => console.log(res));
   }
 }

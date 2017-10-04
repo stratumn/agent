@@ -38,10 +38,11 @@ const builder = new MapexplorerCore.ChainTreeBuilder(element);
 // with an agent URL and a mapId
 builder.build({
   id: myMapId,
-  applicationUrl: myApplication
+  agentUrl: myAgentUrl,
+  process: myProcess
 }, options);
 
-// with a chainscript (JSON string of array of segment as POJO)
+// with a chainscript (JSON string of array or segment as POJO)
 builder.build({
   chainscript: myChainscript
 }), options;
