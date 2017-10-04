@@ -7,7 +7,8 @@ export default {
       exclude: 'node_modules/**'
     }, babelrc()))
   ],
-  sourceMap: true,
-  entry: 'src/index.js',
-  moduleName: 'StratumnAgentClient'
+  sourcemap: true,
+  input: 'src/index.js',
+  name: 'StratumnAgentClient',
+  output: {}
 };

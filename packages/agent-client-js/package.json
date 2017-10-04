@@ -50,7 +50,7 @@
     "leche": "^2.2.1",
     "mocha": "^2.4.5",
     "rimraf": "^2.5.2",
-    "rollup": "^0.34.10",
+    "rollup": "^0.50.0",
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-commonjs": "^3.3.1",
     "rollup-plugin-node-resolve": "^2.0.0",

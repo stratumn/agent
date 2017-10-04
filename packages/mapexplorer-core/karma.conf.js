@@ -30,30 +30,10 @@ module.exports = function(config) {
     },
 
     rollupPreprocessor: {
-      plugins: [
-        json(),
-        babel(Object.assign({
-          exclude: 'node_modules/**'
-        }, babelrc())),
-        builtins(),
-        nodeResolve({
-          jsnext: true,
-          browser: true,
-          preferBuiltins: true
-        }),
-        commonjs({
-          // non-CommonJS modules will be ignored, but you can also
-          // specifically include/exclude files
-          // include: 'node_modules/**',  // Default: undefined
-          // exclude: [],
-          exclude: ['node_modules/rollup-plugin-node-globals/**',
-          'node_modules/process-es6/**', 'node_modules/buffer-es6/**']
-        }),
-        globals()
-      ],
+      plugins: require('./rollupPlugins'),
       // will help to prevent conflicts between different tests entries
       format: 'iife',
-      sourceMap: 'inline'
+      sourcemap: 'inline'
     },
 
     // list of files to exclude

@@ -66,7 +66,7 @@ export default class ChainTreeBuilder {
   }
 
   _display(segments, options) {
-    this.chainTree.display(segments, { ...defaultOptions, ...options });
+    this.chainTree.display(segments, Object.assign({}, defaultOptions, options));
     this._notifyTags(segments);
     return segments;
   }

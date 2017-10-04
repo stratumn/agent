@@ -1,15 +1,15 @@
-var babel = require('rollup-plugin-babel');
-var babelrc = require('babelrc-rollup').default;
+import babel from 'rollup-plugin-babel';
+import babelrc from 'babelrc-rollup';
 
-var pkg = require('./package.json');
-var external = Object.keys(pkg.dependencies);
+const pkg = require('./package.json');
+const external = Object.keys(pkg.dependencies);
 
 module.exports = {
-  entry: 'src/index.js',
+  input: 'src/index.js',
   plugins: [
     babel(babelrc())
   ],
-  external: external,
+  external,
   globals: {
     'd3-hierarchy': 'd3',
     'd3-transition': 'd3',
@@ -18,8 +18,10 @@ module.exports = {
     'd3-zoom': 'd3',
     'd3-array': 'd3'
   },
-  dest: pkg['main'],
-  format: 'umd',
-  moduleName: 'mapexplorerCore',
-  sourceMap: true
+  output: {
+    file: pkg.main,
+    format: 'umd'
+  },
+  name: 'mapexplorerCore',
+  sourcemap: true
 };

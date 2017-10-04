@@ -12,7 +12,9 @@ config.plugins.push(
   commonjs()
 );
 
-config.format = 'umd';
-config.dest = 'dist/stratumn-agent-client.js';
+config.output = {
+  format: 'umd',
+  file: 'dist/stratumn-agent-client.js',
+};
 
 export default config;

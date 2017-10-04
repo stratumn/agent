@@ -1,16 +1,18 @@
-var babel = require('rollup-plugin-babel');
-var babelrc = require('babelrc-rollup').default;
+import babel from 'rollup-plugin-babel';
+import babelrc from 'babelrc-rollup';
 
-var pkg = require('./package.json');
-var external = Object.keys(pkg.dependencies);
+const pkg = require('./package.json');
+const external = Object.keys(pkg.dependencies);
 
 module.exports = {
-  entry: 'src/index.js',
+  input: 'src/index.js',
   plugins: [
     babel(babelrc())
   ],
-  external: external,
-  dest: pkg['jsnext:main'],
-  format: 'es',
-  sourceMap: true
+  external,
+  output: {
+    file: pkg['jsnext:main'],
+    format: 'es',
+  },
+  sourcemap: true
 };
