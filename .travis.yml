@@ -9,7 +9,6 @@ before_install:
   - sh -e /etc/init.d/xvfb start
   - npm update -g
 before_script:
-  - npm install -g lerna
   - npm install -g codecov
   - lerna bootstrap
 script:
