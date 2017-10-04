@@ -48,7 +48,8 @@ export default Ember.Component.extend({
 
     this.get('builder').build({
       id: this.get('mapId'),
-      applicationUrl: this.get('applicationUrl'),
+      agentUrl: this.get('agentUrl'),
+      process: this.get('process'),
       chainscript: this.get('chainscript')
     }, {
       onclick: this.onClick.bind(this),
