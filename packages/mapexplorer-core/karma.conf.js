@@ -1,21 +1,11 @@
-var path = require('path');
-var babel = require('rollup-plugin-babel');
-var babelrc = require('babelrc-rollup').default;
-var json = require('rollup-plugin-json');
-var commonjs = require('rollup-plugin-commonjs');
-var nodeResolve = require('rollup-plugin-node-resolve');
-var builtins = require('rollup-plugin-node-builtins');
-var globals = require('rollup-plugin-node-globals');
-
-
 module.exports = function(config) {
   config.set({
     // base path, that will be used to resolve files and exclude
     basePath: '',
 
-    // frameworks to use
-    frameworks: ['mocha', 'should'],
+    plugins: ['@metahub/karma-rollup-preprocessor', 'karma-*'],
 
+    frameworks: ['mocha', 'should'],
 
     // list of files / patterns to load in the browser
     files: [
@@ -30,10 +20,15 @@ module.exports = function(config) {
     },
 
     rollupPreprocessor: {
-      plugins: require('./rollupPlugins'),
-      // will help to prevent conflicts between different tests entries
-      format: 'iife',
-      sourcemap: 'inline'
+      options: {
+        plugins: require('./rollupPlugins'),
+        // will help to prevent conflicts between different tests entries
+        format: 'iife',
+        output: {
+          format: 'iife',
+          sourcemap: 'inline'
+        }
+      }
     },
 
     // list of files to exclude
