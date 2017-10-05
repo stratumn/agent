@@ -1,6 +1,6 @@
 {
   "name": "ember-mapexplorer",
-  "version": "1.10.2",
+  "version": "2.0.0",
   "description": "Ember addon that displays a Map Explorer",
   "keywords": [
     "ember-addon"
