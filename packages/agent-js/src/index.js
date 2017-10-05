@@ -21,6 +21,7 @@ import memoryStore from './memoryStore';
 import plugins from './plugins';
 import storeHttpClient from './storeHttpClient';
 import websocketServer from './websocketServer';
+import processify from './processify';
 
 module.exports = {
   create,
@@ -28,6 +29,7 @@ module.exports = {
   httpServer,
   memoryStore,
   plugins,
+  processify,
   storeHttpClient,
   websocketServer,
 };
