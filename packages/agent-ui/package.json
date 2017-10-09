@@ -1,6 +1,8 @@
 {
   "name": "agent-ui",
-  "version": "0.1.0",
+  "version": "0.6.0",
+  "description": "Stratumn agent user interface",
+  "license": "Apache-2.0",
   "private": true,
   "dependencies": {
     "immutable": "^3.8.2",
