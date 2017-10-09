@@ -18,8 +18,10 @@ var plugins = [
     preferBuiltins: true
   }),
   commonjs({
-    exclude: ['node_modules/rollup-plugin-node-globals/**',
-      'node_modules/process-es6/**', 'node_modules/buffer-es6/**']
+    namedExports: {
+      '../agent-client-js/node_modules/qs/lib/index.js': ['stringify'],
+      'node_modules/qs/lib/index.js': ['stringify']
+    }
   }),
   globals()
 ];

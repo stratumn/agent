@@ -9,7 +9,11 @@ config.plugins.push(
     browser: true,
     preferBuiltins: true
   }),
-  commonjs()
+  commonjs({
+    namedExports: {
+      'node_modules/qs/lib/index.js': ['stringify']
+    }
+  })
 );
 
 config.output = {
