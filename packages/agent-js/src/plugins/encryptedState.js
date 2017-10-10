@@ -28,33 +28,33 @@ import hashJson from '../hashJson';
  * - a Promise that resolves with the decrypted state
  * @returns {object} an agent plugin
  */
-export default function ({ encryptState, decryptState }) {
+export default function({ encryptState, decryptState }) {
   return {
-
     name: 'Encrypted State',
 
-    description: 'Encrypts the state before the segment is saved. ' +
+    description:
+      'Encrypts the state before the segment is saved. ' +
       'Filters out segment that cannot be decrypted.',
 
     didCreateLink(link) {
       link.meta.stateHash = hashJson(link.state);
-      return Promise.resolve(encryptState(link))
-        .then(state => {
-          link.state = {
-            encrypted: state
-          };
-          link.meta.encryptedState = true;
-        });
+      return Promise.resolve(encryptState(link)).then(state => {
+        link.state = {
+          encrypted: state
+        };
+        link.meta.encryptedState = true;
+      });
     },
 
     willCreate(initialLink) {
-      return this.decrypt(initialLink)
-        .then(decrypted => {
-          if (!decrypted) {
-            throw new Error(`State could not be decrypted from link ${initialLink}`);
-          }
-          delete initialLink.meta.stateHash;
-        });
+      return this.decrypt(initialLink).then(decrypted => {
+        if (!decrypted) {
+          throw new Error(
+            `State could not be decrypted from link ${initialLink}`
+          );
+        }
+        delete initialLink.meta.stateHash;
+      });
     },
 
     filterSegment(segment) {
@@ -63,15 +63,16 @@ export default function ({ encryptState, decryptState }) {
 
     decrypt(link) {
       const expectedFingerpint = link.meta.stateHash;
-      return Promise.resolve(decryptState(link, expectedFingerpint))
-        .then(decryptedState => {
-          if (decryptedState && expectedFingerpint === hashJson(decryptedState)) {
-            link.state = decryptedState;
-            delete link.meta.encryptedState;
-            return true;
-          }
-          return false;
-        });
+      return Promise.resolve(
+        decryptState(link, expectedFingerpint)
+      ).then(decryptedState => {
+        if (decryptedState && expectedFingerpint === hashJson(decryptedState)) {
+          link.state = decryptedState;
+          delete link.meta.encryptedState;
+          return true;
+        }
+        return false;
+      });
     }
   };
 }

@@ -20,7 +20,7 @@ import { Buffer } from 'buffer';
 export default function computeMerkleParent(left, right) {
   if (right) {
     return sha256(
-      Buffer.concat([new Buffer(left, 'hex'), new Buffer(right, 'hex')])
+      Buffer.concat([Buffer.from(left, 'hex'), Buffer.from(right, 'hex')])
     );
   }
   return left;

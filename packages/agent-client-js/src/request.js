@@ -23,9 +23,10 @@ function send(method, url, args) {
   return new Promise((resolve, reject) => {
     request({ method, url, body: args }, (err, res) => {
       if (err) {
-        const error = (err && err.body && err.body.meta && err.body.meta.errorMessage)
-          ? new Error(err.body.meta.errorMessage)
-          : err;
+        const error =
+          err && err.body && err.body.meta && err.body.meta.errorMessage
+            ? new Error(err.body.meta.errorMessage)
+            : err;
         error.status = err.status;
         reject(error);
       } else {

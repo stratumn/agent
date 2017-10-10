@@ -13,9 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+import { withData } from 'leche';
 import getAgent from '../../src/getAgent';
 import { testAgent, agentHttpServer } from './agentHttpServer';
-import { withData } from 'leche';
 
 const port = 3333;
 const agentUrl = `http://localhost:${port}`;
@@ -23,9 +24,17 @@ let agentObj = 'http://not/a/url';
 let closeServer;
 
 // will run before each 'it' test
-beforeEach(() => {agentObj = testAgent(port);});
-beforeEach(() => agentHttpServer(agentObj, port).then(c => { closeServer = c; }));
-afterEach(() => {closeServer();});
+beforeEach(() => {
+  agentObj = testAgent(port);
+});
+beforeEach(() =>
+  agentHttpServer(agentObj, port).then(c => {
+    closeServer = c;
+  })
+);
+afterEach(() => {
+  closeServer();
+});
 
 // defines the dataset over which to run all the tests
 // 1/ with an object agent
@@ -56,7 +65,6 @@ const runTestsWithDataAndAgent = testFunction => {
       getAgent(objectOrUrlCb()).then(res => {
         agent = res;
         process = agent.processes.first_process;
-        return;
       })
     );
     testFunction(() => process);

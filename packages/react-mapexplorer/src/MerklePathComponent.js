@@ -19,26 +19,30 @@ import { MerklePathTree } from 'mapexplorer-core';
 import radium from 'radium';
 
 class MerklePathComponent extends Component {
-  display() {
-    this.tree.display(this.props.merklePath);
-  }
-
   componentDidMount() {
     this.tree = new MerklePathTree(this.element);
 
     this.display();
   }
 
+  display() {
+    this.tree.display(this.props.merklePath);
+  }
+
   render() {
     return (
-      <div className="merkle-path-tree" ref={(element) => { this.element = element; }}>
-      </div>
+      <div
+        className="merkle-path-tree"
+        ref={element => {
+          this.element = element;
+        }}
+      />
     );
   }
 }
 
 MerklePathComponent.propTypes = {
-  merklePath: React.PropTypes.string
+  merklePath: React.PropTypes.string.isRequired
 };
 
 export default radium(MerklePathComponent);

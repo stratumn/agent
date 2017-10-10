@@ -32,11 +32,14 @@ export default class ChainValidator {
 
   validate() {
     try {
-      return resolveLinks(wrap(parseIfJson(this.chainscript)))
-        .then(segments => {
-          wrap(segments).forEach(segment => new SegmentValidator(segment).validate(this.errors));
-          return this.errors;
-        });
+      return resolveLinks(
+        wrap(parseIfJson(this.chainscript))
+      ).then(segments => {
+        wrap(segments).forEach(segment =>
+          new SegmentValidator(segment).validate(this.errors)
+        );
+        return this.errors;
+      });
     } catch (err) {
       return Promise.reject(err);
     }

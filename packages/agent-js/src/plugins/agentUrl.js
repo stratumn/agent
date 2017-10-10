@@ -14,15 +14,16 @@
   limitations under the License.
 */
 
-export default function (agentUrl) {
+export default function(agentUrl) {
   return {
     name: 'Agent URL',
 
-    description: 'Saves in segment meta the URL that can be used to retrieve a segment.',
+    description:
+      'Saves in segment meta the URL that can be used to retrieve a segment.',
 
     didCreateSegment(segment) {
-      const meta = segment.meta;
-      const linkHash = meta.linkHash;
+      const { meta } = segment;
+      const { linkHash } = meta;
 
       meta.agentUrl = agentUrl;
       meta.segmentUrl = `${agentUrl}/segments/${linkHash}`;

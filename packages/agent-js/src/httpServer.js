@@ -66,12 +66,13 @@ export default function httpServer(agent, opts = {}) {
   });
 
   app.post('/:process/segments', (req, res, next) => {
-    /*eslint-disable*/
+    /* eslint-disable */
     res.locals.renderErrorAsLink = true;
-    /*eslint-enable*/
+    /* eslint-enable */
     try {
       const process = agent.getProcess(req.params.process);
-      process.createMap(...parseArgs(req.body))
+      process
+        .createMap(...parseArgs(req.body))
         .then(res.json.bind(res))
         .catch(next);
     } catch (err) {
@@ -80,13 +81,18 @@ export default function httpServer(agent, opts = {}) {
   });
 
   app.post('/:process/segments/:linkHash/:action', (req, res, next) => {
-    /*eslint-disable*/
+    /* eslint-disable */
     res.locals.renderErrorAsLink = true;
-    /*eslint-enable*/
+    /* eslint-enable */
 
     try {
       const process = agent.getProcess(req.params.process);
-      process.createSegment(req.params.linkHash, req.params.action, ...parseArgs(req.body))
+      process
+        .createSegment(
+          req.params.linkHash,
+          req.params.action,
+          ...parseArgs(req.body)
+        )
         .then(res.json.bind(res))
         .catch(next);
     } catch (err) {
@@ -97,7 +103,8 @@ export default function httpServer(agent, opts = {}) {
   app.get('/:process/segments/:linkHash', (req, res, next) => {
     try {
       const process = agent.getProcess(req.params.process);
-      process.getSegment(req.params.linkHash)
+      process
+        .getSegment(req.params.linkHash)
         .then(res.json.bind(res))
         .catch(next);
     } catch (err) {
@@ -108,7 +115,8 @@ export default function httpServer(agent, opts = {}) {
   app.get('/:process/segments', (req, res, next) => {
     try {
       const process = agent.getProcess(req.params.process);
-      process.findSegments(req.query)
+      process
+        .findSegments(req.query)
         .then(res.json.bind(res))
         .catch(next);
     } catch (err) {
@@ -119,7 +127,8 @@ export default function httpServer(agent, opts = {}) {
   app.post('/:process/evidence/:linkHash', (req, res, next) => {
     try {
       const process = agent.getProcess(req.params.process);
-      process.insertEvidence(req.params.linkHash, req.body, req.query.secret)
+      process
+        .insertEvidence(req.params.linkHash, req.body, req.query.secret)
         .then(res.json.bind(res))
         .catch(next);
     } catch (err) {
@@ -130,7 +139,8 @@ export default function httpServer(agent, opts = {}) {
   app.get('/:process/maps', (req, res, next) => {
     try {
       const process = agent.getProcess(req.params.process);
-      process.getMapIds(req.query)
+      process
+        .getMapIds(req.query)
         .then(res.json.bind(res))
         .catch(next);
     } catch (err) {
@@ -140,13 +150,14 @@ export default function httpServer(agent, opts = {}) {
 
   // Legacy
   app.post('/:process/maps', (req, res, next) => {
-    /*eslint-disable*/
+    /* eslint-disable */
     res.locals.renderErrorAsLink = true;
-    /*eslint-enable*/
+    /* eslint-enable */
 
     try {
       const process = agent.getProcess(req.params.process);
-      process.createMap(...parseArgs(req.body))
+      process
+        .createMap(...parseArgs(req.body))
         .then(res.json.bind(res))
         .catch(next);
     } catch (err) {
@@ -156,13 +167,18 @@ export default function httpServer(agent, opts = {}) {
 
   // Legacy
   app.post('/:process/links/:linkHash/:action', (req, res, next) => {
-    /*eslint-disable*/
+    /* eslint-disable */
     res.locals.renderErrorAsLink = true;
-    /*eslint-enable*/
+    /* eslint-enable */
 
     try {
       const process = agent.getProcess(req.params.process);
-      process.createSegment(req.params.linkHash, req.params.action, ...parseArgs(req.body))
+      process
+        .createSegment(
+          req.params.linkHash,
+          req.params.action,
+          ...parseArgs(req.body)
+        )
         .then(res.json.bind(res))
         .catch(next);
     } catch (err) {
@@ -174,7 +190,8 @@ export default function httpServer(agent, opts = {}) {
   app.get('/:process/links/:linkHash', (req, res, next) => {
     try {
       const process = agent.getProcess(req.params.process);
-      process.getSegment(req.params.linkHash)
+      process
+        .getSegment(req.params.linkHash)
         .then(res.json.bind(res))
         .catch(next);
     } catch (err) {
@@ -186,7 +203,8 @@ export default function httpServer(agent, opts = {}) {
   app.get('/:process/links', (req, res, next) => {
     try {
       const process = agent.getProcess(req.params.process);
-      process.findSegments(req.query)
+      process
+        .findSegments(req.query)
         .then(res.json.bind(res))
         .catch(next);
     } catch (err) {
@@ -196,13 +214,14 @@ export default function httpServer(agent, opts = {}) {
 
   // Legacy
   app.get('/:process/maps/:id', (req, res, next) => {
-    /*eslint-disable*/
+    /* eslint-disable */
     req.query.mapId = req.params.id;
-    /*eslint-enable*/
+    /* eslint-enable */
 
     try {
       const process = agent.getProcess(req.params.process);
-      process.findSegments(req.query)
+      process
+        .findSegments(req.query)
         .then(res.json.bind(res))
         .catch(next);
     } catch (err) {
@@ -212,13 +231,14 @@ export default function httpServer(agent, opts = {}) {
 
   // Legacy
   app.get('/:process/branches/:linkHash', (req, res, next) => {
-    /*eslint-disable*/
+    /* eslint-disable */
     req.query.prevLinkHash = req.params.linkHash;
-    /*eslint-enable*/
+    /* eslint-enable */
 
     try {
       const process = agent.getProcess(req.params.process);
-      process.findSegments(req.query)
+      process
+        .findSegments(req.query)
         .then(res.json.bind(res))
         .catch(next);
     } catch (err) {

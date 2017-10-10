@@ -18,7 +18,6 @@ import { memoryStore, create, plugins } from 'stratumn-agent';
 
 // Test actions
 const actions = {
-
   init(title) {
     if (!title) {
       this.reject('a title is required');
@@ -46,7 +45,7 @@ const actions = {
 
     this.state.messages.push({ message, author });
     this.state.updatedAt = Date.now();
-    this.meta.priority++;
+    this.meta.priority += 1;
 
     this.append();
   },
@@ -60,15 +59,20 @@ const actions = {
     this.meta.tags = this.meta.tags || [];
     this.meta.tags.push(tag);
     this.state.updatedAt = Date.now();
-    this.meta.priority++;
+    this.meta.priority += 1;
 
     this.append();
   }
 };
 
 const actions2 = {
-  init(a, b, c) { this.append({ a, b, c }); },
-  action(d) { this.state.d = d; this.append(); },
+  init(a, b, c) {
+    this.append({ a, b, c });
+  },
+  action(d) {
+    this.state.d = d;
+    this.append();
+  }
 };
 
 function testAgent(port) {

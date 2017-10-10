@@ -15,7 +15,6 @@
 */
 
 export default {
-
   name: 'Action arguments',
 
   description: 'Saves the action and its arguments in link meta information.',

@@ -15,6 +15,5 @@
 */
 
 export default function getMapIds(adaptor, process, opts = {}) {
-  return adaptor.getMapIds(process.name, opts)
-    .then(res => res.body);
+  return adaptor.getMapIds(process.name, opts).then(res => res.body);
 }

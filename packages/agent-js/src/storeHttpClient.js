@@ -68,9 +68,11 @@ export default function storeHttpClient(url) {
      */
     getInfo() {
       return new Promise((resolve, reject) => {
-        request
-          .get(`${url}/`)
-          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
+        request.get(`${url}/`).end((err, res) =>
+          handleResponse(err, res)
+            .then(resolve)
+            .catch(reject)
+        );
       });
     },
 
@@ -96,7 +98,11 @@ export default function storeHttpClient(url) {
         request
           .post(`${url}/segments`)
           .send(segment)
-          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
+          .end((err, res) =>
+            handleResponse(err, res)
+              .then(resolve)
+              .catch(reject)
+          );
       });
     },
 
@@ -111,25 +117,28 @@ export default function storeHttpClient(url) {
       return new Promise((resolve, reject) =>
         request
           .get(`${url}/segments/${linkHash}${makeQueryString({ process })}`)
-          .end((err, res) => handleResponse(err, res)
-            .then(s => {
-              segment = s;
-              return filters.reduce(
-                (cur, filter) => cur.then(ok => Promise.resolve(ok && filter(s))),
-                Promise.resolve(true)
-              );
-            })
-            .then(ok => {
-              if (ok) {
-                resolve(segment);
-              } else {
-                const error = new Error('forbidden');
-                error.status = 403;
-                error.statusCode = 403;
-                reject(error);
-              }
-            })
-            .catch(reject))
+          .end((err, res) =>
+            handleResponse(err, res)
+              .then(s => {
+                segment = s;
+                return filters.reduce(
+                  (cur, filter) =>
+                    cur.then(ok => Promise.resolve(ok && filter(s))),
+                  Promise.resolve(true)
+                );
+              })
+              .then(ok => {
+                if (ok) {
+                  resolve(segment);
+                } else {
+                  const error = new Error('forbidden');
+                  error.status = 403;
+                  error.statusCode = 403;
+                  reject(error);
+                }
+              })
+              .catch(reject)
+          )
       );
     },
 
@@ -143,7 +152,11 @@ export default function storeHttpClient(url) {
       return new Promise((resolve, reject) => {
         request
           .del(`${url}/segments${makeQueryString({ process, linkHash })}`)
-          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
+          .end((err, res) =>
+            handleResponse(err, res)
+              .then(resolve)
+              .catch(reject)
+          );
       });
     },
 
@@ -163,13 +176,16 @@ export default function storeHttpClient(url) {
       return new Promise((resolve, reject) => {
         request
           .get(`${url}/segments${makeQueryString(options)}`)
-          .end((err, res) => handleResponse(err, res)
-            .then(s => filters.reduce(
-              (cur, f) => cur.then(sgmts => filterAsync(sgmts, f)),
-              Promise.resolve(s)
-            ))
-            .then(filtered => resolve(filtered))
-            .catch(reject)
+          .end((err, res) =>
+            handleResponse(err, res)
+              .then(s =>
+                filters.reduce(
+                  (cur, f) => cur.then(sgmts => filterAsync(sgmts, f)),
+                  Promise.resolve(s)
+                )
+              )
+              .then(filtered => resolve(filtered))
+              .catch(reject)
           );
       });
     },
@@ -185,10 +201,11 @@ export default function storeHttpClient(url) {
     getMapIds(process, opts) {
       const options = Object.assign({ process }, opts || {});
       return new Promise((resolve, reject) => {
-        request
-          .get(`${url}/maps${makeQueryString(options)}`)
-          .end((err, res) =>
-            handleResponse(err, res).then(resolve).catch(reject));
+        request.get(`${url}/maps${makeQueryString(options)}`).end((err, res) =>
+          handleResponse(err, res)
+            .then(resolve)
+            .catch(reject)
+        );
       });
     }
   });

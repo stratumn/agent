@@ -17,15 +17,13 @@
 import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#createMap', () => {
-
   runTestsWithDataAndAgent(processCb => {
     it('creates a map', () =>
       processCb()
         .createMap('Test')
         .then(segment => {
           segment.link.state.title.should.be.exactly('Test');
-        })
-    );
+        }));
 
     it('handles error if arguments do not match those of "init" function', () =>
       processCb()
@@ -36,8 +34,6 @@ describe('#createMap', () => {
         .catch(err => {
           err.message.should.be.exactly('a title is required');
           err.status.should.be.exactly(400);
-        })
-    );
+        }));
   });
-
 });

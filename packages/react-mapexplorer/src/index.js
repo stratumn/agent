@@ -19,9 +19,4 @@ import DummyEvidence from './DummyEvidence';
 import BitcoinEvidence from './BitcoinEvidence';
 import MerklePathComponent from './MerklePathComponent';
 
-export {
-  MapExplorer,
-  DummyEvidence,
-  BitcoinEvidence,
-  MerklePathComponent,
-};
+export { MapExplorer, DummyEvidence, BitcoinEvidence, MerklePathComponent };

@@ -29,25 +29,28 @@ import hashJson from '../hashJson';
  * - a Promise that resolves with such a boolean
  * @returns {object} an agent plugin
  */
-export default function ({ signState, verifySignature }) {
+export default function({ signState, verifySignature }) {
   return {
-
     name: 'Signed State',
 
-    description: 'Signs the state before the segment is saved.' +
+    description:
+      'Signs the state before the segment is saved.' +
       'Filters out segments whose signature is invalid.',
 
     didCreateLink(link) {
       link.meta.stateHash = hashJson(link.state);
-      Promise.resolve(signState(link, link.meta.stateHash))
-        .then(signature => {
-          link.meta.stateSignature = signature;
-        });
+      Promise.resolve(signState(link, link.meta.stateHash)).then(signature => {
+        link.meta.stateSignature = signature;
+      });
     },
 
     filterSegment(segment) {
       return Promise.resolve(
-        verifySignature(segment, segment.link.meta.stateSignature, segment.link.meta.stateHash)
+        verifySignature(
+          segment,
+          segment.link.meta.stateSignature,
+          segment.link.meta.stateHash
+        )
       );
     }
   };

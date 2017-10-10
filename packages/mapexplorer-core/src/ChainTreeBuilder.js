@@ -14,13 +14,22 @@
   limitations under the License.
 */
 
+import { getAgent } from 'stratumn-agent-client';
 import ChainTree from './ChainTree';
 import compactHash from './compactHash';
 import resolveLinks from './resolveLinks';
 import wrap from './wrap';
 import parseIfJson from './parseIfJson';
 import tagsSet from './tagsSet';
-import { getAgent } from 'stratumn-agent-client';
+
+function load(map) {
+  return getAgent(map.agentUrl)
+    .then(agent => {
+      const process = agent.processes[map.process];
+      return process.findSegments({ mapIds: [map.id], limit: -1 });
+    })
+    .catch(res => console.log(res));
+}
 
 export const defaultOptions = {
   withArgs: false,
@@ -38,8 +47,12 @@ export const defaultOptions = {
     return compactHash(node.data.meta.linkHash);
   },
   getLinkText(node) {
-    return node.target.data.link.meta.action +
-      (this.withArgs ? `(${node.target.data.link.meta.arguments.join(', ')})` : '');
+    return (
+      node.target.data.link.meta.action +
+      (this.withArgs
+        ? `(${node.target.data.link.meta.arguments.join(', ')})`
+        : '')
+    );
   },
   onclick() {},
   onTag() {}
@@ -53,11 +66,12 @@ export default class ChainTreeBuilder {
   build(map, options) {
     this.onTag = options.onTag;
     if (map.id && map.agentUrl && map.process) {
-      return this._load(map).then(segments => this._display(segments, options));
+      return load(map).then(segments => this.display(segments, options));
     } else if (map.chainscript && map.chainscript.length) {
       try {
-        return resolveLinks(wrap(parseIfJson(map.chainscript)))
-          .then(segments => this._display(segments, options));
+        return resolveLinks(wrap(parseIfJson(map.chainscript))).then(segments =>
+          this.display(segments, options)
+        );
       } catch (err) {
         return Promise.reject(err);
       }
@@ -65,22 +79,16 @@ export default class ChainTreeBuilder {
     return Promise.resolve();
   }
 
-  _display(segments, options) {
-    this.chainTree.display(segments, Object.assign({}, defaultOptions, options));
-    this._notifyTags(segments);
+  display(segments, options) {
+    this.chainTree.display(
+      segments,
+      Object.assign({}, defaultOptions, options)
+    );
+    this.notifyTags(segments);
     return segments;
   }
 
-  _notifyTags(chainscript) {
+  notifyTags(chainscript) {
     tagsSet(chainscript).forEach(this.onTag);
-  }
-
-  _load(map) {
-    return getAgent(map.agentUrl)
-      .then(agent => {
-        const process = agent.processes[map.process];
-        return process.findSegments({ mapIds: [map.id], limit: -1 });
-      })
-      .catch(res => console.log(res));
   }
 }

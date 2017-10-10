@@ -32,9 +32,11 @@ export default function fossilizerHttpClient(url, opts = {}) {
      */
     getInfo() {
       return new Promise((resolve, reject) => {
-        request
-          .get(`${url}/`)
-          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
+        request.get(`${url}/`).end((err, res) =>
+          handleResponse(err, res)
+            .then(resolve)
+            .catch(reject)
+        );
       });
     },
 
@@ -46,11 +48,12 @@ export default function fossilizerHttpClient(url, opts = {}) {
      */
     fossilize(data, callbackUrl) {
       if (!callbackUrl && opts.callbackUrl) {
-        /*eslint-disable*/
-        callbackUrl = typeof opts.callbackUrl === 'function'
-          ? opts.callbackUrl(data)
-          : opts.callbackUrl;
-        /*eslint-enable*/
+        /* eslint-disable */
+        callbackUrl =
+          typeof opts.callbackUrl === 'function'
+            ? opts.callbackUrl(data)
+            : opts.callbackUrl;
+        /* eslint-enable */
       }
 
       return new Promise((resolve, reject) => {
@@ -58,7 +61,11 @@ export default function fossilizerHttpClient(url, opts = {}) {
           .post(`${url}/fossils`)
           .type('form')
           .send({ data, callbackUrl })
-          .end((err, res) => handleResponse(err, res).then(resolve).catch(reject));
+          .end((err, res) =>
+            handleResponse(err, res)
+              .then(resolve)
+              .catch(reject)
+          );
       });
     }
   };

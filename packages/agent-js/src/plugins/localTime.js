@@ -15,7 +15,6 @@
 */
 
 export default {
-
   name: 'Local time',
 
   description: 'Saves the local timestamp in the link meta information.',

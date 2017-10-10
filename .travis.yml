@@ -11,5 +11,6 @@ before_script:
   - npm install -g codecov
   - lerna bootstrap
 script:
-  - lerna run test:ci
+  - npm test
+  - npm run lint
   - codecov

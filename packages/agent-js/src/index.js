@@ -31,5 +31,5 @@ module.exports = {
   plugins,
   processify,
   storeHttpClient,
-  websocketServer,
+  websocketServer
 };

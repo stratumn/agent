@@ -20,22 +20,20 @@ import { memoryStoreInfo, segment1, segment2, segment3 } from './fixtures';
 describe('MemoryStore', () => {
   let store;
 
-  beforeEach(() => { store = memoryStore(); });
+  beforeEach(() => {
+    store = memoryStore();
+  });
 
   describe('#getInfo()', () => {
     it('resolves with the store info', () =>
-      store
-        .getInfo()
-        .then(body => body.should.deepEqual(memoryStoreInfo))
-    );
+      store.getInfo().then(body => body.should.deepEqual(memoryStoreInfo)));
   });
 
   describe('#saveSegment()', () => {
     it('resolves with the segment', () =>
       store
         .saveSegment(segment1)
-        .then(body => body.should.deepEqual(segment1))
-    );
+        .then(body => body.should.deepEqual(segment1)));
   });
 
   describe('#getSegment()', () => {
@@ -43,18 +41,18 @@ describe('MemoryStore', () => {
       store
         .saveSegment(segment1)
         .then(() => store.getSegment('first', 'segment1'))
-        .then(body => body.should.deepEqual(segment1))
-    );
+        .then(body => body.should.deepEqual(segment1)));
 
     it('rejects if there is an error', () =>
       store
         .getSegment('notFound', 'test')
-        .then(() => { throw new Error('should not resolve'); })
+        .then(() => {
+          throw new Error('should not resolve');
+        })
         .catch(err => {
           err.status.should.be.exactly(404);
           err.message.should.be.exactly('not found');
-        })
-    );
+        }));
   });
 
   describe('#deleteSegment()', () => {
@@ -62,18 +60,18 @@ describe('MemoryStore', () => {
       store
         .saveSegment(segment1)
         .then(() => store.deleteSegment('segment1'))
-        .then(body => body.should.deepEqual(segment1))
-    );
+        .then(body => body.should.deepEqual(segment1)));
 
     it('rejects if there is an error', () =>
       store
         .deleteSegment('notFound')
-        .then(() => { throw new Error('should not resolve'); })
+        .then(() => {
+          throw new Error('should not resolve');
+        })
         .catch(err => {
           err.status.should.be.exactly(404);
           err.message.should.be.exactly('not found');
-        })
-    );
+        }));
   });
 
   describe('#findSegments()', () => {
@@ -87,32 +85,27 @@ describe('MemoryStore', () => {
     it('resolves with the segments', () =>
       store
         .findSegments('first')
-        .then(body => body.should.deepEqual([segment2, segment1]))
-    );
+        .then(body => body.should.deepEqual([segment2, segment1])));
 
     it('paginages', () =>
       store
         .findSegments('first', { offset: 1, limit: 1 })
-        .then(body => body.should.deepEqual([segment1]))
-    );
+        .then(body => body.should.deepEqual([segment1])));
 
     it('filters by map ID', () =>
       store
         .findSegments('first', { mapId: 'one' })
-        .then(body => body.should.deepEqual([segment2, segment1]))
-    );
+        .then(body => body.should.deepEqual([segment2, segment1])));
 
     it('filters previous link hash', () =>
       store
         .findSegments('first', { prevLinkHash: 'segment1' })
-        .then(body => body.should.deepEqual([segment2]))
-    );
+        .then(body => body.should.deepEqual([segment2])));
 
     it('filters by tags', () =>
       store
         .findSegments('first', { tags: ['one', 'two'] })
-        .then(body => body.should.deepEqual([segment2]))
-    );
+        .then(body => body.should.deepEqual([segment2])));
   });
 
   describe('#getMapIds()', () => {
@@ -124,15 +117,11 @@ describe('MemoryStore', () => {
     );
 
     it('resolves with the map IDs', () =>
-      store
-        .getMapIds('first')
-        .then(body => body.should.deepEqual(['one']))
-    );
+      store.getMapIds('first').then(body => body.should.deepEqual(['one'])));
 
     it('sends a query', () =>
       store
         .getMapIds('first', { offset: 0, limit: 1 })
-        .then(body => body.should.deepEqual(['one']))
-    );
+        .then(body => body.should.deepEqual(['one'])));
   });
 });

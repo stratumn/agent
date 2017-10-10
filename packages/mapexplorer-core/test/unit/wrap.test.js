@@ -17,7 +17,6 @@
 import wrap from '../../src/wrap';
 
 describe('wrap', () => {
-
   describe('With an array', () => {
     it('returns the array', () => {
       const array = [1, 2, 3];
@@ -31,5 +30,4 @@ describe('wrap', () => {
       wrap(object).should.eql([object]);
     });
   });
-
 });

@@ -13,7 +13,7 @@ export default function protoChain(...propsArray) {
       });
     }
     F.prototype = prev;
-    prev = new F;
+    prev = new F();
   });
 
   return prev;

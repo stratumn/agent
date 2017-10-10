@@ -17,13 +17,16 @@
 import create from '../../src/create';
 import memoryStore from '../../src/memoryStore';
 
-export default function (plugin, assertions1) {
-  const assertions = Object.assign({
-    '#init()': () => { },
-    '#action()': () => { },
-    '#createMap()': () => { },
-    '#createSegment()': () => { },
-  }, assertions1);
+export default function(plugin, assertions1) {
+  const assertions = Object.assign(
+    {
+      '#init()': () => {},
+      '#action()': () => {},
+      '#createMap()': () => {},
+      '#createSegment()': () => {}
+    },
+    assertions1
+  );
 
   const actions = {
     init(a, b, c) {
@@ -32,7 +35,8 @@ export default function (plugin, assertions1) {
     },
     action(d) {
       assertions['#action()'](this);
-      this.state.d = d; this.append();
+      this.state.d = d;
+      this.append();
     }
   };
 
@@ -41,8 +45,12 @@ export default function (plugin, assertions1) {
     let process;
 
     beforeEach(() => {
-      agent = create(actions, memoryStore(), null, { agentUrl: 'http://localhost' });
-      process = agent.addProcess('basic', actions, memoryStore(), null, { plugins: [plugin] });
+      agent = create(actions, memoryStore(), null, {
+        agentUrl: 'http://localhost'
+      });
+      process = agent.addProcess('basic', actions, memoryStore(), null, {
+        plugins: [plugin]
+      });
     });
     afterEach(() => {
       delete actions.events;
@@ -50,23 +58,18 @@ export default function (plugin, assertions1) {
 
     describe('#createMap()', () => {
       it('creates a Map', () =>
-        process
-          .createMap(1, 2, 3)
-          .then(assertions['#createMap()'])
-      );
+        process.createMap(1, 2, 3).then(assertions['#createMap()']));
     });
 
     describe('#createSegment()', () => {
       it('creates a segment', () =>
         process
           .createMap(1, 2, 3)
-          .then(segment1 => (
+          .then(segment1 =>
             process
               .createSegment(segment1.meta.linkHash, 'action', 4)
               .then(assertions['#createSegment()'])
-          )
-          )
-      );
+          ));
     });
   });
 }
