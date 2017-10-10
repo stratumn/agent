@@ -19,26 +19,13 @@ import PropTypes from 'prop-types';
 import radium from 'radium';
 import MerklePathComponent from './MerklePathComponent';
 
-function getStyles() {
-  return {
-    evidenceContent: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-around'
-    }
-  };
-}
-
 const BitcoinEvidence = ({ evidence }) => {
-  const styles = getStyles();
   let evidenceInfo;
   let evidenceTree;
   const evidenceComplete = evidence.state === 'COMPLETE';
 
   if (evidenceComplete) {
-    const tx = evidence.transactions
-      ? evidence.transactions['bitcoin:main']
-      : '';
+    const tx = evidence.proof.txid ? evidence.proof.txid : '';
     evidenceInfo = (
       <div>
         <h4>Bitcoin Transaction</h4>
@@ -50,23 +37,26 @@ const BitcoinEvidence = ({ evidence }) => {
         </p>
 
         <h4>Merkle root</h4>
-        <p>{evidence.merkleRoot}</p>
+        <p>{evidence.proof.batch.merkleRoot}</p>
       </div>
     );
 
     evidenceTree = (
       <div className="merkle-path">
         <h4>Merkle Path</h4>
-        <MerklePathComponent merklePath={evidence.merklePath} />
+        <MerklePathComponent merklePath={evidence.proof.batch.merklePath} />
       </div>
     );
   }
 
   return (
-    <div style={styles.evidenceContent}>
+    <div>
+      <h2>Bitcoin evidence</h2>
       <div className="info">
         <h4>State</h4>
         <p>{evidence.state}</p>
+        <h4>Chain</h4>
+        <p>{evidence.provider}</p>
         {evidenceInfo}
       </div>
       {evidenceTree}
@@ -76,7 +66,10 @@ const BitcoinEvidence = ({ evidence }) => {
 
 BitcoinEvidence.propTypes = {
   evidence: PropTypes.shape({
-    state: PropTypes.string.isRequired
+    state: PropTypes.string.isRequired,
+    provider: PropTypes.String,
+    backend: PropTypes.string,
+    proof: PropTypes.object
   }).isRequired
 };
 

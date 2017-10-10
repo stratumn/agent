@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import should from 'should';
 import create from '../src/create';
 import memoryStore from '../src/memoryStore';
 import hashJson from '../src/hashJson';
@@ -27,6 +28,19 @@ const plugins = [
     description: 'D'
   }
 ];
+
+const processInfo = {
+  actions: {
+    init: { args: ['a', 'b', 'c'] },
+    action: { args: ['d'] }
+  },
+  pluginsInfo: [
+    {
+      name: 'T',
+      description: 'D'
+    }
+  ]
+};
 
 // TODO: could be improved by using a dummy fossilizer.
 describe('Process', () => {
@@ -49,20 +63,39 @@ describe('Process', () => {
         info.should.deepEqual({
           name: process.name,
           storeInfo: memoryStoreInfo,
-          processInfo: {
-            actions: {
-              init: { args: ['a', 'b', 'c'] },
-              action: { args: ['d'] }
-            },
-            pluginsInfo: [
-              {
-                name: 'T',
-                description: 'D'
-              }
-            ]
-          }
+          processInfo
         })
       ));
+
+    it('resolves with the process infos with fossilizers', () => {
+      process.fossilizerClients = [
+        {
+          getInfo() {
+            return Promise.resolve({ name: '1' });
+          }
+        },
+        {
+          getInfo() {
+            return Promise.resolve({ name: '2' });
+          }
+        }
+      ];
+      return process.getInfo().then(info =>
+        info.should.deepEqual({
+          name: process.name,
+          storeInfo: memoryStoreInfo,
+          processInfo,
+          fossilizersInfo: [
+            {
+              name: '1'
+            },
+            {
+              name: '2'
+            }
+          ]
+        })
+      );
+    });
   });
 
   describe('#createMap()', () => {
@@ -126,42 +159,48 @@ describe('Process', () => {
       process
         .createMap(1, 2, 3)
         .then(segment => {
-          segment.meta.should.deepEqual({ linkHash: segment.meta.linkHash });
+          segment.meta.should.deepEqual({
+            linkHash: segment.meta.linkHash,
+            evidences: []
+          });
           return segment;
         })
         .then(prevSegment => {
           // emulates a fossilizerClient
-          process.fossilizerClient = {
-            fossilize() {
-              return Promise.resolve(true);
+          process.fossilizerClients = [
+            {
+              fossilize() {
+                return Promise.resolve(true);
+              }
             }
-          };
+          ];
           return process.createSegment(prevSegment.meta.linkHash, 'action', 2);
         })
-        .then(segment3 =>
-          segment3.meta.evidence.state.should.deepEqual('QUEUED')
-        ));
+        .then(segment3 => segment3.meta.evidences.should.deepEqual([])));
   });
 
   describe('#insertEvidence()', () => {
     it('resolves with the updated segment', () => {
-      process.fossilizerClient = {
-        fossilize() {
-          return Promise.resolve(true);
+      process.fossilizerClients = [
+        {
+          fossilize() {
+            return Promise.resolve(true);
+          }
         }
-      };
+      ];
       return process.createMap(1, 2, 3).then(segment1 => {
         const secret = generateSecret(segment1.meta.linkHash, '');
+        process.pendingEvidences[segment1.meta.linkHash] = 1;
         return process
           .insertEvidence(segment1.meta.linkHash, { test: true }, secret)
           .then(segment2 => {
             segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
             segment2.link.meta.mapId.should.be.a.String();
             segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
-            segment2.meta.evidence.should.deepEqual({
-              state: 'COMPLETE',
-              test: true
-            });
+            segment2.meta.evidences.should.deepEqual([{ test: true }]);
+            return should(
+              process.pendingEvidences[segment1.meta.linkHash]
+            ).equal(undefined);
           });
       });
     });
@@ -184,28 +223,55 @@ describe('Process', () => {
           err.status.should.be.exactly(401);
         }));
 
+    it('fails if evidence is unexpected', () =>
+      process
+        .createMap(1, 2, 3)
+        .then(segment1 => {
+          const secret = generateSecret(segment1.meta.linkHash, '');
+          return process.insertEvidence(
+            segment1.meta.linkHash,
+            { test: true },
+            secret
+          );
+        })
+        .then(() => {
+          throw new Error('should have failed');
+        })
+        .catch(err => {
+          err.message.should.be.exactly('trying to add an unexpected evidence');
+          err.status.should.be.exactly(400);
+        }));
+
     it('should call the #didFossilize() event', () => {
-      process.fossilizerClient = {
-        fossilize() {
-          return Promise.resolve(true);
+      process.fossilizerClients = [
+        {
+          fossilize() {
+            return Promise.resolve(true);
+          }
         }
-      };
+      ];
       return process.createMap(1, 2, 3).then(segment => {
         let callCount = 0;
         actions.events = {
           didFossilize(s) {
             callCount += 1;
-            s.meta.evidence.should.deepEqual({ state: 'COMPLETE', test: true });
+            s.meta.evidences.should.deepEqual([
+              { test: true },
+              { test2: true }
+            ]);
             this.state.should.deepEqual({ a: 1, b: 2, c: 3 });
           }
         };
         const secret = generateSecret(segment.meta.linkHash, '');
+        process.pendingEvidences[segment.meta.linkHash] = 2;
         return process
           .insertEvidence(segment.meta.linkHash, { test: true }, secret)
-          .then(() => {
-            callCount.should.be.exactly(1);
-          })
-          .catch(err => console.log(err));
+          .then(() => callCount.should.be.exactly(0))
+          .then(() =>
+            process
+              .insertEvidence(segment.meta.linkHash, { test2: true }, secret)
+              .then(() => callCount.should.be.exactly(1))
+          );
       });
     });
   });

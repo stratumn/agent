@@ -6,53 +6,134 @@
       },
       "meta": {
         "mapId": "576d5e03f75bec9b2b743115",
-        "agentHash": "e0b0976355e77077905db39c8dee0879b82e24f962853fa50c87799f8e33d19f",
-        "stateHash": "c2922d1f6105262f64424abc57cd88b76f2b476e6b7c8920004f4f8413140432",
+        "agentHash":
+          "e0b0976355e77077905db39c8dee0879b82e24f962853fa50c87799f8e33d19f",
+        "stateHash":
+          "c2922d1f6105262f64424abc57cd88b76f2b476e6b7c8920004f4f8413140432",
         "prevLinkHash": null,
         "action": "init",
-        "arguments": [
-          "blah"
-        ]
+        "arguments": ["blah"]
       }
     },
     "meta": {
-      "linkHash": "50044824101e6f10c8af31e7e8bee8771b31073eb398b90460311100897c2f71",
-      "evidence": {
-        "state": "COMPLETE",
-        "merkleRoot": "86aab95fbe95ebe8c63899772cd5d05305ad11e70366f113d99428afc9e244e2",
-        "merklePath": [
-          {
-            "left": "d92ac106fa27208fbd48805b9cc1a491b8d1e41b3e31c0c5c27630c288be15a5",
-            "right": "50044824101e6f10c8af31e7e8bee8771b31073eb398b90460311100897c2f71",
-            "parent": "a6329c2be21f80447ddefd0ddb5490368a06277a5172e37a939d575cd789bfb8"
-          },
-          {
-            "left": "a6329c2be21f80447ddefd0ddb5490368a06277a5172e37a939d575cd789bfb8",
-            "right": "d4af91a13548787fd0fd6f7f7c91f6affc3d7add6f44452de3f21a25bf2a670e",
-            "parent": "a630ad16390a55812d218cccaf516c529a1198c7892abeb6482f4e40cc697d38"
-          },
-          {
-            "left": "a630ad16390a55812d218cccaf516c529a1198c7892abeb6482f4e40cc697d38",
-            "parent": "a630ad16390a55812d218cccaf516c529a1198c7892abeb6482f4e40cc697d38"
-          },
-          {
-            "left": "55833e6cf1bdb03288455434b402142fa79503c447747565273be45bfc31a650",
-            "right": "a630ad16390a55812d218cccaf516c529a1198c7892abeb6482f4e40cc697d38",
-            "parent": "3aa6d982fb2df80c5b46a02f05d16f7148619ecb2d62419e5f9eb0ea772503eb"
-          },
-          {
-            "left": "9e4ea606cde80f5598738b4cd5e633bedca17394b179687bbd015bb8bdfd8f03",
-            "right": "3aa6d982fb2df80c5b46a02f05d16f7148619ecb2d62419e5f9eb0ea772503eb",
-            "parent": "86aab95fbe95ebe8c63899772cd5d05305ad11e70366f113d99428afc9e244e2"
+      "linkHash":
+        "50044824101e6f10c8af31e7e8bee8771b31073eb398b90460311100897c2f71",
+      "evidences": [
+        {
+          "state": "COMPLETE",
+          "backend": "TMPop",
+          "provider": "test-chain-qcaYsP",
+          "proof": {
+            "original": {
+              "blockHeight": 161,
+              "header": {
+                "chain_id": "test-chain-qcaYsP",
+                "height": 162,
+                "time": 1507729619,
+                "num_txs": 1,
+                "last_block_id": {
+                  "hash": "DiGdxqs7Wa96A2bPZ3PH0MmR32M=",
+                  "parts": {
+                    "total": 1,
+                    "hash": "CrfUvymrQC/hmByvVfwyaRLOs60="
+                  }
+                },
+                "last_commit_hash": "xr9VIk8HUi9/3o8rvqkxtj67znY=",
+                "data_hash": "SJBoSB+1arNisScitiPq4SL4bCk=",
+                "app_hash": "vBoJ6l7cuGNeJzT1pHy6Vge39YU="
+              },
+              "merkleProof": {
+                "LeafHash": "UxHFnsH6OpsajdnKkLzDLCwmSfQ=",
+                "InnerNodes": [
+                  {
+                    "Height": 1,
+                    "Size": 2,
+                    "Left": "",
+                    "Right": "H9Bpn7253lN2Wf5dB/YlrQj4MRA="
+                  },
+                  {
+                    "Height": 2,
+                    "Size": 4,
+                    "Left": "",
+                    "Right": "qG+8tH573onSmA+d/rSdmWngIBc="
+                  }
+                ],
+                "RootHash": "vBoJ6l7cuGNeJzT1pHy6Vge39YU="
+              },
+              "signatures": null
+            },
+            "current": {
+              "blockHeight": 26589,
+              "header": {
+                "chain_id": "test-chain-qcaYsP",
+                "height": 26590,
+                "time": 1508144436,
+                "last_block_id": {
+                  "hash": "oo6c8+qqplexzM2EAS1fEvleFbs=",
+                  "parts": {
+                    "total": 1,
+                    "hash": "VABhREUIj6+3rO5ZoLLEwr1n2ME="
+                  }
+                },
+                "last_commit_hash": "6DCHwSYpvYfYUWirEUNwtcEN0vY=",
+                "app_hash": "HAlV4NV4/YeHM9Swn/N7fxRLq7Q="
+              },
+              "merkleProof": {
+                "LeafHash": "UxHFnsH6OpsajdnKkLzDLCwmSfQ=",
+                "InnerNodes": [
+                  {
+                    "Height": 1,
+                    "Size": 2,
+                    "Left": "VK87+SPiIYS2SMgFn0+YKNbcrqY=",
+                    "Right": ""
+                  },
+                  {
+                    "Height": 3,
+                    "Size": 5,
+                    "Left": "",
+                    "Right": "1OFJQPcT1g2U1kxfx/GHzAgJicI="
+                  },
+                  {
+                    "Height": 4,
+                    "Size": 12,
+                    "Left": "",
+                    "Right": "FGQMWDyJ4puWCSL0tV7sXiuNfD0="
+                  }
+                ],
+                "RootHash": "HAlV4NV4/YeHM9Swn/N7fxRLq7Q="
+              },
+              "signatures": null
+            }
           }
-        ],
-        "transactions": {
-          "bitcoin:main": "1f15f3d223d01c30f570ab5941a46f6babbf48c74443964a841976305e8d9b03"
+        },
+        {
+          "state": "COMPLETE",
+          "backend": "dummy",
+          "provider": "dummy",
+          "proof": {
+            "timestamp": 1507729618
+          }
+        },
+        {
+          "state": "COMPLETE",
+          "backend": "bcbatch",
+          "provider": "dummytimestamper",
+          "proof": {
+            "batch": {
+              "timestamp": 1507729626,
+              "merkleRoot":
+                "39b569686cfbd97cb2fd11b3248c538acfaefde67d698a77e5de43f5d87258d8",
+              "merklePath": []
+            },
+            "txid":
+              "11a266e1c7d64e32d70adc6a3215597ed812626d9b3e9e7b3cd71675833fa2be"
+          }
         }
-      },
+      ],
       "application": "snake-eyes",
       "applicationLocation": "https://snake-eyes.stratumn.net",
-      "linkLocation": "https://snake-eyes.stratumn.net/links/50044824101e6f10c8af31e7e8bee8771b31073eb398b90460311100897c2f71",
+      "linkLocation":
+        "https://snake-eyes.stratumn.net/links/50044824101e6f10c8af31e7e8bee8771b31073eb398b90460311100897c2f71",
       "xStratumn": {
         "totalTimeMs": 6.6515439999999995,
         "loadApplicationCache": "hit",

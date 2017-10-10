@@ -62,7 +62,7 @@ export default function create(options) {
     processName,
     actions,
     storeClient,
-    fossilizerClient,
+    fossilizerClients,
     opts
   ) {
     const updatedOpts = Object.assign(opts, options);
@@ -70,7 +70,7 @@ export default function create(options) {
       processName,
       actions,
       storeClient,
-      fossilizerClient,
+      fossilizerClients,
       updatedOpts
     );
     processes[processName] = p;
@@ -106,14 +106,20 @@ export default function create(options) {
      * @param {String} processName - name for the process
      * @param {object} actions - the action functions
      * @param {StoreClient} storeClient - the store client
-     * @param {FossilizerClient} [fossilizerClient] - the fossilizer client
+     * @param {FossilizerClient[]} [fossilizerClients] - an array of fossilizer clients
      * @param {object} [opts] - options
      * @param {string} [opts.salt] - a unique salt
      * @param {number} [opts.reconnectTimeout=5000] - web socket reconnect timeout in milliseconds
      * @param {Plugins[]} [opts.plugins] - a list of agent plugins
      * @returns {Process} - the newly created Process
      */
-    addProcess(processName, actions, storeClient, fossilizerClient, opts = {}) {
+    addProcess(
+      processName,
+      actions,
+      storeClient,
+      fossilizerClients,
+      opts = {}
+    ) {
       if (processes[processName]) {
         const err = new Error('already exists');
         err.status = 400;
@@ -128,7 +134,7 @@ export default function create(options) {
         processName,
         actions,
         storeClient,
-        fossilizerClient,
+        fossilizerClients,
         opts
       );
     },

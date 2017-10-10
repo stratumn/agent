@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import should from 'should';
+
 import create from '../src/create';
 import memoryStore from '../src/memoryStore';
 import plugins from '../src/plugins';
@@ -25,7 +27,16 @@ import fossilizerHttpClient, {
 } from '../src/fossilizerHttpClient';
 import storeHttpClient, { clearAvailableStores } from '../src/storeHttpClient';
 
-// TODO: could be improved by using a dummy fossilizer.
+const dummyFossilizer = {
+  fossilize() {
+    return Promise.resolve({ fossil: true });
+  },
+
+  getInfo() {
+    return Promise.resolve({ name: 'dummy' });
+  }
+};
+
 describe('Agent', () => {
   let agent;
 
@@ -183,6 +194,25 @@ describe('Agent', () => {
           foundSegments.concat(sgmts2).length.should.be.exactly(2);
           callCount.should.be.exactly(2);
         });
+    });
+
+    it('supports one or several fossilizers', () => {
+      const p1 = agent.addProcess('first', actions, memoryStore(), null);
+      should(p1.fossilizerClients).equal(null);
+
+      const p2 = agent.addProcess(
+        'second',
+        actions,
+        memoryStore(),
+        dummyFossilizer
+      );
+      p2.fossilizerClients.should.deepEqual([dummyFossilizer]);
+
+      const p3 = agent.addProcess('third', actions, memoryStore(), [
+        dummyFossilizer,
+        dummyFossilizer
+      ]);
+      p3.fossilizerClients.length.should.be.exactly(2);
     });
   });
 
