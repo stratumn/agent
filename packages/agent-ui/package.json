@@ -33,7 +33,9 @@
     "react-redux": "^5.0.6",
     "react-router": "3",
     "react-router-redux": "^4.0.8",
-    "react-scripts": "1.0.14",
     "redux": "^3.7.2"
+  },
+  "devDependencies": {
+    "react-scripts": "^1.0.14"
   }
 }
