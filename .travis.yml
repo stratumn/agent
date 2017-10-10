@@ -3,9 +3,9 @@ sudo: false
 node_js:
   - 6
 env:
-  - PACKAGE=agent-client-js
-  - PACKAGE=agent-js
-  - PACKAGE=agent-ui
+  - PACKAGE=stratumn-agent-client
+  - PACKAGE=stratumn-agent
+  - PACKAGE=stratumn-agent-ui
   - PACKAGE=mapexplorer-core
   - PACKAGE=react-mapexplorer
 before_install:
