@@ -20,7 +20,6 @@ class App extends Component {
   }
 }
 
-
 function mapStateToProps(state, ownProps) {
   console.log('mapStateToProps', state);
   let processes = [];
