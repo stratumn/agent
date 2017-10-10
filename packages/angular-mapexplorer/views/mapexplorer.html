@@ -43,9 +43,7 @@
         <p>{{me.segment.link.meta.action}}({{me.segment.link.meta.arguments | functionArguments}})</p>
       </div>
       <div ng-show="me.displayed == 'evidence'" layout-gt-sm="row" layout="column">
-        <div ng-transclude="evidenceBody">
-          <st-bitcoin-evidence></st-bitcoin-evidence>
-        </div>
+        <st-evidences evidences="me.segment.meta.evidences"></st-evidences>
       </div>
       <div ng-show="me.displayed == 'json'">
         <div ui-ace="{

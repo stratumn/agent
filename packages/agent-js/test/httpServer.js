@@ -14,12 +14,19 @@
   limitations under the License.
 */
 
+import should from 'should';
 import supertest from 'supertest';
 import create from '../src/create';
 import memoryStore from '../src/memoryStore';
 import hashJson from '../src/hashJson';
 import generateSecret from '../src/generateSecret';
 import actions from './utils/basicActions';
+
+function makePostRequest(server, url, args) {
+  return supertest(server)
+    .post(url)
+    .send(args);
+}
 
 function testFn(req, fn) {
   return new Promise((resolve, reject) => {
@@ -66,7 +73,7 @@ describe('HttpServer()', () => {
 
   describe('GET "/"', () => {
     it('renders the agent info', () => {
-      process.fossilizerClient = null;
+      process.fossilizerClients = null;
       return agent
         .getInfo()
         .then(info => testDeepEquals(supertest(server).get('/'), 200, info));
@@ -116,9 +123,11 @@ describe('HttpServer()', () => {
 
   describe('POST "/<process>/segments"', () => {
     it('renders the first segment', () => {
-      const req = supertest(server)
-        .post(`/${process.name}/segments`)
-        .send([1, 2, 3]);
+      const req = makePostRequest(server, `/${process.name}/segments`, [
+        1,
+        2,
+        3
+      ]);
       return testFn(req, (err, res) => {
         if (err) {
           throw err;
@@ -128,15 +137,14 @@ describe('HttpServer()', () => {
         segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
         segment.link.meta.mapId.should.be.a.String();
         segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
-        segment.meta.evidence.should.deepEqual({ state: 'QUEUED' });
+        segment.meta.evidences.should.deepEqual([]);
+        return should(process.pendingEvidences[segment.linkHash]).be.null;
       });
     });
 
     it('updates correclty when adding a process after initial launch', () => {
       const p2 = agent.addProcess('basic2', actions, memoryStore(), null);
-      const req = supertest(server)
-        .post(`/${p2.name}/segments`)
-        .send([1, 2, 3]);
+      const req = makePostRequest(server, `/${p2.name}/segments`, [1, 2, 3]);
       return testFn(req, (err, res) => {
         if (err) {
           throw err;
@@ -150,9 +158,7 @@ describe('HttpServer()', () => {
     });
 
     it('fails when trying to add segments to a non-existing process', () => {
-      const req = supertest(server)
-        .post('/lol/segments')
-        .send([1, 2, 3]);
+      const req = makePostRequest(server, '/lol/segments', [1, 2, 3]);
       return testFn(req, (err, res) => {
         if (err) {
           throw err;
@@ -165,9 +171,11 @@ describe('HttpServer()', () => {
   describe('POST "/<process>/segments/:linkHash/:action"', () => {
     it('renders the new segment', () =>
       process.createMap(1, 2, 3).then(segment1 => {
-        const req = supertest(server)
-          .post(`/${process.name}/segments/${segment1.meta.linkHash}/action`)
-          .send([4]);
+        const req = makePostRequest(
+          server,
+          `/${process.name}/segments/${segment1.meta.linkHash}/action`,
+          [4]
+        );
         return testFn(req, (err, res) => {
           if (err) {
             throw err;
@@ -179,7 +187,7 @@ describe('HttpServer()', () => {
             segment1.meta.linkHash
           );
           segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
-          segment2.meta.evidence.should.deepEqual({ state: 'QUEUED' });
+          segment2.meta.evidences.should.deepEqual([]);
         });
       }));
   });
@@ -260,10 +268,12 @@ describe('HttpServer()', () => {
     it('renders the updated segment', () =>
       process.createMap(1, 2, 3).then(segment1 => {
         const secret = generateSecret(segment1.meta.linkHash, '');
+        process.pendingEvidences[segment1.meta.linkHash] = 2;
         return process
           .insertEvidence(segment1.meta.linkHash, { test: true }, secret)
-          .then(segment2 =>
-            testDeepEquals(
+          .then(segment2 => {
+            segment2.meta.evidences.push(segment2.meta.evidences[0]);
+            return testDeepEquals(
               supertest(server)
                 .post(
                   `/${process.name}/evidence/${segment1.meta
@@ -272,8 +282,8 @@ describe('HttpServer()', () => {
                 .send({ test: true }),
               200,
               segment2
-            )
-          );
+            );
+          });
       }));
   });
 

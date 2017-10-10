@@ -20,16 +20,37 @@ import { ChainTreeBuilder } from 'mapexplorer-core';
 import radium from 'radium';
 import { getStyles, getRules } from './mapExplorerCss';
 import BitcoinEvidence from './BitcoinEvidence';
+import DummyEvidence from './DummyEvidence';
+import TMPopEvidence from './TMPopEvidence';
 
 const { Style } = radium;
+
+const evidencesContent = {
+  display: 'flex',
+  flexDirection: 'row'
+};
+
+const evidenceStyle = {
+  paddingRight: '3rem'
+};
+
+function renderEvidence(evidence) {
+  return (
+    <div style={evidenceStyle} key={evidence.provider}>
+      {
+        {
+          dummy: <DummyEvidence evidence={evidence} />,
+          bcbatch: <BitcoinEvidence evidence={evidence} />,
+          TMPop: <TMPopEvidence evidence={evidence} />
+        }[evidence.backend]
+      }
+    </div>
+  );
+}
 
 class MapExplorer extends Component {
   constructor(props) {
     super(props);
-    this.evidenceComponent = props.evidenceComponent;
-    if (!this.evidenceComponent) {
-      this.evidenceComponent = BitcoinEvidence;
-    }
 
     this.state = {
       segment: null,
@@ -128,7 +149,9 @@ class MapExplorer extends Component {
           break;
         case 'Evidence':
           segmentContent = (
-            <this.evidenceComponent evidence={segment.meta.evidence} />
+            <div style={evidencesContent}>
+              {segment.meta.evidences.map(e => renderEvidence(e))}
+            </div>
           );
           break;
         case 'JSON':
@@ -208,7 +231,6 @@ MapExplorer.propTypes = {
   agentUrl: PropTypes.string,
   process: PropTypes.string,
   chainscript: PropTypes.string,
-  evidenceComponent: PropTypes.func,
   mapId: PropTypes.string,
   onSelectSegment: PropTypes.func,
   options: PropTypes.shape({})
@@ -218,7 +240,6 @@ MapExplorer.defaultProps = {
   agentUrl: '',
   process: '',
   chainscript: '',
-  evidenceComponent: '',
   mapId: '',
   onSelectSegment: () => {},
   options: {}

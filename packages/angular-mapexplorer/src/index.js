@@ -25,6 +25,10 @@ import stMapExplorer from './stMapExplorer.directive';
 import stMapValidator from './stMapValidator.directive';
 import stPromiseLoader from './stPromiseLoader.directive';
 import stTagColorPicker from './stTagColorPicker.directive';
+import stEvidences from './stEvidences.directive';
+import stBitcoinEvidence from './stBitcoinEvidence.directive';
+import stDummyEvidence from './stDummyEvidence.directive';
+import stTmpopEvidence from './stTmpopEvidence.directive';
 import AceConfigurationService from './AceConfiguration.service';
 import ChainTreeBuilderService from './ChainTreeBuilder.service';
 import MapValidatorService from './MapValidator.service';
@@ -50,6 +54,10 @@ export default angular
   .directive('stMapValidator', stMapValidator)
   .directive('stPromiseLoader', stPromiseLoader)
   .directive('stTagColorPicker', stTagColorPicker)
+  .directive('stEvidences', stEvidences)
+  .directive('stBitcoinEvidence', stBitcoinEvidence)
+  .directive('stDummyEvidence', stDummyEvidence)
+  .directive('stTmpopEvidence', stTmpopEvidence)
   .service('AceConfigurationService', AceConfigurationService)
   .service('ChainTreeBuilderService', ChainTreeBuilderService)
   .service('MapValidatorService', MapValidatorService)

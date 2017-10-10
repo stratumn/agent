@@ -23,15 +23,20 @@ import makeQueryString from './makeQueryString';
 import generateSecret from './generateSecret';
 import filterAsync from './filterAsync';
 
-const QUEUED = 'QUEUED';
-const COMPLETE = 'COMPLETE';
-
 export default class Process {
-  constructor(name, actions, storeClient, fossilizerClient, opts = {}) {
+  constructor(name, actions, storeClient, fossilizerClients, opts = {}) {
     this.name = name;
     this.actions = actions;
     this.storeClient = storeClient;
-    this.fossilizerClient = fossilizerClient;
+
+    if (fossilizerClients) {
+      this.fossilizerClients =
+        fossilizerClients instanceof Array
+          ? fossilizerClients
+          : [fossilizerClients];
+    } else {
+      this.fossilizerClients = null;
+    }
     this.salt = opts.salt || '';
     this.plugins = opts.plugins || [];
     this.evidenceCallbackUrl = opts.evidenceCallbackUrl || '';
@@ -40,6 +45,7 @@ export default class Process {
       actions: getActionsInfo(actions),
       pluginsInfo: getPluginsInfo(this.plugins)
     };
+    this.pendingEvidences = {};
   }
 
   /**
@@ -79,15 +85,18 @@ export default class Process {
   }
 
   fossilizeSegment(segment) {
-    if (this.fossilizerClient) {
+    if (this.fossilizerClients) {
       const { linkHash } = segment.meta;
       const secret = generateSecret(linkHash, this.salt || '');
       let callbackUrl = `${this.evidenceCallbackUrl || this.agentUrl}/${this
         .name}/evidence/${linkHash}`;
       callbackUrl += makeQueryString({ secret });
-      return this.fossilizerClient
-        .fossilize(linkHash, callbackUrl)
-        .then(() => segment);
+
+      this.pendingEvidences[linkHash] = this.fossilizerClients.length;
+      this.fossilizerClients.map(fossilizer =>
+        fossilizer.fossilize(linkHash, callbackUrl).then(() => segment)
+      );
+      return segment;
     }
 
     return segment;
@@ -115,17 +124,18 @@ export default class Process {
   * @returns {Promise} - a promise that resolves with the information
   */
   getInfo() {
-    const { processInfo } = this;
+    const infos = { name: this.name, processInfo: this.processInfo };
     return this.storeClient.getInfo().then(storeInfo => {
-      if (this.fossilizerClient) {
-        return this.fossilizerClient.getInfo().then(fossilizerInfo => ({
-          name: this.name,
-          processInfo,
-          storeInfo,
-          fossilizerInfo
-        }));
+      if (this.fossilizerClients) {
+        const fossilizersInfo = this.fossilizerClients.map(f => f.getInfo());
+        return Promise.all(fossilizersInfo).then(res =>
+          res.reduce((map, fossilizerInfo) => {
+            map.fossilizersInfo.push(fossilizerInfo);
+            return map;
+          }, Object.assign(infos, { fossilizersInfo: [], storeInfo }))
+        );
       }
-      return { name: this.name, processInfo, storeInfo };
+      return Object.assign(infos, { storeInfo });
     });
   }
 
@@ -151,11 +161,7 @@ export default class Process {
       })
       .then(() => {
         const linkHash = hashJson(link);
-
-        const meta = Object.assign(
-          { linkHash },
-          this.fossilizerClient ? { evidence: { state: QUEUED } } : {}
-        );
+        const meta = Object.assign({ linkHash }, { evidences: [] });
 
         segment = { link, meta };
         return this.applyPlugins('didCreateSegment', segment, 'init', args);
@@ -203,10 +209,7 @@ export default class Process {
       })
       .then(() => {
         const linkHash = hashJson(createdLink);
-        const meta = Object.assign(
-          { linkHash },
-          this.fossilizerClient ? { evidence: { state: QUEUED } } : {}
-        );
+        const meta = Object.assign({ linkHash }, { evidences: [] });
 
         segment = { link: createdLink, meta };
         return this.applyPlugins('didCreateSegment', segment, action, args);
@@ -230,27 +233,31 @@ export default class Process {
       return Promise.reject(err);
     }
 
-    // Not atomic. Not an issue at the moment, but it could
-    // become one in the future, for instance if there can be
-    // more than one fossilizers? Could it be solved by adding
-    // an insertEvidence route to stores?
+    if (!this.pendingEvidences[linkHash]) {
+      const err = new Error('trying to add an unexpected evidence');
+      err.status = 400;
+      return Promise.reject(err);
+    }
+    this.pendingEvidences[linkHash] -= 1;
     return this.storeClient
       .getSegment(this.name, linkHash)
       .then(segment => {
-        Object.assign(segment.meta.evidence, evidence, {
-          state: COMPLETE
-        });
+        segment.meta.evidences.push(evidence);
         return this.storeClient.saveSegment(segment);
       })
       .then(segment => {
-        // Call didFossilize event if present.
+        // If all evidences have been added, call didFossilize event if present.
+        if (this.pendingEvidences[linkHash] > 0) {
+          return segment;
+        }
+
         if (
           typeof this.actions.events === 'object' &&
           typeof this.actions.events.didFossilize === 'function'
         ) {
           processify(this.actions, segment.link).events.didFossilize(segment);
         }
-
+        delete this.pendingEvidences[linkHash];
         return segment;
       });
   }

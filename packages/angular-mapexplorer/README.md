@@ -36,18 +36,6 @@ or
 <st-map-explorer agentUrl="home.agentUrl" map-id="home.mapId" process="home.process" options="{showTagColorConfiguration: true}"></st-map-explorer>
 ```
 
-By default the directive expects the evidence to come from the Bitcoin Fossilizer.
-To override the evidence body you can transclude your own evidence component. The evidence part of the segment will be available on `$parent.evidence`
-
-```html
-<st-map-explorer chainscript="home.json" refresh="0">
-  <evidence-body>
-    <h1>State</h1>
-    <p>{{$parent.evidence.state}}</p>
-  </evidence-body>
-</st-map-explorer>
-```
-
 ### Options
 
 ##### showTagColorConfiguration
@@ -72,5 +60,15 @@ Default: noop
 
 Callback called when a segment content is hidden
 
-
 Plus all options inherited from [MapExplorer Core](https://github.com/stratumn/mapexplorer-core)
+
+## Development
+
+Build and launch demo app:
+
+```
+npm run build:demo
+node docs/server.js
+```
+
+The application will be served at `localhost:3300`

@@ -1,0 +1,25 @@
+<div class="layout-row">
+  <div ng-repeat="evidence in evidences" style='padding-right:3em;'>
+
+    <h4>State</h4>
+    <p>{{evidence.state}}</p>
+    <h4>Provider</h4>
+    <p>{{evidence.provider}}</p>
+
+    <div ng-switch="evidence.backend">
+      <div ng-switch-when="bcbatch">
+        <st-bitcoin-evidence evidence="evidence" />
+      </div>
+
+      <div ng-switch-when="dummy">
+        <st-dummy-evidence evidence="evidence" />
+      </div>
+
+      <div ng-switch-when="TMPop">
+        <st-tmpop-evidence evidence="evidence" />
+      </div>
+
+    </div>
+
+  </div>
+</div>

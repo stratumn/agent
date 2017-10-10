@@ -18,26 +18,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const DummyEvidence = ({ evidence }) => {
-  const dateParts = evidence.timestamp.match(
-    /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/
-  );
-  dateParts[2] -= 1; // months are zero-based
-  const date = new Date(Date.UTC.apply(this, dateParts.slice(1)));
+  const { timestamp } = evidence.proof;
+  const date = new Date(timestamp * 1000).toUTCString();
 
   return (
     <div>
+      <h2>Dummy evidence</h2>
       <h4>Authority</h4>
-      <p>Dummy</p>
+      <p>{evidence.provider}</p>
 
       <h4>Time</h4>
-      <p>{date.toISOString()}</p>
+      <p>{date}</p>
     </div>
   );
 };
 
 DummyEvidence.propTypes = {
   evidence: PropTypes.shape({
-    timestamp: PropTypes.string
+    state: PropTypes.string,
+    provider: PropTypes.String,
+    backend: PropTypes.string,
+    proof: PropTypes.object
   }).isRequired
 };
 

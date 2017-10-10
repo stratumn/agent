@@ -43,7 +43,7 @@ class MerklePathComponent extends Component {
 }
 
 MerklePathComponent.propTypes = {
-  merklePath: PropTypes.string.isRequired
+  merklePath: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 export default radium(MerklePathComponent);
