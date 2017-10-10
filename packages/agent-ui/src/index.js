@@ -7,10 +7,8 @@ import { syncHistoryWithStore } from 'react-router-redux';
 
 import routes from './routes';
 import configureStore from './store/configure';
-import { getAgentInfo } from './actions/getAgentInfo'
 
 const store = configureStore();
-store.dispatch(getAgentInfo());
 
 // Create an enhanced history that syncs navigation events with the store
 const history = syncHistoryWithStore(browserHistory, store)

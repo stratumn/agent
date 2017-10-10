@@ -5,8 +5,15 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import TopBar from './topBar';
 import LeftDrawer from './leftDrawer';
+import { getAgentInfo } from '../actions/getAgentInfo'
 
 class App extends Component {
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(getAgentInfo());
+  }
+
   render() {
     console.log('App render', this.props);
     return (
