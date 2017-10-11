@@ -13,7 +13,11 @@
     "url": "https://github.com/stratumn/indigo-js/issues"
   },
   "homepage": "https://github.com/stratumn/indigo-js",
-  "keywords": ["stratumn", "agent", "blockchain"],
+  "keywords": [
+    "stratumn",
+    "agent",
+    "blockchain"
+  ],
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
