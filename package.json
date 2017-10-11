@@ -15,7 +15,9 @@
     "clean":
       "find packages -type d -name 'node_modules' -maxdepth 2 -exec rm -R {} \\;",
     "lint": "eslint packages/*/src/** packages/*/test/**",
+    "lint:ci": "eslint packages/$PACKAGE/src/** packages/$PACKAGE/test/**",
     "test": "lerna run test:ci",
+    "test:ci": "lerna run --scope $PACKAGE test:ci",
     "update-license-headers": "./update-license-headers.sh"
   }
 }
