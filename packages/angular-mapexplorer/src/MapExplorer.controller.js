@@ -15,18 +15,20 @@
 */
 
 export default class MapExplorer {
-
   constructor($scope, AceConfigurationService) {
     this.$scope = $scope;
     this.displayed = 'state';
     this.editors = [];
 
-    $scope.$watch(() => this.segment, () => {
-      if (this.segment) {
-        this.state = JSON.stringify(this.segment.link.state, undefined, 2);
-        this.segmentJSON = JSON.stringify(this.segment, undefined, 2);
+    $scope.$watch(
+      () => this.segment,
+      () => {
+        if (this.segment) {
+          this.state = JSON.stringify(this.segment.link.state, undefined, 2);
+          this.segmentJSON = JSON.stringify(this.segment, undefined, 2);
+        }
       }
-    });
+    );
 
     this.aceLoaded = _editor => {
       this.editors.push(_editor);

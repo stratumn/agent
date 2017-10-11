@@ -7,11 +7,11 @@ const templateUrlRegex = /templateUrl\s*:(.*)/g;
 const stringRegex = /(['"])((?:[^\\]\\\1|.)*?)\1/g;
 
 function insertText(str, dir) {
-  str = str.replace(stringRegex, (match, quote, url) => {
+  const string = str.replace(stringRegex, (match, quote, url) => {
     const text = fs.readFileSync(path.join(dir, url)).toString();
-    return '`' + text + '`';
+    return `\`${text}\``;
   });
-  return str;
+  return string;
 }
 
 export default function angular(options = {}) {
@@ -20,16 +20,17 @@ export default function angular(options = {}) {
   return {
     name: 'angular',
     transform(source, map) {
-      if (!filter(map)) return;
+      if (!filter(map)) return null;
 
-      const dir = path.parse(map).dir;
+      const { dir } = path.parse(map);
 
-      source = source.replace(templateUrlRegex, (match, url) =>
-        `template: ${insertText(url, dir)}`
+      const newSource = source.replace(
+        templateUrlRegex,
+        (match, url) => `template: ${insertText(url, dir)}`
       );
 
       return {
-        code: source,
+        code: newSource,
         map: { mappings: '' }
       };
     }

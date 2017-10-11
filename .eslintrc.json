@@ -19,7 +19,7 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": ["**/test/**"],
+        "devDependencies": ["**/test/**", "**/rollup*.js", "**/karma.conf.js"],
         "optionalDependencies": false
       }
     ],

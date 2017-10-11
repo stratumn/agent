@@ -22,9 +22,7 @@ export default class MapValidatorService {
   }
 
   validate(chainscript) {
-    return this.$q.when(
-      new ChainValidator(chainscript).validate()
-    );
+    return this.$q.when(new ChainValidator(chainscript).validate());
   }
 }
 
