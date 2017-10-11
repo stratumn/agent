@@ -20,7 +20,7 @@ function mapStateToProps(state) {
   console.log('mapStateToProps', state);
   let processes = [];
   if (state.agentInfo) {
-    ({ processes } = state.agentInfo);
+    processes = Object.keys(state.agentInfo.processes);
   }
   return { processes };
 }
