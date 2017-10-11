@@ -1,12 +1,12 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import thunk from 'redux-thunk';
-import agentInfo from '../reducers/getAgentInfo';
+import { getAgentInfo } from '../reducers';
 
-export default function configureStore() {
+export default function() {
   return createStore(
     combineReducers({
-      agentInfo,
+      agentInfo: getAgentInfo,
       routing: routerReducer
     }),
     applyMiddleware(thunk)
