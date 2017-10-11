@@ -23,8 +23,7 @@ export default class objectAdaptor {
   }
 
   getInfo() {
-    return this.agent.getInfo()
-      .then(decorateBody);
+    return this.agent.getInfo().then(decorateBody);
   }
 
   getProcesses() {
@@ -86,7 +85,9 @@ export default class objectAdaptor {
     }
   }
 
+  /* eslint-disable */
   get url() {
     return null;
   }
+  /* eslint-enable */
 }

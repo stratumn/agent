@@ -18,17 +18,13 @@ import getAgent from '../src/getAgent';
 import { runTestsWithData } from './utils/testSetUp';
 
 describe('#getProcesses', () => {
-
   runTestsWithData(objectOrUrlCb => {
     it('resolves with a list of all processes', () =>
       getAgent(objectOrUrlCb())
-        .then(agent =>
-          agent.getProcesses())
+        .then(agent => agent.getProcesses())
         .then(processes => {
           processes.length.should.be.exactly(3);
           processes[0].name.should.be.exactly('first_process');
-        })
-    );
+        }));
   });
-
 });

@@ -17,6 +17,7 @@
 import segmentify from './segmentify';
 
 export default function getSegment(adaptor, process, linkHash) {
-  return adaptor.getSegment(process.name, linkHash)
+  return adaptor
+    .getSegment(process.name, linkHash)
     .then(res => segmentify(adaptor, process, res.body));
 }

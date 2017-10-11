@@ -17,18 +17,14 @@
 import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#getSegment', () => {
-
   runTestsWithDataAndAgent(processCb => {
     it('gets a segment', () =>
       processCb()
         .createMap('hi there')
-        .then(segment =>
-          processCb().getSegment(segment.meta.linkHash)
-        )
+        .then(segment => processCb().getSegment(segment.meta.linkHash))
         .then(segment => {
           segment.link.state.title.should.be.exactly('hi there');
-        })
-    );
+        }));
 
     it('rejects if the segment is not found', () =>
       processCb()
@@ -38,8 +34,6 @@ describe('#getSegment', () => {
         })
         .catch(err => {
           err.status.should.be.exactly(404);
-        })
-    );
+        }));
   });
-
 });

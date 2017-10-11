@@ -16,6 +16,7 @@
 
 // emulates Array.prototype.filter() with a filter that returns a promise
 export default function filterAsync(array, filter) {
-  return Promise.all(array.map(entry => filter(entry)))
-    .then(bits => array.filter(() => bits.shift()));
+  return Promise.all(array.map(entry => filter(entry))).then(bits =>
+    array.filter(() => bits.shift())
+  );
 }

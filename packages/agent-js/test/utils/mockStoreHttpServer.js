@@ -27,7 +27,7 @@ export default function mockStoreHttpServer(mock) {
       return {
         status: 403,
         statusCode: 403,
-        message: '\'process\' is required in segment.meta.process'
+        message: "'process' is required in segment.meta.process"
       };
     }
     return {
@@ -42,7 +42,7 @@ export default function mockStoreHttpServer(mock) {
       return {
         status: 403,
         statusCode: 403,
-        message: 'param \'process\' is required'
+        message: "param 'process' is required"
       };
     }
     return {
@@ -61,8 +61,10 @@ export default function mockStoreHttpServer(mock) {
     }
     return {
       status: 200,
-      body:
-      { meta: { linkHash: req.params.linkHash }, link: { state: { query: '', filtered: 0 } } }
+      body: {
+        meta: { linkHash: req.params.linkHash },
+        link: { state: { query: '', filtered: 0 } }
+      }
     };
   });
 
@@ -72,7 +74,7 @@ export default function mockStoreHttpServer(mock) {
       return {
         status: 403,
         statusCode: 403,
-        message: 'param \'process\' is required'
+        message: "param 'process' is required"
       };
     } else if (parsedParams.linkHash === 'notFound') {
       return {
@@ -88,7 +90,10 @@ export default function mockStoreHttpServer(mock) {
     } else if (parsedParams.process === 'testFilter') {
       return {
         status: 200,
-        body: { link: { state: { query: req.params.query } }, meta: { linkHash: 'linkHash' } }
+        body: {
+          link: { state: { query: req.params.query } },
+          meta: { linkHash: 'linkHash' }
+        }
       };
     }
     return {
@@ -106,7 +111,7 @@ export default function mockStoreHttpServer(mock) {
       return {
         status: 403,
         statusCode: 403,
-        message: 'param \'process\' is required'
+        message: "param 'process' is required"
       };
     }
     return {

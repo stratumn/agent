@@ -22,14 +22,15 @@ This multi-package repository (monorepo) is managed by [Lerna](https://github.co
 Install dependencies:
 
 ```
-npm install -g lerna
-lerna bootstrap
+npm install
+npm run bootstrap
 ```
 
 Run tests:
 
 ```
-lerna run test
+npm test
+npm run lint
 ```
 
 Publish dependencies:

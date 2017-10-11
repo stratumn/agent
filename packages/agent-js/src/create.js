@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import httpServer from './httpServer.js';
-import Process from './process.js';
+import httpServer from './httpServer';
+import Process from './process';
 import getDefinedFilters from './getDefinedFilters';
 
 /**
@@ -38,18 +38,23 @@ export default function create(options) {
     storeClient.on('message', msg => {
       const eventName = msg.type;
       const process = processes[msg.data.link.meta.process];
-      if (typeof process === 'object'
-        && typeof process.actions.events === 'object'
-        && typeof process.actions.events[eventName] === 'function') {
+      if (
+        typeof process === 'object' &&
+        typeof process.actions.events === 'object' &&
+        typeof process.actions.events[eventName] === 'function'
+      ) {
         const segment = msg.data;
-        getDefinedFilters(process.plugins).reduce(
-          (cur, filter) => cur.then(ok => Promise.resolve(ok && filter(segment))),
-          Promise.resolve(true)
-        ).then(ok => {
-          if (ok) {
-            process.actions.events[eventName](segment);
-          }
-        });
+        getDefinedFilters(process.plugins)
+          .reduce(
+            (cur, filter) =>
+              cur.then(ok => Promise.resolve(ok && filter(segment))),
+            Promise.resolve(true)
+          )
+          .then(ok => {
+            if (ok) {
+              process.actions.events[eventName](segment);
+            }
+          });
       }
     });
 
@@ -57,9 +62,21 @@ export default function create(options) {
     storeClient.connect(reconnectTimeout);
   }
 
-  function addProcess(processName, actions, storeClient, fossilizerClient, opts) {
+  function addProcess(
+    processName,
+    actions,
+    storeClient,
+    fossilizerClient,
+    opts
+  ) {
     const updatedOpts = Object.assign(opts, options);
-    const p = new Process(processName, actions, storeClient, fossilizerClient, updatedOpts);
+    const p = new Process(
+      processName,
+      actions,
+      storeClient,
+      fossilizerClient,
+      updatedOpts
+    );
     processes[processName] = p;
     if (storeClients.indexOf(storeClient) < 0) {
       connectStoreClient(storeClient, opts.reconnectTimeout);
@@ -75,10 +92,12 @@ export default function create(options) {
     getInfo() {
       const processesInfo = Object.values(processes).map(p => p.getInfo());
       return Promise.all(processesInfo)
-        .then(res => res.reduce((map, process) => {
-          map[process.name] = process;
-          return map;
-        }, {}))
+        .then(res =>
+          res.reduce((map, process) => {
+            map[process.name] = process;
+            return map;
+          }, {})
+        )
         .then(map => ({ processes: map }));
     },
 
@@ -105,7 +124,13 @@ export default function create(options) {
         err.status = 400;
         throw err;
       }
-      return addProcess(processName, actions, storeClient, fossilizerClient, opts);
+      return addProcess(
+        processName,
+        actions,
+        storeClient,
+        fossilizerClient,
+        opts
+      );
     },
 
     /**
@@ -191,6 +216,5 @@ export default function create(options) {
     httpServer(opts = {}) {
       return httpServer(this, opts);
     }
-
   };
 }

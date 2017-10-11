@@ -27,5 +27,5 @@ module.exports = {
   encryptedState,
   localTime,
   signedState,
-  stateHash,
+  stateHash
 };

@@ -19,39 +19,45 @@ import protoChain from './protoChain';
 export default function processify(actions, initialLink) {
   let link = JSON.parse(JSON.stringify(initialLink || {}));
 
-  const methods = protoChain({
-    init(state) { this.append(state); }
-  }, actions);
+  const methods = protoChain(
+    {
+      init(state) {
+        this.append(state);
+      }
+    },
+    actions
+  );
 
   const process = {};
 
-  const promisify = (key) =>
-    (...args) =>
-      new Promise((resolve, reject) => {
-        const ctx = {
-          state: JSON.parse(JSON.stringify(link.state || {})),
-          meta: JSON.parse(JSON.stringify(link.meta || {})),
-          append(state, meta) {
-            link = { state: state || this.state, meta: meta || this.meta };
-            resolve(link);
-          },
-          reject(error) {
-            const err = error || this.error;
-            reject(err instanceof Error ? err : new Error(err || 'An error occurred'));
-          }
-        };
+  const promisify = key => (...args) =>
+    new Promise((resolve, reject) => {
+      const ctx = {
+        state: JSON.parse(JSON.stringify(link.state || {})),
+        meta: JSON.parse(JSON.stringify(link.meta || {})),
+        append(state, meta) {
+          link = { state: state || this.state, meta: meta || this.meta };
+          resolve(link);
+        },
+        reject(error) {
+          const err = error || this.error;
+          reject(
+            err instanceof Error ? err : new Error(err || 'An error occurred')
+          );
+        }
+      };
 
-        methods[key].apply(ctx, args);
-      });
+      methods[key].apply(ctx, args);
+    });
 
   // Promisify all methods
-  /*eslint-disable */
+  /* eslint-disable */
   for (const key in methods) {
     if (typeof methods[key] === 'function' && !Object.hasOwnProperty(key)) {
       process[key] = promisify(key);
     }
   }
-  /*eslint-enable */
+  /* eslint-enable */
 
   // Add event functions.
   if (typeof actions.events === 'object') {
@@ -64,7 +70,10 @@ export default function processify(actions, initialLink) {
     };
 
     Object.keys(actions.events).forEach(key => {
-      if (typeof actions.events[key] === 'function' && !Object.hasOwnProperty(key)) {
+      if (
+        typeof actions.events[key] === 'function' &&
+        !Object.prototype.hasOwnProperty.call(process.events, key)
+      ) {
         process.events[key] = actions.events[key].bind(ctx);
       }
     });

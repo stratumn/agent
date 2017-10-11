@@ -17,7 +17,6 @@
 import hashJson from '../hashJson';
 
 export default {
-
   name: 'State Hash',
 
   description: 'Computes and adds the hash of the state in meta.',

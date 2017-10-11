@@ -17,21 +17,17 @@
 import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#getMap', () => {
-
   runTestsWithDataAndAgent(processCb => {
     // Deprecated
     it('finds the segments', () =>
-    processCb()
-      .createMap('blank')
-      .then(() =>
-        processCb().createMap('hi'))
-      .then(segment => segment.addMessage('hello', 'bot'))
-      .then(segment => processCb().getMap(segment.link.meta.mapId))
-      .then(segments => {
-        segments.should.be.an.Array();
-        segments.length.should.be.exactly(2);
-      })
-    );
+      processCb()
+        .createMap('blank')
+        .then(() => processCb().createMap('hi'))
+        .then(segment => segment.addMessage('hello', 'bot'))
+        .then(segment => processCb().getMap(segment.link.meta.mapId))
+        .then(segments => {
+          segments.should.be.an.Array();
+          segments.length.should.be.exactly(2);
+        }));
   });
-
 });

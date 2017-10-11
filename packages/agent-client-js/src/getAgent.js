@@ -21,8 +21,7 @@ import getAdaptor from './getAdaptor';
 export default function getAgent(objectOrUrl) {
   try {
     const adaptor = getAdaptor(objectOrUrl);
-    return adaptor.getInfo()
-    .then(res => {
+    return adaptor.getInfo().then(res => {
       const agent = res.body;
       agent.url = adaptor.url;
       agent.getProcesses = getProcesses.bind(null, adaptor);

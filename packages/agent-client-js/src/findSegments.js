@@ -30,14 +30,15 @@ export default function findSegments(adaptor, process, opts = {}) {
 
     return promiseWhile(
       () => lastBatch.length === options.limit,
-      () => findSegments(adaptor, process, options)
-        .then(newSegments => {
+      () =>
+        findSegments(adaptor, process, options).then(newSegments => {
           lastBatch = newSegments;
           result.push(...newSegments);
           options.offset += options.limit;
         })
     ).then(() => result);
   }
-  return adaptor.findSegments(process.name, opts)
+  return adaptor
+    .findSegments(process.name, opts)
     .then(res => res.body.map(obj => segmentify(adaptor, process, obj)));
 }

@@ -1,8 +1,21 @@
 {
-	"devDependencies": {
-		"lerna": "^2.2.0"
-	},
-	"scripts": {
-		"update-license-headers": "./update-license-headers.sh"
-	}
+  "devDependencies": {
+    "eslint": "^4.8.0",
+    "eslint-config-airbnb": "^16.0.0",
+    "eslint-config-prettier": "^2.6.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-prettier": "^2.3.1",
+    "eslint-plugin-react": "^7.4.0",
+    "lerna": "^2.2.0",
+    "prettier": "^1.7.4"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "clean":
+      "find packages -type d -name 'node_modules' -maxdepth 2 -exec rm -R {} \\;",
+    "lint": "eslint packages/*/src/** packages/*/test/**",
+    "test": "lerna run test:ci",
+    "update-license-headers": "./update-license-headers.sh"
+  }
 }

@@ -19,14 +19,16 @@
  * @returns {function} an express middleware.
  */
 export default function error() {
-  /*eslint-disable*/
+  /* eslint-disable */
   return (err, req, res, next) => {
-  /*eslint-enable*/
+    /* eslint-enable */
     if (err.status && err.status !== 500) {
       console.error(`${req.originalUrl}: ${err.stack}`);
 
       if (res.locals.renderErrorAsLink) {
-        res.status(err.status).json({ link: {}, meta: { errorMessage: err.message } });
+        res
+          .status(err.status)
+          .json({ link: {}, meta: { errorMessage: err.message } });
       } else {
         res.status(err.status).json({ status: err.status, error: err.message });
       }
@@ -37,7 +39,9 @@ export default function error() {
     console.error(`${req.originalUrl}: ${err.stack}`);
 
     if (res.locals.renderErrorAsLink) {
-      res.status(500).json({ link: {}, meta: { errorMessage: 'internal server error' } });
+      res
+        .status(500)
+        .json({ link: {}, meta: { errorMessage: 'internal server error' } });
     } else {
       res.status(500).json({ status: 500, error: 'internal server error' });
     }

@@ -20,10 +20,8 @@
  * @returns {object} information about the plugins
  */
 export default function getPluginsInfo(plugins) {
-  return plugins.map(plugin => (
-    {
-      name: plugin.name,
-      description: plugin.description
-    })
-  );
+  return plugins.map(plugin => ({
+    name: plugin.name,
+    description: plugin.description
+  }));
 }

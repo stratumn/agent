@@ -27,8 +27,7 @@ export default function memoryStore() {
     /**
      * Does nothing since memory store doesn't use a web socket.
      */
-    connect() {
-    },
+    connect() {},
 
     /**
      * Gets information about the store.
@@ -55,7 +54,11 @@ export default function memoryStore() {
         type: 'didSave',
         data: JSON.parse(JSON.stringify(segment))
       });
-      emitter.emit.bind(emitter, 'didSave', JSON.parse(JSON.stringify(segment)));
+      emitter.emit.bind(
+        emitter,
+        'didSave',
+        JSON.parse(JSON.stringify(segment))
+      );
       return Promise.resolve(segment);
     },
 
@@ -120,10 +123,12 @@ export default function memoryStore() {
           return;
         }
 
-        if (opts.prevLinkHash && segment.link.meta.prevLinkHash !== opts.prevLinkHash) {
+        if (
+          opts.prevLinkHash &&
+          segment.link.meta.prevLinkHash !== opts.prevLinkHash
+        ) {
           return;
         }
-
 
         if (opts.tags) {
           const segmentTags = segment.link.meta.tags;
@@ -132,7 +137,7 @@ export default function memoryStore() {
             return;
           }
 
-          for (let i = 0; i < opts.tags.length; i++) {
+          for (let i = 0; i < opts.tags.length; i += 1) {
             if (segmentTags.indexOf(opts.tags[i]) < 0) {
               return;
             }
@@ -179,12 +184,13 @@ export default function memoryStore() {
      */
     getMapIds(process, opts = {}) {
       const m = {};
-      const filteredSegments = Object.values(segments).filter(s => s.link.meta.process === process);
+      const filteredSegments = Object.values(segments).filter(
+        s => s.link.meta.process === process
+      );
 
       filteredSegments.forEach(s => {
         m[segments[s.meta.linkHash].link.meta.mapId] = true;
       });
-
 
       let a = Object.keys(m);
 

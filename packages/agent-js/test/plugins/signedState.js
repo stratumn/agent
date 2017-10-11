@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import pluginTest from '.';
 import uuid from 'uuid';
+import pluginTest from '.';
 import signedState from '../../src/plugins/signedState';
 
 let signature;
@@ -31,7 +31,7 @@ const dummySigning = {
   },
 
   verifySignature(segment, s) {
-    return (signature === s);
+    return signature === s;
   }
 };
 
@@ -63,8 +63,7 @@ describe('signedState', () => {
       return Promise.all([
         signedState(dummySigning).filterSegment(s1),
         signedState(dummySigning).filterSegment(s2)
-      ])
-      .then(([result1, result2]) => {
+      ]).then(([result1, result2]) => {
         result1.should.be.ok();
         result2.should.not.be.ok();
       });

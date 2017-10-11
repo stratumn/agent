@@ -34,4 +34,3 @@ pluginTest(localTime, {
     return (link.meta.localTime === null).should.be.true;
   }
 });
-

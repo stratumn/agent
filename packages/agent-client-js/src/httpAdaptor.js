@@ -47,7 +47,10 @@ export default class httpAdaptor {
   }
 
   createSegment(processName, linkHash, action, ...args) {
-    return post(`${this.url}/${processName}/segments/${linkHash}/${action}`, args);
+    return post(
+      `${this.url}/${processName}/segments/${linkHash}/${action}`,
+      args
+    );
   }
 
   get url() {

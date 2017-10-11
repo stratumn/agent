@@ -17,8 +17,13 @@
 import getActionsInfo from '../src/getActionsInfo';
 
 const actions = {
-  init(a, b, c) { this.append({ a, b, c }); },
-  action(d) { this.state.d = d; this.append(); }
+  init(a, b, c) {
+    this.append({ a, b, c });
+  },
+  action(d) {
+    this.state.d = d;
+    this.append();
+  }
 };
 
 describe('#getActionsInfo()', () => {

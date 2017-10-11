@@ -29,8 +29,9 @@ pluginTest(actionArgs, {
   },
 
   '#action()'(link) {
-    return (link.meta.action === null).should.be.true &&
-      (link.meta.arguments === null).should.be.true;
+    return (
+      (link.meta.action === null).should.be.true &&
+      (link.meta.arguments === null).should.be.true
+    );
   }
 });
-

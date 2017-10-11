@@ -26,6 +26,8 @@ describe('#makeQueryString()', () => {
   });
 
   it('uses bracket convention for arrays', () => {
-    makeQueryString({ a: [1, 2, 'three'] }).should.be.exactly('?a%5B%5D=1&a%5B%5D=2&a%5B%5D=three');
+    makeQueryString({ a: [1, 2, 'three'] }).should.be.exactly(
+      '?a%5B%5D=1&a%5B%5D=2&a%5B%5D=three'
+    );
   });
 });

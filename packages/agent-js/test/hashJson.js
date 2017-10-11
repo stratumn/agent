@@ -24,6 +24,8 @@ describe('#hashJson()', () => {
   });
 
   it('returns a canonical hash', () => {
-    hashJson({ a: 1000, b: null }).should.be.exactly(hashJson({ b: null, a: 1e3 }));
+    hashJson({ a: 1000, b: null }).should.be.exactly(
+      hashJson({ b: null, a: 1e3 })
+    );
   });
 });

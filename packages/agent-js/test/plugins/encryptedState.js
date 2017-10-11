@@ -27,7 +27,7 @@ let state;
 
 const dummyEncryption = {
   encryptState(link) {
-    state = link.state;
+    ({ state } = link);
     return 1;
   },
 
@@ -66,16 +66,15 @@ describe('encryptedState', () => {
       };
       const s2 = { link: { state: {}, meta: {} } };
 
-      encryptedState(dummyEncryption).filterSegment(s1)
-      .then(result => result.should.be.ok())
-      .then(() =>
-        encryptedState(dummyEncryption).filterSegment(s2)
-      )
-      .then(result => {
-        result.should.not.be.ok();
-        done();
-      })
-      .catch(done);
+      encryptedState(dummyEncryption)
+        .filterSegment(s1)
+        .then(result => result.should.be.ok())
+        .then(() => encryptedState(dummyEncryption).filterSegment(s2))
+        .then(result => {
+          result.should.not.be.ok();
+          done();
+        })
+        .catch(done);
     });
   });
 });

@@ -26,16 +26,16 @@ export default function promiseWhile(condition, body) {
   return new Promise((resolve, reject) => {
     function loop() {
       body()
-      .then(() => {
-        // When the result of calling `condition` is no longer true, we are
-        // done.
-        if (!condition()) {
-          resolve();
-        } else {
-          loop();
-        }
-      })
-      .catch(reject);
+        .then(() => {
+          // When the result of calling `condition` is no longer true, we are
+          // done.
+          if (!condition()) {
+            resolve();
+          } else {
+            loop();
+          }
+        })
+        .catch(reject);
     }
 
     // Start running the loop in the next tick so that this function is

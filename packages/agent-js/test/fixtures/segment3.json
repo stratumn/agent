@@ -6,9 +6,7 @@
     "meta": {
       "process": "second",
       "mapId": "two",
-      "tags": [
-        "two"
-      ],
+      "tags": ["two"],
       "priority": 3
     }
   },

@@ -17,7 +17,6 @@
 import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#getMapIds', () => {
-
   runTestsWithDataAndAgent(processCb => {
     it('gets map IDs', () =>
       processCb()
@@ -29,8 +28,6 @@ describe('#getMapIds', () => {
           mapIds.should.be.an.Array();
           mapIds.length.should.be.exactly(3);
           mapIds.forEach(mapId => mapId.should.be.a.String());
-        })
-    );
+        }));
   });
-
 });
