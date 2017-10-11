@@ -16,10 +16,7 @@
 
 import angular from 'angular';
 
-stMapExplorer.$inject = ['ChainTreeBuilderService'];
-
 export default function stMapExplorer(ChainTreeBuilderService) {
-
   return {
     restrict: 'E',
     scope: {
@@ -56,15 +53,22 @@ export default function stMapExplorer(ChainTreeBuilderService) {
         controller.error = null;
         controller.loading = true;
         ChainTreeBuilderService.build(builder, scope, options)
-          .then(() => (controller.loading = false))
+          .then(() => {
+            controller.loading = false;
+          })
           .catch(error => {
             controller.loading = false;
             controller.error = error.message;
           });
       };
 
-      scope.$watchGroup(['applicationUrl', 'mapId', 'refresh', 'chainscript'], update);
+      scope.$watchGroup(
+        ['applicationUrl', 'mapId', 'refresh', 'chainscript'],
+        update
+      );
       scope.$watch('options', update, true);
     }
   };
 }
+
+stMapExplorer.$inject = ['ChainTreeBuilderService'];

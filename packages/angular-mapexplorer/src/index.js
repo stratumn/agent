@@ -16,6 +16,10 @@
 
 import angular from 'angular';
 
+import '../vendor/angular-drop';
+import '../vendor/ace';
+import '../vendor/ui-ace';
+
 import stMerklePathTree from './stMerklePathTree.directive';
 import stMapExplorer from './stMapExplorer.directive';
 import stMapValidator from './stMapValidator.directive';
@@ -27,11 +31,20 @@ import MapValidatorService from './MapValidator.service';
 import MapExplorerController from './MapExplorer.controller';
 import functionArguments from './functionArguments.filter';
 
-export default angular.module('stratumn.angular-mapexplorer',
-  ['ngAnimate', 'material.components.autocomplete', 'material.components.button',
-    'material.components.icon', 'material.components.toolbar', 'ngSanitize',
-    'material.components.progressCircular', 'ngAria', 'mdColorPicker', 'ui.drop', 'ui.ace']
-)
+export default angular
+  .module('stratumn.angular-mapexplorer', [
+    'ngAnimate',
+    'material.components.autocomplete',
+    'material.components.button',
+    'material.components.icon',
+    'material.components.toolbar',
+    'ngSanitize',
+    'material.components.progressCircular',
+    'ngAria',
+    'mdColorPicker',
+    'ui.drop',
+    'ui.ace'
+  ])
   .directive('stMapExplorer', stMapExplorer)
   .directive('stMerklePathTree', stMerklePathTree)
   .directive('stMapValidator', stMapValidator)
@@ -41,6 +54,4 @@ export default angular.module('stratumn.angular-mapexplorer',
   .service('ChainTreeBuilderService', ChainTreeBuilderService)
   .service('MapValidatorService', MapValidatorService)
   .controller('MapExplorerController', MapExplorerController)
-  .filter('functionArguments', () => functionArguments)
-  .name;
-
+  .filter('functionArguments', () => functionArguments).name;

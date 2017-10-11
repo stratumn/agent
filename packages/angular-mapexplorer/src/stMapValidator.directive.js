@@ -16,17 +16,14 @@
 
 import angular from 'angular';
 
-stMapValidator.$inject = ['MapValidatorService'];
-
 export default function stMapValidator(MapValidatorService) {
-
   return {
     restrict: 'E',
     scope: {
       chainscript: '=?'
     },
     templateUrl: '../views/mapvalidator.html',
-    link: (scope) => {
+    link: scope => {
       scope.$watch('chainscript', () => {
         scope.error = null;
         if (angular.isDefined(scope.chainscript)) {
@@ -35,7 +32,8 @@ export default function stMapValidator(MapValidatorService) {
             .then(errors => {
               scope.errors = errors;
               scope.loading = false;
-            }).catch(error => {
+            })
+            .catch(error => {
               scope.error = error.message;
               scope.loading = false;
             });
@@ -44,3 +42,5 @@ export default function stMapValidator(MapValidatorService) {
     }
   };
 }
+
+stMapValidator.$inject = ['MapValidatorService'];

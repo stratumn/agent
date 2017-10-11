@@ -14,10 +14,7 @@
   limitations under the License.
 */
 
-stPromiseLoader.$inject = ['$q'];
-
 export default function stPromiseLoader($q) {
-
   return {
     restrict: 'E',
     scope: {
@@ -26,7 +23,7 @@ export default function stPromiseLoader($q) {
       title: '='
     },
     templateUrl: '../views/promiseloader.html',
-    link: (scope) => {
+    link: scope => {
       scope.errorMessages = [];
       scope.loadingErrors = false;
       scope.success = false;
@@ -40,7 +37,8 @@ export default function stPromiseLoader($q) {
         scope.error = false;
         if (scope.errors) {
           scope.loadingErrors = true;
-          $q.all(scope.errors)
+          $q
+            .all(scope.errors)
             .then(errs => {
               scope.errorMessages = errs.filter(Boolean);
               scope.loadingErrors = false;
@@ -57,3 +55,4 @@ export default function stPromiseLoader($q) {
   };
 }
 
+stPromiseLoader.$inject = ['$q'];
