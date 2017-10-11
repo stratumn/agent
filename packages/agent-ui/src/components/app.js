@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import TopBar from './topBar';
-import LeftDrawer from './leftDrawer';
-import { getAgentInfo } from '../actions/getAgentInfo';
+import { TopBar, LeftDrawer } from './';
+import { getAgentInfo } from '../actions';
 
 class App extends Component {
   componentDidMount() {
