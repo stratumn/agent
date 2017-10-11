@@ -17,7 +17,6 @@
 import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#findSegments', () => {
-
   runTestsWithDataAndAgent(processCb => {
     it('finds the segments', () =>
       processCb()
@@ -27,8 +26,7 @@ describe('#findSegments', () => {
         .then(segments => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(2);
-        })
-    );
+        }));
 
     it('finds the tagged segments', () =>
       processCb()
@@ -46,19 +44,19 @@ describe('#findSegments', () => {
         .then(segments => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(2);
-        })
-    );
+        }));
 
     it('applies the options mapId', () =>
       processCb()
         .createMap('hi')
         .then(() => processCb().createMap('hi'))
-        .then(segment => processCb().findSegments({ mapIds: [segment.link.meta.mapId] }))
+        .then(segment =>
+          processCb().findSegments({ mapIds: [segment.link.meta.mapId] })
+        )
         .then(segments => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(1);
-        })
-    );
+        }));
 
     it('loads all segments with a limit of -1', () =>
       processCb()
@@ -68,8 +66,7 @@ describe('#findSegments', () => {
         .then(segments => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(2);
-        })
-    );
+        }));
 
     it('loads all segments with a limit of -1', () =>
       processCb()
@@ -79,8 +76,7 @@ describe('#findSegments', () => {
         .then(segments => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(2);
-        })
-    );
+        }));
 
     it('returns segmentified segments', () =>
       processCb()
@@ -89,8 +85,6 @@ describe('#findSegments', () => {
         .then(() => processCb().findSegments())
         .then(segments => {
           segments.forEach(segment => segment.getPrev.should.be.a.Function());
-        })
-    );
+        }));
   });
-
 });

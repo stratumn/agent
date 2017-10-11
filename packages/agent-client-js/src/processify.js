@@ -32,7 +32,11 @@ export default function processify(adaptor, process) {
   }
   updatedProcess.createMap = createMap.bind(null, adaptor, updatedProcess);
   updatedProcess.getSegment = getSegment.bind(null, adaptor, updatedProcess);
-  updatedProcess.findSegments = findSegments.bind(null, adaptor, updatedProcess);
+  updatedProcess.findSegments = findSegments.bind(
+    null,
+    adaptor,
+    updatedProcess
+  );
   updatedProcess.getMapIds = getMapIds.bind(null, adaptor, updatedProcess);
 
   // Deprecated.

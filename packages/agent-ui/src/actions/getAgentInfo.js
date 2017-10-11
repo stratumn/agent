@@ -8,11 +8,11 @@ export function getAgentInfoSuccess(info) {
 }
 
 export function getAgentInfo() {
-  return function(dispatch) {
+  return function withDispatch(dispatch) {
     return getAgent(url)
       .then(res => dispatch(getAgentInfoSuccess(res)))
       .catch(error => {
-        throw(error);
+        throw error;
       });
   };
 }

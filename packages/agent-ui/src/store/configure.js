@@ -1,9 +1,9 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';  
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import agentInfo from '../reducers/getAgentInfo';
 import thunk from 'redux-thunk';
+import agentInfo from '../reducers/getAgentInfo';
 
-export default function configureStore() {  
+export default function configureStore() {
   return createStore(
     combineReducers({
       agentInfo,

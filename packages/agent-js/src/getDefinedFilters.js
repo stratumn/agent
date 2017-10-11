@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-export default function (plugins) {
-  return plugins.slice()
+export default function(plugins) {
+  return plugins
+    .slice()
     .reverse()
     .map(p => p.filterSegment && p.filterSegment.bind(p))
     .filter(n => n);

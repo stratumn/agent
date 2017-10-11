@@ -14,27 +14,30 @@
   limitations under the License.
 */
 
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 
-export default class DummyEvidence extends Component {
-  render() {
-    const evidence = this.props.evidence;
-    const dateParts = evidence.timestamp.match(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/);
-    dateParts[2] -= 1; // months are zero-based
-    const date = new Date(Date.UTC.apply(this, dateParts.slice(1)));
+const DummyEvidence = ({ evidence }) => {
+  const dateParts = evidence.timestamp.match(
+    /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/
+  );
+  dateParts[2] -= 1; // months are zero-based
+  const date = new Date(Date.UTC.apply(this, dateParts.slice(1)));
 
-    return (
-      <div>
-        <h4>Authority</h4>
-        <p>Dummy</p>
+  return (
+    <div>
+      <h4>Authority</h4>
+      <p>Dummy</p>
 
-        <h4>Time</h4>
-        <p>{date.toISOString()}</p>
-      </div>
-    );
-  }
-}
+      <h4>Time</h4>
+      <p>{date.toISOString()}</p>
+    </div>
+  );
+};
 
 DummyEvidence.propTypes = {
-  evidence: React.PropTypes.object,
+  evidence: PropTypes.shape({
+    timestamp: PropTypes.string
+  }).isRequired
 };
+
+export default DummyEvidence;

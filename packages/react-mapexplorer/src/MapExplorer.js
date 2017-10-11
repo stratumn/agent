@@ -14,12 +14,13 @@
   limitations under the License.
 */
 
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { ChainTreeBuilder } from 'mapexplorer-core';
+import radium from 'radium';
 import { getStyles, getRules } from './mapExplorerCss';
 import BitcoinEvidence from './BitcoinEvidence';
-import radium from 'radium';
-const Style = radium.Style;
+
+const { Style } = radium;
 
 class MapExplorer extends Component {
   constructor(props) {
@@ -38,12 +39,33 @@ class MapExplorer extends Component {
     this.handleShow = this.handleShow.bind(this);
   }
 
+  componentDidMount() {
+    this.state.builder = new ChainTreeBuilder(this.element);
+
+    this.state.builder.build(
+      {
+        id: this.props.mapId,
+        agentUrl: this.props.agentUrl,
+        chainscript: this.props.chainscript,
+        process: this.props.process
+      },
+      Object.assign(
+        {},
+        {
+          onclick: this.handleSegmentClick,
+          onTag: () => {}
+        },
+        this.props.options
+      )
+    );
+  }
+
   handleSegmentClick(d, onHide, element) {
     this.onHide = onHide;
     const segment = d.data;
     this.setState({ segment });
 
-    const onSelectSegment = this.props.onSelectSegment;
+    const { onSelectSegment } = this.props;
     if (onSelectSegment) {
       onSelectSegment(this.state.segment, element);
     }
@@ -52,7 +74,7 @@ class MapExplorer extends Component {
   handleClose() {
     this.setState({ segment: null });
     this.onHide();
-    const onSelectSegment = this.props.onSelectSegment;
+    const { onSelectSegment } = this.props;
     if (onSelectSegment) {
       onSelectSegment(null);
     }
@@ -64,25 +86,11 @@ class MapExplorer extends Component {
     };
   }
 
-  componentDidMount() {
-    this.state.builder = new ChainTreeBuilder(this.element);
-
-    this.state.builder.build({
-      id: this.props.mapId,
-      agentUrl: this.props.agentUrl,
-      chainscript: this.props.chainscript,
-      process: this.props.process
-    }, Object.assign({}, {
-      onclick: this.handleSegmentClick,
-      onTag: () => { }
-    }, this.props.options));
-  }
-
   render() {
     const styles = getStyles();
     const rules = getRules();
     let segmentContainer;
-    const segment = this.state.segment;
+    const { segment } = this.state;
 
     if (segment) {
       let segmentContent;
@@ -108,10 +116,12 @@ class MapExplorer extends Component {
               <p>{segment.link.meta.prevLinkHash}</p>
 
               <h4>Action</h4>
-              <p>{segment.link.meta.action}
-                ({(segment.link.meta.arguments || []).map(
-                  (arg) => JSON.stringify(arg, undefined, 2)
-                ).join(', ')})</p>
+              <p>
+                {segment.link.meta.action}
+                ({(segment.link.meta.arguments || [])
+                  .map(arg => JSON.stringify(arg, undefined, 2))
+                  .join(', ')})
+              </p>
             </div>
           );
           break;
@@ -121,9 +131,7 @@ class MapExplorer extends Component {
           );
           break;
         case 'json':
-          segmentContent = (
-            <pre>{JSON.stringify(segment, undefined, 2)}</pre>
-          );
+          segmentContent = <pre>{JSON.stringify(segment, undefined, 2)}</pre>;
           break;
         default:
           throw new Error(`Unexpected content ${this.state.content}`);
@@ -137,41 +145,78 @@ class MapExplorer extends Component {
               <h2 style={styles.titleh2}>{segment.meta.linkHash}</h2>
             </div>
 
-            <a onClick={this.handleClose} style={styles.close}>
+            <button
+              onClick={this.handleClose}
+              style={styles.close}
+              onKeyDown={this.handleClose}
+            >
               &#10005;
-            </a>
+            </button>
           </div>
           <div style={styles.body}>
             <div className="menu">
               <ul>
-                <li className={(this.state.content === 'state' ? 'active' : '')}
-                  onClick={this.handleShow('state')}>State</li>
-                <li className={(this.state.content === 'link' ? 'active' : '')}
-                  onClick={this.handleShow('link')}>Link</li>
-                <li className={(this.state.content === 'evidence' ? 'active' : '')}
-                  onClick={this.handleShow('evidence')}>Evidence</li>
-                <li className={(this.state.content === 'json' ? 'active' : '')}
-                  onClick={this.handleShow('json')}>JSON</li>
+                <li
+                  className={this.state.content === 'state' ? 'active' : ''}
+                  onClick={this.handleShow('state')}
+                  onKeyDown={this.handleShow('state')}
+                  role="presentation"
+                >
+                  State
+                </li>
+                <li
+                  className={this.state.content === 'link' ? 'active' : ''}
+                  onClick={this.handleShow('link')}
+                  onKeyDown={this.handleShow('link')}
+                  role="presentation"
+                >
+                  Link
+                </li>
+                <li
+                  className={this.state.content === 'evidence' ? 'active' : ''}
+                  onClick={this.handleShow('evidence')}
+                  onKeyDown={this.handleShow('evidence')}
+                  role="presentation"
+                >
+                  Evidence
+                </li>
+                <li
+                  className={this.state.content === 'json' ? 'active' : ''}
+                  onClick={this.handleShow('json')}
+                  onKeyDown={this.handleShow('link')}
+                  role="presentation"
+                >
+                  JSON
+                </li>
               </ul>
             </div>
-            <div style={styles.content}>
-              {segmentContent}
-            </div>
+            <div style={styles.content}>{segmentContent}</div>
           </div>
         </div>
       );
     }
 
     return (
-      <div className="react-mapexplorer" ref={(element) => { this.element = element; }}>
-        <Style
-          scopeSelector=".react-mapexplorer"
-          rules={rules}
-        />
+      <div
+        className="react-mapexplorer"
+        ref={element => {
+          this.element = element;
+        }}
+      >
+        <Style scopeSelector=".react-mapexplorer" rules={rules} />
         {segmentContainer}
         <svg>
-          <marker id="triangle" viewBox="0 0 10 10" refX="0" refY="5" markerUnits="strokeWidth"
-            markerWidth="4" markerHeight="3" orient="auto" style={styles.triangle}>
+          <marker
+            id="triangle"
+            viewBox="0 0 10 10"
+            refX="0"
+            refY="5"
+            markerUnits="strokeWidth"
+            markerWidth="4"
+            markerHeight="3"
+            orient="auto"
+            style={styles.triangle}
+          >
             <path fill="#CCCCCC" d="M 0 0 L 10 5 L 0 10 z" />
           </marker>
         </svg>
@@ -181,13 +226,23 @@ class MapExplorer extends Component {
 }
 
 MapExplorer.propTypes = {
-  agentUrl: React.PropTypes.string,
-  process: React.PropTypes.string,
-  chainscript: React.PropTypes.string,
-  evidenceComponent: React.PropTypes.func,
-  mapId: React.PropTypes.string,
-  onSelectSegment: React.PropTypes.func,
-  options: React.PropTypes.object,
+  agentUrl: PropTypes.string,
+  process: PropTypes.string,
+  chainscript: PropTypes.string,
+  evidenceComponent: PropTypes.func,
+  mapId: PropTypes.string,
+  onSelectSegment: PropTypes.func,
+  options: PropTypes.shape({})
+};
+
+MapExplorer.defaultProps = {
+  agentUrl: '',
+  process: '',
+  chainscript: '',
+  evidenceComponent: '',
+  mapId: '',
+  onSelectSegment: () => {},
+  options: {}
 };
 
 export default radium(MapExplorer);

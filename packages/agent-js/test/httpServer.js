@@ -21,34 +21,36 @@ import hashJson from '../src/hashJson';
 import generateSecret from '../src/generateSecret';
 
 const actions = {
-  init(a, b, c) { this.append({ a, b, c }); },
-  action(d) { this.state.d = d; this.append(); }
+  init(a, b, c) {
+    this.append({ a, b, c });
+  },
+  action(d) {
+    this.state.d = d;
+    this.append();
+  }
 };
 
 function testFn(req, fn) {
   return new Promise((resolve, reject) => {
-    req
-      .end((err, res) => {
-        try {
-          fn(err, res);
-          resolve();
-        } catch (e) {
-          reject(e);
-        }
-      });
+    req.end((err, res) => {
+      try {
+        fn(err, res);
+        resolve();
+      } catch (e) {
+        reject(e);
+      }
+    });
   });
 }
 
 function testDeepEquals(req, status, body) {
   return new Promise((resolve, reject) => {
-    req
-      .expect(status, body)
-      .end(err => {
-        if (err) {
-          reject(err);
-        }
-        resolve();
-      });
+    req.expect(status, body).end(err => {
+      if (err) {
+        reject(err);
+      }
+      resolve();
+    });
   });
 }
 
@@ -59,7 +61,9 @@ describe('HttpServer()', () => {
   let mockFossilizer;
 
   beforeEach(() => {
-    agent = create(actions, memoryStore(), null, { agentUrl: 'http://localhost' });
+    agent = create(actions, memoryStore(), null, {
+      agentUrl: 'http://localhost'
+    });
     mockFossilizer = {
       fossilize() {
         return Promise.resolve(true);
@@ -83,7 +87,9 @@ describe('HttpServer()', () => {
       agent.addProcess('second', actions, memoryStore(), null);
       const req = supertest(server).get('/processes');
       return testFn(req, (err, res) => {
-        if (err) { throw err; }
+        if (err) {
+          throw err;
+        }
         res.status.should.be.exactly(200);
         const processes = res.body;
         processes.length.should.be.exactly(2);
@@ -96,7 +102,9 @@ describe('HttpServer()', () => {
     it('removes an existing process and renders the updated list of processes', () => {
       const req = supertest(server).get(`/${process.name}/remove`);
       return testFn(req, (err, res) => {
-        if (err) { throw err; }
+        if (err) {
+          throw err;
+        }
         res.status.should.be.exactly(200);
         const processes = res.body;
         processes.length.should.be.exactly(0);
@@ -107,7 +115,9 @@ describe('HttpServer()', () => {
     it('renders an error if the process does not exist', () => {
       const req = supertest(server).get('/doesnotexist/remove');
       return testFn(req, (err, res) => {
-        if (err) { throw err; }
+        if (err) {
+          throw err;
+        }
         res.status.should.be.exactly(404);
       });
     });
@@ -115,9 +125,13 @@ describe('HttpServer()', () => {
 
   describe('POST "/<process>/segments"', () => {
     it('renders the first segment', () => {
-      const req = supertest(server).post(`/${process.name}/segments`).send([1, 2, 3]);
+      const req = supertest(server)
+        .post(`/${process.name}/segments`)
+        .send([1, 2, 3]);
       return testFn(req, (err, res) => {
-        if (err) { throw err; }
+        if (err) {
+          throw err;
+        }
         res.status.should.be.exactly(200);
         const segment = res.body;
         segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
@@ -129,9 +143,13 @@ describe('HttpServer()', () => {
 
     it('updates correclty when adding a process after initial launch', () => {
       const p2 = agent.addProcess('basic2', actions, memoryStore(), null);
-      const req = supertest(server).post(`/${p2.name}/segments`).send([1, 2, 3]);
+      const req = supertest(server)
+        .post(`/${p2.name}/segments`)
+        .send([1, 2, 3]);
       return testFn(req, (err, res) => {
-        if (err) { throw err; }
+        if (err) {
+          throw err;
+        }
         res.status.should.be.exactly(200);
         const segment = res.body;
         segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
@@ -141,9 +159,13 @@ describe('HttpServer()', () => {
     });
 
     it('fails when trying to add segments to a non-existing process', () => {
-      const req = supertest(server).post('/lol/segments').send([1, 2, 3]);
+      const req = supertest(server)
+        .post('/lol/segments')
+        .send([1, 2, 3]);
       return testFn(req, (err, res) => {
-        if (err) { throw err; }
+        if (err) {
+          throw err;
+        }
         res.status.should.be.exactly(404);
       });
     });
@@ -151,22 +173,24 @@ describe('HttpServer()', () => {
 
   describe('POST "/<process>/segments/:linkHash/:action"', () => {
     it('renders the new segment', () =>
-      process
-        .createMap(1, 2, 3)
-        .then(segment1 => {
-          const req = supertest(server)
-            .post(`/${process.name}/segments/${segment1.meta.linkHash}/action`).send([4]);
-          return testFn(req, (err, res) => {
-            if (err) { throw err; }
-            res.status.should.be.exactly(200);
-            const segment2 = res.body;
-            segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
-            segment2.link.meta.prevLinkHash.should.be.exactly(segment1.meta.linkHash);
-            segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
-            segment2.meta.evidence.should.deepEqual({ state: 'QUEUED' });
-          });
-        })
-    );
+      process.createMap(1, 2, 3).then(segment1 => {
+        const req = supertest(server)
+          .post(`/${process.name}/segments/${segment1.meta.linkHash}/action`)
+          .send([4]);
+        return testFn(req, (err, res) => {
+          if (err) {
+            throw err;
+          }
+          res.status.should.be.exactly(200);
+          const segment2 = res.body;
+          segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
+          segment2.link.meta.prevLinkHash.should.be.exactly(
+            segment1.meta.linkHash
+          );
+          segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
+          segment2.meta.evidence.should.deepEqual({ state: 'QUEUED' });
+        });
+      }));
   });
 
   describe('GET "/<process>/segments/:linkHash"', () => {
@@ -174,36 +198,50 @@ describe('HttpServer()', () => {
       process
         .createMap(1, 2, 3)
         .then(segment =>
-          testDeepEquals(supertest(server)
-            .get(`/${process.name}/segments/${segment.meta.linkHash}`), 200, segment)
-        )
-    );
+          testDeepEquals(
+            supertest(server).get(
+              `/${process.name}/segments/${segment.meta.linkHash}`
+            ),
+            200,
+            segment
+          )
+        ));
   });
 
   describe('GET "/<process>/segments"', () => {
     it('renders the segments', () =>
       process
         .createMap(1, 2, 3)
-        .then(segment => process.createSegment(segment.meta.linkHash, 'action', 4))
+        .then(segment =>
+          process.createSegment(segment.meta.linkHash, 'action', 4)
+        )
         .then(() => process.findSegments({ limit: 20 }))
         .then(segments =>
-          testDeepEquals(supertest(server).get(`/${process.name}/segments?limit=20`), 200, segments)
-        )
-    );
+          testDeepEquals(
+            supertest(server).get(`/${process.name}/segments?limit=20`),
+            200,
+            segments
+          )
+        ));
 
     it('filters by mapIds', () => {
       let mapId;
       return process
         .createMap(1, 2, 3)
-        .then(segment1 => process.createSegment(segment1.meta.linkHash, 'action', 4))
-        .then(() => process.createMap(4, 5, 6)
-          .then(segment2 => {
-            mapId = segment2.link.meta.mapId;
+        .then(segment1 =>
+          process.createSegment(segment1.meta.linkHash, 'action', 4)
+        )
+        .then(() =>
+          process.createMap(4, 5, 6).then(segment2 => {
+            ({ mapId } = segment2.link.meta);
             return process.findSegments({ mapIds: [mapId] });
-          }))
+          })
+        )
         .then(segments =>
           testDeepEquals(
-            supertest(server).get(`/${process.name}/segments?limit=20&mapIds=${mapId}`),
+            supertest(server).get(
+              `/${process.name}/segments?limit=20&mapIds=${mapId}`
+            ),
             200,
             segments
           )
@@ -218,45 +256,55 @@ describe('HttpServer()', () => {
         .then(() => process.createMap(4, 5, 6))
         .then(() => process.createMap(7, 8, 9))
         .then(() => process.getMapIds(process.name, { limit: 20 }))
-        .then(mapIds => testDeepEquals(supertest(server)
-          .get(`/${process.name}/maps?limit=20`), 200, mapIds))
-    );
+        .then(mapIds =>
+          testDeepEquals(
+            supertest(server).get(`/${process.name}/maps?limit=20`),
+            200,
+            mapIds
+          )
+        ));
   });
 
   describe('POST "/evidence/:linkHash"', () => {
     it('renders the updated segment', () =>
-      process
-        .createMap(1, 2, 3)
-        .then(segment1 => {
-          const secret = generateSecret(segment1.meta.linkHash, '');
-          return process
-            .insertEvidence(segment1.meta.linkHash, { test: true }, secret)
-            .then(segment2 =>
-              testDeepEquals(
-                supertest(server)
-                  .post(`/${process.name}/evidence/${segment1.meta.linkHash}?secret=${secret}`)
-                  .send({ test: true }),
-                200,
-                segment2
-              )
-            );
-        })
-    );
+      process.createMap(1, 2, 3).then(segment1 => {
+        const secret = generateSecret(segment1.meta.linkHash, '');
+        return process
+          .insertEvidence(segment1.meta.linkHash, { test: true }, secret)
+          .then(segment2 =>
+            testDeepEquals(
+              supertest(server)
+                .post(
+                  `/${process.name}/evidence/${segment1.meta
+                    .linkHash}?secret=${secret}`
+                )
+                .send({ test: true }),
+              200,
+              segment2
+            )
+          );
+      }));
   });
 
   describe('GET /404', () => {
     it('renders an error', () =>
-      testDeepEquals(supertest(server).get('/404'), 404, { status: 404, error: 'not found' })
-    );
+      testDeepEquals(supertest(server).get('/404'), 404, {
+        status: 404,
+        error: 'not found'
+      }));
   });
 
   // Legacy routes
 
   describe('[DEPRECATED] POST "/maps"', () => {
     it('renders the first segment', () => {
-      const req = supertest(server).post(`/${process.name}/maps`).send([1, 2, 3]);
+      const req = supertest(server)
+        .post(`/${process.name}/maps`)
+        .send([1, 2, 3]);
       return testFn(req, (err, res) => {
-        if (err) { throw err; }
+        if (err) {
+          throw err;
+        }
         res.status.should.be.exactly(200);
         const segment = res.body;
         segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
@@ -269,21 +317,24 @@ describe('HttpServer()', () => {
 
   describe('[DEPRECATED] POST "/links/:linkHash/:action"', () => {
     it('renders the new segment', () => {
-      process
-        .createMap(1, 2, 3)
-        .then(segment1 => {
-          const req = supertest(server)
-            .post(`/${process.name}/links/${segment1.meta.linkHash}/action`).send([4]);
-          return testFn(req, (err, res) => {
-            if (err) { throw err; }
-            res.status.should.be.exactly(200);
-            const segment2 = res.body;
-            segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
-            segment2.link.meta.prevLinkHash.should.be.exactly(segment1.meta.linkHash);
-            segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
-            segment2.meta.evidence.should.deepEqual({ state: 'QUEUED' });
-          });
+      process.createMap(1, 2, 3).then(segment1 => {
+        const req = supertest(server)
+          .post(`/${process.name}/links/${segment1.meta.linkHash}/action`)
+          .send([4]);
+        return testFn(req, (err, res) => {
+          if (err) {
+            throw err;
+          }
+          res.status.should.be.exactly(200);
+          const segment2 = res.body;
+          segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
+          segment2.link.meta.prevLinkHash.should.be.exactly(
+            segment1.meta.linkHash
+          );
+          segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
+          segment2.meta.evidence.should.deepEqual({ state: 'QUEUED' });
         });
+      });
     });
   });
 
@@ -292,59 +343,74 @@ describe('HttpServer()', () => {
       process
         .createMap(1, 2, 3)
         .then(segment =>
-          testDeepEquals(supertest(server)
-            .get(`/${process.name}/links/${segment.meta.linkHash}`), 200, segment)
-        )
-    );
+          testDeepEquals(
+            supertest(server).get(
+              `/${process.name}/links/${segment.meta.linkHash}`
+            ),
+            200,
+            segment
+          )
+        ));
   });
 
   describe('[DEPRECATED] GET "/links"', () => {
     it('renders the segments', () =>
       process
         .createMap(1, 2, 3)
-        .then(segment => process.createSegment(segment.meta.linkHash, 'action', 4))
+        .then(segment =>
+          process.createSegment(segment.meta.linkHash, 'action', 4)
+        )
         .then(() => process.findSegments({ limit: 20 }))
         .then(segments =>
-          testDeepEquals(supertest(server).get(`/${process.name}/links?limit=20`), 200, segments)
-        )
-    );
+          testDeepEquals(
+            supertest(server).get(`/${process.name}/links?limit=20`),
+            200,
+            segments
+          )
+        ));
   });
 
   describe('[DEPRECATED] GET "/maps/:id"', () => {
     it('renders the segments', () =>
-      process
-        .createMap(1, 2, 3)
-        .then(segment => (
-          process
-            .createMap(4, 5, 6))
-          .then(() => process.createSegment(segment.meta.linkHash, 'action', 10))
+      process.createMap(1, 2, 3).then(segment =>
+        process
+          .createMap(4, 5, 6)
+          .then(() =>
+            process.createSegment(segment.meta.linkHash, 'action', 10)
+          )
           .then(() => process.findSegments({ mapId: segment.link.meta.mapId }))
           .then(segments =>
             testDeepEquals(
-              supertest(server)
-                .get(`/${process.name}/maps/${segment.link.meta.mapId}`), 200, segments
+              supertest(server).get(
+                `/${process.name}/maps/${segment.link.meta.mapId}`
+              ),
+              200,
+              segments
             )
           )
-        )
-    );
+      ));
   });
 
   describe('[DEPRECATED] GET "/branches/:linkHash"', () => {
     it('renders the segments', () =>
-      process
-        .createMap(1, 2, 3)
-        .then(segment => (
-          process
-            .createMap(4, 5, 6))
-          .then(() => process.createSegment(segment.meta.linkHash, 'action', 10))
-          .then(() => process.findSegments({ prevLinkHash: segment.meta.linkHash }))
+      process.createMap(1, 2, 3).then(segment =>
+        process
+          .createMap(4, 5, 6)
+          .then(() =>
+            process.createSegment(segment.meta.linkHash, 'action', 10)
+          )
+          .then(() =>
+            process.findSegments({ prevLinkHash: segment.meta.linkHash })
+          )
           .then(segments =>
             testDeepEquals(
-              supertest(server)
-                .get(`/${process.name}/branches/${segment.meta.linkHash}`), 200, segments
+              supertest(server).get(
+                `/${process.name}/branches/${segment.meta.linkHash}`
+              ),
+              200,
+              segments
             )
           )
-        )
-    );
+      ));
   });
 });

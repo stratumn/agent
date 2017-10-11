@@ -15,22 +15,29 @@
 */
 
 import request from 'superagent';
-import create from '../src/create';
 import mocker from 'superagent-mocker';
+import create from '../src/create';
 import fossilizerHttpClient from '../src/fossilizerHttpClient';
 import mockFossilizerHttpServer from './utils/mockFossilizerHttpServer';
 import memoryStore from '../src/memoryStore';
 
 const actions = {
-  init(a, b, c) { this.append({ a, b, c }); },
+  init(a, b, c) {
+    this.append({ a, b, c });
+  }
 };
 
 const fossilizerClient = fossilizerHttpClient('http://localhost');
 const agent = create({ agentUrl: 'http://localhost:3000' });
-const process = agent.addProcess('basic', actions, memoryStore(), fossilizerClient,
+const process = agent.addProcess(
+  'basic',
+  actions,
+  memoryStore(),
+  fossilizerClient,
   {
-    salt: '',
-  });
+    salt: ''
+  }
+);
 
 mockFossilizerHttpServer(mocker(request), process);
 
@@ -39,18 +46,18 @@ describe('FossilizerHttpClient', () => {
     it('resolves with the fossilizer info', () =>
       fossilizerHttpClient('http://localhost')
         .getInfo()
-        .then(body => body.should.deepEqual({ name: 'mock' }))
-    );
+        .then(body => body.should.deepEqual({ name: 'mock' })));
   });
 
   describe('#fossilize()', () => {
     it('resolves with the response', () =>
       fossilizerClient
         .fossilize('Hello, World!', 'http://localhost:3333')
-        .then(body => body.should.deepEqual({
-          data: 'Hello, World!',
-          callbackUrl: 'http://localhost:3333'
-        }))
-    );
+        .then(body =>
+          body.should.deepEqual({
+            data: 'Hello, World!',
+            callbackUrl: 'http://localhost:3333'
+          })
+        ));
   });
 });

@@ -78,7 +78,7 @@ export function getRules() {
       width: '100px',
       outline: 0,
       marginBottom: 15,
-      fontFamily: linkTextFont,
+      fontFamily: linkTextFont
     },
 
     p: {
@@ -92,38 +92,38 @@ export function getRules() {
       fontSize: '15px',
       color: brandPrimary,
       display: 'block',
-      cursor: 'pointer',
+      cursor: 'pointer'
     },
 
     '.node': {
-      cursor: 'pointer',
+      cursor: 'pointer'
     },
 
     '.node polygon': {
-      fill: segmentPrimaryColor,
+      fill: segmentPrimaryColor
     },
 
     '.node text': {
       fontFamily: segmentTextFont,
       fontSize: 14,
-      fill: segmentTextColor,
+      fill: segmentTextColor
     },
 
     '.node rect': {
-      fill: segmentSecondaryColor,
+      fill: segmentSecondaryColor
     },
 
     '.textpath': {
       fontFamily: linkTextFont,
       fontSize: 14,
-      fill: linkTextColor,
+      fill: linkTextColor
     },
 
     '.link': {
       fill: 'none',
       stroke: linkColor,
       strokeWidth: 5,
-      markerEnd: 'url("#triangle")',
+      markerEnd: 'url("#triangle")'
     },
 
     '.node.selected polygon': {
@@ -131,8 +131,8 @@ export function getRules() {
     },
 
     '.node.selected rect': {
-      fill: selectedSegmentSecondaryColor,
-    },
+      fill: selectedSegmentSecondaryColor
+    }
   };
 }
 
@@ -150,12 +150,12 @@ export function getStyles() {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'center'
     },
 
     titleh2: {
       fontWeight: '100',
-      fontFamily: linkTextFont,
+      fontFamily: linkTextFont
     },
 
     body: {
@@ -164,11 +164,11 @@ export function getStyles() {
       maxHeight: '400px',
       overflowY: 'scroll',
       display: 'flex',
-      flexDirection: 'row',
+      flexDirection: 'row'
     },
 
     content: {
-      overflowY: 'scroll',
+      overflowY: 'scroll'
     },
 
     close: {

@@ -28,13 +28,13 @@ export default function websocketServer(app, storeHttpClient) {
   const wss = new websocket.Server({ server });
 
   // Send messages on storeHttpClient message event
-  storeHttpClient.on('message', (msg) => {
+  storeHttpClient.on('message', msg => {
     const msgJson = JSON.stringify(msg);
-    wss.clients.forEach((client) => {
+    wss.clients.forEach(client => {
       client.send(msgJson);
     });
   });
-  wss.on('connection', (ws) => {
+  wss.on('connection', ws => {
     ws.send('Connected to agent client websocket');
   });
 

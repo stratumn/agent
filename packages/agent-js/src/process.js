@@ -27,7 +27,6 @@ const QUEUED = 'QUEUED';
 const COMPLETE = 'COMPLETE';
 
 export default class Process {
-
   constructor(name, actions, storeClient, fossilizerClient, opts = {}) {
     this.name = name;
     this.actions = actions;
@@ -45,10 +44,10 @@ export default class Process {
 
   fossilizeSegment(segment) {
     if (this.fossilizerClient) {
-      const linkHash = segment.meta.linkHash;
+      const { linkHash } = segment.meta;
       const secret = generateSecret(linkHash, this.salt || '');
-      let callbackUrl = `${this.evidenceCallbackUrl ||
-        this.agentUrl}/${this.name}/evidence/${linkHash}`;
+      let callbackUrl = `${this.evidenceCallbackUrl || this.agentUrl}/${this
+        .name}/evidence/${linkHash}`;
       callbackUrl += makeQueryString({ secret });
       return this.fossilizerClient
         .fossilize(linkHash, callbackUrl)
@@ -67,8 +66,12 @@ export default class Process {
   applyPlugins(method, ...args) {
     // execute all plugins sequentially
     return this.plugins.reduce(
-      (cur, plugin) => cur.then(() => Promise.resolve(plugin[method] && plugin[method](...args))),
-      Promise.resolve());
+      (cur, plugin) =>
+        cur.then(() =>
+          Promise.resolve(plugin[method] && plugin[method](...args))
+        ),
+      Promise.resolve()
+    );
   }
 
   /**
@@ -76,18 +79,18 @@ export default class Process {
   * @returns {Promise} - a promise that resolve with the information
   */
   getInfo() {
-    const processInfo = this.processInfo;
-    return this.storeClient
-      .getInfo()
-      .then(storeInfo => {
-        if (this.fossilizerClient) {
-          return this.fossilizerClient
-            .getInfo()
-            .then(fossilizerInfo =>
-              ({ name: this.name, processInfo, storeInfo, fossilizerInfo }));
-        }
-        return { name: this.name, processInfo, storeInfo };
-      });
+    const { processInfo } = this;
+    return this.storeClient.getInfo().then(storeInfo => {
+      if (this.fossilizerClient) {
+        return this.fossilizerClient.getInfo().then(fossilizerInfo => ({
+          name: this.name,
+          processInfo,
+          storeInfo,
+          fossilizerInfo
+        }));
+      }
+      return { name: this.name, processInfo, storeInfo };
+    });
   }
 
   /**
@@ -113,8 +116,10 @@ export default class Process {
       .then(() => {
         const linkHash = hashJson(link);
 
-        const meta = Object.assign({ linkHash },
-          this.fossilizerClient ? { evidence: { state: QUEUED } } : {});
+        const meta = Object.assign(
+          { linkHash },
+          this.fossilizerClient ? { evidence: { state: QUEUED } } : {}
+        );
 
         segment = { link, meta };
         return this.applyPlugins('didCreateSegment', segment, 'init', args);
@@ -149,11 +154,11 @@ export default class Process {
       .then(() => {
         delete initialLink.meta.prevLinkHash;
         initialLink.meta.prevLinkHash = prevLinkHash;
-        return processify(this.actions, initialLink)[action](...args)
-          .catch(err => {
-            err.status = 400;
-            throw err;
-          });
+        const process = processify(this.actions, initialLink);
+        return process[action](...args).catch(err => {
+          err.status = 400;
+          throw err;
+        });
       })
       .then(link => {
         createdLink = link;
@@ -162,8 +167,10 @@ export default class Process {
       })
       .then(() => {
         const linkHash = hashJson(createdLink);
-        const meta = Object.assign({ linkHash },
-          this.fossilizerClient ? { evidence: { state: QUEUED } } : {});
+        const meta = Object.assign(
+          { linkHash },
+          this.fossilizerClient ? { evidence: { state: QUEUED } } : {}
+        );
 
         segment = { link: createdLink, meta };
         return this.applyPlugins('didCreateSegment', segment, action, args);
@@ -201,8 +208,10 @@ export default class Process {
       })
       .then(segment => {
         // Call didFossilize event if present.
-        if (typeof this.actions.events === 'object' &&
-          typeof this.actions.events.didFossilize === 'function') {
+        if (
+          typeof this.actions.events === 'object' &&
+          typeof this.actions.events.didFossilize === 'function'
+        ) {
           processify(this.actions, segment.link).events.didFossilize(segment);
         }
 
@@ -215,7 +224,11 @@ export default class Process {
    * @returns {Promise} - a promise that resolve with the segment
    */
   getSegment(linkHash) {
-    return this.storeClient.getSegment(this.name, linkHash, getDefinedFilters(this.plugins));
+    return this.storeClient.getSegment(
+      this.name,
+      linkHash,
+      getDefinedFilters(this.plugins)
+    );
   }
 
   /**
@@ -234,7 +247,11 @@ export default class Process {
       options.mapIds = options.mapId;
       delete options.mapId;
     }
-    return this.storeClient.findSegments(this.name, options, getDefinedFilters(this.plugins));
+    return this.storeClient.findSegments(
+      this.name,
+      options,
+      getDefinedFilters(this.plugins)
+    );
   }
 
   /**
@@ -247,5 +264,4 @@ export default class Process {
   getMapIds(opts) {
     return this.storeClient.getMapIds(this.name, opts);
   }
-
 }

@@ -14,67 +14,69 @@
   limitations under the License.
 */
 
-import React from 'react';
-import MerklePathComponent from './MerklePathComponent';
+import React, { PropTypes } from 'react';
 import radium from 'radium';
+import MerklePathComponent from './MerklePathComponent';
 
-class BitcoinEvidence extends React.Component {
-  getStyles() {
-    return {
-      evidenceContent: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-      },
-    };
-  }
-
-  render() {
-    const styles = this.getStyles();
-    const evidence = this.props.evidence;
-    let evidenceInfo;
-    let evidenceTree;
-    const evidenceComplete = (evidence.state === 'COMPLETE');
-
-    if (evidenceComplete) {
-      const tx = evidence.transactions ? evidence.transactions['bitcoin:main'] : '';
-      evidenceInfo = (
-        <div>
-          <h4>Bitcoin Transaction</h4>
-          <p>
-            {tx}
-            <a target="_blank"
-              href={`https://blockchain.info/tx/${tx}`}>View transaction on Blockchain.info</a>
-          </p>
-
-          <h4>Merkle root</h4>
-          <p>{evidence.merkleRoot}</p>
-        </div>
-      );
-
-      evidenceTree = (
-        <div className="merkle-path">
-          <h4>Merkle Path</h4>
-          <MerklePathComponent merklePath={evidence.merklePath} />
-        </div>
-      );
+function getStyles() {
+  return {
+    evidenceContent: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-around'
     }
+  };
+}
 
-    return (
-      <div style={styles.evidenceContent}>
-        <div className="info">
-          <h4>State</h4>
-          <p>{evidence.state}</p>
-          {evidenceInfo}
-        </div>
-        {evidenceTree}
+const BitcoinEvidence = ({ evidence }) => {
+  const styles = getStyles();
+  let evidenceInfo;
+  let evidenceTree;
+  const evidenceComplete = evidence.state === 'COMPLETE';
+
+  if (evidenceComplete) {
+    const tx = evidence.transactions
+      ? evidence.transactions['bitcoin:main']
+      : '';
+    evidenceInfo = (
+      <div>
+        <h4>Bitcoin Transaction</h4>
+        <p>
+          {tx}
+          <a target="_blank" href={`https://blockchain.info/tx/${tx}`}>
+            View transaction on Blockchain.info
+          </a>
+        </p>
+
+        <h4>Merkle root</h4>
+        <p>{evidence.merkleRoot}</p>
+      </div>
+    );
+
+    evidenceTree = (
+      <div className="merkle-path">
+        <h4>Merkle Path</h4>
+        <MerklePathComponent merklePath={evidence.merklePath} />
       </div>
     );
   }
-}
+
+  return (
+    <div style={styles.evidenceContent}>
+      <div className="info">
+        <h4>State</h4>
+        <p>{evidence.state}</p>
+        {evidenceInfo}
+      </div>
+      {evidenceTree}
+    </div>
+  );
+};
 
 BitcoinEvidence.propTypes = {
-  evidence: React.PropTypes.object,
+  evidence: PropTypes.shape({
+    state: PropTypes.string.isRequired
+  }).isRequired
 };
 
 export default radium(BitcoinEvidence);

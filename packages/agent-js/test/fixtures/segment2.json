@@ -7,10 +7,7 @@
       "process": "first",
       "mapId": "one",
       "prevLinkHash": "segment1",
-      "tags": [
-        "one",
-        "two"
-      ],
+      "tags": ["one", "two"],
       "priority": 2
     }
   },

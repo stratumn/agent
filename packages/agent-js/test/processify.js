@@ -25,38 +25,37 @@ describe('processify', () => {
   const data = { message: 'test' };
 
   it('adds the default init function', done => {
-    processify(actions).init(data).then(res => {
-      res.state.should.eql(data);
-      done();
-    })
-    .catch(done);
+    processify(actions)
+      .init(data)
+      .then(res => {
+        res.state.should.eql(data);
+        done();
+      })
+      .catch(done);
   });
 
   it('returns the state in the result on function call', () => {
-    processify(actions).add(data).then(res =>
-      res.state.add.should.eql(data)
-    );
+    processify(actions)
+      .add(data)
+      .then(res => res.state.add.should.eql(data));
   });
 
   it('keeps its state on successive function calls', () => {
     const mAgent = processify(actions);
-    mAgent.init(data).then(() =>
-      mAgent.add()
-    ).then(res =>
-      res.state.message.should.eql('test'));
+    mAgent
+      .init(data)
+      .then(() => mAgent.add())
+      .then(res => res.state.message.should.eql('test'));
   });
 
   it('rejects the promise with the error message on reject', () => {
     const mAgent = processify(actions);
-    mAgent.reject()
-      .catch((res) => res.message.should.eql('error'));
+    mAgent.reject().catch(res => res.message.should.eql('error'));
   });
 
   it('returns the tags in the result on function call', () => {
     const mAgent = processify(actions);
-    mAgent.tag().then((res) =>
-      res.meta.tags.should.eql(['tag'])
-    );
+    mAgent.tag().then(res => res.meta.tags.should.eql(['tag']));
   });
 
   it('adds event functions', () => {

@@ -17,11 +17,16 @@
 import create from '../src/create';
 import memoryStore from '../src/memoryStore';
 import plugins from '../src/plugins';
-import Process from '../src/process.js';
+import Process from '../src/process';
 
 const actions = {
-  init(a, b, c) { this.append({ a, b, c }); },
-  action(d) { this.state[Object.keys(this.state).length] = d; this.append(); }
+  init(a, b, c) {
+    this.append({ a, b, c });
+  },
+  action(d) {
+    this.state[Object.keys(this.state).length] = d;
+    this.append();
+  }
 };
 
 // TODO: could be improved by using a dummy fossilizer.
@@ -36,35 +41,29 @@ describe('Agent', () => {
     delete actions.events;
   });
 
-
   describe('#getInfo', () => {
     it('returns a Promise resolving with each process information', () => {
       agent.addProcess('basic', actions, memoryStore(), null);
       agent.addProcess('basic2', actions, memoryStore(), null);
-      return agent.getInfo()
-        .then(infos => {
-          infos.processes.should.be.an.Object();
-          Object.keys(infos.processes).length.should.be.exactly(2);
-          Object.values(infos.processes)[0].should.be.an.Object();
-          Object.values(infos.processes)[0].name.should.be.a.String();
-        });
+      return agent.getInfo().then(infos => {
+        infos.processes.should.be.an.Object();
+        Object.keys(infos.processes).length.should.be.exactly(2);
+        Object.values(infos.processes)[0].should.be.an.Object();
+        Object.values(infos.processes)[0].name.should.be.a.String();
+      });
     });
   });
 
   describe('#addProcess', () => {
     it('resolves with the newly created process', () => {
-      const process = agent.addProcess(
-        'basic',
-        actions,
-        memoryStore(),
-        null,
-        {
-          plugins: [plugins.stateHash, plugins.localTime],
-          salt: '30d3460fabed01abc3196b0d41b8fc98b672de6501ae2886bd1d9fb70a53f86a'
-        });
+      const process = agent.addProcess('basic', actions, memoryStore(), null, {
+        plugins: [plugins.stateHash, plugins.localTime],
+        salt: '30d3460fabed01abc3196b0d41b8fc98b672de6501ae2886bd1d9fb70a53f86a'
+      });
       process.name.should.be.exactly('basic');
-      process.salt.should.be.
-        exactly('30d3460fabed01abc3196b0d41b8fc98b672de6501ae2886bd1d9fb70a53f86a');
+      process.salt.should.be.exactly(
+        '30d3460fabed01abc3196b0d41b8fc98b672de6501ae2886bd1d9fb70a53f86a'
+      );
       process.plugins.should.deepEqual([plugins.stateHash, plugins.localTime]);
       process.actions.should.deepEqual(actions);
     });
@@ -112,17 +111,19 @@ describe('Agent', () => {
       let foundSegments;
       actions.events = {
         didSave() {
-          callCount++;
+          callCount += 1;
         }
       };
 
-      return agent.addProcess('first', actions, memoryStore(), null)
+      return agent
+        .addProcess('first', actions, memoryStore(), null)
         .createMap(1, 2, 3)
         .then(() =>
-          agent.addProcess('second', actions, memoryStore(), null)
-            .createMap('a', 'b', 'c'))
-        .then(() =>
-          agent.findSegments('first'))
+          agent
+            .addProcess('second', actions, memoryStore(), null)
+            .createMap('a', 'b', 'c')
+        )
+        .then(() => agent.findSegments('first'))
         .then(sgmts1 => {
           foundSegments = sgmts1;
           return agent.findSegments('second');
@@ -133,33 +134,34 @@ describe('Agent', () => {
         });
     });
 
-    it('calls the storeClient callbacks even if multiple processes are using the same store',
-      () => {
-        let callCount = 0;
-        actions.events = {
-          didSave() {
-            callCount++;
-          }
-        };
-        const store = memoryStore();
-        let foundSegments;
+    it('calls the storeClient callbacks even if multiple processes are using the same store', () => {
+      let callCount = 0;
+      actions.events = {
+        didSave() {
+          callCount += 1;
+        }
+      };
+      const store = memoryStore();
+      let foundSegments;
 
-        return agent.addProcess('first', actions, store, null)
-          .createMap(1, 2, 3)
-          .then(() =>
-            agent.addProcess('second', actions, store, null)
-              .createMap('a', 'b', 'c'))
-          .then(() =>
-            agent.findSegments('first'))
-          .then(sgmts1 => {
-            foundSegments = sgmts1;
-            return agent.findSegments('second');
-          })
-          .then(sgmts2 => {
-            foundSegments.concat(sgmts2).length.should.be.exactly(2);
-            callCount.should.be.exactly(2);
-          });
-      });
+      return agent
+        .addProcess('first', actions, store, null)
+        .createMap(1, 2, 3)
+        .then(() =>
+          agent
+            .addProcess('second', actions, store, null)
+            .createMap('a', 'b', 'c')
+        )
+        .then(() => agent.findSegments('first'))
+        .then(sgmts1 => {
+          foundSegments = sgmts1;
+          return agent.findSegments('second');
+        })
+        .then(sgmts2 => {
+          foundSegments.concat(sgmts2).length.should.be.exactly(2);
+          callCount.should.be.exactly(2);
+        });
+    });
   });
 
   describe('#getProcess', () => {
@@ -175,7 +177,7 @@ describe('Agent', () => {
         agent.getProcess('fake');
       } catch (err) {
         err.status.should.be.exactly(404);
-        err.message.should.be.exactly('process \'fake\' does not exist');
+        err.message.should.be.exactly("process 'fake' does not exist");
       }
     });
   });
@@ -193,7 +195,7 @@ describe('Agent', () => {
         agent.removeProcess('first');
         throw new Error('should have failed');
       } catch (err) {
-        err.message.should.be.exactly('process \'first\' does not exist');
+        err.message.should.be.exactly("process 'first' does not exist");
         err.status.should.be.exactly(404);
       }
     });
@@ -205,9 +207,7 @@ describe('Agent', () => {
       agent.addProcess('basic2', actions, memoryStore(), null);
       const processes = agent.getAllProcesses();
       processes.length.should.be.exactly(2);
-      for (const p of processes) {
-        p.name.should.be.oneOf(['basic', 'basic2']);
-      }
+      processes.forEach(p => p.name.should.be.oneOf(['basic', 'basic2']));
     });
   });
 
@@ -216,95 +216,89 @@ describe('Agent', () => {
       const p1 = agent.addProcess('basic', actions, memoryStore(), null);
       const p2 = agent.addProcess('basic2', actions, memoryStore(), null);
 
-      return p1.createMap(1, 2, 3)
-        .then(s1 =>
-          p1.createSegment(s1.meta.linkHash, 'action', 5))
-        .then(() =>
-          agent.findSegments('basic'))
-        .then(segments =>
-          segments.length.should.be.exactly(2)
-        )
-        .then(() =>
-          p2.createMap(4, 5, 6))
-        .then(s1 =>
-          p2.createSegment(s1.meta.linkHash, 'action', 5))
-        .then(() =>
-          agent.findSegments('basic2'))
-        .then(segments =>
-          segments.length.should.be.exactly(2)
-        )
-        .then(() =>
-          agent.findSegments('none'))
-        .then(() => { throw new Error('Should have failed'); })
+      return p1
+        .createMap(1, 2, 3)
+        .then(s1 => p1.createSegment(s1.meta.linkHash, 'action', 5))
+        .then(() => agent.findSegments('basic'))
+        .then(segments => segments.length.should.be.exactly(2))
+        .then(() => p2.createMap(4, 5, 6))
+        .then(s1 => p2.createSegment(s1.meta.linkHash, 'action', 5))
+        .then(() => agent.findSegments('basic2'))
+        .then(segments => segments.length.should.be.exactly(2))
+        .then(() => agent.findSegments('none'))
+        .then(() => {
+          throw new Error('Should have failed');
+        })
         .catch(err => {
-          err.message.should.be.exactly('process \'none\' does not exist');
+          err.message.should.be.exactly("process 'none' does not exist");
           err.status.should.be.exactly(404);
         });
     });
 
     it('finds the right amount of segments when using the same store for 2+ processes', () => {
       const store = memoryStore();
-      return agent.addProcess('first', actions, store, null)
+      return agent
+        .addProcess('first', actions, store, null)
         .createMap(1, 2, 3)
         .then(() =>
-          agent.addProcess('second', actions, store, null)
-            .createMap('a', 'b', 'c'))
-        .then(() =>
-          agent.findSegments('first'))
-        .then(segments =>
-          segments.length.should.be.exactly(1))
-        .then(() =>
-          agent.findSegments('second'))
-        .then(segments =>
-          segments.length.should.be.exactly(1));
+          agent
+            .addProcess('second', actions, store, null)
+            .createMap('a', 'b', 'c')
+        )
+        .then(() => agent.findSegments('first'))
+        .then(segments => segments.length.should.be.exactly(1))
+        .then(() => agent.findSegments('second'))
+        .then(segments => segments.length.should.be.exactly(1));
     });
 
     it('only finds the segments of a given process when specified', () => {
       const store = memoryStore();
-      return agent.addProcess('first', actions, store, null)
+      return agent
+        .addProcess('first', actions, store, null)
         .createMap(1, 2, 3)
         .then(() =>
-          agent.addProcess('second', actions, store, null)
-            .createMap('a', 'b', 'c'))
-        .then(() =>
-          agent.findSegments('second'))
-        .then(segments =>
-          segments.length.should.be.exactly(1)
-        );
+          agent
+            .addProcess('second', actions, store, null)
+            .createMap('a', 'b', 'c')
+        )
+        .then(() => agent.findSegments('second'))
+        .then(segments => segments.length.should.be.exactly(1));
     });
   });
 
   describe('#getMapIds', () => {
     it('returns the map ids of a processes', () =>
-      agent.addProcess('basic', actions, memoryStore(), null)
+      agent
+        .addProcess('basic', actions, memoryStore(), null)
         .createMap(1, 2, 3)
         .then(() =>
-          agent.addProcess('basic2', actions, memoryStore(), null)
-            .createMap('a', 'b', 'c'))
-        .then(() =>
-          agent.getMapIds('basic'))
+          agent
+            .addProcess('basic2', actions, memoryStore(), null)
+            .createMap('a', 'b', 'c')
+        )
+        .then(() => agent.getMapIds('basic'))
         .then(mapIds => {
           mapIds.length.should.be.exactly(1);
           mapIds[0].should.be.an.instanceOf(String);
         }));
 
     it('throw an error for a non-existent process', () =>
-      agent.getMapIds('none')
-        .then(() => (new Error('should have failed')))
-        .catch(err =>
-          err.status.should.be.exactly(404)
-        )
-    );
+      agent
+        .getMapIds('none')
+        .then(() => new Error('should have failed'))
+        .catch(err => err.status.should.be.exactly(404)));
 
     it('returns the good amount of map ids when using one store for multiple processes', () => {
       const store = memoryStore();
-      return agent.addProcess('first', actions, store, null)
+      return agent
+        .addProcess('first', actions, store, null)
         .createMap(1, 2, 3)
         .then(() =>
-          agent.addProcess('second', actions, store, null)
-            .createMap('a', 'b', 'c'))
-        .then(() =>
-          agent.getMapIds('first'))
+          agent
+            .addProcess('second', actions, store, null)
+            .createMap('a', 'b', 'c')
+        )
+        .then(() => agent.getMapIds('first'))
         .then(mapIds => {
           mapIds.length.should.be.exactly(1);
         });

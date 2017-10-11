@@ -17,19 +17,14 @@
 import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#getLink', () => {
-
   runTestsWithDataAndAgent(processCb => {
     // Deprecated
     it('gets a segment', () =>
       processCb()
         .createMap('hi there')
-        .then(segment =>
-          processCb().getLink(segment.meta.linkHash)
-        )
+        .then(segment => processCb().getLink(segment.meta.linkHash))
         .then(segment => {
           segment.link.state.title.should.be.exactly('hi there');
-        })
-    );
+        }));
   });
-
 });

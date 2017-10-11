@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import httpAdaptor from './httpAdaptor';
-import objectAdaptor from './objectAdaptor';
+import HttpAdaptor from './httpAdaptor';
+import ObjectAdaptor from './objectAdaptor';
 
 export default function getAdaptor(objectOrUrl) {
   if (typeof objectOrUrl === 'string') {
-    return new httpAdaptor(objectOrUrl);
+    return new HttpAdaptor(objectOrUrl);
   } else if (typeof objectOrUrl === 'object') {
-    return new objectAdaptor(objectOrUrl);
+    return new ObjectAdaptor(objectOrUrl);
   }
 
   throw new Error('The argument passed is neither a url or an object!');

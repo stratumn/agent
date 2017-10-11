@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { makeLink, finalLink, translate } from './treeUtils';
-import parseChainscript from './parseChainscript';
 import { tree } from 'd3-hierarchy';
 import { transition } from 'd3-transition';
 import { easeLinear } from 'd3-ease';
 import { select, selectAll, event } from 'd3-selection';
 import { zoom } from 'd3-zoom';
 import { max } from 'd3-array';
+import { makeLink, finalLink, translate } from './treeUtils';
+import parseChainscript from './parseChainscript';
 
 const margin = { top: 20, right: 120, bottom: 20, left: 120 };
 const height = 800 - margin.top - margin.bottom;
@@ -39,43 +39,60 @@ export default class ChainTree {
   display(chainscript, options) {
     if (chainscript && chainscript.length) {
       const root = parseChainscript(chainscript);
-      this._update(root, options);
+      this.update(root, options);
     } else {
-      this._update(null, options);
+      this.update(null, options);
     }
   }
 
-  _update(root, options) {
+  update(root, options) {
     const self = this;
     const polygon = options.polygonSize;
     const nodes = root ? root.descendants() : [];
     const links = root ? root.links() : [];
     const maxDepth = max(nodes, x => x.depth) || 0;
-    const computedWidth = Math.max(maxDepth * (polygon.width + options.getArrowLength()), 500);
+    const computedWidth = Math.max(
+      maxDepth * (polygon.width + options.getArrowLength()),
+      500
+    );
     const treeTransition = transition()
       .duration(options.duration)
       .ease(easeLinear);
 
     const branchesCount = nodes.reduce(
-      (pre, cur) => pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0),
+      (pre, cur) =>
+        pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0),
       1
     );
-    const computedHeight = branchesCount * polygon.height * options.verticalSpacing;
+    const computedHeight =
+      branchesCount * polygon.height * options.verticalSpacing;
 
     this.tree.size([computedHeight, computedWidth]);
     this.svg
-      .attr('width',
-        options.zoomable ? 1200 : computedWidth + margin.right + margin.left +
-        options.getArrowLength())
-      .attr('height',
-        (options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
+      .attr(
+        'width',
+        options.zoomable
+          ? 1200
+          : computedWidth +
+            margin.right +
+            margin.left +
+            options.getArrowLength()
+      )
+      .attr(
+        'height',
+        (options.zoomable ? height : computedHeight) +
+          margin.top +
+          margin.bottom
+      );
 
     // Compute the new tree layout.
     if (root) {
       root.x0 = computedHeight / 2;
       root.y0 = 0;
       this.tree(root);
-      root.each(node => { node.y += options.getArrowLength(); });
+      root.each(node => {
+        node.y += options.getArrowLength();
+      });
     }
 
     if (options.zoomable) {
@@ -86,10 +103,15 @@ export default class ChainTree {
     this.innerG.attr('transform', () => translate(margin.top, margin.left));
 
     // Update the links...
-    const link = this.innerG.selectAll('path.link').data(links,
-      function key(d) { return d ? d.target.id : this.id; });
+    const link = this.innerG
+      .selectAll('path.link')
+      .data(links, function key(d) {
+        return d ? d.target.id : this.id;
+      });
 
-    link.enter().insert('text')
+    link
+      .enter()
+      .insert('text')
       .attr('dx', polygon.width + 20)
       .attr('dy', '-0.3em')
       .append('textPath')
@@ -98,11 +120,15 @@ export default class ChainTree {
       .text(options.getLinkText);
 
     // Enter any new links at the parent's previous position.
-    link.enter().insert('path', 'g')
+    link
+      .enter()
+      .insert('path', 'g')
       .attr('class', 'link')
       .attr('id', d => `link-${d.target.id}`);
 
-    const linkUpdate = this.innerG.selectAll('path.link:not(.init)').transition(treeTransition);
+    const linkUpdate = this.innerG
+      .selectAll('path.link:not(.init)')
+      .transition(treeTransition);
 
     // Transition links to their new position.
     linkUpdate.attr('d', d => finalLink(d, 15));
@@ -110,11 +136,14 @@ export default class ChainTree {
     link.exit().remove();
 
     // Update the nodes...
-    const node = this.innerG.selectAll('g.node').data(nodes,
-      function key(d) { return d ? d.id : this.id; });
+    const node = this.innerG.selectAll('g.node').data(nodes, function key(d) {
+      return d ? d.id : this.id;
+    });
 
     // Enter any new nodes at the parent's previous position.
-    const nodeEnter = node.enter().append('g')
+    const nodeEnter = node
+      .enter()
+      .append('g')
       .attr('class', d => ['node'].concat(d.data.link.meta.tags).join(' '))
       .attr('id', d => d.id)
       .attr('transform', d => {
@@ -122,27 +151,36 @@ export default class ChainTree {
         return translate(origin.x0, origin.y0);
       })
       .on('click', function onClick(d) {
-        selectAll('g.node')
-          .classed('selected', false);
-        select(this)
-          .classed('selected', true);
-        options.onclick(d, () => {
-          self.innerG.selectAll('g.node.selected').classed('selected', false);
-        }, this);
+        selectAll('g.node').classed('selected', false);
+        select(this).classed('selected', true);
+        options.onclick(
+          d,
+          () => {
+            self.innerG.selectAll('g.node.selected').classed('selected', false);
+          },
+          this
+        );
       });
 
-    nodeEnter.append('polygon').attr('points',
-      `0,${polygon.height / 4} ${polygon.width / 2},${polygon.height / 2} ` +
-      `${polygon.width},${polygon.height / 4} ${polygon.width},${-polygon.height / 4} ` +
-      `${polygon.width / 2},${-polygon.height / 2} 0,${-polygon.height / 4}`);
+    nodeEnter
+      .append('polygon')
+      .attr(
+        'points',
+        `0,${polygon.height / 4} ${polygon.width / 2},${polygon.height / 2} ` +
+          `${polygon.width},${polygon.height /
+            4} ${polygon.width},${-polygon.height / 4} ` +
+          `${polygon.width / 2},${-polygon.height / 2} 0,${-polygon.height / 4}`
+      );
 
-    nodeEnter.append('rect')
+    nodeEnter
+      .append('rect')
       .attr('y', -(options.getBoxSize().height / 2))
       .attr('width', polygon.width)
       .attr('height', options.getBoxSize().height)
       .style('fill-opacity', 1e-6);
 
-    nodeEnter.append('text')
+    nodeEnter
+      .append('text')
       .attr('dx', 12)
       .attr('dy', 4)
       .attr('text-anchor', 'begin')
@@ -161,16 +199,18 @@ export default class ChainTree {
     nodeExit.select('text').style('fill-opacity', 1e-6);
     nodeExit.attr('transform', () => translate(0, 0)).remove();
 
-    this._drawInit(root);
+    this.drawInit(root);
   }
 
-  _drawInit(root) {
-    this.innerG.append('path')
+  drawInit(root) {
+    this.innerG
+      .append('path')
       .attr('class', 'link init')
       .attr('id', 'init-link')
       .attr('d', makeLink({ x: root.x, y: root.y0 }, root, 15));
 
-    this.innerG.append('text')
+    this.innerG
+      .append('text')
       .attr('dx', 20)
       .attr('dy', '-0.3em')
       .append('textPath')

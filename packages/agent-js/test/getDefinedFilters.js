@@ -19,9 +19,7 @@ import getDefinedFilters from '../src/getDefinedFilters';
 describe('#getDefinedFilters()', () => {
   it('returns the defined filterSegment functions', () => {
     const p1 = {
-      filterSegment() {
-        return;
-      }
+      filterSegment() {}
     };
     const p2 = {};
     const plugins = [p1, p2];

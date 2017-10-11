@@ -21,11 +21,13 @@ export default function mockFossilizerHttpServer(mock, process) {
     body: { name: 'mock' }
   }));
 
-
   mock.post('http://localhost/fossils', req => {
     if (req.body.callbackUrl.indexOf('=') > 0) {
-      const secret = req.body.callbackUrl.substr(req.body.callbackUrl.indexOf('=') + 1);
-      return process.insertEvidence(req.body.data, { mockEvidence: result }, secret)
+      const secret = req.body.callbackUrl.substr(
+        req.body.callbackUrl.indexOf('=') + 1
+      );
+      return process
+        .insertEvidence(req.body.data, { mockEvidence: result }, secret)
         .then(() => ({
           status: 200,
           body: req.body

@@ -15,8 +15,8 @@
 */
 
 export default function parseIfJson(object) {
-  if (typeof(object) !== 'object') {
-    object = JSON.parse(object);
+  if (typeof object !== 'object') {
+    return JSON.parse(object);
   }
   return object;
 }
