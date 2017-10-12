@@ -7,6 +7,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import { expect } from 'chai';
 
 import { AgentInfoPage } from '../components';
+import { actionTypes } from '../actions';
 import configureStore from '../store/configure';
 
 describe('Agent Info Page', () => {
@@ -40,7 +41,7 @@ describe('Agent Info Page', () => {
 
   it('receives the agent url from the store', () => {
     testStore.dispatch({
-      type: 'AGENT_INFO_SUCCESS',
+      type: actionTypes.AGENT_INFO_SUCCESS,
       info: { url: 'http://localhost:3000' }
     });
 
