@@ -7,6 +7,28 @@
   "homepage": "",
   "main": "lib/angular-mapexplorer.js",
   "jsnext:main": "lib/angular-mapexplorer.mjs",
+  "scripts": {
+    "lint": "eslint src",
+    "test": "karma start karma.conf.js",
+    "test:ci": "npm run test -- --single-run",
+    "build:npm": "npm run build:npm:es && npm run build:npm:umd",
+    "build:npm:es": "rollup -c rollup.es.config.js",
+    "build:npm:umd": "rollup -c rollup.umd.config.js",
+    "build:browser": "rollup -c rollup.browser.config.js",
+    "build:demo": "rollup -c rollup.browser.demo.config.js",
+    "build": "npm run build:npm && npm run build:browser",
+    "prepublish": "npm run build"
+  },
+  "dependencies": {
+    "angular": "~1.5.11",
+    "angular-animate": "~1.5.11",
+    "angular-aria": "~1.5.11",
+    "angular-material": "^1.1.0",
+    "angular-route": "~1.5.11",
+    "angular-sanitize": "~1.5.11",
+    "mapexplorer-core": "^2.0.1",
+    "md-color-picker": "^0.2.6"
+  },
   "devDependencies": {
     "@metahub/karma-rollup-preprocessor": "^3.0.0",
     "angular-mocks": "~1.5.11",
@@ -40,30 +62,8 @@
     "should": "^8.2.2",
     "tinycolor2": "^1.4.1"
   },
-  "scripts": {
-    "lint": "eslint src",
-    "test": "karma start karma.conf.js",
-    "test:ci": "npm run test -- --single-run",
-    "build:npm": "npm run build:npm:es && npm run build:npm:umd",
-    "build:npm:es": "rollup -c rollup.es.config.js",
-    "build:npm:umd": "rollup -c rollup.umd.config.js",
-    "build:browser": "rollup -c rollup.browser.config.js",
-    "build:demo": "rollup -c rollup.browser.demo.config.js",
-    "build": "npm run build:npm && npm run build:browser",
-    "prepublish": "npm run build"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/stratumn/indigo"
-  },
-  "dependencies": {
-    "angular": "~1.5.11",
-    "angular-animate": "~1.5.11",
-    "angular-aria": "~1.5.11",
-    "angular-material": "^1.1.0",
-    "angular-route": "~1.5.11",
-    "angular-sanitize": "~1.5.11",
-    "mapexplorer-core": "^2.0.1",
-    "md-color-picker": "^0.2.6"
   }
 }
