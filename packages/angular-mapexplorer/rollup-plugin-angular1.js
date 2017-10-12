@@ -1,7 +1,7 @@
-import fs from 'fs';
-import path from 'path';
+const fs = require('fs');
+const path = require('path');
 
-import { createFilter } from 'rollup-pluginutils';
+const { createFilter } = require('rollup-pluginutils');
 
 const templateUrlRegex = /templateUrl\s*:(.*)/g;
 const stringRegex = /(['"])((?:[^\\]\\\1|.)*?)\1/g;
@@ -14,7 +14,7 @@ function insertText(str, dir) {
   return string;
 }
 
-export default function angular(options = {}) {
+module.exports = function angular(options = {}) {
   const filter = createFilter(options.include, options.exclude);
 
   return {
@@ -35,4 +35,4 @@ export default function angular(options = {}) {
       };
     }
   };
-}
+};
