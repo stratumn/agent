@@ -3,7 +3,7 @@ import { NavLink, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
+import { MenuItem } from 'material-ui/Menu';
 
 const ActiveMenuItem = ({ match, item }) => {
   const toLink = match.url === '/' ? `/${item}` : `${match.url}/${item}`;
@@ -33,7 +33,7 @@ const LeftDrawer = ({ processes, match }) => {
     </div>
   ));
   console.log('leftdrawer', processes);
-  return <Drawer>{menuItems}</Drawer>;
+  return <Drawer type="permanent">{menuItems}</Drawer>;
 };
 
 LeftDrawer.propTypes = {

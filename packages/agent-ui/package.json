@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "immutable": "^3.8.2",
-    "material-ui": "^0.19.4",
+    "material-ui": "^1.0.0-beta.16",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
