@@ -15,6 +15,7 @@
 */
 /* global inject, angular, spyOn, expect, jasmine */
 import chainscript from './fixtures/chainscript.json';
+import '../src/index';
 
 describe('st-map-explorer', () => {
   let element;

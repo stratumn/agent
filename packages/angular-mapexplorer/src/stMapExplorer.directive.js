@@ -49,7 +49,7 @@ export default function stMapExplorer(ChainTreeBuilderService) {
       const builder = ChainTreeBuilderService.getBuilder(elem);
 
       const update = () => {
-        const options = { ...defaultOptions, ...scope.options };
+        const options = Object.assign({}, defaultOptions, scope.options);
 
         controller.error = null;
         controller.loading = true;

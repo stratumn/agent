@@ -1,8 +1,5 @@
-const babel = require('rollup-plugin-babel');
-const babelrc = require('babelrc-rollup').default;
-const json = require('rollup-plugin-json');
-const nodeResolve = require('rollup-plugin-node-resolve');
-const commonjs = require('rollup-plugin-commonjs');
+const istanbul = require('rollup-plugin-istanbul');
+const plugins = require('./rollup.browser.plugins');
 
 module.exports = function configure(config) {
   config.set({
@@ -24,9 +21,8 @@ module.exports = function configure(config) {
       'node_modules/angular-aria/angular-aria.js',
       'node_modules/tinycolor2/dist/tinycolor-min.js',
       'node_modules/md-color-picker/dist/mdColorPicker.js',
-      'dist/angular-mapexplorer.js',
-      'test/*.spec.js',
-      'node_modules/babel-polyfill/dist/polyfill.js'
+      'node_modules/babel-polyfill/dist/polyfill.js',
+      'test/*.spec.js'
     ],
 
     // list of files to exclude
@@ -40,27 +36,12 @@ module.exports = function configure(config) {
     rollupPreprocessor: {
       options: {
         plugins: [
-          json(),
-          babel(
-            Object.assign(
-              {
-                exclude: 'node_modules/**'
-              },
-              babelrc()
-            )
-          ),
-          nodeResolve({
-            jsnext: true,
-            browser: true,
-            preferBuiltins: true
-          }),
-          commonjs({
-            namedExports: {
-              // 'node_modules/angular/index.js': ['angular'],
-              // 'node_modules/angular/angular.js': ['angular']
-            }
+          istanbul({
+            include: ['src/**'],
+            // we have to exclude the directives because of an incompatibility with the angular plugin...
+            exclude: ['src/*.directive.js']
           })
-        ],
+        ].concat(plugins),
         output: {
           // will help to prevent conflicts between different tests entries
           format: 'iife',
@@ -71,7 +52,11 @@ module.exports = function configure(config) {
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['dots'],
+    reporters: ['progress', 'coverage'],
+
+    coverageReporter: {
+      reporters: [{ type: 'lcov' }]
+    },
 
     // web server port
     port: 9876,
