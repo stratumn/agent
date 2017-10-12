@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Provider } from 'react-redux';
-import { Router, browserHistory } from 'react-router';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import { getAgentInfo } from '../actions';
-import routes from '../routes';
 import { configureStore } from './';
+
+import routes from '../routes';
 
 export default function(doc) {
   const store = configureStore();
@@ -14,7 +15,7 @@ export default function(doc) {
 
   ReactDOM.render(
     <Provider store={store}>
-      <Router history={browserHistory} routes={routes} />
+      <Router>{routes}</Router>
     </Provider>,
     doc
   );
