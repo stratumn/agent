@@ -14,28 +14,7 @@
   limitations under the License.
 */
 
-import { moduleForComponent, test } from 'ember-qunit';
-import hbs from 'htmlbars-inline-precompile';
+import Ember from 'ember';
 
-moduleForComponent(
-  'merkle-path-tree',
-  'Integration | Component | merkle path tree',
-  {
-    integration: true
-  }
-);
-
-test('it renders', function(assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-
-  this.render(hbs`{{merkle-path-tree}}`);
-
-  assert.equal(
-    this.$()
-      .text()
-      .trim(),
-    ''
-  );
-  assert.equal(this.$().find('svg').length, 1);
-});
+const eq = params => params[0] === params[1];
+export default Ember.Helper.helper(eq);

@@ -17,7 +17,7 @@
 import Ember from 'ember';
 
 export function join(items, hash) {
-  const delimiter = hash.delimiter || ",";
+  const delimiter = hash.delimiter || ',';
   return items[0].join(delimiter);
 }
 
