@@ -1,4 +1,7 @@
-module.exports = function(config) {
+const plugins = require('./rollupPlugins');
+const istanbul = require('rollup-plugin-istanbul');
+
+module.exports = function configure(config) {
   config.set({
     // base path, that will be used to resolve files and exclude
     basePath: '',
@@ -16,13 +19,16 @@ module.exports = function(config) {
 
     preprocessors: {
       'test/integration/init.js': ['rollup'],
-      'test/integration/*.test.js': ['rollup'],
-      'src/**/*.js': ['coverage']
+      'test/integration/*.test.js': ['rollup']
     },
 
     rollupPreprocessor: {
       options: {
-        plugins: require('./rollupPlugins'),
+        plugins: [
+          istanbul({
+            include: ['src/**/*.js']
+          })
+        ].concat(plugins),
         // will help to prevent conflicts between different tests entries
         format: 'iife',
         output: {
@@ -40,7 +46,11 @@ module.exports = function(config) {
     reporters: ['progress', 'coverage'],
 
     coverageReporter: {
-      reporters: [{ type: 'lcov' }]
+      reporters: [
+        {
+          type: 'lcov'
+        }
+      ]
     },
 
     // web server port
