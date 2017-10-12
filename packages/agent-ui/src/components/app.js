@@ -20,6 +20,7 @@ class App extends Component {
         <div>
           <TopBar />
           <LeftDrawer processes={this.props.processes} />
+          {this.props.children}
         </div>
       </MuiThemeProvider>
     );
@@ -36,6 +37,7 @@ function mapStateToProps(state) {
 }
 
 App.propTypes = {
+  children: PropTypes.object.isRequired,
   processes: PropTypes.arrayOf(PropTypes.string).isRequired,
   dispatch: PropTypes.func.isRequired
 };

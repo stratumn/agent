@@ -1,6 +1,11 @@
 import React from 'react';
-import { Route } from 'react-router';
+import { Route, IndexRoute } from 'react-router';
 
 import App from './components/app';
+import AgentInfoPage from './components/agentInfoPage';
 
-export default <Route path="/" component={App} />;
+export default (
+  <Route path="/" component={App}>
+    <IndexRoute component={AgentInfoPage} />
+  </Route>
+);
