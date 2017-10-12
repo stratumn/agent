@@ -6,3 +6,4 @@ lib
 coverage
 _book
 dist
+.nyc_output

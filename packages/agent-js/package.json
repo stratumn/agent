@@ -7,7 +7,7 @@
     "test":
       "mocha --compilers js:babel-core/register --recursive --require should",
     "test:ci":
-      "babel-node ./node_modules/isparta/bin/isparta cover ./node_modules/mocha/bin/_mocha -- --recursive --require should",
+      "nyc npm test && nyc report --reporter=text-lcov > coverage/coverage.lcov",
     "build:lib": "babel src --out-dir lib",
     "clean": "rimraf lib coverage",
     "preversion": "npm run clean && npm run test",
@@ -44,10 +44,9 @@
     "babel-polyfill": "^6.5.0",
     "babel-preset-es2015-node4": "latest",
     "babel-preset-es2017": "^6.9.0",
-    "isparta": "^4.0.0",
-    "istanbul": "0.4.4",
     "mocha": "^2.4.5",
     "nodemon": "^1.9.2",
+    "nyc": "^11.2.1",
     "rimraf": "^2.5.3",
     "should": "^8.2.2",
     "superagent-mocker": "^0.4.0",
