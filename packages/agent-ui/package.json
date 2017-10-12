@@ -35,8 +35,12 @@
     "stratumn-agent-client": "^3.0.2"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
+    "enzyme": "^3.1.0",
+    "enzyme-adapter-react-16": "^1.0.1",
     "eslint": "^4.8.0",
     "eslint-plugin-react": "^7.4.0",
-    "react-scripts": "^1.0.14"
+    "react-scripts": "^1.0.14",
+    "react-test-renderer": "^16.0.0"
   }
 }
