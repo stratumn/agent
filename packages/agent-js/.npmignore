@@ -2,3 +2,4 @@
 *.log
 test
 coverage
+.nyc_output

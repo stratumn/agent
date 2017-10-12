@@ -4,3 +4,4 @@
 test
 coverage
 _book
+.nyc_output
