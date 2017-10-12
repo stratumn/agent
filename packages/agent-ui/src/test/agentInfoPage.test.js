@@ -6,7 +6,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 import { expect } from 'chai';
 
-import AgentInfoPage from '../components/agentInfoPage';
+import { AgentInfoPage } from '../components';
 import configureStore from '../store/configure';
 
 describe('Agent Info Page', () => {
