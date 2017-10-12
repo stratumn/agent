@@ -31,8 +31,9 @@ export default class ChainTreeBuilderService {
       builder.build(
         {
           id: map.mapId,
-          applicationUrl: map.applicationUrl,
-          chainscript: map.chainscript
+          agentUrl: map.agentUrl,
+          chainscript: map.chainscript,
+          process: map.process
         },
         options
       )

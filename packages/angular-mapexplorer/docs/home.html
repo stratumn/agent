@@ -1,73 +1,81 @@
 <div ng-controller='Home as home'>
-   <md-content>
-          <md-tabs md-dynamic-height md-border-bottom>
-              <md-tab label="Chainscript JSON">
-                  <md-content>
-                      <div ng-hide="home.segmentShowed['first']" layout="row">
-                          <div class="with-json" flex="grow">
-                              <div ui-ace="{
+  <md-content>
+    <md-tabs md-dynamic-height md-border-bottom>
+      <md-tab label="Chainscript JSON">
+        <md-content>
+          <div ng-hide="home.segmentShowed['first']" layout="row">
+            <div class="with-json" flex="grow">
+              <div ui-ace="{
                                   useWrapMode: true,
                                   onLoad: home.aceLoaded
                               }" ng-model="home.json"></div>
-                              <md-button class="md-flat-button" aria-label="Format" ng-click="home.format()">
-                                  Format
-                              </md-button>
-                          </div>
-                          <st-map-validator chainscript="home.json"></st-map-validator>
-                      </div>
-                  </md-content>
-                  <div class="tip" ng-hide="home.json" layout>
-                      <span flex>Enter Chainscript JSON</span>
-                  </div>
-                  <st-map-explorer chainscript="home.json" refresh="0" name=" 'first' "></st-map-explorer>
-              </md-tab>
-              <md-tab label="Stratumn Application" md-active="home.applicationUrl && home.mapId">
-                  <div ng-hide="home.segmentShowed['second']">
-                      <md-content layout="row" class="form" ng-hide="home.applicationUrl && home.mapId">
-                          <div layout="column" flex="40">
-                              <label>Application URL</label>
-                              <input ng-model="home.applicationUrlInput">
-                          </div>
-                          <div layout="column" flex="40">
-                              <label>Map ID</label>
-                              <input ng-model="home.mapIdInput">
-                          </div>
-                          <md-button class="primary" aria-label="Generate" ng-click="home.generateMap()">
-                              Generate Map
-                          </md-button>
-                      </md-content>
-                      <md-content layout="row" class="form" ng-show="home.applicationUrl && home.mapId">
-                          <div layout="column" flex="grow">
-                              <label>Application</label>
-                              <span>{{home.applicationUrl}}</span>
-                          </div>
-                          <div layout="column" flex="grow">
-                              <label>Map ID</label>
-                              <span>{{home.mapId}}</span>
-                          </div>
+              <md-button class="md-flat-button" aria-label="Format" ng-click="home.format()">
+                Format
+              </md-button>
+            </div>
+            <st-map-validator chainscript="home.json"></st-map-validator>
+          </div>
+        </md-content>
+        <div class="tip" ng-hide="home.json" layout>
+          <span flex>Enter Chainscript JSON</span>
+        </div>
+        <st-map-explorer chainscript="home.json" refresh="0" name=" 'first' "></st-map-explorer>
+      </md-tab>
+      <md-tab label="Stratumn Application" md-active="home.agentUrl && home.mapId && home.process">
+        <div ng-hide="home.segmentShowed['second']">
+          <md-content layout="row" class="form" ng-hide="home.agentUrl && home.mapId && home.process">
+            <div layout="column" flex="40">
+              <label>Agent URL</label>
+              <input ng-model="home.agentUrlInput">
+            </div>
+            <div layout="column" flex="40">
+              <label>Map ID</label>
+              <input ng-model="home.mapIdInput">
+            </div>
+            <div layout="column" flex="40">
+              <label>Process</label>
+              <input ng-model="home.processInput">
+            </div>
+            <md-button class="primary" aria-label="Generate" ng-click="home.generateMap()">
+              Generate Map
+            </md-button>
+          </md-content>
+          <md-content layout="row" class="form" ng-show="home.agentUrl && home.mapId && home.process">
+            <div layout="column" flex="grow">
+              <label>Agent URL</label>
+              <span>{{home.agentUrl}}</span>
+            </div>
+            <div layout="column" flex="grow">
+              <label>Map ID</label>
+              <span>{{home.mapId}}</span>
+            </div>
+            <div layout="column" flex="grow">
+              <label>Process</label>
+              <span>{{home.process}}</span>
+            </div>
 
-                          <div layout="row">
-                              <md-button class="md-fab md-mini" aria-label="Refresh" ng-click="home.refresh()">
-                                  <md-icon md-font-library="material-icons">refresh</md-icon>
-                              </md-button>
-                              <md-button class="md-fab md-mini md-primary" aria-label="Edit" ng-click="home.edit()">
-                                  <md-icon md-font-library="material-icons">edit</md-icon>
-                              </md-button>
-                          </div>
-                      </md-content>
-                  </div>
+            <div layout="row">
+              <md-button class="md-fab md-mini" aria-label="Refresh" ng-click="home.refresh()">
+                <md-icon md-font-library="material-icons">refresh</md-icon>
+              </md-button>
+              <md-button class="md-fab md-mini md-primary" aria-label="Edit" ng-click="home.edit()">
+                <md-icon md-font-library="material-icons">edit</md-icon>
+              </md-button>
+            </div>
+          </md-content>
+        </div>
 
-                  <div class="tip" ng-hide="home.applicationUrl && home.mapId" layout>
-                      <span flex>Enter a Stratumn application name and Chain Map ID</span>
-                  </div>
-                  <st-map-explorer ng-show="home.applicationUrl && home.mapId" application-url="home.applicationUrl" map-id="home.mapId" refresh="home.counter" name=" 'second' "></st-map-explorer>
-              </md-tab>
-          </md-tabs>
-      </md-content>
-      <svg>
-          <marker id="triangle" viewBox="0 0 10 10" refX="0" refY="5" markerUnits="strokeWidth"
-                  markerWidth="4" markerHeight="3" orient="auto">
-              <path fill="#CCCCCC" d="M 0 0 L 10 5 L 0 10 z" />
-          </marker>
-      </svg>
-  </div>
+        <div class="tip" ng-hide="home.agentUrl && home.mapId && home.process" layout>
+          <span flex>Enter an agent URL, a Map ID and a process name</span>
+        </div>
+        <st-map-explorer ng-show="home.agentUrl && home.mapId && home.process" agent-url="home.agentUrl" map-id="home.mapId" process="home.process"
+          refresh="home.counter" name=" 'second' "></st-map-explorer>
+      </md-tab>
+    </md-tabs>
+  </md-content>
+  <svg>
+    <marker id="triangle" viewBox="0 0 10 10" refX="0" refY="5" markerUnits="strokeWidth" markerWidth="4" markerHeight="3" orient="auto">
+      <path fill="#CCCCCC" d="M 0 0 L 10 5 L 0 10 z" />
+    </marker>
+  </svg>
+</div>

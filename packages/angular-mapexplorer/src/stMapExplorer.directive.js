@@ -20,9 +20,10 @@ export default function stMapExplorer(ChainTreeBuilderService) {
   return {
     restrict: 'E',
     scope: {
-      applicationUrl: '=?',
+      agentUrl: '=?',
       mapId: '=?',
       chainscript: '=?',
+      process: '=?',
       refresh: '=',
       options: '=?',
       name: '=?'
@@ -63,7 +64,7 @@ export default function stMapExplorer(ChainTreeBuilderService) {
       };
 
       scope.$watchGroup(
-        ['applicationUrl', 'mapId', 'refresh', 'chainscript'],
+        ['agentUrl', 'mapId', 'process', 'refresh', 'chainscript'],
         update
       );
       scope.$watch('options', update, true);
