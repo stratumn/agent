@@ -31,7 +31,9 @@ export default Ember.Component.extend({
       }
     },
     show(part) {
-      ['state', 'link', 'evidence', 'json'].forEach((part) => this.set(part + 'Showed', false));
+      ['state', 'link', 'evidence', 'json'].forEach(part =>
+        this.set(part + 'Showed', false)
+      );
       this.set(part + 'Showed', true);
     }
   },
@@ -39,39 +41,40 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
     this.set('stateShowed', true);
-    this.set('evidence-component', 'bitcoin-component');
   },
 
   didInsertElement() {
     this.set('builder', new mapexplorerCore.ChainTreeBuilder(this.$()[0]));
-    this.detectEvidenceComponent();
 
-    this.get('builder').build({
-      id: this.get('mapId'),
-      agentUrl: this.get('agentUrl'),
-      process: this.get('process'),
-      chainscript: this.get('chainscript')
-    }, {
-      onclick: this.onClick.bind(this),
-      onTag: () => {}
-    });
+    this.get('builder').build(
+      {
+        id: this.get('mapId'),
+        agentUrl: this.get('agentUrl'),
+        process: this.get('process'),
+        chainscript: this.get('chainscript')
+      },
+      {
+        onclick: this.onClick.bind(this),
+        onTag: () => {}
+      }
+    );
   },
 
   didUpdateAttrs() {
     this._super(...arguments);
-
 
     // Temporary solution.
     const chainscript = this.get('chainscript');
 
     if (chainscript) {
       let builder = this.get('builder');
-      builder.chainTree.display(chainscript, Object.assign(mapexplorerCore.defaultOptions, {
-        onclick: this.onClick.bind(this),
-        onTag: () => {}
-      }));
-
-      this.detectEvidenceComponent(chainscript);
+      builder.chainTree.display(
+        chainscript,
+        Object.assign(mapexplorerCore.defaultOptions, {
+          onclick: this.onClick.bind(this),
+          onTag: () => {}
+        })
+      );
     }
   },
 
@@ -82,32 +85,6 @@ export default Ember.Component.extend({
     const onSelectSegment = this.get('onSelectSegment');
     if (onSelectSegment) {
       onSelectSegment(this.get('segment'));
-    }
-  },
-
-  detectEvidenceComponent() {
-    let chainscript = this.get('chainscript');
-    if (chainscript && chainscript.length > 0) {
-      if (typeof(chainscript) !== 'object') {
-        chainscript = JSON.parse(chainscript);
-      }
-      const evidence = chainscript[0].meta.evidence;
-      let transactionKey;
-      if (evidence.transactions) {
-        transactionKey = Object.keys(evidence.transactions)[0];
-      }
-      let component;
-      if (/bitcoin/.test(transactionKey)) {
-        component = 'bitcoin-evidence';
-      } else if (/TMPop/.test(transactionKey)) {
-        component = 'tmpop-evidence';
-      } else if (evidence.timestamp) {
-        component = 'dummy-evidence';
-      }
-
-      if (component) {
-        this.set('evidence-component', component);
-      }
     }
   }
 });
