@@ -6,11 +6,11 @@ import Adapter from 'enzyme-adapter-react-16';
 
 import { expect } from 'chai';
 
-import { AgentInfoPage } from '../components';
-import { actionTypes } from '../actions';
-import configureStore from '../store/configure';
+import { AgentInfoPage } from '../../components';
+import { actionTypes } from '../../actions';
+import configureStore from '../../store/configure';
 
-describe('Agent Info Page', () => {
+describe('<AgentInfoPage />', () => {
   configure({ adapter: new Adapter() });
 
   let props;
