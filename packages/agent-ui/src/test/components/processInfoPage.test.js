@@ -87,3 +87,20 @@ describe('<ProcessInfoPage />', () => {
     expect(mappedProps.process).to.deep.equal(mehProcess);
   });
 });
+
+describe('<StoreSection />', () => {
+  it('renders the store adapter name', () => {
+    const testProcess = new TestProcess.Builder('test')
+      .withStoreAdapter('dummyStore', 'v0.42.0', 'abcdef16', 'my awesome store')
+      .build();
+
+    const storeSection = mount(
+      <StoreSection storeAdapter={testProcess.storeInfo.adapter} />
+    );
+
+    const storeNameSection = storeSection
+      .find('samp')
+      .filterWhere(samp => samp.text() === 'dummyStore');
+    expect(storeNameSection).to.have.length(1);
+  });
+});
