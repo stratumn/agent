@@ -2,8 +2,7 @@ import React from 'react';
 
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import { TestProcess } from '../builders/testProcessBuilder';
-import { TestState } from '../builders/testStateBuilder';
+import { TestProcessBuilder, TestStateBuilder } from '../builders';
 
 import {
   ProcessInfoPage,
@@ -22,14 +21,14 @@ describe('<ProcessInfoPage />', () => {
   });
 
   it('displays the process name once loaded', () => {
-    const testProcess = new TestProcess.Builder('test').build();
+    const testProcess = new TestProcessBuilder('test').build();
 
     const processInfoPage = mount(<ProcessInfoPage process={testProcess} />);
     expect(processInfoPage.find('h1').text()).to.equal('test');
   });
 
   it('renders actions details and forwards properties', () => {
-    const testProcess = new TestProcess.Builder('test')
+    const testProcess = new TestProcessBuilder('test')
       .withAction('init', ['title'])
       .withAction('beAwesome', ['why', 'how'])
       .build();
@@ -42,7 +41,7 @@ describe('<ProcessInfoPage />', () => {
   });
 
   it('renders store details and forwards properties', () => {
-    const testProcess = new TestProcess.Builder('test')
+    const testProcess = new TestProcessBuilder('test')
       .withStoreAdapter('dummyStore', 'v0.42.0', 'abcdef16', 'my awesome store')
       .build();
 
@@ -54,7 +53,7 @@ describe('<ProcessInfoPage />', () => {
   });
 
   it('renders fossilizers details and forwards properties', () => {
-    const testProcess = new TestProcess.Builder('test')
+    const testProcess = new TestProcessBuilder('test')
       .withFossilizer(
         'btcFossilizer',
         'v42',
@@ -73,10 +72,10 @@ describe('<ProcessInfoPage />', () => {
   });
 
   it('extracts from store state the process chosen in the url', () => {
-    const awesomeProcess = new TestProcess.Builder('awesome').build();
-    const mehProcess = new TestProcess.Builder('meh').build();
+    const awesomeProcess = new TestProcessBuilder('awesome').build();
+    const mehProcess = new TestProcessBuilder('meh').build();
 
-    const testState = new TestState.Builder()
+    const testState = new TestStateBuilder()
       .withProcess(awesomeProcess)
       .withProcess(mehProcess)
       .build();
@@ -90,7 +89,7 @@ describe('<ProcessInfoPage />', () => {
 
 describe('<StoreSection />', () => {
   it('renders the store adapter name', () => {
-    const testProcess = new TestProcess.Builder('test')
+    const testProcess = new TestProcessBuilder('test')
       .withStoreAdapter('dummyStore', 'v0.42.0', 'abcdef16', 'my awesome store')
       .build();
 

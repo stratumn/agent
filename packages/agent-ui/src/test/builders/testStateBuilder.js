@@ -1,24 +1,16 @@
-export class TestState {
-  constructor(builder) {
-    this.agentInfo = builder.agentInfo;
+export default class {
+  constructor() {
+    this.agentInfo = { processes: {} };
   }
 
-  static get Builder() {
-    class Builder {
-      constructor() {
-        this.agentInfo = { processes: {} };
-      }
+  withProcess(process) {
+    this.agentInfo.processes[process.name] = process;
+    return this;
+  }
 
-      withProcess(process) {
-        this.agentInfo.processes[process.name] = process;
-        return this;
-      }
-
-      build() {
-        return new TestState(this);
-      }
-    }
-
-    return Builder;
+  build() {
+    return {
+      agentInfo: this.agentInfo
+    };
   }
 }
