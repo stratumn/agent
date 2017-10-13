@@ -22,7 +22,8 @@ const url = 'http://localhost';
 function test(segment) {
   segment.meta.agentUrl.should.be.exactly('http://localhost');
   segment.meta.segmentUrl.should.be.exactly(
-    `http://localhost/segments/${segment.meta.linkHash}`
+    `http://localhost/${segment.link.meta.process}/segments/${segment.meta
+      .linkHash}`
   );
 }
 

@@ -24,9 +24,10 @@ export default function(agentUrl) {
     didCreateSegment(segment) {
       const { meta } = segment;
       const { linkHash } = meta;
+      const { process } = segment.link.meta;
 
       meta.agentUrl = agentUrl;
-      meta.segmentUrl = `${agentUrl}/segments/${linkHash}`;
+      meta.segmentUrl = `${agentUrl}/${process}/segments/${linkHash}`;
     }
   };
 }
