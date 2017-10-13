@@ -54,7 +54,9 @@
   "dependencies": {
     "httpplease": "^0.16.4",
     "qs": "stratumn/qs#rename-formats-default",
-    "setimmediate": "^1.0.5",
-    "xmlhttprequest": "~1.7.0"
+    "setimmediate": "^1.0.5"
+  },
+  "resolutions": {
+    "xmlhttprequest": "1.7.0"
   }
 }
