@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -6,20 +6,15 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import { TopBar, LeftDrawer } from './';
 
-class App extends Component {
-  render() {
-    console.log('App render', this.props);
-    return (
-      <MuiThemeProvider>
-        <div>
-          <TopBar />
-          <LeftDrawer processes={this.props.processes} />
-          {this.props.children}
-        </div>
-      </MuiThemeProvider>
-    );
-  }
-}
+export const App = ({ processes, children }) => (
+  <MuiThemeProvider>
+    <div>
+      <TopBar />
+      <LeftDrawer processes={processes} />
+      {children}
+    </div>
+  </MuiThemeProvider>
+);
 
 function mapStateToProps(state) {
   console.log('mapStateToProps', state);
@@ -32,8 +27,7 @@ function mapStateToProps(state) {
 
 App.propTypes = {
   children: PropTypes.node.isRequired,
-  processes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  dispatch: PropTypes.func.isRequired
+  processes: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
 export default connect(mapStateToProps)(App);
