@@ -1,18 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Route } from 'react-router-dom';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import { TopBar, LeftDrawer } from './';
+import { TopBar, LeftDrawer, AgentInfoPage, ProcessInfoPage } from './';
 
-export const App = ({ processes, children }) => (
+export const App = ({ processes }) => (
   <MuiThemeProvider>
     <div>
       <TopBar />
       <LeftDrawer processes={processes} />
-      {children}
+      <Route exact path="/" component={AgentInfoPage} />
+      <Route exact path="/:process" component={ProcessInfoPage} />
     </div>
   </MuiThemeProvider>
 );
@@ -27,7 +28,6 @@ function mapStateToProps(state) {
 }
 
 App.propTypes = {
-  children: PropTypes.node.isRequired,
   processes: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
