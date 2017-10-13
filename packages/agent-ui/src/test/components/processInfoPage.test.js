@@ -103,3 +103,55 @@ describe('<StoreSection />', () => {
     expect(storeNameSection).to.have.length(1);
   });
 });
+
+describe('<ActionsSection />', () => {
+  it('correctly displays actions signature', () => {
+    const testProcess = new TestProcessBuilder('test')
+      .withAction('greet', ['name'])
+      .withAction('send', ['from', 'to'])
+      .build();
+
+    const actionsSection = mount(
+      <ActionsSection actions={testProcess.processInfo.actions} />
+    );
+
+    const actionItems = actionsSection.find('li').find('samp');
+    expect(actionItems).to.have.length(2);
+    expect(actionItems.at(0).text()).to.equal('greet(name)');
+    expect(actionItems.at(1).text()).to.equal('send(from, to)');
+  });
+});
+
+describe('<FossilizersSection />', () => {
+  it('displays a custom message when no fossilizers are connected', () => {
+    const testProcess = new TestProcessBuilder('no fossilizers').build();
+
+    const fossilizersSection = mount(
+      <FossilizersSection fossilizers={testProcess.fossilizersInfo} />
+    );
+
+    expect(
+      fossilizersSection
+        .find('p')
+        .filterWhere(
+          p => p.text() === 'Your agent is not connected to fossilizers.'
+        )
+    ).to.have.length(1);
+  });
+
+  it("displays fossilizers' details", () => {
+    const testProcess = new TestProcessBuilder('with fossilizers')
+      .withFossilizer('btcFoss', 'v42', 'ab45de56', 'btc fossilizer', 'btc')
+      .withFossilizer('ethFoss', 'v42.1', 'abcabcde', 'evm fossilizer', 'evm')
+      .build();
+
+    const fossilizersSection = mount(
+      <FossilizersSection fossilizers={testProcess.fossilizersInfo} />
+    );
+
+    const fossilizerItems = fossilizersSection.find('li');
+    expect(fossilizerItems).to.have.length(2);
+    expect(fossilizerItems.at(0).text()).to.contain('btcFoss');
+    expect(fossilizerItems.at(1).text()).to.contain('ethFoss');
+  });
+});
