@@ -2,13 +2,15 @@ import React from 'react';
 
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import { TestProcess, Builder } from '../builders/testProcessBuilder';
+import { TestProcess } from '../builders/testProcessBuilder';
+import { TestState } from '../builders/testStateBuilder';
 
 import {
   ProcessInfoPage,
   StoreSection,
   ActionsSection,
-  FossilizersSection
+  FossilizersSection,
+  mapStateToProps
 } from '../../components/processInfoPage';
 
 describe('<ProcessInfoPage />', () => {
@@ -68,5 +70,20 @@ describe('<ProcessInfoPage />', () => {
     const fossilizersProps = processInfoPage.find(FossilizersSection).props()
       .fossilizers;
     expect(fossilizersProps).to.deep.equal(testProcess.fossilizersInfo);
+  });
+
+  it('extracts from store state the process chosen in the url', () => {
+    const awesomeProcess = new TestProcess.Builder('awesome').build();
+    const mehProcess = new TestProcess.Builder('meh').build();
+
+    const testState = new TestState.Builder()
+      .withProcess(awesomeProcess)
+      .withProcess(mehProcess)
+      .build();
+
+    const routeParams = { params: { process: 'meh' } };
+    const mappedProps = mapStateToProps(testState, routeParams);
+
+    expect(mappedProps.process).to.deep.equal(mehProcess);
   });
 });
