@@ -18,7 +18,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "test:ci": "react-scripts build && CI=true react-scripts test --env=jsdom",
+    "test:ci":
+      "react-scripts build && CI=true react-scripts test --env=jsdom --coverage",
     "eject": "react-scripts eject"
   },
   "dependencies": {
