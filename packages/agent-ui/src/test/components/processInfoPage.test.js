@@ -1,5 +1,4 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { mount } from 'enzyme';
 import { expect } from 'chai';
@@ -19,7 +18,8 @@ describe('<ProcessInfoPage />', () => {
     },
     storeInfo: {
       adapter: {}
-    }
+    },
+    fossilizersInfo: []
   };
 
   it('renders a loading message while process info has not loaded', () => {
