@@ -5,14 +5,8 @@ import { connect } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import { TopBar, LeftDrawer } from './';
-import { getAgentInfo } from '../actions';
 
 class App extends Component {
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(getAgentInfo());
-  }
-
   render() {
     console.log('App render', this.props);
     return (
