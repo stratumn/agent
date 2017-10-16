@@ -33,7 +33,7 @@ class MapExplorer extends Component {
 
     this.state = {
       segment: null,
-      content: 'state'
+      content: 'State'
     };
     this.handleSegmentClick = this.handleSegmentClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -96,12 +96,12 @@ class MapExplorer extends Component {
     if (segment) {
       let segmentContent;
       switch (this.state.content) {
-        case 'state':
+        case 'State':
           segmentContent = (
             <pre>{JSON.stringify(segment.link.state, undefined, 2)}</pre>
           );
           break;
-        case 'link':
+        case 'Link':
           segmentContent = (
             <div className="link">
               <h4>Map ID</h4>
@@ -126,12 +126,12 @@ class MapExplorer extends Component {
             </div>
           );
           break;
-        case 'evidence':
+        case 'Evidence':
           segmentContent = (
             <this.evidenceComponent evidence={segment.meta.evidence} />
           );
           break;
-        case 'json':
+        case 'JSON':
           segmentContent = <pre>{JSON.stringify(segment, undefined, 2)}</pre>;
           break;
         default:
@@ -157,38 +157,16 @@ class MapExplorer extends Component {
           <div style={styles.body}>
             <div className="menu">
               <ul>
-                <li
-                  className={this.state.content === 'state' ? 'active' : ''}
-                  onClick={this.handleShow('state')}
-                  onKeyDown={this.handleShow('state')}
-                  role="presentation"
-                >
-                  State
-                </li>
-                <li
-                  className={this.state.content === 'link' ? 'active' : ''}
-                  onClick={this.handleShow('link')}
-                  onKeyDown={this.handleShow('link')}
-                  role="presentation"
-                >
-                  Link
-                </li>
-                <li
-                  className={this.state.content === 'evidence' ? 'active' : ''}
-                  onClick={this.handleShow('evidence')}
-                  onKeyDown={this.handleShow('evidence')}
-                  role="presentation"
-                >
-                  Evidence
-                </li>
-                <li
-                  className={this.state.content === 'json' ? 'active' : ''}
-                  onClick={this.handleShow('json')}
-                  onKeyDown={this.handleShow('link')}
-                  role="presentation"
-                >
-                  JSON
-                </li>
+                {['State', 'Link', 'Evidence', 'JSON'].map(item => (
+                  <li
+                    className={this.state.content === item ? 'active' : ''}
+                    onClick={this.handleShow(item)}
+                    onKeyDown={this.handleShow(item)}
+                    role="presentation"
+                  >
+                    {item}
+                  </li>
+                ))}
               </ul>
             </div>
             <div style={styles.content}>{segmentContent}</div>

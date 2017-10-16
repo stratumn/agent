@@ -15,16 +15,7 @@
 */
 
 import getActionsInfo from '../src/getActionsInfo';
-
-const actions = {
-  init(a, b, c) {
-    this.append({ a, b, c });
-  },
-  action(d) {
-    this.state.d = d;
-    this.append();
-  }
-};
+import actions from './utils/basicActions';
 
 describe('#getActionsInfo()', () => {
   it('returns the actions info', () => {

@@ -19,6 +19,7 @@ import memoryStore from '../src/memoryStore';
 import hashJson from '../src/hashJson';
 import generateSecret from '../src/generateSecret';
 import { memoryStoreInfo } from './fixtures';
+import actions from './utils/basicActions';
 
 const plugins = [
   {
@@ -26,16 +27,6 @@ const plugins = [
     description: 'D'
   }
 ];
-
-const actions = {
-  init(a, b, c) {
-    this.append({ a, b, c });
-  },
-  action(d) {
-    this.state.d = d;
-    this.append();
-  }
-};
 
 // TODO: could be improved by using a dummy fossilizer.
 describe('Process', () => {

@@ -18,21 +18,12 @@ import create from '../src/create';
 import memoryStore from '../src/memoryStore';
 import plugins from '../src/plugins';
 import Process from '../src/process';
+import actions from './utils/basicActions';
 
 import fossilizerHttpClient, {
   clearAvailableFossilizers
 } from '../src/fossilizerHttpClient';
 import storeHttpClient, { clearAvailableStores } from '../src/storeHttpClient';
-
-const actions = {
-  init(a, b, c) {
-    this.append({ a, b, c });
-  },
-  action(d) {
-    this.state[Object.keys(this.state).length] = d;
-    this.append();
-  }
-};
 
 // TODO: could be improved by using a dummy fossilizer.
 describe('Agent', () => {

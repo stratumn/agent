@@ -19,16 +19,7 @@ import create from '../src/create';
 import memoryStore from '../src/memoryStore';
 import hashJson from '../src/hashJson';
 import generateSecret from '../src/generateSecret';
-
-const actions = {
-  init(a, b, c) {
-    this.append({ a, b, c });
-  },
-  action(d) {
-    this.state.d = d;
-    this.append();
-  }
-};
+import actions from './utils/basicActions';
 
 function testFn(req, fn) {
   return new Promise((resolve, reject) => {
