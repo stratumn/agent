@@ -2,6 +2,8 @@
 
 A react component used to display a Map Explorer from chainscript.
 
+[![npm](https://img.shields.io/npm/v/react-mapexplorer.svg)](https://www.npmjs.com/package/react-mapexplorer)
+
 ## Installation
 
 ```

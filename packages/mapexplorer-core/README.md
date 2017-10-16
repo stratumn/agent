@@ -1,6 +1,6 @@
 # MapExplorer Core
 
-[![build status](https://travis-ci.org/stratumn/mapexplorer-core.svg?branch=master)](https://travis-ci.org/stratumn/mapexplorer-core.svg?branch=master)
+[![npm](https://img.shields.io/npm/v/mapexplorer-core.svg)](https://www.npmjs.com/package/mapexplorer-core)
 
 Core library for building Map Explorer components
 

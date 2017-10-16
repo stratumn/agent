@@ -2,9 +2,7 @@
 
 This NodeJS module exposes functions to create Stratumn agents using Javascript.
 
-[![Build Status](https://travis-ci.org/stratumn/agent-js.svg?branch=master)](https://travis-ci.org/stratumn/agent-js)
-[![codecov](https://codecov.io/gh/stratumn/agent-js/branch/master/graph/badge.svg)](https://codecov.io/gh/stratumn/agent-js)
-[![Build Status](https://david-dm.org/stratumn/agent-js.svg)](https://david-dm.org/stratumn/agent-js)
+[![npm](https://img.shields.io/npm/v/stratumn-agent.svg)](https://www.npmjs.com/package/stratumn-agent)
 
 Copyright 2017 Stratumn SAS. All rights reserved.
 
