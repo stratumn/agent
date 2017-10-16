@@ -18,7 +18,7 @@ export const ProcessInfoPage = ({ process }) => (
   </div>
 );
 
-function mapStateToProps(state, ownProps) {
+export function mapStateToProps(state, ownProps) {
   let process = {};
   if (state.agentInfo) {
     if (state.agentInfo.processes[ownProps.params.process]) {
