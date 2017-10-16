@@ -5,19 +5,33 @@ export default class HomeController {
     this.agentUrl = $routeParams.agentUrl;
     this.process = $routeParams.process;
     this.counter = 0;
-    this.segmentShowed = {};
+
+    const segmentShowed = {};
+    this.segmentShowed = segmentShowed;
+
+    this.mapExplorerFromCSOptions = {
+      onSegmentShow() {
+        segmentShowed.CS = true;
+      },
+
+      onSegmentHide() {
+        segmentShowed.CS = false;
+      }
+    };
+
+    this.mapExplorerFromURLOptions = {
+      onSegmentShow() {
+        segmentShowed.URL = true;
+      },
+
+      onSegmentHide() {
+        segmentShowed.URL = false;
+      }
+    };
 
     this.aceLoaded = editor => {
       this.editor = editor;
       AceConfigurationService.configure(this.editor);
-    };
-
-    this.$scope.onSegmentShow = name => {
-      this.segmentShowed[name] = true;
-    };
-
-    this.$scope.onSegmentHide = name => {
-      this.segmentShowed[name] = false;
     };
   }
 

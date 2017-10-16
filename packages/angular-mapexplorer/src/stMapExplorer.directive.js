@@ -19,14 +19,16 @@ import angular from 'angular';
 export default function stMapExplorer(ChainTreeBuilderService) {
   return {
     restrict: 'E',
+    transclude: {
+      evidenceBody: '?evidenceBody'
+    },
     scope: {
       agentUrl: '=?',
       mapId: '=?',
       chainscript: '=?',
       process: '=?',
       refresh: '=',
-      options: '=?',
-      name: '=?'
+      options: '=?'
     },
     templateUrl: '../views/mapexplorer.html',
     controller: 'MapExplorerController',

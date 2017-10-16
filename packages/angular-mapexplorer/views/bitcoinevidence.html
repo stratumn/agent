@@ -1,0 +1,18 @@
+<div class="info">
+  <h4>State</h4>
+  <p>{{$parent.evidence.state}}</p>
+  <div ng-show="evidence.state === 'COMPLETE'">
+    <h4>Bitcoin Transaction</h4>
+    <p>
+      {{$parent.evidence.transactions['bitcoin:main']}}
+      <a target="_blank" ng-href="https://blockchain.info/tx/{{$parent.evidence.transactions['bitcoin:main']}}">View transaction on Blockchain.info</a>
+    </p>
+
+    <h4>Merkle root</h4>
+    <p>{{$parent.evidence.merkleRoot}}</p>
+  </div>
+</div>
+<div class="merkle-path" ng-show="$parent.evidence.state === 'COMPLETE'">
+  <h4>Merkle Path</h4>
+  <st-merkle-path-tree merkle-path="$parent.evidence.merklePath"></st-merkle-path-tree>
+</div>

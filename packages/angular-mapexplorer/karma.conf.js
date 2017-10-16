@@ -97,7 +97,8 @@ module.exports = function configure(config) {
           base: 'Chrome',
           flags: ['--no-sandbox']
         }
-      }
+      },
+      singleRun: true
     });
   }
 };

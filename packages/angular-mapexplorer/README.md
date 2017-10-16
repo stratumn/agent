@@ -26,24 +26,29 @@ You might also need `tinycolor.js` and `angular-drop`.
 
 ## Usage
 
-```
-<st-map-explorer chainscript="home.json" refresh="0" name=" 'my-chain-explorer' "></st-map-explorer>
+```html
+<st-map-explorer chainscript="home.json" refresh="0"></st-map-explorer>
 ```
 
 or
 
+```html
+<st-map-explorer agentUrl="home.agentUrl" map-id="home.mapId" process="home.process" options="{showTagColorConfiguration: true}"></st-map-explorer>
 ```
-<st-map-explorer application="home.application" map-id="home.mapId" options="{zoomable: true}"></st-map-explorer>
+
+By default the directive expects the evidence to come from the Bitcoin Fossilizer.
+To override the evidence body you can transclude your own evidence component. The evidence part of the segment will be available on `$parent.evidence`
+
+```html
+<st-map-explorer chainscript="home.json" refresh="0">
+  <evidence-body>
+    <h1>State</h1>
+    <p>{{$parent.evidence.state}}</p>
+  </evidence-body>
+</st-map-explorer>
 ```
 
 ### Options
-
-##### zoomable
-```
-Default: false
-```
-
-Make the map zoomable.
 
 ##### showTagColorConfiguration
 ```
@@ -53,5 +58,19 @@ Default: false
 Display the tag color legend and allow configuration
 
 
+#### onSegmentShow
+```
+Default: noop
+```
+
+Callback called when a segment content is displayed with the segment in argument
+
+#### onSegmentHide
+```
+Default: noop
+```
+
+Callback called when a segment content is hidden
 
 
+Plus all options inherited from [MapExplorer Core](https://github.com/stratumn/mapexplorer-core)
