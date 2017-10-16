@@ -11,8 +11,6 @@ engines:
     enabled: true
   radon:
     enabled: true
-  requiresafe:
-    enabled: true
 ratings:
   paths:
   - "**.js"
