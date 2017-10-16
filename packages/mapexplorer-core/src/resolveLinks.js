@@ -15,13 +15,13 @@
 */
 
 import merge from 'deepmerge';
-import { loadLink } from 'stratumn-agent-client';
+import { fromSegment } from 'stratumn-agent-client';
 
 export default function resolveLinks(segments) {
   return Promise.all(
     segments.map(segment => {
       if (!segment.link.state) {
-        return loadLink(segment).then(res => merge(res, segment));
+        return fromSegment(segment).then(res => merge(res, segment));
       }
       return Promise.resolve(segment);
     })
