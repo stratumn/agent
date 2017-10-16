@@ -18,6 +18,9 @@ import httpServer from './httpServer';
 import Process from './process';
 import getDefinedFilters from './getDefinedFilters';
 
+import { getAvailableFossilizers } from './fossilizerHttpClient';
+import { getAvailableStores } from './storeHttpClient';
+
 /**
  * Creates an agent.
  * @param {object} options - options
@@ -98,7 +101,11 @@ export default function create(options) {
             return map;
           }, {})
         )
-        .then(map => ({ processes: map }));
+        .then(map => ({
+          processes: map,
+          stores: getAvailableStores(),
+          fossilizers: getAvailableFossilizers()
+        }));
     },
 
     /**
