@@ -39,7 +39,9 @@ export default class MapExplorer {
   show(segment, onHide) {
     this.segment = segment;
     this.onHide = onHide;
-    this.$scope.$parent.onSegmentShow(this.$scope.name);
+    if (this.$scope.options.onSegmentShow) {
+      this.$scope.options.onSegmentShow(segment);
+    }
   }
 
   display(tab) {
@@ -53,7 +55,9 @@ export default class MapExplorer {
 
   close() {
     this.segment = null;
-    this.$scope.$parent.onSegmentHide(this.$scope.name);
+    if (this.$scope.options.onSegmentHide) {
+      this.$scope.options.onSegmentHide();
+    }
     this.onHide();
   }
 }

@@ -43,23 +43,8 @@
         <p>{{me.segment.link.meta.action}}({{me.segment.link.meta.arguments | functionArguments}})</p>
       </div>
       <div ng-show="me.displayed == 'evidence'" layout-gt-sm="row" layout="column">
-        <div class="info">
-          <h4>State</h4>
-          <p>{{me.segment.meta.evidence.state}}</p>
-          <div ng-show="me.segment.meta.evidence.state === 'COMPLETE'">
-            <h4>Bitcoin Transaction</h4>
-            <p>
-              {{me.segment.meta.evidence.transactions['bitcoin:main']}}
-              <a target="_blank" ng-href="https://blockchain.info/tx/{{me.segment.meta.evidence.transactions['bitcoin:main']}}">View transaction on Blockchain.info</a>
-            </p>
-
-            <h4>Merkle root</h4>
-            <p>{{me.segment.meta.evidence.merkleRoot}}</p>
-          </div>
-        </div>
-        <div class="merkle-path" ng-show="me.segment.meta.evidence.state === 'COMPLETE'">
-          <h4>Merkle Path</h4>
-          <st-merkle-path-tree merkle-path="me.segment.meta.evidence.merklePath"></st-merkle-path-tree>
+        <div ng-transclude="evidenceBody">
+          <st-bitcoin-evidence></st-bitcoin-evidence>
         </div>
       </div>
       <div ng-show="me.displayed == 'json'">
@@ -72,20 +57,20 @@
   </div>
 </div>
 <div ng-show="me.loading" layout="row" layout-sm="column" layout-align="space-around">
-    <md-progress-circular md-mode="indeterminate" md-diameter="80"></md-progress-circular>
+  <md-progress-circular md-mode="indeterminate" md-diameter="80"></md-progress-circular>
 </div>
 <div ng-hide="me.loading" class="scroll">
-    <div ng-show="tags && tags.length && options.showTagColorConfiguration" draggable id="tags-configuration">
-      <md-toolbar>
-        <div class="md-toolbar-tools">
-          <h4>Configure link tag color</h4>
-          <md-button class="md-icon-button" aria-label="Close" ng-click="options.showTagColorConfiguration = false">
-            <md-icon md-font-library="material-icons">close</md-icon>
-          </md-button>
-        </div>
-      </md-toolbar>
-      <div class="content">
-        <st-tag-color-picker ng-repeat="tag in tags" tag="tag"></st-tag-color-picker>
+  <div ng-show="tags && tags.length && options.showTagColorConfiguration" draggable id="tags-configuration">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h4>Configure link tag color</h4>
+        <md-button class="md-icon-button" aria-label="Close" ng-click="options.showTagColorConfiguration = false">
+          <md-icon md-font-library="material-icons">close</md-icon>
+        </md-button>
       </div>
+    </md-toolbar>
+    <div class="content">
+      <st-tag-color-picker ng-repeat="tag in tags" tag="tag"></st-tag-color-picker>
     </div>
+  </div>
 </div>
