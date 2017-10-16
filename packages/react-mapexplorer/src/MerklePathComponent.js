@@ -15,6 +15,7 @@
 */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { MerklePathTree } from 'mapexplorer-core';
 import radium from 'radium';
 
@@ -42,7 +43,7 @@ class MerklePathComponent extends Component {
 }
 
 MerklePathComponent.propTypes = {
-  merklePath: React.PropTypes.string.isRequired
+  merklePath: PropTypes.string.isRequired
 };
 
 export default radium(MerklePathComponent);

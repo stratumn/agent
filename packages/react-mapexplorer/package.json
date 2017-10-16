@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "mapexplorer-core": "^2.0.0",
-    "radium": "^0.18.1"
+    "radium": "^0.19.5"
   },
   "peerDependencies": {
     "react": "^0.14.9 || ^15.0.0 || ^16.0.0",
@@ -39,6 +39,14 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-postcss": "^0.5.5"
   },
-  "files": ["dist"],
-  "keywords": ["react", "react-component", "indigo", "Stratumn", "MapExplorer"]
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "react",
+    "react-component",
+    "indigo",
+    "Stratumn",
+    "MapExplorer"
+  ]
 }

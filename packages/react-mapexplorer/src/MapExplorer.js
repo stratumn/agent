@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { ChainTreeBuilder } from 'mapexplorer-core';
 import radium from 'radium';
 import { getStyles, getRules } from './mapExplorerCss';
