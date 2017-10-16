@@ -243,10 +243,7 @@ export default class Process {
    */
   findSegments(opts) {
     const options = opts;
-    if (options.mapId) {
-      options.mapIds = options.mapId;
-      delete options.mapId;
-    }
+
     return this.storeClient.findSegments(
       this.name,
       options,
