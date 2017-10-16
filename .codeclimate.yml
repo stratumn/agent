@@ -1,2 +1,22 @@
+---
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - javascript
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+  radon:
+    enabled: true
+  requiresafe:
+    enabled: true
+ratings:
+  paths:
+  - "**.js"
+  - "**.jsx"
 exclude_paths:
+- node_modules/
 - "**/vendor/"
