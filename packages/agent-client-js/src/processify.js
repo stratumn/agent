@@ -19,11 +19,6 @@ import getSegment from './getSegment';
 import findSegments from './findSegments';
 import getMapIds from './getMapIds';
 
-// Deprecated.
-import getBranches from './getBranches';
-import getLink from './getLink';
-import getMap from './getMap';
-
 export default function processify(adaptor, process) {
   const updatedProcess = process;
   if (adaptor.url) {
@@ -38,11 +33,6 @@ export default function processify(adaptor, process) {
     updatedProcess
   );
   updatedProcess.getMapIds = getMapIds.bind(null, adaptor, updatedProcess);
-
-  // Deprecated.
-  updatedProcess.getBranches = getBranches.bind(null, adaptor, updatedProcess);
-  updatedProcess.getLink = getLink.bind(null, adaptor, updatedProcess);
-  updatedProcess.getMap = getMap.bind(null, adaptor, updatedProcess);
 
   return updatedProcess;
 }
