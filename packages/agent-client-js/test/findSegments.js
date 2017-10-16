@@ -18,10 +18,14 @@ import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#findSegments', () => {
   runTestsWithDataAndAgent(processCb => {
-    it('finds the segments', () =>
-      processCb()
+    function processCbWithMaps() {
+      return processCb()
         .createMap('hi')
-        .then(() => processCb().createMap('hi'))
+        .then(() => processCb().createMap('hi'));
+    }
+
+    it('finds the segments', () =>
+      processCbWithMaps()
         .then(() => processCb().findSegments())
         .then(segments => {
           segments.should.be.an.Array();
@@ -29,9 +33,7 @@ describe('#findSegments', () => {
         }));
 
     it('finds the tagged segments', () =>
-      processCb()
-        .createMap('hi')
-        .then(() => processCb().createMap('hi'))
+      processCbWithMaps()
         .then(segment => segment.addMessage('hello', 'bob'))
         .then(segment => segment.addTag('myTag'))
         .then(segment => segment.addTag('myTag2'))
@@ -47,9 +49,7 @@ describe('#findSegments', () => {
         }));
 
     it('applies the options mapId', () =>
-      processCb()
-        .createMap('hi')
-        .then(() => processCb().createMap('hi'))
+      processCbWithMaps()
         .then(segment =>
           processCb().findSegments({ mapIds: [segment.link.meta.mapId] })
         )
@@ -58,30 +58,18 @@ describe('#findSegments', () => {
           segments.length.should.be.exactly(1);
         }));
 
-    it('loads all segments with a limit of -1', () =>
-      processCb()
-        .createMap('hi')
-        .then(() => processCb().createMap('hi'))
-        .then(() => processCb().findSegments({ limit: -1, batchSize: 1 }))
-        .then(segments => {
-          segments.should.be.an.Array();
-          segments.length.should.be.exactly(2);
-        }));
-
-    it('loads all segments with a limit of -1', () =>
-      processCb()
-        .createMap('hi')
-        .then(() => processCb().createMap('hi'))
-        .then(() => processCb().findSegments({ limit: -1, batchSize: 2 }))
-        .then(segments => {
-          segments.should.be.an.Array();
-          segments.length.should.be.exactly(2);
-        }));
+    [1, 2].forEach(batchSize => {
+      it('loads all segments with a limit of -1', () =>
+        processCbWithMaps()
+          .then(() => processCb().findSegments({ limit: -1, batchSize }))
+          .then(segments => {
+            segments.should.be.an.Array();
+            segments.length.should.be.exactly(2);
+          }));
+    });
 
     it('returns segmentified segments', () =>
-      processCb()
-        .createMap('hi')
-        .then(() => processCb().createMap('hi'))
+      processCbWithMaps()
         .then(() => processCb().findSegments())
         .then(segments => {
           segments.forEach(segment => segment.getPrev.should.be.a.Function());

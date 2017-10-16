@@ -29,6 +29,12 @@ import parseArgs from './parseArgs';
  * @returns {express.Server} - an express server
  */
 export default function httpServer(agent, opts = {}) {
+  function loadProcess(req, res, next) {
+    const process = agent.getProcess(req.params.process);
+    res.locals.process = process;
+    next();
+  }
+
   const app = express();
 
   app.disable('x-powered-by');
@@ -65,29 +71,22 @@ export default function httpServer(agent, opts = {}) {
     }
   });
 
-  app.post('/:process/segments', (req, res, next) => {
-    /* eslint-disable */
+  app.post('/:process/segments', loadProcess, (req, res, next) => {
     res.locals.renderErrorAsLink = true;
-    /* eslint-enable */
-    try {
-      const process = agent.getProcess(req.params.process);
-      process
-        .createMap(...parseArgs(req.body))
-        .then(res.json.bind(res))
-        .catch(next);
-    } catch (err) {
-      next(err);
-    }
+
+    res.locals.process
+      .createMap(...parseArgs(req.body))
+      .then(res.json.bind(res))
+      .catch(next);
   });
 
-  app.post('/:process/segments/:linkHash/:action', (req, res, next) => {
-    /* eslint-disable */
-    res.locals.renderErrorAsLink = true;
-    /* eslint-enable */
+  app.post(
+    '/:process/segments/:linkHash/:action',
+    loadProcess,
+    (req, res, next) => {
+      res.locals.renderErrorAsLink = true;
 
-    try {
-      const process = agent.getProcess(req.params.process);
-      process
+      res.locals.process
         .createSegment(
           req.params.linkHash,
           req.params.action,
@@ -95,57 +94,35 @@ export default function httpServer(agent, opts = {}) {
         )
         .then(res.json.bind(res))
         .catch(next);
-    } catch (err) {
-      next(err);
     }
+  );
+
+  app.get('/:process/segments/:linkHash', loadProcess, (req, res, next) => {
+    res.locals.process
+      .getSegment(req.params.linkHash)
+      .then(res.json.bind(res))
+      .catch(next);
   });
 
-  app.get('/:process/segments/:linkHash', (req, res, next) => {
-    try {
-      const process = agent.getProcess(req.params.process);
-      process
-        .getSegment(req.params.linkHash)
-        .then(res.json.bind(res))
-        .catch(next);
-    } catch (err) {
-      next(err);
-    }
+  app.get('/:process/segments', loadProcess, (req, res, next) => {
+    res.locals.process
+      .findSegments(req.query)
+      .then(res.json.bind(res))
+      .catch(next);
   });
 
-  app.get('/:process/segments', (req, res, next) => {
-    try {
-      const process = agent.getProcess(req.params.process);
-      process
-        .findSegments(req.query)
-        .then(res.json.bind(res))
-        .catch(next);
-    } catch (err) {
-      next(err);
-    }
+  app.post('/:process/evidence/:linkHash', loadProcess, (req, res, next) => {
+    res.locals.process
+      .insertEvidence(req.params.linkHash, req.body, req.query.secret)
+      .then(res.json.bind(res))
+      .catch(next);
   });
 
-  app.post('/:process/evidence/:linkHash', (req, res, next) => {
-    try {
-      const process = agent.getProcess(req.params.process);
-      process
-        .insertEvidence(req.params.linkHash, req.body, req.query.secret)
-        .then(res.json.bind(res))
-        .catch(next);
-    } catch (err) {
-      next(err);
-    }
-  });
-
-  app.get('/:process/maps', (req, res, next) => {
-    try {
-      const process = agent.getProcess(req.params.process);
-      process
-        .getMapIds(req.query)
-        .then(res.json.bind(res))
-        .catch(next);
-    } catch (err) {
-      next(err);
-    }
+  app.get('/:process/maps', loadProcess, (req, res, next) => {
+    res.locals.process
+      .getMapIds(req.query)
+      .then(res.json.bind(res))
+      .catch(next);
   });
 
   app.use((req, res, next) => {
