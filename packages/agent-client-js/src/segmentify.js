@@ -14,49 +14,22 @@
   limitations under the License.
 */
 
-import deprecated from './deprecated';
-import getBranches from './getBranches';
-
 export default function segmentify(adaptor, process, obj) {
   Object.keys(process.processInfo.actions)
     .filter(key => ['init'].indexOf(key) < 0)
     .forEach(key => {
-      /* eslint-disable */
-      obj[key] = (...args) => {
-        return adaptor
+      obj[key] = (...args) =>
+        adaptor
           .createSegment(process.name, obj.meta.linkHash, key, ...args)
           .then(res => segmentify(adaptor, process, res.body));
-      };
     });
 
-  /* eslint-disable */
   obj.getPrev = () => {
-    /* eslint-enable */
     if (obj.link.meta.prevLinkHash) {
       return process.getSegment(obj.link.meta.prevLinkHash);
     }
 
     return Promise.resolve(null);
-  };
-
-  // Deprecated.
-  /* eslint-disable */
-  obj.load = () => {
-    /* eslint-enable */
-    deprecated('segment#load()');
-    return Promise.resolve(
-      segmentify(adaptor, process, {
-        link: JSON.parse(JSON.stringify(obj.link)),
-        meta: JSON.parse(JSON.stringify(obj.meta))
-      })
-    );
-  };
-
-  // Deprecated.
-  /* eslint-disable */
-  obj.getBranches = (...args) => {
-    /* eslint-enable */
-    return getBranches(adaptor, process, obj.meta.linkHash, ...args);
   };
 
   return obj;
