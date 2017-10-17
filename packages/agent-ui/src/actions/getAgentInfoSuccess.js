@@ -1,6 +1,6 @@
 import { actionTypes } from './';
 
-export default function getAgentInfoSuccess(info) {
+export default function(info) {
   console.log('getAgentInfoSuccess', info);
   return { type: actionTypes.AGENT_INFO_SUCCESS, info };
 }

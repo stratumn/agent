@@ -80,7 +80,7 @@ describe('<ProcessInfoPage />', () => {
       .withProcess(mehProcess)
       .build();
 
-    const routeParams = { params: { process: 'meh' } };
+    const routeParams = { match: { params: { process: 'meh' } } };
     const mappedProps = mapStateToProps(testState, routeParams);
 
     expect(mappedProps.process).to.deep.equal(mehProcess);
