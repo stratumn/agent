@@ -17,7 +17,7 @@
 export default function getProcess(agent, name) {
   const process = agent.processes[name];
   if (!process) {
-    return Promise.reject(new Error(`process '${name}' not found`));
+    throw new Error(`process '${name}' not found`);
   }
-  return Promise.resolve(process);
+  return process;
 }

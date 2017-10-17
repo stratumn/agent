@@ -20,13 +20,12 @@ import getProcess from './getProcess';
 import segmentify from './segmentify';
 
 export default function fromSegment(obj) {
-  return getAgent(obj.meta.agentUrl || obj.meta.applicationLocation)
-    .then(agent =>
-      Promise.all([agent, getProcess(agent, obj.link.meta.process)])
-    )
-    .then(([agent, process]) => {
-      const adaptor = getAdaptor(agent.url);
-      const segment = segmentify(adaptor, process, obj);
-      return { process, segment };
-    });
+  return getAgent(
+    obj.meta.agentUrl || obj.meta.applicationLocation
+  ).then(agent => {
+    const process = getProcess(agent, obj.link.meta.process);
+    const adaptor = getAdaptor(agent.url);
+    const segment = segmentify(adaptor, process, obj);
+    return { process, segment };
+  });
 }
