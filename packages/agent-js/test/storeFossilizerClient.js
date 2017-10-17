@@ -17,7 +17,10 @@
 import request from 'superagent';
 import mocker from 'superagent-mocker';
 import create from '../src/create';
-import fossilizerHttpClient from '../src/fossilizerHttpClient';
+import fossilizerHttpClient, {
+  getAvailableFossilizers,
+  clearAvailableFossilizers
+} from '../src/fossilizerHttpClient';
 import mockFossilizerHttpServer from './utils/mockFossilizerHttpServer';
 import memoryStore from '../src/memoryStore';
 
@@ -42,6 +45,43 @@ const process = agent.addProcess(
 mockFossilizerHttpServer(mocker(request), process);
 
 describe('FossilizerHttpClient', () => {
+  describe('#getAvailableFossilizers()', () => {
+    beforeEach(() => {
+      clearAvailableFossilizers();
+    });
+
+    it('tracks fossilizer clients that are created', () => {
+      fossilizerHttpClient('http://fossilizer1:6000', { name: '1' });
+      fossilizerHttpClient('http://fossilizer2:6001', { name: '2' });
+
+      getAvailableFossilizers().length.should.be.exactly(2);
+
+      getAvailableFossilizers()[0].name.should.be.exactly('1');
+      getAvailableFossilizers()[0].url.should.be.exactly(
+        'http://fossilizer1:6000'
+      );
+
+      getAvailableFossilizers()[1].name.should.be.exactly('2');
+      getAvailableFossilizers()[1].url.should.be.exactly(
+        'http://fossilizer2:6001'
+      );
+    });
+
+    it('does not store duplicate fossilizers', () => {
+      fossilizerHttpClient('http://fossilizer:6000', { name: '1' });
+      fossilizerHttpClient('http://fossilizer:6000', { name: '2' });
+
+      getAvailableFossilizers().length.should.be.exactly(1);
+    });
+
+    it('accepts missing names for backwards compatibility', () => {
+      fossilizerHttpClient('http://fossilizer:6000', { name: '1' });
+      fossilizerHttpClient('http://fossilizer:6001');
+
+      getAvailableFossilizers().length.should.be.exactly(2);
+    });
+  });
+
   describe('#getInfo()', () => {
     it('resolves with the fossilizer info', () =>
       fossilizerHttpClient('http://localhost')

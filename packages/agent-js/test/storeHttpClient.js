@@ -17,12 +17,48 @@
 import request from 'superagent';
 import mocker from 'superagent-mocker';
 import should from 'should';
-import storeHttpClient from '../src/storeHttpClient';
+import storeHttpClient, {
+  getAvailableStores,
+  clearAvailableStores
+} from '../src/storeHttpClient';
 import mockStoreHttpServer from './utils/mockStoreHttpServer';
 
 mockStoreHttpServer(mocker(request));
 
 describe('StoreHttpClient', () => {
+  describe('#getAvailableStores()', () => {
+    beforeEach(() => {
+      clearAvailableStores();
+    });
+
+    it('tracks store clients that are created', () => {
+      storeHttpClient('http://store1:5000', { name: '1' });
+      storeHttpClient('http://store2:5001', { name: '2' });
+
+      getAvailableStores().length.should.be.exactly(2);
+
+      getAvailableStores()[0].name.should.be.exactly('1');
+      getAvailableStores()[0].url.should.be.exactly('http://store1:5000');
+
+      getAvailableStores()[1].name.should.be.exactly('2');
+      getAvailableStores()[1].url.should.be.exactly('http://store2:5001');
+    });
+
+    it('does not store duplicate store clients', () => {
+      storeHttpClient('http://store:5000', { name: '1' });
+      storeHttpClient('http://store:5000', { name: '2' });
+
+      getAvailableStores().length.should.be.exactly(1);
+    });
+
+    it('accepts missing names for backwards compatibility', () => {
+      storeHttpClient('http://store:5000', { name: '1' });
+      storeHttpClient('http://store:5001');
+
+      getAvailableStores().length.should.be.exactly(2);
+    });
+  });
+
   describe('#getInfo()', () => {
     it('resolves with the store info', () =>
       storeHttpClient('http://localhost')

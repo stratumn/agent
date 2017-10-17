@@ -19,6 +19,11 @@ import memoryStore from '../src/memoryStore';
 import plugins from '../src/plugins';
 import Process from '../src/process';
 
+import fossilizerHttpClient, {
+  clearAvailableFossilizers
+} from '../src/fossilizerHttpClient';
+import storeHttpClient, { clearAvailableStores } from '../src/storeHttpClient';
+
 const actions = {
   init(a, b, c) {
     this.append({ a, b, c });
@@ -35,6 +40,8 @@ describe('Agent', () => {
 
   beforeEach(() => {
     agent = create({ agentUrl: 'http://localhost' });
+    clearAvailableFossilizers();
+    clearAvailableStores();
   });
 
   afterEach(() => {
@@ -50,6 +57,30 @@ describe('Agent', () => {
         Object.keys(infos.processes).length.should.be.exactly(2);
         Object.values(infos.processes)[0].should.be.an.Object();
         Object.values(infos.processes)[0].name.should.be.a.String();
+      });
+    });
+
+    it('returns a Promise resolving with information about the existing fossilizers', () => {
+      fossilizerHttpClient('http://fossilizer:6000', {
+        name: 'dummyfossilizer'
+      });
+
+      return agent.getInfo().then(infos => {
+        infos.fossilizers.should.be.an.Object();
+        infos.fossilizers.length.should.be.exactly(1);
+        infos.fossilizers[0].name.should.be.exactly('dummyfossilizer');
+        infos.fossilizers[0].url.should.be.exactly('http://fossilizer:6000');
+      });
+    });
+
+    it('returns a Promise resolving with information about the existing stores', () => {
+      storeHttpClient('http://store:5000', { name: 'tmstore' });
+
+      return agent.getInfo().then(infos => {
+        infos.stores.should.be.an.Object();
+        infos.stores.length.should.be.exactly(1);
+        infos.stores[0].name.should.be.exactly('tmstore');
+        infos.stores[0].url.should.be.exactly('http://store:5000');
       });
     });
   });

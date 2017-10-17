@@ -32,9 +32,18 @@ import filterAsync from './filterAsync';
  *   - 'didSave': a segment was saved
  *
  * @param {string} url - the base URL of the store
+ * @param {object} [opt] - options
+ * @param {string} [opt.name] - the name of the store
  * @returns {Client} a store HTTP client
  */
-export default function storeHttpClient(url) {
+export default function storeHttpClient(url, opt = {}) {
+  if (!storeHttpClient.availableStores.find(store => store.url === url)) {
+    storeHttpClient.availableStores.push({
+      name: opt.name,
+      url: url
+    });
+  }
+
   // Web socket URL.
   const wsUrl = `${url.replace(/^http/, 'ws')}/websocket`;
 
@@ -209,4 +218,22 @@ export default function storeHttpClient(url) {
       });
     }
   });
+}
+
+storeHttpClient.availableStores = [];
+
+/**
+ * Returns basic information about the store HTTP clients that have been created.
+ * @returns {Array} an array of store HTTP clients basic information
+ */
+export function getAvailableStores() {
+  return JSON.parse(JSON.stringify(storeHttpClient.availableStores));
+}
+
+/**
+ * Clears information about the store HTTP clients created.
+ * Should only be used for tests setup.
+ */
+export function clearAvailableStores() {
+  storeHttpClient.availableStores = [];
 }
