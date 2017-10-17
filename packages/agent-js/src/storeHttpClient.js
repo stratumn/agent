@@ -37,10 +37,7 @@ import filterAsync from './filterAsync';
  * @returns {Client} a store HTTP client
  */
 export default function storeHttpClient(url, opt = {}) {
-  if (
-    storeHttpClient.availableStores.filter(store => store.url === url)
-      .length === 0
-  ) {
+  if (!storeHttpClient.availableStores.find(store => store.url === url)) {
     storeHttpClient.availableStores.push({
       name: opt.name,
       url: url

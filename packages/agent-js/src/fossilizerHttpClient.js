@@ -27,9 +27,9 @@ import handleResponse from './handleResponse';
  */
 export default function fossilizerHttpClient(url, opts = {}) {
   if (
-    fossilizerHttpClient.availableFossilizers.filter(
+    !fossilizerHttpClient.availableFossilizers.find(
       fossilizer => fossilizer.url === url
-    ).length === 0
+    )
   ) {
     fossilizerHttpClient.availableFossilizers.push({
       name: opts.name,
