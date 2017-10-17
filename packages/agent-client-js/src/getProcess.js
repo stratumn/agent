@@ -14,17 +14,10 @@
   limitations under the License.
 */
 
-import getAgent from './getAgent';
-import getAdaptor from './getAdaptor';
-import segmentify from './segmentify';
-
-export default function fromSegment(obj) {
-  return getAgent(
-    obj.meta.agentUrl || obj.meta.applicationLocation
-  ).then(agent => {
-    const process = agent.getProcess(obj.link.meta.process);
-    const adaptor = getAdaptor(agent.url);
-    const segment = segmentify(adaptor, process, obj);
-    return { process, segment };
-  });
+export default function getProcess(agent, name) {
+  const process = agent.processes[name];
+  if (!process) {
+    throw new Error(`process '${name}' not found`);
+  }
+  return process;
 }

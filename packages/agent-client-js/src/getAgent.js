@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import getProcess from './getProcess';
 import getProcesses from './getProcesses';
 import processify from './processify';
 import getAdaptor from './getAdaptor';
@@ -24,6 +25,7 @@ export default function getAgent(objectOrUrl) {
     return adaptor.getInfo().then(res => {
       const agent = res.body;
       agent.url = adaptor.url;
+      agent.getProcess = getProcess.bind(null, agent);
       agent.getProcesses = getProcesses.bind(null, adaptor);
       agent.processes = Object.keys(agent.processes)
         .map(key => agent.processes[key])
