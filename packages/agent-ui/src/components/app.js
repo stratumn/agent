@@ -15,7 +15,6 @@ export const App = ({ processes }) => (
 );
 
 function mapStateToProps(state) {
-  console.log('mapStateToProps', state);
   let processes = [];
   if (state.agentInfo) {
     processes = Object.keys(state.agentInfo.processes);
