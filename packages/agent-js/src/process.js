@@ -21,7 +21,7 @@ import getPluginsInfo from './getPluginsInfo';
 import hashJson from './hashJson';
 import makeQueryString from './makeQueryString';
 import generateSecret from './generateSecret';
-import getDefinedFilters from './getDefinedFilters';
+import filterAsync from './filterAsync';
 
 const QUEUED = 'QUEUED';
 const COMPLETE = 'COMPLETE';
@@ -40,6 +40,42 @@ export default class Process {
       actions: getActionsInfo(actions),
       pluginsInfo: getPluginsInfo(this.plugins)
     };
+  }
+
+  /**
+  * Extracts filters from plugins
+  * @returns {function[]} - An array of the filter function bound to their plugin
+  */
+  extractFilters() {
+    return this.plugins
+      .slice()
+      .reverse()
+      .map(p => p.filterSegment && p.filterSegment.bind(p))
+      .filter(n => n);
+  }
+
+  /**
+  * Applies filters from plugins to a segment
+  * @param {object} - A segment to be filtered
+  * @returns {Promise} - A promise that resolves to true if the segment has passed all filters.
+  */
+  filterSegment(segment) {
+    return this.extractFilters().reduce(
+      (cur, filter) => cur.then(ok => Promise.resolve(ok && filter(segment))),
+      Promise.resolve(true)
+    );
+  }
+
+  /**
+   *
+   * @param {object[]} segments - An array of segments to be filtered
+   * @returns {Promise} - A promise that resolves with the list of segments that passed all filters.
+   */
+  filterSegments(segments) {
+    return this.extractFilters().reduce(
+      (cur, f) => cur.then(sgmts => filterAsync(sgmts, f)),
+      Promise.resolve(segments)
+    );
   }
 
   fossilizeSegment(segment) {
@@ -76,7 +112,7 @@ export default class Process {
 
   /**
   * Gets information about the process.
-  * @returns {Promise} - a promise that resolve with the information
+  * @returns {Promise} - a promise that resolves with the information
   */
   getInfo() {
     const { processInfo } = this;
@@ -224,11 +260,22 @@ export default class Process {
    * @returns {Promise} - a promise that resolve with the segment
    */
   getSegment(linkHash) {
-    return this.storeClient.getSegment(
-      this.name,
-      linkHash,
-      getDefinedFilters(this.plugins)
-    );
+    let segment;
+    return this.storeClient
+      .getSegment(this.name, linkHash, this.filterSegment)
+      .then(s => {
+        segment = s;
+        return this.filterSegment(s);
+      })
+      .then(ok => {
+        if (ok) {
+          return segment;
+        }
+        const error = new Error('forbidden');
+        error.status = 403;
+        error.statusCode = 403;
+        throw error;
+      });
   }
 
   /**
@@ -244,11 +291,9 @@ export default class Process {
   findSegments(opts) {
     const options = opts;
 
-    return this.storeClient.findSegments(
-      this.name,
-      options,
-      getDefinedFilters(this.plugins)
-    );
+    return this.storeClient
+      .findSegments(this.name, options)
+      .then(s => this.filterSegments(s));
   }
 
   /**

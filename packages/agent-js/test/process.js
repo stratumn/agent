@@ -209,4 +209,83 @@ describe('Process', () => {
       });
     });
   });
+
+  describe('#findSegments()', () => {
+    it('applies the filters', () => {
+      process.plugins = [
+        {
+          filter(segment) {
+            return segment.link.state.a === 1;
+          }
+        }
+      ];
+      Promise.all([process.createMap(1, 2, 3), process.createMap(2, 2, 3)])
+        .then(() => process.findSegments('test', null))
+        .then(body => {
+          body.should.be.an.Array();
+          body.length.should.be.exactly(1);
+          body[0].link.state.filtered.should.be.exactly(1);
+        });
+    });
+
+    it('applies the filters sequentially', () => {
+      process.plugins = [
+        {
+          filter(segment) {
+            segment.link.state.filtered = 1;
+            return true;
+          }
+        },
+        {
+          filter(segment) {
+            return segment.link.state.a === 1;
+          }
+        }
+      ];
+
+      process
+        .createMap(2, 2, 3)
+        .then(() => process.findSegments('test'))
+        .then(body => {
+          body.should.have.length(2);
+        });
+    });
+  });
+
+  describe('#getSegment()', () => {
+    it('applies the filters', () => {
+      process.plugins = [
+        {
+          filter(segment) {
+            return segment.link.state.a === 1;
+          }
+        }
+      ];
+
+      process
+        .createMap(2, 2, 3)
+        .then(() => process.getSegment('testFilter', 'linkHash'))
+        .then(() => {
+          throw new Error('should not resolve');
+        })
+        .catch(err => {
+          err.statusCode.should.be.exactly(403);
+          err.message.should.be.exactly('forbidden');
+        });
+    });
+  });
+
+  describe('#extractFilters()', () => {
+    it('returns the defined filterSegment functions', () => {
+      process.plugins.push({
+        filterSegment() {
+          return true;
+        }
+      });
+
+      const filtered = process.extractFilters(plugins);
+      filtered.should.containEql(plugins[1].filterSegment.bind(plugins[1]));
+      filtered.should.have.length(1);
+    });
+  });
 });

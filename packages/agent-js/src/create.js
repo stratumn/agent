@@ -16,7 +16,6 @@
 
 import httpServer from './httpServer';
 import Process from './process';
-import getDefinedFilters from './getDefinedFilters';
 
 import { getAvailableFossilizers } from './fossilizerHttpClient';
 import { getAvailableStores } from './storeHttpClient';
@@ -47,17 +46,11 @@ export default function create(options) {
         typeof process.actions.events[eventName] === 'function'
       ) {
         const segment = msg.data;
-        getDefinedFilters(process.plugins)
-          .reduce(
-            (cur, filter) =>
-              cur.then(ok => Promise.resolve(ok && filter(segment))),
-            Promise.resolve(true)
-          )
-          .then(ok => {
-            if (ok) {
-              process.actions.events[eventName](segment);
-            }
-          });
+        process.filterSegment(segment).then(ok => {
+          if (ok) {
+            process.actions.events[eventName](segment);
+          }
+        });
       }
     });
 
