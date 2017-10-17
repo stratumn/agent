@@ -19,7 +19,6 @@ import request from 'superagent';
 import WebSocket from 'ws';
 import makeQueryString from './makeQueryString';
 import handleResponse from './handleResponse';
-import filterAsync from './filterAsync';
 
 /**
  * Creates a store HTTP client.
@@ -121,33 +120,15 @@ export default function storeHttpClient(url, opt = {}) {
      * @param {string} linkHash - the link hash
      * @returns {Promise} a promise that resolve with the segment
      */
-    getSegment(process, linkHash, filters = []) {
-      let segment;
-      return new Promise((resolve, reject) =>
+    getSegment(process, linkHash) {
+      return new Promise(resolve =>
         request
-          .get(`${url}/segments/${linkHash}${makeQueryString({ process })}`)
-          .end((err, res) =>
-            handleResponse(err, res)
-              .then(s => {
-                segment = s;
-                return filters.reduce(
-                  (cur, filter) =>
-                    cur.then(ok => Promise.resolve(ok && filter(s))),
-                  Promise.resolve(true)
-                );
-              })
-              .then(ok => {
-                if (ok) {
-                  resolve(segment);
-                } else {
-                  const error = new Error('forbidden');
-                  error.status = 403;
-                  error.statusCode = 403;
-                  reject(error);
-                }
-              })
-              .catch(reject)
+          .get(
+            `${url}/segments/${linkHash}${makeQueryString({
+              process
+            })}`
           )
+          .end((err, res) => resolve(handleResponse(err, res)))
       );
     },
 
@@ -180,22 +161,12 @@ export default function storeHttpClient(url, opt = {}) {
      * @param {string[]} [opts.tags] - an array of tags the segments must have
      * @returns {Promise} a promise that resolve with the segments
      */
-    findSegments(process, opts, filters = []) {
+    findSegments(process, opts) {
       const options = Object.assign({ process }, opts || {});
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         request
           .get(`${url}/segments${makeQueryString(options)}`)
-          .end((err, res) =>
-            handleResponse(err, res)
-              .then(s =>
-                filters.reduce(
-                  (cur, f) => cur.then(sgmts => filterAsync(sgmts, f)),
-                  Promise.resolve(s)
-                )
-              )
-              .then(filtered => resolve(filtered))
-              .catch(reject)
-          );
+          .end((err, res) => resolve(handleResponse(err, res)));
       });
     },
 

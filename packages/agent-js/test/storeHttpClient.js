@@ -103,19 +103,6 @@ describe('StoreHttpClient', () => {
           err.statusCode.should.be.exactly(404);
           err.message.should.be.exactly('not found');
         }));
-
-    it('applies the filters', () =>
-      storeHttpClient('http://localhost')
-        .getSegment('testFilter', 'linkHash', [
-          segment => segment.meta.linkHash !== 'linkHash?process=testFilter'
-        ])
-        .then(() => {
-          throw new Error('should not resolve');
-        })
-        .catch(err => {
-          err.statusCode.should.be.exactly(403);
-          err.message.should.be.exactly('forbidden');
-        }));
   });
 
   describe('#deleteSegment()', () => {
@@ -154,31 +141,6 @@ describe('StoreHttpClient', () => {
             'process=one&mapId=map&prevLinkHash=hash' +
               '&tags%5B%5D=tag1&tags%5B%5D=tag2&offset=20&limit=10'
           );
-        }));
-
-    it('applies the filters', () =>
-      storeHttpClient('http://localhost')
-        .findSegments('test', null, [
-          segment => segment.link.state.filtered === 1
-        ])
-        .then(body => {
-          body.should.be.an.Array();
-          body.length.should.be.exactly(1);
-          body[0].link.state.filtered.should.be.exactly(1);
-        }));
-
-    it('applies the filters sequentially', () =>
-      storeHttpClient('http://localhost')
-        .findSegments('test', null, [
-          segment =>
-            new Promise(resolve => {
-              segment.link.state.filtered = 1;
-              resolve(true);
-            }),
-          segment => Promise.resolve(segment.link.state.filtered === 1)
-        ])
-        .then(body => {
-          body.should.have.length(2);
         }));
   });
 
