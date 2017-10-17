@@ -28,7 +28,9 @@ const ActiveSubMenuItem = ({ match }) => (
 );
 
 ActiveSubMenuItem.propTypes = {
-  match: ReactRouterPropTypes.match.isRequired
+  match: PropTypes.shape({
+    url: PropTypes.string.isRequired
+  }).isRequired
 };
 
 const LeftDrawer = ({ processes, match }) => {
