@@ -1,5 +1,7 @@
 import React from 'react';
-// import { Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -7,15 +9,19 @@ import Typography from 'material-ui/Typography';
 
 import { withStyles } from 'material-ui/styles';
 
-const Title = ({ location }) => (
+const Title = ({ urlPath }) => (
   <Typography type="title" noWrap>
-    {location.pathname}
+    {urlPath}
   </Typography>
 );
 
+Title.propTypes = {
+  urlPath: PropTypes.string.isRequired
+};
+
 const drawerWidth = 240;
 
-const styles = theme => ({
+const styles = () => ({
   appBar: {
     position: 'absolute',
     width: `calc(100% - ${drawerWidth}px)`,
@@ -23,12 +29,24 @@ const styles = theme => ({
   }
 });
 
-const TopBar = props => (
-  <AppBar className={props.classes.appBar}>
+const TopBar = ({ style, urlPath }) => (
+  <AppBar className={style}>
     <Toolbar>
-      {/* <Route path="/:rest" component={Title} {...this.props} /> */}
-      <Title {...props} />
+      <Title urlPath={urlPath} />
     </Toolbar>
   </AppBar>
 );
-export default withStyles(styles)(TopBar);
+
+TopBar.propTypes = {
+  style: PropTypes.string.isRequired,
+  urlPath: PropTypes.string.isRequired
+};
+
+function mapStateToProps(state, ownProps) {
+  return {
+    style: ownProps.classes.appBar,
+    urlPath: ownProps.location.pathname
+  };
+}
+
+export default withStyles(styles)(withRouter(connect(mapStateToProps)(TopBar)));

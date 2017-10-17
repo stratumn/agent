@@ -1,6 +1,7 @@
 import React from 'react';
-import { NavLink, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
+import { NavLink, Route, withRouter } from 'react-router-dom';
 
 import Drawer from 'material-ui/Drawer';
 import { MenuItem } from 'material-ui/Menu';
@@ -14,30 +15,35 @@ const ActiveMenuItem = ({ match, item }) => {
   );
 };
 
-const ActiveSubMenuItem = ({ match }) => {
-  console.log('ActiveSubMenuItem', match);
-  return (
-    <div>
-      <ActiveMenuItem item="maps" match={match} />
-      <ActiveMenuItem item="segments" match={match} />
-    </div>
-  );
+ActiveMenuItem.propTypes = {
+  match: ReactRouterPropTypes.match.isRequired,
+  item: PropTypes.string.isRequired
+};
+
+const ActiveSubMenuItem = ({ match }) => (
+  <div>
+    <ActiveMenuItem item="maps" match={match} />
+    <ActiveMenuItem item="segments" match={match} />
+  </div>
+);
+
+ActiveSubMenuItem.propTypes = {
+  match: ReactRouterPropTypes.match.isRequired
 };
 
 const LeftDrawer = ({ processes, match }) => {
-  console.log('leftdrawer', match);
   const menuItems = processes.map(p => (
     <div key={p}>
       <ActiveMenuItem item={p} match={match} />
-      <Route path={`/${p}`} component={ActiveSubMenuItem} {...this.props} />
+      <Route path={`/${p}`} component={ActiveSubMenuItem} />
     </div>
   ));
-  console.log('leftdrawer', processes);
   return <Drawer type="permanent">{menuItems}</Drawer>;
 };
 
 LeftDrawer.propTypes = {
-  processes: PropTypes.arrayOf(PropTypes.string).isRequired
+  processes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  match: ReactRouterPropTypes.match.isRequired
 };
 
-export default LeftDrawer;
+export default withRouter(LeftDrawer);
