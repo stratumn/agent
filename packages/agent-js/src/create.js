@@ -188,12 +188,7 @@ export default function create(options) {
      * @returns {Promise} - a promise that resolve with the segments
      */
     findSegments(processName, opts = {}) {
-      if (!processes[processName]) {
-        const err = new Error(`process '${processName}' does not exist`);
-        err.status = 404;
-        return Promise.reject(err);
-      }
-      return processes[processName].findSegments(opts);
+      return this.delegatePromiseToProcess(processName, 'findSegments', opts);
     },
 
     /**
@@ -205,12 +200,7 @@ export default function create(options) {
      * @returns {Promise} - a promise that resolve with the map IDs
      */
     getMapIds(processName, opts = {}) {
-      if (!processes[processName]) {
-        const err = new Error(`process '${processName}' does not exist`);
-        err.status = 404;
-        return Promise.reject(err);
-      }
-      return processes[processName].getMapIds(opts);
+      return this.delegatePromiseToProcess(processName, 'getMapIds', opts);
     },
 
     /**
@@ -222,6 +212,15 @@ export default function create(options) {
     */
     httpServer(opts = {}) {
       return httpServer(this, opts);
+    },
+
+    delegatePromiseToProcess(processName, func, opts) {
+      try {
+        const process = this.getProcess(processName);
+        return process[func](opts);
+      } catch (err) {
+        return Promise.reject(err);
+      }
     }
   };
 }
