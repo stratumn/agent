@@ -16,14 +16,13 @@
 
 import getAgent from './getAgent';
 import getAdaptor from './getAdaptor';
-import getProcess from './getProcess';
 import segmentify from './segmentify';
 
 export default function fromSegment(obj) {
   return getAgent(
     obj.meta.agentUrl || obj.meta.applicationLocation
   ).then(agent => {
-    const process = getProcess(agent, obj.link.meta.process);
+    const process = agent.getProcess(obj.link.meta.process);
     const adaptor = getAdaptor(agent.url);
     const segment = segmentify(adaptor, process, obj);
     return { process, segment };
