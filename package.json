@@ -14,9 +14,7 @@
     "bootstrap": "lerna bootstrap",
     "clean": "lerna clean",
     "lint": "eslint packages/*/src packages/*/test",
-    "lint:ci": "lerna exec --scope $PACKAGE -- \\$LERNA_ROOT_PATH/node_modules/.bin/eslint \\$\\(pwd\\)/src \\$\\(pwd\\)/test",
     "test": "lerna run test:ci",
-    "test:ci": "lerna run --scope $PACKAGE test:ci",
     "update-license-headers": "./update-license-headers.sh"
   }
 }
