@@ -14,17 +14,10 @@
   limitations under the License.
 */
 
-import { runTestsWithDataAndAgent } from './utils/testSetUp';
-
-describe('#getLink', () => {
-  runTestsWithDataAndAgent(processCb => {
-    // Deprecated
-    it('gets a segment', () =>
-      processCb()
-        .createMap('hi there')
-        .then(segment => processCb().getLink(segment.meta.linkHash))
-        .then(segment => {
-          segment.link.state.title.should.be.exactly('hi there');
-        }));
-  });
-});
+export default function getProcess(agent, name) {
+  const process = agent.processes[name];
+  if (!process) {
+    throw new Error(`process '${name}' not found`);
+  }
+  return process;
+}

@@ -19,7 +19,7 @@
         <div class="tip" ng-hide="home.json" layout>
           <span flex>Enter Chainscript JSON</span>
         </div>
-        <st-map-explorer chainscript="home.json" refresh="0" name=" 'first' "></st-map-explorer>
+        <st-map-explorer chainscript="home.json" refresh="0" options="home.mapExplorerFromCSOptions"></st-map-explorer>
       </md-tab>
       <md-tab label="Stratumn Application" md-active="home.agentUrl && home.mapId && home.process">
         <div ng-hide="home.segmentShowed['second']">
@@ -69,7 +69,7 @@
           <span flex>Enter an agent URL, a Map ID and a process name</span>
         </div>
         <st-map-explorer ng-show="home.agentUrl && home.mapId && home.process" agent-url="home.agentUrl" map-id="home.mapId" process="home.process"
-          refresh="home.counter" name=" 'second' "></st-map-explorer>
+          refresh="home.counter" options="home.mapExplorerFromURLOptions"></st-map-explorer>
       </md-tab>
     </md-tabs>
   </md-content>

@@ -18,11 +18,12 @@ To get started, visit the [Indigo Framework website](https://indigoframework.com
 ## Development
 
 This multi-package repository (monorepo) is managed by [Lerna](https://github.com/lerna/lerna) to streamline development and testing of cross libraries changes. Make sure you've read Lerna documentation before starting.
+Lerna is configured to use [`yarn`](https://yarnpkg.com/en/) for dependency management. Make sure you have it up and running.
 
 Install dependencies:
 
 ```
-npm install
+yarn
 npm run bootstrap
 ```
 

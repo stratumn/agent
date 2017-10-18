@@ -15,23 +15,26 @@
 */
 
 import getAgent from '../src/getAgent';
+import getProcess from '../src/getProcess';
 import { runTestsWithData } from './utils/testSetUp';
 
-describe('#processify', () => {
+describe('#getProcesses', () => {
   runTestsWithData(objectOrUrlCb => {
-    it('adds the helper functions to the process', () =>
-      getAgent(objectOrUrlCb()).then(agent => {
-        const testProcess = agent.processes.first_process;
-        if (typeof objectOrUrlCb() === 'string') {
-          testProcess.agentUrl.should.be.exactly('http://localhost:3333');
-          testProcess.prefixUrl.should.be.exactly(
-            'http://localhost:3333/first_process'
-          );
-        }
-        testProcess.createMap.should.be.a.Function();
-        testProcess.getSegment.should.be.a.Function();
-        testProcess.findSegments.should.be.a.Function();
-        testProcess.getMapIds.should.be.a.Function();
-      }));
+    it('resolves with a good process name', () =>
+      getAgent(objectOrUrlCb())
+        .then(agent => getProcess(agent, 'first_process'))
+        .then(process => {
+          process.name.should.be.exactly('first_process');
+        }));
+
+    it('resolves with a unknown process name', () =>
+      getAgent(objectOrUrlCb())
+        .then(agent => getProcess(agent, 'unknown_process'))
+        .then(() => {
+          throw new Error('it should have failed');
+        })
+        .catch(err => {
+          err.message.should.be.exactly(`process 'unknown_process' not found`);
+        }));
   });
 });

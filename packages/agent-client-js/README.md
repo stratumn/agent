@@ -108,6 +108,40 @@ AgentClient
   });
 ```
 
+### Agent#getProcesses()
+
+Returns the list of all processes.
+
+```javascript
+AgentClient
+  .getAgent('http://localhost:3000')
+  .then(agent => agent.getProcesses())
+  .then(processes => {
+    processes.forEach(element => {
+      console.log(`agent.getProcesses(): ${element.name} => ${element}`);
+    }, this);
+  }))
+  .catch(function(err) {
+    // Handle errors
+  });
+```
+
+### Agent#getProcess(name)
+
+Returns the named process described in agent.
+
+```javascript
+AgentClient
+  .getAgent('http://localhost:3000')
+  .then(function(agent) {
+    const process = agent.getProcess('first_process');
+    console.log(`agent.getProcess(): ${process.name}`);
+  })
+  .catch(function(err) {
+    // Handle errors
+  });
+```
+
 ### Process#createMap(...args)
 
 Returns a promise that resolves with a the first segment of a map.

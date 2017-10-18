@@ -63,37 +63,5 @@ describe('#segmentify', () => {
               (segment4 === null).should.be.exactly(true);
             })
         ));
-
-    // Deprecated
-    it('adds a #load() method to the segment', () =>
-      processCb()
-        .createMap('hi there')
-        .then(segment1 =>
-          segment1.load().then(segment2 => {
-            segment2.link.should.deepEqual(segment1.link);
-            segment2.meta.should.deepEqual(segment1.meta);
-          })
-        ));
-
-    // Deprecated
-    it('adds a #getBranches() method to the segment', () =>
-      processCb()
-        .createMap('hi there')
-        .then(segment =>
-          Promise.all([
-            segment.addMessage('message one', 'me'),
-            segment.addMessage('message two', 'me')
-          ])
-            .then(() => segment.getBranches())
-            .then(segments => {
-              segments.length.should.be.exactly(2);
-              segments[0].link.meta.prevLinkHash.should.be.exactly(
-                segment.meta.linkHash
-              );
-              segments[1].link.meta.prevLinkHash.should.be.exactly(
-                segment.meta.linkHash
-              );
-            })
-        ));
   });
 });
