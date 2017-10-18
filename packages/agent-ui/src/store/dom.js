@@ -2,22 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Provider } from 'react-redux';
-import { Router, browserHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
 
+import { App } from '../components';
 import { getAgentInfo } from '../actions';
-import routes from '../routes';
 import { configureStore } from './';
+
+const agentUrl = 'http://localhost:3000';
 
 export default function(doc) {
   const store = configureStore();
-  store.dispatch(getAgentInfo());
-
-  const history = syncHistoryWithStore(browserHistory, store);
+  store.dispatch(getAgentInfo(agentUrl));
 
   ReactDOM.render(
     <Provider store={store}>
-      <Router history={history} routes={routes} />
+      <Router>
+        <App />
+      </Router>
     </Provider>,
     doc
   );

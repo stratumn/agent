@@ -19,10 +19,11 @@ export const ProcessInfoPage = ({ process }) => (
 );
 
 export function mapStateToProps(state, ownProps) {
+  const processName = ownProps.match.params.process;
   let process = {};
   if (state.agentInfo) {
-    if (state.agentInfo.processes[ownProps.params.process]) {
-      process = state.agentInfo.processes[ownProps.params.process];
+    if (state.agentInfo.processes[processName]) {
+      process = state.agentInfo.processes[processName];
     }
   }
   return { process };
