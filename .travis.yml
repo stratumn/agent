@@ -11,6 +11,6 @@ before_script:
   - yarn global add codecov
   - lerna bootstrap
 script:
-  - npm run test:ci
-  - npm run lint:ci
+  - npm run test
+  - npm run lint
   - codecov
