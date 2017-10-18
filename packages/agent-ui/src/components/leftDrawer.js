@@ -40,7 +40,7 @@ const LeftDrawer = ({ processes, match }) => {
       <Route path={`/${p}`} component={ActiveSubMenuItem} />
     </div>
   ));
-  return <Drawer type="permanent">{menuItems}</Drawer>;
+  return <Drawer open={false}>{menuItems}</Drawer>;
 };
 
 LeftDrawer.propTypes = {

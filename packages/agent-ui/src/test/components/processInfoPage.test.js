@@ -98,8 +98,8 @@ describe('<StoreSection />', () => {
     );
 
     const storeNameSection = storeSection
-      .find('samp')
-      .filterWhere(samp => samp.text() === 'dummyStore');
+      .find('Typography')
+      .filterWhere(text => text.text() === 'dummyStore');
     expect(storeNameSection).to.have.length(1);
   });
 });
@@ -115,7 +115,7 @@ describe('<ActionsSection />', () => {
       <ActionsSection actions={testProcess.processInfo.actions} />
     );
 
-    const actionItems = actionsSection.find('li').find('samp');
+    const actionItems = actionsSection.find('ListItemText');
     expect(actionItems).to.have.length(2);
     expect(actionItems.at(0).text()).to.equal('greet(name)');
     expect(actionItems.at(1).text()).to.equal('send(from, to)');

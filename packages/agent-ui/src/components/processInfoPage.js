@@ -2,16 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import Divider from 'material-ui/Divider';
+import List, { ListItem, ListItemText } from 'material-ui/List';
+import Typography from 'material-ui/Typography';
+
 export const ProcessInfoPage = ({ process }) => (
   <div>
-    {!process.name && <p>Loading...</p>}
+    {!process.name && <Typography type="display1">Loading...</Typography>}
     {process.name && (
       <div>
-        <h1>{process.name}</h1>
+        <Typography type="headline">{process.name}</Typography>
         <ActionsSection actions={process.processInfo.actions} />
-        <hr />
+        <Divider />
         <StoreSection storeAdapter={process.storeInfo.adapter} />
-        <hr />
+        <Divider />
         <FossilizersSection fossilizers={process.fossilizersInfo} />
       </div>
     )}
@@ -40,21 +44,19 @@ ProcessInfoPage.propTypes = {
 
 export const StoreSection = ({ storeAdapter }) => (
   <div>
-    <h3>Store</h3>
-    <p>
-      <small>
-        A store is responsible for saving your data. There are different
-        adapters available depending on your needs.
-      </small>
-    </p>
-    <h4>Store adapter name</h4>
-    <samp>{storeAdapter.name}</samp>
-    <h4>Store adapter version</h4>
-    <samp>{storeAdapter.version}</samp>
-    <h4>Store adapter commit</h4>
-    <samp>{storeAdapter.commit}</samp>
-    <h4>Store adapter description</h4>
-    <samp>{storeAdapter.description}</samp>
+    <Typography type="title">Store</Typography>
+    <Typography paragraph>
+      A store is responsible for saving your data. There are different adapters
+      available depending on your needs.
+    </Typography>
+    <Typography type="subheading">Store adapter name</Typography>
+    <Typography paragraph>{storeAdapter.name}</Typography>
+    <Typography type="subheading">Store adapter version</Typography>
+    <Typography paragraph>{storeAdapter.version}</Typography>
+    <Typography type="subheading">Store adapter commit</Typography>
+    <Typography paragraph>{storeAdapter.commit}</Typography>
+    <Typography type="subheading">Store adapter description</Typography>
+    <Typography paragraph>{storeAdapter.description}</Typography>
   </div>
 );
 
@@ -81,20 +83,20 @@ function formatActionSignature(action, args) {
 
 export const ActionsSection = ({ actions }) => (
   <div>
-    <h3>Actions</h3>
-    <ul>
+    <Typography type="title">Actions</Typography>
+    <List dense>
       {Object.keys(actions).map(action => (
-        <li key={action}>
-          <samp>{formatActionSignature(action, actions[action].args)}</samp>
-        </li>
+        <ListItem key={action} dense>
+          <ListItemText
+            secondary={formatActionSignature(action, actions[action].args)}
+            disableTypography
+          />
+        </ListItem>
       ))}
-    </ul>
-    <p>
-      <small>
-        These are the procedures that define how segments are added to your
-        maps.
-      </small>
-    </p>
+    </List>
+    <Typography paragraph>
+      These are the procedures that define how segments are added to your maps.
+    </Typography>
   </div>
 );
 
@@ -111,43 +113,38 @@ ActionsSection.propTypes = {
 
 export const FossilizersSection = ({ fossilizers }) => (
   <div>
-    <h3>Fossilizer</h3>
-    <p>
-      <small>
-        A fossilizer adds the steps of your workflow to a timeline, such as a
-        Blockchain or a trusted timestamping authority.
-      </small>
-    </p>
+    <Typography type="title">Fossilizer</Typography>
+    <Typography paragraph>
+      A fossilizer adds the steps of your workflow to a timeline, such as a
+      Blockchain or a trusted timestamping authority.
+    </Typography>
     {fossilizers.length === 0 && (
-      <p>Your agent is not connected to fossilizers.</p>
+      <Typography paragraph>
+        Your agent is not connected to fossilizers.
+      </Typography>
     )}
     {fossilizers.length > 0 && (
-      <ul>
+      <List>
         {fossilizers.map(fossilizer => (
-          <li key={fossilizer.adapter.name}>
-            <h4>
-              Fossilizer:
-              <samp>{fossilizer.adapter.name}</samp>
-            </h4>
-            <h4>
-              Adapter version:
-              <samp>{fossilizer.adapter.version}</samp>
-            </h4>
-            <h4>
-              Adapter commit:
-              <samp>{fossilizer.adapter.commit}</samp>
-            </h4>
-            <h4>
-              Adapter description:
-              <samp>{fossilizer.adapter.description}</samp>
-            </h4>
-            <h4>
-              Adapter blockchain
-              <samp>{fossilizer.adapter.blockchain}</samp>
-            </h4>
-          </li>
+          <ListItem key={fossilizer.adapter.name}>
+            <Typography type="subheading">
+              Fossilizer: {fossilizer.adapter.name}
+            </Typography>
+            <Typography type="subheading">
+              Adapter version: {fossilizer.adapter.version}
+            </Typography>
+            <Typography type="subheading">
+              Adapter commit: {fossilizer.adapter.commit}
+            </Typography>
+            <Typography type="subheading">
+              Adapter description: {fossilizer.adapter.description}
+            </Typography>
+            <Typography type="subheading">
+              Adapter blockchain: {fossilizer.adapter.blockchain}
+            </Typography>
+          </ListItem>
         ))}
-      </ul>
+      </List>
     )}
   </div>
 );
