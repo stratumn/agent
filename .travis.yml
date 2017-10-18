@@ -3,13 +3,6 @@ sudo: false
 cache: yarn
 node_js:
   - 6
-env:
-  - PACKAGE=stratumn-agent-client
-  - PACKAGE=stratumn-agent
-  - PACKAGE=stratumn-agent-ui
-  - PACKAGE=mapexplorer-core
-  - PACKAGE=react-mapexplorer
-  - PACKAGE=angular-mapexplorer
 before_install:
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
