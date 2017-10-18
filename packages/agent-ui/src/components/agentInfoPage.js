@@ -6,7 +6,7 @@ import Divider from 'material-ui/Divider';
 import Typography from 'material-ui/Typography';
 
 export const AgentInfoPage = ({ agentUrl }) => (
-  <div>
+  <div style={{ marginLeft: '248px', marginTop: '72px' }}>
     <Typography paragraph>
       An agent executes the logic of your processes. A process is defined by a
       set of actions that may be used in the workflow.<br />

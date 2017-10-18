@@ -7,7 +7,7 @@ import List, { ListItem, ListItemText } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 
 export const ProcessInfoPage = ({ process }) => (
-  <div>
+  <div style={{ marginLeft: '248px', marginTop: '72px' }}>
     {!process.name && <Typography type="display1">Loading...</Typography>}
     {process.name && (
       <div>

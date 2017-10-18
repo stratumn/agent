@@ -35,12 +35,12 @@ ActiveSubMenuItem.propTypes = {
 
 const LeftDrawer = ({ processes, match }) => {
   const menuItems = processes.map(p => (
-    <div key={p}>
+    <div key={p} style={{ width: '240px' }}>
       <ActiveMenuItem item={p} match={match} />
       <Route path={`/${p}`} component={ActiveSubMenuItem} />
     </div>
   ));
-  return <Drawer open={false}>{menuItems}</Drawer>;
+  return <Drawer type="permanent">{menuItems}</Drawer>;
 };
 
 LeftDrawer.propTypes = {
