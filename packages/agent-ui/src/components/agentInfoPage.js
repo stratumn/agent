@@ -5,8 +5,11 @@ import { connect } from 'react-redux';
 import Divider from 'material-ui/Divider';
 import Typography from 'material-ui/Typography';
 
-export const AgentInfoPage = ({ agentUrl }) => (
-  <div style={{ marginLeft: '248px', marginTop: '72px' }}>
+import { withStyles } from 'material-ui/styles';
+import AppStyle from '../style/app';
+
+export const AgentInfoPage = ({ agentUrl, style }) => (
+  <div className={style}>
     <Typography paragraph>
       An agent executes the logic of your processes. A process is defined by a
       set of actions that may be used in the workflow.<br />
@@ -21,32 +24,34 @@ export const AgentInfoPage = ({ agentUrl }) => (
       </a>
     </Typography>
     <Typography paragraph>
-      <Typography>
-        You can use this URL to connect to your agent, using the{' '}
-        <a
-          href="https://github.com/stratumn/indigo-js/tree/master/packages/agent-client-js"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Stratumn Javascript Agent Client
-        </a>{' '}
-        for instance.
-      </Typography>
+      You can use this URL to connect to your agent, using the{' '}
+      <a
+        href="https://github.com/stratumn/indigo-js/tree/master/packages/agent-client-js"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Stratumn Javascript Agent Client
+      </a>{' '}
+      for instance.
     </Typography>
     <Divider />
   </div>
 );
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   let agentUrl = '';
   if (state.agentInfo) {
     agentUrl = state.agentInfo.url;
   }
-  return { agentUrl };
+  return {
+    agentUrl: agentUrl,
+    style: ownProps.classes.content
+  };
 }
 
 AgentInfoPage.propTypes = {
-  agentUrl: PropTypes.string.isRequired
+  agentUrl: PropTypes.string.isRequired,
+  style: PropTypes.string.isRequired
 };
 
-export default connect(mapStateToProps)(AgentInfoPage);
+export default withStyles(AppStyle)(connect(mapStateToProps)(AgentInfoPage));

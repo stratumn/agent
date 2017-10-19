@@ -6,6 +6,9 @@ import { NavLink, Route, withRouter } from 'react-router-dom';
 import Drawer from 'material-ui/Drawer';
 import { MenuItem } from 'material-ui/Menu';
 
+import { withStyles } from 'material-ui/styles';
+import AppStyle from '../style/app';
+
 const ActiveMenuItem = ({ match, item }) => {
   const toLink = match.url === '/' ? `/${item}` : `${match.url}/${item}`;
   return (
@@ -33,9 +36,9 @@ ActiveSubMenuItem.propTypes = {
   }).isRequired
 };
 
-const LeftDrawer = ({ processes, match }) => {
+const LeftDrawer = ({ processes, match, classes }) => {
   const menuItems = processes.map(p => (
-    <div key={p} style={{ width: '240px' }}>
+    <div key={p} className={classes.leftDrawer}>
       <ActiveMenuItem item={p} match={match} />
       <Route path={`/${p}`} component={ActiveSubMenuItem} />
     </div>
@@ -45,7 +48,10 @@ const LeftDrawer = ({ processes, match }) => {
 
 LeftDrawer.propTypes = {
   processes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  match: ReactRouterPropTypes.match.isRequired
+  match: ReactRouterPropTypes.match.isRequired,
+  classes: PropTypes.shape({
+    leftDrawer: PropTypes.string.isRequired
+  }).isRequired
 };
 
-export default withRouter(LeftDrawer);
+export default withStyles(AppStyle)(withRouter(LeftDrawer));

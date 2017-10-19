@@ -6,8 +6,11 @@ import Divider from 'material-ui/Divider';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 
-export const ProcessInfoPage = ({ process }) => (
-  <div style={{ marginLeft: '248px', marginTop: '72px' }}>
+import { withStyles } from 'material-ui/styles';
+import AppStyle from '../style/app';
+
+export const ProcessInfoPage = ({ process, style }) => (
+  <div className={style}>
     {!process.name && <Typography type="display1">Loading...</Typography>}
     {process.name && (
       <div>
@@ -30,7 +33,10 @@ export function mapStateToProps(state, ownProps) {
       process = state.agentInfo.processes[processName];
     }
   }
-  return { process };
+  return {
+    process: process,
+    style: ownProps.classes.content
+  };
 }
 
 ProcessInfoPage.defaultProps = {
@@ -39,7 +45,8 @@ ProcessInfoPage.defaultProps = {
 ProcessInfoPage.propTypes = {
   process: PropTypes.shape({
     name: PropTypes.string
-  })
+  }),
+  style: PropTypes.string.isRequired
 };
 
 export const StoreSection = ({ storeAdapter }) => (
@@ -166,4 +173,4 @@ FossilizersSection.propTypes = {
   )
 };
 
-export default connect(mapStateToProps)(ProcessInfoPage);
+export default withStyles(AppStyle)(connect(mapStateToProps)(ProcessInfoPage));
