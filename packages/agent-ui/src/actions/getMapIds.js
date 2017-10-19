@@ -5,6 +5,7 @@ export default function(url, processName) {
   return dispatch =>
     getAgent(url)
       .then(agent => {
+        console.log(agent);
         const proc = agent.getProcess(processName);
         return proc.getMapIds();
       })

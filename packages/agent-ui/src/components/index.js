@@ -4,3 +4,4 @@ export { default as TopBar } from './topBar';
 export { default as InfoPage } from './info';
 export { default as AgentInfoPage } from './agentInfoPage';
 export { default as ProcessInfoPage } from './processInfoPage';
+export { default as MapsInfoPage } from './mapsInfoPage';
