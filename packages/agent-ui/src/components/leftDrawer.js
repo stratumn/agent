@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactRouterPropTypes from 'react-router-prop-types';
-import { NavLink, Route, withRouter } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Drawer from 'material-ui/Drawer';
@@ -14,25 +13,11 @@ const ActiveMenuItem = ({ to, item }) => (
 );
 
 ActiveMenuItem.propTypes = {
-  match: ReactRouterPropTypes.match.isRequired,
+  to: PropTypes.string.isRequired,
   item: PropTypes.string.isRequired
 };
 
-const ActiveSubMenuItem = ({ match }) => (
-  <div>
-    <ActiveMenuItem item="maps" match={match} />
-    <ActiveMenuItem item="segments" match={match} />
-  </div>
-);
-
-ActiveSubMenuItem.propTypes = {
-  match: PropTypes.shape({
-    url: PropTypes.string.isRequired
-  }).isRequired
-};
-
 const DetailMenu = ({ processName, params }) => {
-  console.log('render detailmenu');
   const { agent, process } = params;
   if (process === processName) {
     return (
@@ -45,8 +30,12 @@ const DetailMenu = ({ processName, params }) => {
   return null;
 };
 
+DetailMenu.propTypes = {
+  processName: PropTypes.string.isRequired,
+  params: PropTypes.object.isRequired
+};
+
 const ProcessMenu = ({ name, info, params }) => {
-  console.log('render processmenu');
   const { agent } = params;
   if (info && agent === name) {
     const { processes } = info;
@@ -60,8 +49,13 @@ const ProcessMenu = ({ name, info, params }) => {
   return null;
 };
 
+ProcessMenu.propTypes = {
+  name: PropTypes.string.isRequired,
+  info: PropTypes.object,
+  params: PropTypes.object.isRequired
+};
+
 const AgentMenu = ({ agent, params }) => {
-  console.log('render agentmenu');
   const { name, info } = agent;
   return (
     <div>
@@ -71,8 +65,12 @@ const AgentMenu = ({ agent, params }) => {
   );
 };
 
+AgentMenu.propTypes = {
+  agent: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired
+};
+
 const LeftDrawer = ({ agents, params }) => {
-  console.log('render leftdrawer');
   const menuItems = Object.keys(agents).map(name => (
     <AgentMenu key={name} agent={agents[name]} params={params} />
   ));
@@ -81,12 +79,11 @@ const LeftDrawer = ({ agents, params }) => {
 };
 
 LeftDrawer.propTypes = {
-  processes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  match: ReactRouterPropTypes.match.isRequired
+  agents: PropTypes.object.isRequired,
+  params: PropTypes.object.isRequired
 };
 
 const mapStateToProps = ({ agents }, { match }) => {
-  console.log('mapStateToProps', agents);
   const { params } = match;
   return { agents, params };
 };

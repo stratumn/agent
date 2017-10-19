@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Route } from 'react-router-dom';
@@ -57,7 +57,7 @@ function mapStateToProps(_, { classes, match }) {
 }
 
 const TopBarStyled = withStyles(styles)(
-  connect(mapStateToProps)(TopBarContent)
+  withRouter(connect(mapStateToProps)(TopBarContent))
 );
 
 export default () => (

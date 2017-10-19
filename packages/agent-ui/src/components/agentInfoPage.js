@@ -2,23 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { getAgentInfo } from "../actions";
-
 class AgentInfoPage extends Component {
   static propTypes = {
     agentUrl: PropTypes.string.isRequired,
   };
-
-  componentDidMount() {
-    const { dispatch, match } = this.props;
-    dispatch(getAgentInfo(match.params.agent));
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { dispatch, match } = nextProps;
-    if (this.props.match.params.agent !== match.params.agent)
-      dispatch(getAgentInfo(match.params.agent));
-  }
 
   render() {
     const { agentUrl } = this.props;

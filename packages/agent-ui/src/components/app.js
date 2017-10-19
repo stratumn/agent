@@ -1,37 +1,48 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter, Route } from 'react-router-dom';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import ReactRouterPropTypes from "react-router-prop-types";
+import { connect } from "react-redux";
+import { withRouter, Route } from "react-router-dom";
 
-import { TopBar, LeftDrawer, InfoPage } from './';
+import { TopBar, LeftDrawer, InfoPage } from "./";
+import { getAgentInfo } from "../actions";
 
-class App extends Component {
-  // static propTypes = {
-  //   processes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  // };
+class AppContent extends Component {
+  static propTypes = {
+    match: ReactRouterPropTypes.match.isRequired,
+    dispatch: PropTypes.func.isRequired,
+  };
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { dispatch, match } = this.props;
+    const { agent } = match.params;
+    if (agent) dispatch(getAgentInfo(agent));
+  }
 
-  // componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) {
+    const { dispatch, match } = nextProps;
+    if (this.props.match.params.agent !== match.params.agent)
+      dispatch(getAgentInfo(match.params.agent));
+  }
 
   render() {
     return (
       <div>
         <TopBar />
-        <Route path="/:agent?/:process?/:detail?/:id?" component={LeftDrawer} />
+        <LeftDrawer />
         <InfoPage />
       </div>
     );
   }
 }
 
-// function mapStateToProps(state) {
-//   let processes = [];
-//   if (state.agentInfo) {
-//     processes = Object.keys(state.agentInfo.processes);
-//   }
-//   return { processes };
-// }
+const AppContentConnected = withRouter(connect()(AppContent));
 
-// export default connect(mapStateToProps)(App);
+const App = () => (
+  <Route
+    path="/:agent?/:process?/:detail?/:id?"
+    component={AppContentConnected}
+  />
+);
+
 export default withRouter(connect()(App));

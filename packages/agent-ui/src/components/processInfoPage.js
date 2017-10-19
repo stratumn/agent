@@ -2,23 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { getAgentInfo } from "../actions";
-
 class ProcessInfoPage extends Component {
   static propTypes = {
     process: PropTypes.shape({
       name: PropTypes.string,
     }),
   };
-
-  static defaultProps = {
-    process: { name: "" },
-  };
-
-  componentDidMount() {
-    const { dispatch, match } = this.props;
-    dispatch(getAgentInfo(match.params.agent));
-  }
 
   render() {
     const { process } = this.props;
