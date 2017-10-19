@@ -8,7 +8,7 @@ import Typography from 'material-ui/Typography';
 import CodeIcon from 'material-ui-icons/Code';
 
 import { withStyles } from 'material-ui/styles';
-import AppStyle from '../style/app';
+import AppStyle, { stylePropTypes, styleDefaultProps } from '../style/app';
 
 export const ProcessInfoPage = ({ process, style }) => (
   <div className={style.content}>
@@ -44,16 +44,13 @@ export function mapStateToProps(state, ownProps) {
 
 ProcessInfoPage.defaultProps = {
   process: { name: '' },
-  style: { content: '', divider: '' }
+  style: styleDefaultProps
 };
 ProcessInfoPage.propTypes = {
   process: PropTypes.shape({
     name: PropTypes.string
   }),
-  style: PropTypes.shape({
-    content: PropTypes.string.isRequired,
-    divider: PropTypes.string.isRequired
-  })
+  style: stylePropTypes
 };
 
 export const StoreSection = ({ storeAdapter }) => (

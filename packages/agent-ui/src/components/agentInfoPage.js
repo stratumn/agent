@@ -6,7 +6,7 @@ import Divider from 'material-ui/Divider';
 import Typography from 'material-ui/Typography';
 
 import { withStyles } from 'material-ui/styles';
-import AppStyle from '../style/app';
+import AppStyle, { stylePropTypes, styleDefaultProps } from '../style/app';
 
 export const AgentInfoPage = ({ agentUrl, style }) => (
   <div className={style.content}>
@@ -52,14 +52,11 @@ function mapStateToProps(state, ownProps) {
 }
 
 AgentInfoPage.defaultProps = {
-  style: { content: '', divider: '' }
+  style: styleDefaultProps
 };
 AgentInfoPage.propTypes = {
   agentUrl: PropTypes.string.isRequired,
-  style: PropTypes.shape({
-    content: PropTypes.string.isRequired,
-    divider: PropTypes.string.isRequired
-  })
+  style: stylePropTypes
 };
 
 export default withStyles(AppStyle)(connect(mapStateToProps)(AgentInfoPage));
