@@ -1,5 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 import { getAgentInfo } from '../reducers';
 
 export default function() {
@@ -7,6 +8,6 @@ export default function() {
     combineReducers({
       agents: getAgentInfo
     }),
-    applyMiddleware(thunk)
+    applyMiddleware(thunk, logger)
   );
 }
