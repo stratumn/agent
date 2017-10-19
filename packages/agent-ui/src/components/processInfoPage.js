@@ -1,41 +1,42 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-export const ProcessInfoPage = ({ process }) => (
-  <div>
-    {!process.name && <p>Loading...</p>}
-    {process.name && (
+class ProcessInfoPage extends Component {
+  static propTypes = {
+    process: PropTypes.shape({
+      name: PropTypes.string,
+    }),
+  };
+
+  render() {
+    const { process } = this.props;
+    return (
       <div>
-        <h1>{process.name}</h1>
-        <ActionsSection actions={process.processInfo.actions} />
-        <hr />
-        <StoreSection storeAdapter={process.storeInfo.adapter} />
-        <hr />
-        <FossilizersSection fossilizers={process.fossilizersInfo} />
+        {!process.name && <p>Loading...</p>}
+        {process.name && (
+          <div>
+            <h1>{process.name}</h1>
+            <ActionsSection actions={process.processInfo.actions} />
+            <hr />
+            <StoreSection storeAdapter={process.storeInfo.adapter} />
+            <hr />
+            <FossilizersSection fossilizers={process.fossilizersInfo} />
+          </div>
+        )}
       </div>
-    )}
-  </div>
-);
-
-export function mapStateToProps(state, ownProps) {
-  const processName = ownProps.match.params.process;
-  let process = {};
-  if (state.agentInfo) {
-    if (state.agentInfo.processes[processName]) {
-      process = state.agentInfo.processes[processName];
-    }
+    );
   }
-  return { process };
 }
 
-ProcessInfoPage.defaultProps = {
-  process: { name: '' }
-};
-ProcessInfoPage.propTypes = {
-  process: PropTypes.shape({
-    name: PropTypes.string
-  })
+const mapStateToProps = ({ agents }, { match }) => {
+  const { agent, process } = match.params;
+  const { info } = agents[agent];
+  let processInfo = {};
+  if (info && info.processes) {
+    processInfo = info.processes[process];
+  }
+  return { process: processInfo };
 };
 
 export const StoreSection = ({ storeAdapter }) => (
@@ -63,8 +64,8 @@ StoreSection.propTypes = {
     name: PropTypes.string,
     version: PropTypes.string,
     commit: PropTypes.string,
-    description: PropTypes.string
-  }).isRequired
+    description: PropTypes.string,
+  }).isRequired,
 };
 
 function formatActionSignature(action, args) {
@@ -72,10 +73,10 @@ function formatActionSignature(action, args) {
   for (let i = 0; args && i < args.length; i += 1) {
     signature += args[i];
     if (i < args.length - 1) {
-      signature += ', ';
+      signature += ", ";
     }
   }
-  signature += ')';
+  signature += ")";
   return signature;
 }
 
@@ -99,14 +100,14 @@ export const ActionsSection = ({ actions }) => (
 );
 
 ActionsSection.defaultProps = {
-  actions: {}
+  actions: {},
 };
 ActionsSection.propTypes = {
   actions: PropTypes.objectOf(
     PropTypes.shape({
-      args: PropTypes.arrayOf(PropTypes.string)
-    })
-  )
+      args: PropTypes.arrayOf(PropTypes.string),
+    }),
+  ),
 };
 
 export const FossilizersSection = ({ fossilizers }) => (
@@ -153,7 +154,7 @@ export const FossilizersSection = ({ fossilizers }) => (
 );
 
 FossilizersSection.defaultProps = {
-  fossilizers: []
+  fossilizers: [],
 };
 FossilizersSection.propTypes = {
   fossilizers: PropTypes.arrayOf(
@@ -163,10 +164,10 @@ FossilizersSection.propTypes = {
         version: PropTypes.string,
         commit: PropTypes.string,
         description: PropTypes.string,
-        blockchain: PropTypes.string
-      }
-    })
-  )
+        blockchain: PropTypes.string,
+      },
+    }),
+  ),
 };
 
 export default connect(mapStateToProps)(ProcessInfoPage);

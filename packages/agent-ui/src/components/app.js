@@ -1,29 +1,48 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter, Route } from 'react-router-dom';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import ReactRouterPropTypes from "react-router-prop-types";
+import { connect } from "react-redux";
+import { withRouter, Route } from "react-router-dom";
 
-import { TopBar, LeftDrawer, AgentInfoPage, ProcessInfoPage } from './';
+import { TopBar, LeftDrawer, InfoPage } from "./";
+import { getAgentInfo } from "../actions";
 
-export const App = ({ processes }) => (
-  <div>
-    <TopBar />
-    <LeftDrawer processes={processes} />
-    <Route exact path="/" component={AgentInfoPage} />
-    <Route exact path="/:process" component={ProcessInfoPage} />
-  </div>
-);
+class AppContent extends Component {
+  static propTypes = {
+    match: ReactRouterPropTypes.match.isRequired,
+    dispatch: PropTypes.func.isRequired,
+  };
 
-function mapStateToProps(state) {
-  let processes = [];
-  if (state.agentInfo) {
-    processes = Object.keys(state.agentInfo.processes);
+  componentDidMount() {
+    const { dispatch, match } = this.props;
+    const { agent } = match.params;
+    if (agent) dispatch(getAgentInfo(agent));
   }
-  return { processes };
+
+  componentWillReceiveProps(nextProps) {
+    const { dispatch, match } = nextProps;
+    if (this.props.match.params.agent !== match.params.agent)
+      dispatch(getAgentInfo(match.params.agent));
+  }
+
+  render() {
+    return (
+      <div>
+        <TopBar />
+        <LeftDrawer />
+        <InfoPage />
+      </div>
+    );
+  }
 }
 
-App.propTypes = {
-  processes: PropTypes.arrayOf(PropTypes.string).isRequired
-};
+const AppContentConnected = withRouter(connect()(AppContent));
 
-export default withRouter(connect(mapStateToProps)(App));
+const App = () => (
+  <Route
+    path="/:agent?/:process?/:detail?/:id?"
+    component={AppContentConnected}
+  />
+);
+
+export default withRouter(connect()(App));

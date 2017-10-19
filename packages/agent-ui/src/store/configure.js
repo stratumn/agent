@@ -1,12 +1,14 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import { getAgentInfo } from '../reducers';
+import logger from 'redux-logger';
+import { getAgentInfo, getMapIds } from '../reducers';
 
 export default function() {
   return createStore(
     combineReducers({
-      agentInfo: getAgentInfo
+      agents: getAgentInfo,
+      maps: getMapIds
     }),
-    applyMiddleware(thunk)
+    applyMiddleware(thunk, logger)
   );
 }
