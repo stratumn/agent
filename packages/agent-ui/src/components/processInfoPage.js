@@ -3,22 +3,25 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import Divider from 'material-ui/Divider';
-import List, { ListItem, ListItemText } from 'material-ui/List';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
+import CodeIcon from 'material-ui-icons/Code';
 
 import { withStyles } from 'material-ui/styles';
 import AppStyle from '../style/app';
 
 export const ProcessInfoPage = ({ process, style }) => (
-  <div className={style}>
+  <div className={style.content}>
     {!process.name && <Typography type="display1">Loading...</Typography>}
     {process.name && (
       <div>
-        <Typography type="headline">{process.name}</Typography>
+        <Typography type="headline" paragraph>
+          {process.name}
+        </Typography>
         <ActionsSection actions={process.processInfo.actions} />
-        <Divider />
+        <Divider className={style.divider} />
         <StoreSection storeAdapter={process.storeInfo.adapter} />
-        <Divider />
+        <Divider className={style.divider} />
         <FossilizersSection fossilizers={process.fossilizersInfo} />
       </div>
     )}
@@ -35,23 +38,29 @@ export function mapStateToProps(state, ownProps) {
   }
   return {
     process: process,
-    style: ownProps.classes.content
+    style: ownProps.classes
   };
 }
 
 ProcessInfoPage.defaultProps = {
-  process: { name: '' }
+  process: { name: '' },
+  style: { content: '', divider: '' }
 };
 ProcessInfoPage.propTypes = {
   process: PropTypes.shape({
     name: PropTypes.string
   }),
-  style: PropTypes.string.isRequired
+  style: PropTypes.shape({
+    content: PropTypes.string.isRequired,
+    divider: PropTypes.string.isRequired
+  })
 };
 
 export const StoreSection = ({ storeAdapter }) => (
   <div>
-    <Typography type="title">Store</Typography>
+    <Typography type="title" paragraph>
+      Store
+    </Typography>
     <Typography paragraph>
       A store is responsible for saving your data. There are different adapters
       available depending on your needs.
@@ -91,12 +100,15 @@ function formatActionSignature(action, args) {
 export const ActionsSection = ({ actions }) => (
   <div>
     <Typography type="title">Actions</Typography>
-    <List dense>
+    <List>
       {Object.keys(actions).map(action => (
-        <ListItem key={action} dense>
+        <ListItem key={action}>
+          <ListItemIcon>
+            <CodeIcon />
+          </ListItemIcon>
           <ListItemText
-            secondary={formatActionSignature(action, actions[action].args)}
-            disableTypography
+            primary={formatActionSignature(action, actions[action].args)}
+            style={{ fontStyle: 'italic' }}
           />
         </ListItem>
       ))}
@@ -120,7 +132,9 @@ ActionsSection.propTypes = {
 
 export const FossilizersSection = ({ fossilizers }) => (
   <div>
-    <Typography type="title">Fossilizer</Typography>
+    <Typography type="title" paragraph>
+      Fossilizer
+    </Typography>
     <Typography paragraph>
       A fossilizer adds the steps of your workflow to a timeline, such as a
       Blockchain or a trusted timestamping authority.

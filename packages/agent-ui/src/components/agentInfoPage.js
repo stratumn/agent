@@ -9,15 +9,17 @@ import { withStyles } from 'material-ui/styles';
 import AppStyle from '../style/app';
 
 export const AgentInfoPage = ({ agentUrl, style }) => (
-  <div className={style}>
+  <div className={style.content}>
     <Typography paragraph>
       An agent executes the logic of your processes. A process is defined by a
       set of actions that may be used in the workflow.<br />
       An instance of a process is called a map. It contains the different steps
       of the process, called segments.
     </Typography>
-    <Divider />
-    <Typography type="title">Endpoint</Typography>
+    <Divider className={style.divider} />
+    <Typography type="title" paragraph>
+      Endpoint
+    </Typography>
     <Typography paragraph>
       <a href={agentUrl} target="_blank" rel="noopener noreferrer">
         {agentUrl}
@@ -45,13 +47,19 @@ function mapStateToProps(state, ownProps) {
   }
   return {
     agentUrl: agentUrl,
-    style: ownProps.classes.content
+    style: ownProps.classes
   };
 }
 
+AgentInfoPage.defaultProps = {
+  style: { content: '', divider: '' }
+};
 AgentInfoPage.propTypes = {
   agentUrl: PropTypes.string.isRequired,
-  style: PropTypes.string.isRequired
+  style: PropTypes.shape({
+    content: PropTypes.string.isRequired,
+    divider: PropTypes.string.isRequired
+  })
 };
 
 export default withStyles(AppStyle)(connect(mapStateToProps)(AgentInfoPage));

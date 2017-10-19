@@ -24,7 +24,12 @@ describe('<ProcessInfoPage />', () => {
     const testProcess = new TestProcessBuilder('test').build();
 
     const processInfoPage = mount(<ProcessInfoPage process={testProcess} />);
-    expect(processInfoPage.find('h1').text()).to.equal('test');
+    expect(
+      processInfoPage
+        .find('Typography')
+        .at(0)
+        .text()
+    ).to.equal('test');
   });
 
   it('renders actions details and forwards properties', () => {
@@ -81,8 +86,7 @@ describe('<ProcessInfoPage />', () => {
       .build();
 
     const ownProps = {
-      match: { params: { process: 'meh' } },
-      classes: { content: 'awesome style' }
+      match: { params: { process: 'meh' } }
     };
     const mappedProps = mapStateToProps(testState, ownProps);
 

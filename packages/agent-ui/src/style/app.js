@@ -22,5 +22,8 @@ export default theme => ({
     height: `calc(100% - ${appBarHeight}px)`,
     marginLeft: drawerWidth,
     marginTop: appBarHeight
+  },
+  divider: {
+    marginBottom: theme.spacing.unit
   }
 });
