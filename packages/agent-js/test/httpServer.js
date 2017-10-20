@@ -89,6 +89,107 @@ describe('HttpServer()', () => {
     });
   });
 
+  describe('POST "/<process>/add"', () => {
+    const encodedScript = Buffer.from(
+      'module.exports = { ' +
+        "name:'hot', " +
+        'init: function(title) {' +
+        'if (!title) {' +
+        "return this.reject('a title is required');" +
+        '}' +
+        'this.state = {' +
+        'title: title' +
+        '};' +
+        'this.append();' +
+        '} ' +
+        '};'
+    ).toString('base64');
+
+    it('adds a new process and returns the updated list of processes', () => {
+      const hotProcess = { script: encodedScript };
+
+      const req = supertest(server)
+        .post('/hot/add')
+        .send(hotProcess);
+
+      return testFn(req, (err, res) => {
+        if (err) {
+          throw err;
+        }
+        res.status.should.be.exactly(200);
+        const processes = res.body;
+        processes.length.should.be.exactly(2);
+        processes[1].name.should.be.exactly('hot');
+      });
+    });
+
+    it('rejects process with name mismatch', () => {
+      const hotProcess = { script: encodedScript };
+      const req = supertest(server)
+        .post('/not-the-right-name/add')
+        .send(hotProcess);
+
+      return testFn(req, (err, res) => {
+        if (err) {
+          throw err;
+        }
+        res.status.should.be.exactly(400);
+        res.body.error.should.be.exactly(
+          "Process name from url doesn't match process name from the script"
+        );
+      });
+    });
+
+    it('rejects process with missing script', () => {
+      const hotProcess = { script: '' };
+      const req = supertest(server)
+        .post('/hot/add')
+        .send(hotProcess);
+
+      return testFn(req, (err, res) => {
+        if (err) {
+          throw err;
+        }
+        res.status.should.be.exactly(400);
+        res.body.error.should.be.exactly('missing script');
+      });
+    });
+
+    it('rejects process with no exported init function', () => {
+      const missingFunctions = Buffer.from(
+        "module.exports = { name:'hot'};"
+      ).toString('base64');
+
+      const hotProcess = { script: missingFunctions };
+      const req = supertest(server)
+        .post('/hot/add')
+        .send(hotProcess);
+
+      return testFn(req, (err, res) => {
+        if (err) {
+          throw err;
+        }
+        res.status.should.be.exactly(400);
+        res.body.error.should.be.exactly('missing init function');
+      });
+    });
+
+    it('rejects process with invalid script', () => {
+      const hotProcess = { script: 'this is definitely not a valid script' };
+      const req = supertest(server)
+        .post('/hot/add')
+        .send(hotProcess);
+
+      return testFn(req, (err, res) => {
+        if (err) {
+          throw err;
+        }
+        res.status.should.be.exactly(400);
+        res.body.error.should.be.exactly('invalid script');
+      });
+    });
+  });
+
   describe('GET "/<process>/remove"', () => {
     it('removes an existing process and renders the updated list of processes', () => {
       const req = supertest(server).get(`/${process.name}/remove`);

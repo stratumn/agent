@@ -19,6 +19,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import error from './error';
 import parseArgs from './parseArgs';
+import memorystore from './memoryStore';
 
 /**
  * Creates an HTTP server for an agent.
@@ -59,6 +60,52 @@ export default function httpServer(agent, opts = {}) {
       res.json(processes);
     } catch (err) {
       next(err);
+    }
+  });
+
+  /**
+   * This API allows dynamic upload of new processes to a running agent.
+   * This is obviously very dangerous as it accepts any javascript code.
+   * A strict access control mechanism should be setup to restrict access to this API.
+   */
+  app.post('/:process/add', (req, res, next) => {
+    try {
+      if (!req.body.script) {
+        return res.status(400).json({ error: 'missing script' });
+      }
+
+      let exported;
+      try {
+        const processModule = new module.constructor();
+        /* eslint-disable no-underscore-dangle */
+        processModule._compile(
+          Buffer.from(req.body.script, 'base64').toString(),
+          '' // this parameter is actually required (undefined isn't accepted)
+        );
+        /* eslint-enable no-underscore-dangle */
+        exported = processModule.exports;
+      } catch (err) {
+        return res.status(400).json({ error: 'invalid script' });
+      }
+
+      if (exported.name !== req.params.process) {
+        return res.status(400).json({
+          error:
+            "Process name from url doesn't match process name from the script"
+        });
+      }
+
+      if (!exported.init || typeof exported.init !== 'function') {
+        return res.status(400).json({
+          error: 'missing init function'
+        });
+      }
+
+      agent.addProcess(exported.name, exported, memorystore(), null);
+
+      return res.json(agent.getAllProcesses());
+    } catch (err) {
+      return next(err);
     }
   });
 
