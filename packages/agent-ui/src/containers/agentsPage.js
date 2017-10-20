@@ -1,8 +1,50 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-export const AgentsPage = () => <div>agents list and add</div>;
+import { getAgent } from '../actions';
+
+export const AgentsPage = ({ fetchAgent }) => {
+  let agentName;
+  let agentUrl;
+
+  return (
+    <div>
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          if (!agentName.value.trim() || !agentUrl.value.trim()) {
+            return;
+          }
+          fetchAgent(agentName.value, agentUrl.value);
+          agentName.value = '';
+          agentUrl.value = '';
+        }}
+      >
+        <input
+          placeholder="Agent name"
+          ref={node => {
+            agentName = node;
+          }}
+        />
+        <br />
+        <input
+          placeholder="Agent url"
+          ref={node => {
+            agentUrl = node;
+          }}
+        />
+        <br />
+        <button type="submit">Add Agent</button>
+      </form>
+    </div>
+  );
+};
+
+AgentsPage.propTypes = {
+  fetchAgent: PropTypes.func.isRequired
+};
 
 function mapStateToProps(state, ownProps) {
   console.log('AgentsPage state', state);
@@ -10,4 +52,8 @@ function mapStateToProps(state, ownProps) {
   return {};
 }
 
-export default withRouter(connect(mapStateToProps)(AgentsPage));
+export default withRouter(
+  connect(mapStateToProps, {
+    fetchAgent: getAgent
+  })(AgentsPage)
+);
