@@ -141,14 +141,24 @@ export default class Process {
 
   /**
    * Creates the first segment of a map, calling the #init() function of the agent.
+   * @param {object[]} [refs] - the optional list of references of the new map
+   * @param {string} [refs.process] - ref process name from the same store
+   * @param {string} [refs.linkHash] - ref linkHash from the same store
+   * @param {object} [refs.segment] - ref linked segment from another store
+   * @param {string} [refs.meta] - ref type of relation
    * @param {...} args - the arguments to pass to the init function
    * @returns {Promise} - a promise that resolve with the segment
    */
-  createMap(...args) {
+  createMap(refs, ...args) {
     const initialLink = { meta: { mapId: uuid.v4() } };
     let link;
     let segment;
-    return processify(this.actions, initialLink)
+    return processify(
+      this.actions,
+      initialLink,
+      refs,
+      this.storeClient.getSegment
+    )
       .init(...args)
       .catch(err => {
         err.status = 400;
@@ -173,10 +183,15 @@ export default class Process {
    * Appends a segment to a map.
    * @param {string} prevLinkHash - the previous link hash
    * @param {string} action - the name of the transition function to call
+   * @param {object[]} [refs] - the optional list of references of the new segment
+   * @param {string} [refs.process] - ref process name from the same store
+   * @param {string} [refs.linkHash] - ref linkHash from the same store
+   * @param {object} [refs.segment] - ref linked segment from another store
+   * @param {string} [refs.meta] - ref type of relation
    * @param {...} args - the arguments to pass to the transition function
    * @returns {Promise} - a promise that resolve with the segment
    */
-  createSegment(prevLinkHash, action, ...args) {
+  createSegment(prevLinkHash, action, refs, ...args) {
     if (!this.actions[action]) {
       const err = new Error('not found');
       err.status = 404;
@@ -196,7 +211,12 @@ export default class Process {
       .then(() => {
         delete initialLink.meta.prevLinkHash;
         initialLink.meta.prevLinkHash = prevLinkHash;
-        const process = processify(this.actions, initialLink);
+        const process = processify(
+          this.actions,
+          initialLink,
+          refs,
+          this.storeClient.getSegment
+        );
         return process[action](...args).catch(err => {
           err.status = 400;
           throw err;
@@ -221,7 +241,7 @@ export default class Process {
    * Inserts evidence.
    * @param {string} linkHash - the link hash
    * @param {object} evidence - evidence to insert
-   * @param {strint} secret - a secret
+   * @param {string} secret - a secret
    * @returns {Promise} - a promise that resolve with the segment
    */
   insertEvidence(linkHash, evidence, secret) {

@@ -58,16 +58,16 @@ export default function(plugin, assertions1) {
 
     describe('#createMap()', () => {
       it('creates a Map', () =>
-        process.createMap(1, 2, 3).then(assertions['#createMap()']));
+        process.createMap([], 1, 2, 3).then(assertions['#createMap()']));
     });
 
     describe('#createSegment()', () => {
       it('creates a segment', () =>
         process
-          .createMap(1, 2, 3)
+          .createMap(null, 1, 2, 3)
           .then(segment1 =>
             process
-              .createSegment(segment1.meta.linkHash, 'action', 4)
+              .createSegment(segment1.meta.linkHash, 'action', [], 4)
               .then(assertions['#createSegment()'])
           ));
     });
