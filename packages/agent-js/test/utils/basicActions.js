@@ -21,5 +21,20 @@ export default {
   action(d) {
     this.state.d = d;
     this.append();
+  },
+  testLoadSegments() {
+    if (this.meta.refs != null) {
+      const segmentPromises = this.meta.refs.map(ref =>
+        this.loadSegment(ref)
+          .then(seg => (seg ? 1 : 0))
+          .catch(() => -1)
+      );
+      Promise.all(segmentPromises).then(segs => {
+        this.state.nbSeg = segs.reduce((a, b) => a + (b > 0 ? 1 : 0), 0);
+        this.state.nbErr = segs.reduce((a, b) => a + (b < 0 ? 1 : 0), 0);
+        this.state.nbNull = segs.reduce((a, b) => a + (b === 0 ? 1 : 0), 0);
+        this.append();
+      });
+    }
   }
 };

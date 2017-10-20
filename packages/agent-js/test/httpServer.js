@@ -22,6 +22,7 @@ import hashJson from '../src/hashJson';
 import plugins from '../src/plugins';
 import generateSecret from '../src/generateSecret';
 import actions from './utils/basicActions';
+import refs from './utils/refs';
 
 function makePostRequest(server, url, args) {
   return supertest(server)
@@ -295,6 +296,7 @@ describe('HttpServer()', () => {
   describe('POST "/<process>/segments"', () => {
     it('renders the first segment', () => {
       const req = makePostRequest(server, `/${process.name}/segments`, [
+        [],
         1,
         2,
         3
@@ -313,9 +315,52 @@ describe('HttpServer()', () => {
       });
     });
 
+    it('renders the first segment with good refs', () => {
+      const req = makePostRequest(server, `/${process.name}/segments`, [
+        refs.getGoodRefs(process.name),
+        1,
+        2,
+        3
+      ]);
+      return testFn(req, (err, res) => {
+        if (err) {
+          throw err;
+        }
+        res.status.should.be.exactly(200);
+        const segment = res.body;
+        segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
+        segment.link.meta.mapId.should.be.a.String();
+        segment.link.meta.refs.should.be.an.Array();
+        segment.link.meta.refs.length.should.be.exactly(3);
+        segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
+        segment.meta.evidences.should.deepEqual([]);
+        return should(process.pendingEvidences[segment.linkHash]).be.null;
+      });
+    });
+
+    it('renders the first segment with bad process ref', () => {
+      const req = makePostRequest(server, `/${process.name}/segments`, [
+        refs.getBadRefs(),
+        1,
+        2,
+        3
+      ]);
+      return testFn(req, (err, res) => {
+        if (err) {
+          throw err;
+        }
+        res.status.should.be.exactly(400);
+      });
+    });
+
     it('updates correclty when adding a process after initial launch', () => {
       const p2 = agent.addProcess('basic2', actions, memoryStore(), null);
-      const req = makePostRequest(server, `/${p2.name}/segments`, [1, 2, 3]);
+      const req = makePostRequest(server, `/${p2.name}/segments`, [
+        null,
+        1,
+        2,
+        3
+      ]);
       return testFn(req, (err, res) => {
         if (err) {
           throw err;
@@ -329,7 +374,7 @@ describe('HttpServer()', () => {
     });
 
     it('fails when trying to add segments to a non-existing process', () => {
-      const req = makePostRequest(server, '/lol/segments', [1, 2, 3]);
+      const req = makePostRequest(server, '/lol/segments', [[], 1, 2, 3]);
       return testFn(req, (err, res) => {
         if (err) {
           throw err;
@@ -341,11 +386,11 @@ describe('HttpServer()', () => {
 
   describe('POST "/<process>/segments/:linkHash/:action"', () => {
     it('renders the new segment', () =>
-      process.createMap(1, 2, 3).then(segment1 => {
+      process.createMap([], 1, 2, 3).then(segment1 => {
         const req = makePostRequest(
           server,
           `/${process.name}/segments/${segment1.meta.linkHash}/action`,
-          [4]
+          [[], 4]
         );
         return testFn(req, (err, res) => {
           if (err) {
@@ -366,7 +411,7 @@ describe('HttpServer()', () => {
   describe('GET "/<process>/segments/:linkHash"', () => {
     it('renders the segment', () =>
       process
-        .createMap(1, 2, 3)
+        .createMap([], 1, 2, 3)
         .then(segment =>
           testDeepEquals(
             supertest(server).get(
@@ -381,9 +426,9 @@ describe('HttpServer()', () => {
   describe('GET "/<process>/segments"', () => {
     it('renders the segments', () =>
       process
-        .createMap(1, 2, 3)
+        .createMap([], 1, 2, 3)
         .then(segment =>
-          process.createSegment(segment.meta.linkHash, 'action', 4)
+          process.createSegment(segment.meta.linkHash, 'action', [], 4)
         )
         .then(() => process.findSegments({ limit: 20 }))
         .then(segments =>
@@ -397,12 +442,12 @@ describe('HttpServer()', () => {
     it('filters by mapIds', () => {
       let mapId;
       return process
-        .createMap(1, 2, 3)
+        .createMap([], 1, 2, 3)
         .then(segment1 =>
-          process.createSegment(segment1.meta.linkHash, 'action', 4)
+          process.createSegment(segment1.meta.linkHash, 'action', [], 4)
         )
         .then(() =>
-          process.createMap(4, 5, 6).then(segment2 => {
+          process.createMap([], 4, 5, 6).then(segment2 => {
             ({ mapId } = segment2.link.meta);
             return process.findSegments({ mapIds: [mapId] });
           })
@@ -422,9 +467,9 @@ describe('HttpServer()', () => {
   describe('GET "/<process>/maps"', () => {
     it('renders the map IDs', () =>
       process
-        .createMap(1, 2, 3)
-        .then(() => process.createMap(4, 5, 6))
-        .then(() => process.createMap(7, 8, 9))
+        .createMap([], 1, 2, 3)
+        .then(() => process.createMap([], 4, 5, 6))
+        .then(() => process.createMap([], 7, 8, 9))
         .then(() => process.getMapIds(process.name, { limit: 20 }))
         .then(mapIds =>
           testDeepEquals(
@@ -437,7 +482,7 @@ describe('HttpServer()', () => {
 
   describe('POST "/evidence/:linkHash"', () => {
     it('renders the updated segment', () =>
-      process.createMap(1, 2, 3).then(segment1 => {
+      process.createMap([], 1, 2, 3).then(segment1 => {
         const secret = generateSecret(segment1.meta.linkHash, '');
         process.pendingEvidences[segment1.meta.linkHash] = 2;
         return process
@@ -445,12 +490,12 @@ describe('HttpServer()', () => {
           .then(segment2 => {
             segment2.meta.evidences.push(segment2.meta.evidences[0]);
             return testDeepEquals(
-              supertest(server)
-                .post(
-                  `/${process.name}/evidence/${segment1.meta
-                    .linkHash}?secret=${secret}`
-                )
-                .send({ test: true }),
+              makePostRequest(
+                server,
+                `/${process.name}/evidence/${segment1.meta
+                  .linkHash}?secret=${secret}`,
+                { test: true }
+              ),
               200,
               segment2
             );

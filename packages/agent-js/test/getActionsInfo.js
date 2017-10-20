@@ -21,7 +21,8 @@ describe('#getActionsInfo()', () => {
   it('returns the actions info', () => {
     getActionsInfo(actions).should.deepEqual({
       init: { args: ['a', 'b', 'c'] },
-      action: { args: ['d'] }
+      action: { args: ['d'] },
+      testLoadSegments: { args: [] }
     });
   });
 

@@ -70,7 +70,7 @@ export default function memoryStore() {
      */
     getSegment(process, linkHash) {
       const segment = segments[linkHash];
-      if (!segment) {
+      if (!segment || segment.link.meta.process !== process) {
         const err = new Error('not found');
         err.status = 404;
         return Promise.reject(err);
