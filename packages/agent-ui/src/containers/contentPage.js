@@ -4,10 +4,11 @@ import { withRouter, Route } from 'react-router-dom';
 
 import {
   AgentInfoPage,
+  AgentsPage,
+  MapPage,
   ProcessInfoPage,
   ProcessMapsPage,
   ProcessSegmentsPage,
-  MapPage,
   SegmentPage
 } from './';
 
@@ -23,6 +24,7 @@ export const ContentPage = () => (
       borderStyle: 'solid'
     }}
   >
+    <Route exact path="/" component={AgentsPage} />
     <Route exact path="/:agent" component={AgentInfoPage} />
     <Route exact path="/:agent/:process" component={ProcessInfoPage} />
     <Route exact path="/:agent/:process/maps" component={ProcessMapsPage} />
