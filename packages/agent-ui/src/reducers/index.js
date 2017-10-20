@@ -1,9 +1,13 @@
 import { combineReducers } from 'redux';
 
-const dummy = (state = null, action) => state;
+import agents from './agents';
+import maps from './maps';
+import segments from './segments';
 
 const rootReducer = combineReducers({
-  dummy
+  agents,
+  maps,
+  segments
 });
 
 export default rootReducer;
