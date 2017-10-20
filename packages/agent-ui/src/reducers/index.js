@@ -1,3 +1,9 @@
-export { default as getAgentInfo } from './getAgentInfo';
-export { default as getMapIds } from './getMapIds';
-export { default as findSegments } from './findSegments';
+import { combineReducers } from 'redux';
+
+const dummy = (state = null, action) => state;
+
+const rootReducer = combineReducers({
+  dummy
+});
+
+export default rootReducer;

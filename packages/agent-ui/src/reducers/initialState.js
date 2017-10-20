@@ -1,4 +1,6 @@
 export default {
-  processes: {},
-  url: ''
+  agents: {},
+  mapsDetails: {},
+  segmentsDetails: {},
+  segmentDetails: {}
 };
