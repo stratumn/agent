@@ -181,11 +181,11 @@ describe('Agent', () => {
 
       return agent
         .addProcess('first', actions, memoryStore(), null)
-        .createMap(1, 2, 3)
+        .createMap(null, 1, 2, 3)
         .then(() =>
           agent
             .addProcess('second', actions, memoryStore(), null)
-            .createMap('a', 'b', 'c')
+            .createMap(null, 'a', 'b', 'c')
         )
         .then(() => agent.findSegments('first'))
         .then(sgmts1 => {
@@ -210,11 +210,11 @@ describe('Agent', () => {
 
       return agent
         .addProcess('first', actions, store, null)
-        .createMap(1, 2, 3)
+        .createMap(null, 1, 2, 3)
         .then(() =>
           agent
             .addProcess('second', actions, store, null)
-            .createMap('a', 'b', 'c')
+            .createMap(null, 'a', 'b', 'c')
         )
         .then(() => agent.findSegments('first'))
         .then(sgmts1 => {
@@ -327,12 +327,12 @@ describe('Agent', () => {
       const p2 = agent.addProcess('basic2', actions, memoryStore(), null);
 
       return p1
-        .createMap(1, 2, 3)
-        .then(s1 => p1.createSegment(s1.meta.linkHash, 'action', 5))
+        .createMap(null, 1, 2, 3)
+        .then(s1 => p1.createSegment(s1.meta.linkHash, 'action', [], 5))
         .then(() => agent.findSegments('basic'))
         .then(segments => segments.length.should.be.exactly(2))
-        .then(() => p2.createMap(4, 5, 6))
-        .then(s1 => p2.createSegment(s1.meta.linkHash, 'action', 5))
+        .then(() => p2.createMap(null, 4, 5, 6))
+        .then(s1 => p2.createSegment(s1.meta.linkHash, 'action', [], 5))
         .then(() => agent.findSegments('basic2'))
         .then(segments => segments.length.should.be.exactly(2))
         .then(() => agent.findSegments('none'))
@@ -349,11 +349,11 @@ describe('Agent', () => {
       const store = memoryStore();
       return agent
         .addProcess('first', actions, store, null)
-        .createMap(1, 2, 3)
+        .createMap(null, 1, 2, 3)
         .then(() =>
           agent
             .addProcess('second', actions, store, null)
-            .createMap('a', 'b', 'c')
+            .createMap(null, 'a', 'b', 'c')
         )
         .then(() => agent.findSegments('first'))
         .then(segments => segments.length.should.be.exactly(1))
@@ -365,11 +365,11 @@ describe('Agent', () => {
       const store = memoryStore();
       return agent
         .addProcess('first', actions, store, null)
-        .createMap(1, 2, 3)
+        .createMap(null, 1, 2, 3)
         .then(() =>
           agent
             .addProcess('second', actions, store, null)
-            .createMap('a', 'b', 'c')
+            .createMap(null, 'a', 'b', 'c')
         )
         .then(() => agent.findSegments('second'))
         .then(segments => segments.length.should.be.exactly(1));
@@ -380,11 +380,11 @@ describe('Agent', () => {
     it('returns the map ids of a processes', () =>
       agent
         .addProcess('basic', actions, memoryStore(), null)
-        .createMap(1, 2, 3)
+        .createMap(null, 1, 2, 3)
         .then(() =>
           agent
             .addProcess('basic2', actions, memoryStore(), null)
-            .createMap('a', 'b', 'c')
+            .createMap(null, 'a', 'b', 'c')
         )
         .then(() => agent.getMapIds('basic'))
         .then(mapIds => {
@@ -402,11 +402,11 @@ describe('Agent', () => {
       const store = memoryStore();
       return agent
         .addProcess('first', actions, store, null)
-        .createMap(1, 2, 3)
+        .createMap(null, 1, 2, 3)
         .then(() =>
           agent
             .addProcess('second', actions, store, null)
-            .createMap('a', 'b', 'c')
+            .createMap(null, 'a', 'b', 'c')
         )
         .then(() => agent.getMapIds('first'))
         .then(mapIds => {

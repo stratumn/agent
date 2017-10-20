@@ -16,7 +16,24 @@
 
 import protoChain from './protoChain';
 
-export default function processify(actions, initialLink) {
+function loadMeta(inputMeta, refs) {
+  const meta = JSON.parse(JSON.stringify(inputMeta || {}));
+  meta.refs = [];
+  if (refs == null) return meta;
+  if (!Array.isArray(refs)) {
+    throw new Error('Bad references type');
+  }
+
+  refs.forEach(ref => {
+    if ((!ref.process || !ref.linkHash) && ref.segment == null) {
+      throw new Error(`missing segment or (process and linkHash)`);
+    }
+    meta.refs.push(ref);
+  });
+  return meta;
+}
+
+export default function processify(actions, initialLink, refs, getSegment) {
   let link = JSON.parse(JSON.stringify(initialLink || {}));
 
   const methods = protoChain(
@@ -34,7 +51,7 @@ export default function processify(actions, initialLink) {
     new Promise((resolve, reject) => {
       const ctx = {
         state: JSON.parse(JSON.stringify(link.state || {})),
-        meta: JSON.parse(JSON.stringify(link.meta || {})),
+        meta: loadMeta(link.meta, refs),
         append(state, meta) {
           link = { state: state || this.state, meta: meta || this.meta };
           resolve(link);
@@ -44,6 +61,9 @@ export default function processify(actions, initialLink) {
           reject(
             err instanceof Error ? err : new Error(err || 'An error occurred')
           );
+        },
+        loadSegment(ref) {
+          return getSegment(ref.process, ref.linkHash);
         }
       };
 
