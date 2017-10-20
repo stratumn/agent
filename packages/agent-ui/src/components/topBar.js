@@ -8,6 +8,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 
 import { withStyles } from 'material-ui/styles';
+import AppStyle from '../style/app';
 
 const Title = ({ urlPath }) => (
   <Typography type="title" noWrap>
@@ -19,17 +20,7 @@ Title.propTypes = {
   urlPath: PropTypes.string.isRequired
 };
 
-const drawerWidth = 240;
-
-const styles = () => ({
-  appBar: {
-    position: 'absolute',
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth
-  }
-});
-
-const TopBar = ({ style, urlPath }) => (
+const TopBar = ({ urlPath, style }) => (
   <AppBar className={style}>
     <Toolbar>
       <Title urlPath={urlPath} />
@@ -38,15 +29,17 @@ const TopBar = ({ style, urlPath }) => (
 );
 
 TopBar.propTypes = {
-  style: PropTypes.string.isRequired,
-  urlPath: PropTypes.string.isRequired
+  urlPath: PropTypes.string.isRequired,
+  style: PropTypes.string.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
   return {
-    style: ownProps.classes.appBar,
-    urlPath: ownProps.location.pathname
+    urlPath: ownProps.location.pathname,
+    style: ownProps.classes.appBar
   };
 }
 
-export default withStyles(styles)(withRouter(connect(mapStateToProps)(TopBar)));
+export default withStyles(AppStyle)(
+  withRouter(connect(mapStateToProps)(TopBar))
+);
