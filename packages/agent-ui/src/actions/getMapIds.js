@@ -1,13 +1,33 @@
 import { getAgent } from 'stratumn-agent-client';
-import { getMapIdsSuccess, getMapIdsFailure } from './';
+import { actionTypes } from './';
 
-export default function(url, processName) {
-  return dispatch =>
-    getAgent(url)
-      .then(agent => {
-        const proc = agent.getProcess(processName);
+const getMapIdsRequest = (agent, process) => ({
+  type: actionTypes.MAP_IDS_REQUEST,
+  agent,
+  process
+});
+
+const getMapIdsError = error => ({
+  type: actionTypes.MAP_IDS_ERROR,
+  error
+});
+
+const getMapIdsSuccess = mapIds => ({
+  type: actionTypes.MAP_IDS_SUCCESS,
+  mapIds
+});
+
+export default function(agent, process) {
+  return dispatch => {
+    dispatch(getMapIdsRequest(agent, process));
+    // TODO: get agent url
+    const url = '';
+    return getAgent(url)
+      .then(a => {
+        const proc = a.getProcess(process);
         return proc.getMapIds();
       })
       .then(mapIds => dispatch(getMapIdsSuccess(mapIds)))
-      .catch(err => dispatch(getMapIdsFailure(err)));
+      .catch(err => dispatch(getMapIdsError(err)));
+  };
 }
