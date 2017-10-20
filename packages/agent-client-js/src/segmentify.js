@@ -14,13 +14,21 @@
   limitations under the License.
 */
 
+import withRefs from './withRefs';
+
 export default function segmentify(adaptor, process, obj) {
   Object.keys(process.processInfo.actions)
-    .filter(key => ['init'].indexOf(key) < 0)
-    .forEach(key => {
-      obj[key] = (...args) =>
+    .filter(action => ['init'].indexOf(action) < 0)
+    .forEach(action => {
+      obj[action] = (...args) =>
         adaptor
-          .createSegment(process.name, obj.meta.linkHash, key, ...args)
+          .createSegment(
+            process.name,
+            obj.meta.linkHash,
+            action,
+            obj.refs,
+            ...args
+          )
           .then(res => segmentify(adaptor, process, res.body));
     });
 
@@ -32,5 +40,6 @@ export default function segmentify(adaptor, process, obj) {
     return Promise.resolve(null);
   };
 
+  obj.withRefs = withRefs.bind(null, obj);
   return obj;
 }

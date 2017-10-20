@@ -14,10 +14,6 @@
   limitations under the License.
 */
 
-import segmentify from './segmentify';
-
-export default function createMap(adaptor, process, ...args) {
-  return adaptor
-    .createMap(process.name, process.refs, ...args)
-    .then(res => segmentify(adaptor, process, res.body));
+export default function withRefs(obj, references) {
+  return Object.assign(obj, { refs: references });
 }

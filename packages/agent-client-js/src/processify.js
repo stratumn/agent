@@ -15,6 +15,7 @@
 */
 
 import createMap from './createMap';
+import withRefs from './withRefs';
 import getSegment from './getSegment';
 import findSegments from './findSegments';
 import getMapIds from './getMapIds';
@@ -33,6 +34,7 @@ export default function processify(adaptor, process) {
     updatedProcess
   );
   updatedProcess.getMapIds = getMapIds.bind(null, adaptor, updatedProcess);
+  updatedProcess.withRefs = withRefs.bind(null, updatedProcess);
 
   return updatedProcess;
 }
