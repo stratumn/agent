@@ -72,7 +72,7 @@ export default function httpServer(agent, opts = {}) {
    * setup to restrict access to this API.
    */
   if (opts.enableProcessUpload) {
-    app.post('/:process/add', (req, res, next) => {
+    app.post('/:process/upload', (req, res, next) => {
       try {
         if (!req.body.script) {
           return res.status(400).json({ error: 'missing script' });

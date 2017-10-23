@@ -89,7 +89,7 @@ describe('HttpServer()', () => {
     });
   });
 
-  describe('POST "/<process>/add"', () => {
+  describe('POST "/<process>/upload"', () => {
     const validEncodedScript = Buffer.from(
       'module.exports = { ' +
         'init: function(title) {' +
@@ -118,7 +118,7 @@ describe('HttpServer()', () => {
     ) => {
       const newProcess = { script: encodedScript };
       const req = supertest(testServer)
-        .post(`/${processName}/add`)
+        .post(`/${processName}/upload`)
         .send(newProcess);
 
       return testFn(req, (err, res) => {
