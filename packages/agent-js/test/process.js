@@ -31,8 +31,12 @@ const plugins = [
 
 const processInfo = {
   actions: {
-    init: { args: ['a', 'b', 'c'] },
-    action: { args: ['d'] }
+    init: {
+      args: ['a', 'b', 'c']
+    },
+    action: {
+      args: ['d']
+    }
   },
   pluginsInfo: [
     {
@@ -71,12 +75,16 @@ describe('Process', () => {
       process.fossilizerClients = [
         {
           getInfo() {
-            return Promise.resolve({ name: '1' });
+            return Promise.resolve({
+              name: '1'
+            });
           }
         },
         {
           getInfo() {
-            return Promise.resolve({ name: '2' });
+            return Promise.resolve({
+              name: '2'
+            });
           }
         }
       ];
@@ -101,7 +109,11 @@ describe('Process', () => {
   describe('#createMap()', () => {
     it('resolves with the first segment', () =>
       process.createMap(1, 2, 3).then(segment => {
-        segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
+        segment.link.state.should.deepEqual({
+          a: 1,
+          b: 2,
+          c: 3
+        });
         segment.link.meta.mapId.should.be.a.String();
         segment.link.meta.process.should.be.exactly('basic');
         segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
@@ -112,7 +124,11 @@ describe('Process', () => {
       actions.events = {
         didSave(s) {
           callCount += 1;
-          s.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
+          s.link.state.should.deepEqual({
+            a: 1,
+            b: 2,
+            c: 3
+          });
         }
       };
       return process
@@ -131,7 +147,12 @@ describe('Process', () => {
           return process.createSegment(segment1.meta.linkHash, 'action', 4);
         })
         .then(segment2 => {
-          segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
+          segment2.link.state.should.deepEqual({
+            a: 1,
+            b: 2,
+            c: 3,
+            d: 4
+          });
           segment2.link.meta.prevLinkHash.should.be.exactly(
             sgmt1.meta.linkHash
           );
@@ -145,7 +166,12 @@ describe('Process', () => {
         actions.events = {
           didSave(s) {
             callCount += 1;
-            s.link.state.should.deepEqual({ a: 1, b: 2, c: 3, d: 4 });
+            s.link.state.should.deepEqual({
+              a: 1,
+              b: 2,
+              c: 3,
+              d: 4
+            });
           }
         };
         return process
@@ -192,12 +218,26 @@ describe('Process', () => {
         const secret = generateSecret(segment1.meta.linkHash, '');
         process.pendingEvidences[segment1.meta.linkHash] = 1;
         return process
-          .insertEvidence(segment1.meta.linkHash, { test: true }, secret)
+          .insertEvidence(
+            segment1.meta.linkHash,
+            {
+              test: true
+            },
+            secret
+          )
           .then(segment2 => {
-            segment2.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
+            segment2.link.state.should.deepEqual({
+              a: 1,
+              b: 2,
+              c: 3
+            });
             segment2.link.meta.mapId.should.be.a.String();
             segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
-            segment2.meta.evidences.should.deepEqual([{ test: true }]);
+            segment2.meta.evidences.should.deepEqual([
+              {
+                test: true
+              }
+            ]);
             return should(
               process.pendingEvidences[segment1.meta.linkHash]
             ).equal(undefined);
@@ -211,7 +251,9 @@ describe('Process', () => {
         .then(segment1 =>
           process.insertEvidence(
             segment1.meta.linkHash,
-            { test: true },
+            {
+              test: true
+            },
             'wrong secret'
           )
         )
@@ -230,7 +272,9 @@ describe('Process', () => {
           const secret = generateSecret(segment1.meta.linkHash, '');
           return process.insertEvidence(
             segment1.meta.linkHash,
-            { test: true },
+            {
+              test: true
+            },
             secret
           );
         })
@@ -256,20 +300,40 @@ describe('Process', () => {
           didFossilize(s) {
             callCount += 1;
             s.meta.evidences.should.deepEqual([
-              { test: true },
-              { test2: true }
+              {
+                test: true
+              },
+              {
+                test2: true
+              }
             ]);
-            this.state.should.deepEqual({ a: 1, b: 2, c: 3 });
+            this.state.should.deepEqual({
+              a: 1,
+              b: 2,
+              c: 3
+            });
           }
         };
         const secret = generateSecret(segment.meta.linkHash, '');
         process.pendingEvidences[segment.meta.linkHash] = 2;
         return process
-          .insertEvidence(segment.meta.linkHash, { test: true }, secret)
+          .insertEvidence(
+            segment.meta.linkHash,
+            {
+              test: true
+            },
+            secret
+          )
           .then(() => callCount.should.be.exactly(0))
           .then(() =>
             process
-              .insertEvidence(segment.meta.linkHash, { test2: true }, secret)
+              .insertEvidence(
+                segment.meta.linkHash,
+                {
+                  test2: true
+                },
+                secret
+              )
               .then(() => callCount.should.be.exactly(1))
           );
       });
@@ -280,40 +344,43 @@ describe('Process', () => {
     it('applies the filters', () => {
       process.plugins = [
         {
-          filter(segment) {
+          filterSegment(segment) {
             return segment.link.state.a === 1;
           }
         }
       ];
-      Promise.all([process.createMap(1, 2, 3), process.createMap(2, 2, 3)])
-        .then(() => process.findSegments('test', null))
+      return Promise.all([
+        process.createMap(1, 2, 3),
+        process.createMap(2, 2, 3)
+      ])
+        .then(() => process.findSegments())
         .then(body => {
           body.should.be.an.Array();
           body.length.should.be.exactly(1);
-          body[0].link.state.filtered.should.be.exactly(1);
+          body[0].link.state.a.should.be.exactly(1);
         });
     });
 
     it('applies the filters sequentially', () => {
       process.plugins = [
         {
-          filter(segment) {
-            segment.link.state.filtered = 1;
-            return true;
+          filterSegment(segment) {
+            return segment.link.state.filtered === 1;
           }
         },
         {
-          filter(segment) {
-            return segment.link.state.a === 1;
+          filterSegment(segment) {
+            segment.link.state.filtered = 1;
+            return true;
           }
         }
       ];
 
-      process
+      return process
         .createMap(2, 2, 3)
-        .then(() => process.findSegments('test'))
+        .then(() => process.findSegments())
         .then(body => {
-          body.should.have.length(2);
+          body.should.have.length(1);
         });
     });
   });
@@ -322,20 +389,20 @@ describe('Process', () => {
     it('applies the filters', () => {
       process.plugins = [
         {
-          filter(segment) {
+          filterSegment(segment) {
             return segment.link.state.a === 1;
           }
         }
       ];
 
-      process
+      return process
         .createMap(2, 2, 3)
-        .then(() => process.getSegment('testFilter', 'linkHash'))
+        .then(s => process.getSegment(s.meta.linkHash))
         .then(() => {
           throw new Error('should not resolve');
         })
         .catch(err => {
-          err.statusCode.should.be.exactly(403);
+          err.status.should.be.exactly(403);
           err.message.should.be.exactly('forbidden');
         });
     });

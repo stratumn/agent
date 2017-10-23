@@ -269,7 +269,7 @@ export default class Process {
   getSegment(linkHash) {
     let segment;
     return this.storeClient
-      .getSegment(this.name, linkHash, this.filterSegment)
+      .getSegment(this.name, linkHash)
       .then(s => {
         segment = s;
         return this.filterSegment(s);
