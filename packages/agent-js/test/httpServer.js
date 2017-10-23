@@ -90,7 +90,7 @@ describe('HttpServer()', () => {
   });
 
   describe('POST "/<process>/add"', () => {
-    const encodedScript = Buffer.from(
+    const validEncodedScript = Buffer.from(
       'module.exports = { ' +
         'init: function(title) {' +
         'if (!title) {' +
@@ -110,86 +110,75 @@ describe('HttpServer()', () => {
       serverWithProcessUpload = agent.httpServer({ enableProcessUpload: true });
     });
 
-    it('is disabled by default', () => {
-      const hotProcess = { script: encodedScript };
-
-      const req = supertest(server)
-        .post('/hot/add')
-        .send(hotProcess);
+    const uploadProcessAndValidate = (
+      testServer,
+      encodedScript,
+      validate,
+      processName = 'newProcess'
+    ) => {
+      const newProcess = { script: encodedScript };
+      const req = supertest(testServer)
+        .post(`/${processName}/add`)
+        .send(newProcess);
 
       return testFn(req, (err, res) => {
         if (err) {
           throw err;
         }
+
+        validate(res);
+      });
+    };
+
+    it('is disabled by default', () =>
+      uploadProcessAndValidate(server, validEncodedScript, res => {
         res.status.should.be.exactly(404);
-      });
-    });
+      }));
 
-    it('adds a new process and returns the updated list of processes', () => {
-      const hotProcess = { script: encodedScript };
+    it('adds a new process and returns the updated list of processes', () =>
+      uploadProcessAndValidate(
+        serverWithProcessUpload,
+        validEncodedScript,
+        res => {
+          res.status.should.be.exactly(200);
+          const processes = res.body;
+          processes.length.should.be.exactly(2);
+          processes[1].name.should.be.exactly('hot');
+        },
+        'hot'
+      ));
 
-      const req = supertest(serverWithProcessUpload)
-        .post('/hot/add')
-        .send(hotProcess);
-
-      return testFn(req, (err, res) => {
-        if (err) {
-          throw err;
-        }
-        res.status.should.be.exactly(200);
-        const processes = res.body;
-        processes.length.should.be.exactly(2);
-        processes[1].name.should.be.exactly('hot');
-      });
-    });
-
-    it('rejects process with missing script', () => {
-      const hotProcess = { script: '' };
-      const req = supertest(serverWithProcessUpload)
-        .post('/hot/add')
-        .send(hotProcess);
-
-      return testFn(req, (err, res) => {
-        if (err) {
-          throw err;
-        }
+    it('rejects process with missing script', () =>
+      uploadProcessAndValidate(serverWithProcessUpload, '', res => {
         res.status.should.be.exactly(400);
         res.body.error.should.be.exactly('missing script');
-      });
-    });
+      }));
 
     it('rejects process with no exported init function', () => {
       const missingFunctions = Buffer.from(
-        "module.exports = { name:'hot'};"
+        "module.exports = { useless:'dummy'};"
       ).toString('base64');
 
-      const hotProcess = { script: missingFunctions };
-      const req = supertest(serverWithProcessUpload)
-        .post('/hot/add')
-        .send(hotProcess);
-
-      return testFn(req, (err, res) => {
-        if (err) {
-          throw err;
+      return uploadProcessAndValidate(
+        serverWithProcessUpload,
+        missingFunctions,
+        res => {
+          res.status.should.be.exactly(400);
+          res.body.error.should.be.exactly('missing init function');
         }
-        res.status.should.be.exactly(400);
-        res.body.error.should.be.exactly('missing init function');
-      });
+      );
     });
 
     it('rejects process with invalid script', () => {
-      const hotProcess = { script: 'this is definitely not a valid script' };
-      const req = supertest(serverWithProcessUpload)
-        .post('/hot/add')
-        .send(hotProcess);
-
-      return testFn(req, (err, res) => {
-        if (err) {
-          throw err;
+      const invalidScript = 'this is definitely not a valid script';
+      return uploadProcessAndValidate(
+        serverWithProcessUpload,
+        invalidScript,
+        res => {
+          res.status.should.be.exactly(400);
+          res.body.error.should.be.exactly('invalid script');
         }
-        res.status.should.be.exactly(400);
-        res.body.error.should.be.exactly('invalid script');
-      });
+      );
     });
   });
 
