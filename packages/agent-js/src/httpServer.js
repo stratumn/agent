@@ -48,13 +48,11 @@ export default function httpServer(agent, opts = {}) {
     app.options('*', corsMiddleware);
   }
 
-  app.get('/', (req, res) => {
-    agent.getInfo().then(res.json.bind(res));
-  });
+  app.get('/', (req, res) => agent.getInfo().then(res.json.bind(res)));
 
   app.get('/processes', (req, res) => {
     const processes = agent.getAllProcesses(req.query);
-    res.json(processes);
+    return res.json(processes);
   });
 
   /**
@@ -96,19 +94,19 @@ export default function httpServer(agent, opts = {}) {
 
       agent.addProcess(req.params.process, exported, memorystore(), null);
 
-      res.json(agent.getAllProcesses());
+      return res.json(agent.getAllProcesses());
     });
   }
 
   app.get('/:process/remove', (req, res) => {
     const processes = agent.removeProcess(req.params.process);
-    res.json(processes);
+    return res.json(processes);
   });
 
   app.post('/:process/segments', loadProcess, (req, res) => {
     res.locals.renderErrorAsLink = true;
 
-    res.locals.process
+    return res.locals.process
       .createMap(...parseArgs(req.body))
       .then(res.json.bind(res));
   });
@@ -116,7 +114,7 @@ export default function httpServer(agent, opts = {}) {
   app.post('/:process/segments/:linkHash/:action', loadProcess, (req, res) => {
     res.locals.renderErrorAsLink = true;
 
-    res.locals.process
+    return res.locals.process
       .createSegment(
         req.params.linkHash,
         req.params.action,
@@ -125,28 +123,28 @@ export default function httpServer(agent, opts = {}) {
       .then(res.json.bind(res));
   });
 
-  app.get('/:process/segments/:linkHash', loadProcess, (req, res) => {
-    res.locals.process.getSegment(req.params.linkHash).then(res.json.bind(res));
-  });
+  app.get('/:process/segments/:linkHash', loadProcess, (req, res) =>
+    res.locals.process.getSegment(req.params.linkHash).then(res.json.bind(res))
+  );
 
-  app.get('/:process/segments', loadProcess, (req, res) => {
-    res.locals.process.findSegments(req.query).then(res.json.bind(res));
-  });
+  app.get('/:process/segments', loadProcess, (req, res) =>
+    res.locals.process.findSegments(req.query).then(res.json.bind(res))
+  );
 
-  app.post('/:process/evidence/:linkHash', loadProcess, (req, res) => {
+  app.post('/:process/evidence/:linkHash', loadProcess, (req, res) =>
     res.locals.process
       .insertEvidence(req.params.linkHash, req.body, req.query.secret)
-      .then(res.json.bind(res));
-  });
+      .then(res.json.bind(res))
+  );
 
-  app.get('/:process/maps', loadProcess, (req, res) => {
-    res.locals.process.getMapIds(req.query).then(res.json.bind(res));
-  });
+  app.get('/:process/maps', loadProcess, (req, res) =>
+    res.locals.process.getMapIds(req.query).then(res.json.bind(res))
+  );
 
   app.use((req, res, next) => {
     const err = new Error('not found');
     err.status = 404;
-    next(err);
+    return next(err);
   });
 
   app.use(error());
