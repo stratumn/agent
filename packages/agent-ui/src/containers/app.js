@@ -4,8 +4,6 @@ import { withRouter } from 'react-router-dom';
 
 import { TopBar, LeftNavigation, ContentPage } from './';
 
-// TODO: temporarily load agentInfo for local here if no agent loaded?
-
 export const App = () => (
   <div>
     <TopBar />
