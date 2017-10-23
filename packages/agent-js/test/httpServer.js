@@ -96,6 +96,99 @@ describe('HttpServer()', () => {
     });
   });
 
+  describe('POST "/<process>/upload"', () => {
+    const validEncodedScript = Buffer.from(
+      'module.exports = { ' +
+        'init: function(title) {' +
+        'if (!title) {' +
+        "return this.reject('a title is required');" +
+        '}' +
+        'this.state = {' +
+        'title: title' +
+        '};' +
+        'this.append();' +
+        '} ' +
+        '};'
+    ).toString('base64');
+
+    let serverWithProcessUpload;
+
+    beforeEach(() => {
+      serverWithProcessUpload = agent.httpServer({ enableProcessUpload: true });
+    });
+
+    const uploadProcessAndValidate = (
+      testServer,
+      encodedScript,
+      validate,
+      processName = 'newProcess'
+    ) => {
+      const newProcess = { script: encodedScript };
+      const req = supertest(testServer)
+        .post(`/${processName}/upload`)
+        .send(newProcess);
+
+      return testFn(req, (err, res) => {
+        if (err) {
+          throw err;
+        }
+
+        validate(res);
+      });
+    };
+
+    it('is disabled by default', () =>
+      uploadProcessAndValidate(server, validEncodedScript, res => {
+        res.status.should.be.exactly(404);
+      }));
+
+    it('adds a new process and returns the updated list of processes', () =>
+      uploadProcessAndValidate(
+        serverWithProcessUpload,
+        validEncodedScript,
+        res => {
+          res.status.should.be.exactly(200);
+          const processes = res.body;
+          processes.length.should.be.exactly(2);
+          processes[1].name.should.be.exactly('hot');
+        },
+        'hot'
+      ));
+
+    it('rejects process with missing script', () =>
+      uploadProcessAndValidate(serverWithProcessUpload, '', res => {
+        res.status.should.be.exactly(400);
+        res.body.error.should.be.exactly('missing script');
+      }));
+
+    it('rejects process with no exported init function', () => {
+      const missingFunctions = Buffer.from(
+        "module.exports = { useless:'dummy'};"
+      ).toString('base64');
+
+      return uploadProcessAndValidate(
+        serverWithProcessUpload,
+        missingFunctions,
+        res => {
+          res.status.should.be.exactly(400);
+          res.body.error.should.be.exactly('missing init function');
+        }
+      );
+    });
+
+    it('rejects process with invalid script', () => {
+      const invalidScript = 'this is definitely not a valid script';
+      return uploadProcessAndValidate(
+        serverWithProcessUpload,
+        invalidScript,
+        res => {
+          res.status.should.be.exactly(400);
+          res.body.error.should.be.exactly('invalid script');
+        }
+      );
+    });
+  });
+
   describe('GET "/<process>/remove"', () => {
     it('removes an existing process and renders the updated list of processes', () => {
       const req = supertest(server).get(`/${process.name}/remove`);

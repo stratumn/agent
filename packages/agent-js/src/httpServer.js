@@ -19,6 +19,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import error from './error';
 import parseArgs from './parseArgs';
+import memorystore from './memoryStore';
 
 /**
  * Creates an HTTP server for an agent.
@@ -26,6 +27,7 @@ import parseArgs from './parseArgs';
  * @param {object} [opts] - options
  * @param {object} [opts.cors] - CORS options
  * @param {object} [opts.salt] - salt used for callback URLs
+ * @param {object} [opts.enableProcessUpload] - allow clients to upload new processes to a running agent
  * @returns {express.Server} - an express server
  */
 export default function httpServer(agent, opts = {}) {
@@ -61,6 +63,49 @@ export default function httpServer(agent, opts = {}) {
       next(err);
     }
   });
+
+  /**
+   * This API allows dynamic upload of new processes to a running agent.
+   * This is obviously very dangerous as it accepts any javascript code,
+   * which is why it's disabled by default.
+   * If you choose to enable it, a strict access control mechanism should be 
+   * setup to restrict access to this API.
+   */
+  if (opts.enableProcessUpload) {
+    app.post('/:process/upload', (req, res, next) => {
+      try {
+        if (!req.body.script) {
+          return res.status(400).json({ error: 'missing script' });
+        }
+
+        let exported;
+        try {
+          const processModule = new module.constructor();
+          /* eslint-disable no-underscore-dangle */
+          processModule._compile(
+            Buffer.from(req.body.script, 'base64').toString(),
+            '' // this parameter is actually required (undefined isn't accepted)
+          );
+          /* eslint-enable no-underscore-dangle */
+          exported = processModule.exports;
+        } catch (err) {
+          return res.status(400).json({ error: 'invalid script' });
+        }
+
+        if (!exported.init || typeof exported.init !== 'function') {
+          return res.status(400).json({
+            error: 'missing init function'
+          });
+        }
+
+        agent.addProcess(req.params.process, exported, memorystore(), null);
+
+        return res.json(agent.getAllProcesses());
+      } catch (err) {
+        return next(err);
+      }
+    });
+  }
 
   app.get('/:process/remove', (req, res, next) => {
     try {
