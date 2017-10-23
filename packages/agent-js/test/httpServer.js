@@ -105,10 +105,31 @@ describe('HttpServer()', () => {
         '};'
     ).toString('base64');
 
-    it('adds a new process and returns the updated list of processes', () => {
+    let serverWithProcessUpload;
+
+    beforeEach(() => {
+      serverWithProcessUpload = agent.httpServer({ enableProcessUpload: true });
+    });
+
+    it('is disabled by default', () => {
       const hotProcess = { script: encodedScript };
 
       const req = supertest(server)
+        .post('/hot/add')
+        .send(hotProcess);
+
+      return testFn(req, (err, res) => {
+        if (err) {
+          throw err;
+        }
+        res.status.should.be.exactly(404);
+      });
+    });
+
+    it('adds a new process and returns the updated list of processes', () => {
+      const hotProcess = { script: encodedScript };
+
+      const req = supertest(serverWithProcessUpload)
         .post('/hot/add')
         .send(hotProcess);
 
@@ -125,7 +146,7 @@ describe('HttpServer()', () => {
 
     it('rejects process with name mismatch', () => {
       const hotProcess = { script: encodedScript };
-      const req = supertest(server)
+      const req = supertest(serverWithProcessUpload)
         .post('/not-the-right-name/add')
         .send(hotProcess);
 
@@ -142,7 +163,7 @@ describe('HttpServer()', () => {
 
     it('rejects process with missing script', () => {
       const hotProcess = { script: '' };
-      const req = supertest(server)
+      const req = supertest(serverWithProcessUpload)
         .post('/hot/add')
         .send(hotProcess);
 
@@ -161,7 +182,7 @@ describe('HttpServer()', () => {
       ).toString('base64');
 
       const hotProcess = { script: missingFunctions };
-      const req = supertest(server)
+      const req = supertest(serverWithProcessUpload)
         .post('/hot/add')
         .send(hotProcess);
 
@@ -176,7 +197,7 @@ describe('HttpServer()', () => {
 
     it('rejects process with invalid script', () => {
       const hotProcess = { script: 'this is definitely not a valid script' };
-      const req = supertest(server)
+      const req = supertest(serverWithProcessUpload)
         .post('/hot/add')
         .send(hotProcess);
 
