@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import { getAgent } from '../actions';
 
@@ -38,9 +38,6 @@ export const AgentsPage = ({ fetchAgent }) => {
         <br />
         <button type="submit">Add Agent</button>
       </form>
-      <NavLink to="/local">/local</NavLink>
-      <br />
-      <NavLink to="/local/goods">/local/goods</NavLink>
     </div>
   );
 };
