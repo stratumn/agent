@@ -12,7 +12,9 @@ const Root = ({ store }) => (
 );
 
 Root.propTypes = {
+  /* eslint-disable react/forbid-prop-types */
   store: PropTypes.object.isRequired
+  /* eslint-enable react/forbid-prop-types */
 };
 
 export default Root;
