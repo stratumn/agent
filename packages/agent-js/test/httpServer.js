@@ -92,7 +92,6 @@ describe('HttpServer()', () => {
   describe('POST "/<process>/add"', () => {
     const encodedScript = Buffer.from(
       'module.exports = { ' +
-        "name:'hot', " +
         'init: function(title) {' +
         'if (!title) {' +
         "return this.reject('a title is required');" +
@@ -141,23 +140,6 @@ describe('HttpServer()', () => {
         const processes = res.body;
         processes.length.should.be.exactly(2);
         processes[1].name.should.be.exactly('hot');
-      });
-    });
-
-    it('rejects process with name mismatch', () => {
-      const hotProcess = { script: encodedScript };
-      const req = supertest(serverWithProcessUpload)
-        .post('/not-the-right-name/add')
-        .send(hotProcess);
-
-      return testFn(req, (err, res) => {
-        if (err) {
-          throw err;
-        }
-        res.status.should.be.exactly(400);
-        res.body.error.should.be.exactly(
-          "Process name from url doesn't match process name from the script"
-        );
       });
     });
 

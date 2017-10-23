@@ -92,20 +92,13 @@ export default function httpServer(agent, opts = {}) {
           return res.status(400).json({ error: 'invalid script' });
         }
 
-        if (exported.name !== req.params.process) {
-          return res.status(400).json({
-            error:
-              "Process name from url doesn't match process name from the script"
-          });
-        }
-
         if (!exported.init || typeof exported.init !== 'function') {
           return res.status(400).json({
             error: 'missing init function'
           });
         }
 
-        agent.addProcess(exported.name, exported, memorystore(), null);
+        agent.addProcess(req.params.process, exported, memorystore(), null);
 
         return res.json(agent.getAllProcesses());
       } catch (err) {
