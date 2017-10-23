@@ -21,6 +21,7 @@
       {
         "devDependencies": [
           "**/test/**",
+          "**/*.test.js",
           "**/rollup*.js",
           "**/karma.conf.js",
           "**/setupTests.js"
