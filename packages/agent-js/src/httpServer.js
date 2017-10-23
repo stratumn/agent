@@ -103,42 +103,58 @@ export default function httpServer(agent, opts = {}) {
     return res.json(processes);
   });
 
-  app.post('/:process/segments', loadProcess, (req, res) => {
+  app.post('/:process/segments', loadProcess, (req, res, next) => {
     res.locals.renderErrorAsLink = true;
 
     return res.locals.process
       .createMap(...parseArgs(req.body))
-      .then(res.json.bind(res));
+      .then(res.json.bind(res))
+      .catch(next);
   });
 
-  app.post('/:process/segments/:linkHash/:action', loadProcess, (req, res) => {
-    res.locals.renderErrorAsLink = true;
+  app.post(
+    '/:process/segments/:linkHash/:action',
+    loadProcess,
+    (req, res, next) => {
+      res.locals.renderErrorAsLink = true;
 
-    return res.locals.process
-      .createSegment(
-        req.params.linkHash,
-        req.params.action,
-        ...parseArgs(req.body)
-      )
-      .then(res.json.bind(res));
-  });
-
-  app.get('/:process/segments/:linkHash', loadProcess, (req, res) =>
-    res.locals.process.getSegment(req.params.linkHash).then(res.json.bind(res))
+      return res.locals.process
+        .createSegment(
+          req.params.linkHash,
+          req.params.action,
+          ...parseArgs(req.body)
+        )
+        .then(res.json.bind(res))
+        .catch(next);
+    }
   );
 
-  app.get('/:process/segments', loadProcess, (req, res) =>
-    res.locals.process.findSegments(req.query).then(res.json.bind(res))
+  app.get('/:process/segments/:linkHash', loadProcess, (req, res, next) =>
+    res.locals.process
+      .getSegment(req.params.linkHash)
+      .then(res.json.bind(res))
+      .catch(next)
   );
 
-  app.post('/:process/evidence/:linkHash', loadProcess, (req, res) =>
+  app.get('/:process/segments', loadProcess, (req, res, next) =>
+    res.locals.process
+      .findSegments(req.query)
+      .then(res.json.bind(res))
+      .catch(next)
+  );
+
+  app.post('/:process/evidence/:linkHash', loadProcess, (req, res, next) =>
     res.locals.process
       .insertEvidence(req.params.linkHash, req.body, req.query.secret)
       .then(res.json.bind(res))
+      .catch(next)
   );
 
-  app.get('/:process/maps', loadProcess, (req, res) =>
-    res.locals.process.getMapIds(req.query).then(res.json.bind(res))
+  app.get('/:process/maps', loadProcess, (req, res, next) =>
+    res.locals.process
+      .getMapIds(req.query)
+      .then(res.json.bind(res))
+      .catch(next)
   );
 
   app.use((req, res, next) => {
