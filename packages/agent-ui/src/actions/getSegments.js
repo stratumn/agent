@@ -7,8 +7,8 @@ const getSegmentsRequest = (agent, process) => ({
   process
 });
 
-const getSegmentsError = error => ({
-  type: actionTypes.SEGMENTS_ERROR,
+const getSegmentsFailure = error => ({
+  type: actionTypes.SEGMENTS_FAILURE,
   error
 });
 
@@ -28,6 +28,6 @@ export default function(agent, process, options) {
         return proc.findSegments(options);
       })
       .then(res => dispatch(getSegmentsSuccess(res)))
-      .catch(err => dispatch(getSegmentsError(err)));
+      .catch(err => dispatch(getSegmentsFailure(err)));
   };
 }

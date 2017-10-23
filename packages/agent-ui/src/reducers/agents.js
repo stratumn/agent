@@ -10,7 +10,7 @@ export default function(state = {}, action) {
         processes: {}
       };
       return Object.assign({}, state, agent);
-    case actionTypes.AGENT_INFO_ERROR:
+    case actionTypes.AGENT_INFO_FAILURE:
     case actionTypes.AGENT_INFO_SUCCESS:
     default:
       return state;

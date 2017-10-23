@@ -7,8 +7,8 @@ const getAgentRequest = (name, url) => ({
   url
 });
 
-const getAgentError = error => ({
-  type: actionTypes.AGENT_INFO_ERROR,
+const getAgentFailure = error => ({
+  type: actionTypes.AGENT_INFO_FAILURE,
   error
 });
 
@@ -22,6 +22,6 @@ export default function(name, url) {
     dispatch(getAgentRequest(name, url));
     return getAgent(url)
       .then(agent => dispatch(getAgentSuccess(agent)))
-      .catch(err => dispatch(getAgentError(err)));
+      .catch(err => dispatch(getAgentFailure(err)));
   };
 }

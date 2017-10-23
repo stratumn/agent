@@ -7,8 +7,8 @@ const getMapIdsRequest = (agent, process) => ({
   process
 });
 
-const getMapIdsError = error => ({
-  type: actionTypes.MAP_IDS_ERROR,
+const getMapIdsFailure = error => ({
+  type: actionTypes.MAP_IDS_FAILURE,
   error
 });
 
@@ -28,6 +28,6 @@ export default function(agent, process) {
         return proc.getMapIds();
       })
       .then(mapIds => dispatch(getMapIdsSuccess(mapIds)))
-      .catch(err => dispatch(getMapIdsError(err)));
+      .catch(err => dispatch(getMapIdsFailure(err)));
   };
 }
