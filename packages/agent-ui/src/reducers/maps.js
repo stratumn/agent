@@ -1,11 +1,10 @@
 import { actionTypes } from '../actions';
 
-export default function(state = null, action) {
+export default function(state = {}, action) {
   switch (action.type) {
-    case actionTypes.MAP_IDS_SUCCESS:
-      return action.mapIds;
+    case actionTypes.MAP_IDS_REQUEST:
     case actionTypes.MAP_IDS_FAILURE:
-      return action.error;
+    case actionTypes.MAP_IDS_SUCCESS:
     default:
       return state;
   }
