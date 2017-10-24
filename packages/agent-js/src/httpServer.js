@@ -15,6 +15,7 @@
 */
 
 import express from 'express';
+import { wrap } from 'async-middleware';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import error from './error';
@@ -103,19 +104,22 @@ export default function httpServer(agent, opts = {}) {
     return res.json(processes);
   });
 
-  app.post('/:process/segments', loadProcess, (req, res, next) => {
-    res.locals.renderErrorAsLink = true;
+  app.post(
+    '/:process/segments',
+    loadProcess,
+    wrap((req, res) => {
+      res.locals.renderErrorAsLink = true;
 
-    return res.locals.process
-      .createMap(...parseArgs(req.body))
-      .then(res.json.bind(res))
-      .catch(next);
-  });
+      return res.locals.process
+        .createMap(...parseArgs(req.body))
+        .then(res.json.bind(res));
+    })
+  );
 
   app.post(
     '/:process/segments/:linkHash/:action',
     loadProcess,
-    (req, res, next) => {
+    wrap((req, res) => {
       res.locals.renderErrorAsLink = true;
 
       return res.locals.process
@@ -124,37 +128,44 @@ export default function httpServer(agent, opts = {}) {
           req.params.action,
           ...parseArgs(req.body)
         )
+        .then(res.json.bind(res));
+    })
+  );
+
+  app.get(
+    '/:process/segments/:linkHash',
+    loadProcess,
+    wrap((req, res) =>
+      res.locals.process
+        .getSegment(req.params.linkHash)
         .then(res.json.bind(res))
-        .catch(next);
-    }
+    )
   );
 
-  app.get('/:process/segments/:linkHash', loadProcess, (req, res, next) =>
-    res.locals.process
-      .getSegment(req.params.linkHash)
-      .then(res.json.bind(res))
-      .catch(next)
+  app.get(
+    '/:process/segments',
+    loadProcess,
+    wrap((req, res) =>
+      res.locals.process.findSegments(req.query).then(res.json.bind(res))
+    )
   );
 
-  app.get('/:process/segments', loadProcess, (req, res, next) =>
-    res.locals.process
-      .findSegments(req.query)
-      .then(res.json.bind(res))
-      .catch(next)
+  app.post(
+    '/:process/evidence/:linkHash',
+    loadProcess,
+    wrap((req, res) =>
+      res.locals.process
+        .insertEvidence(req.params.linkHash, req.body, req.query.secret)
+        .then(res.json.bind(res))
+    )
   );
 
-  app.post('/:process/evidence/:linkHash', loadProcess, (req, res, next) =>
-    res.locals.process
-      .insertEvidence(req.params.linkHash, req.body, req.query.secret)
-      .then(res.json.bind(res))
-      .catch(next)
-  );
-
-  app.get('/:process/maps', loadProcess, (req, res, next) =>
-    res.locals.process
-      .getMapIds(req.query)
-      .then(res.json.bind(res))
-      .catch(next)
+  app.get(
+    '/:process/maps',
+    loadProcess,
+    wrap((req, res) =>
+      res.locals.process.getMapIds(req.query).then(res.json.bind(res))
+    )
   );
 
   app.use((req, res, next) => {
