@@ -6,9 +6,16 @@ import { withRouter, NavLink } from 'react-router-dom';
 export const LeftNavigation = ({ agents }) => {
   const agentsList = agents.map(a => (
     <div>
-      <NavLink key={a} to={`/${a}`}>
-        {a}
+      <NavLink key={a.name} to={`/${a.name}`}>
+        {a.name}
       </NavLink>
+      {a.processes.map(p => (
+        <div>
+          <NavLink key={p} to={`/${a.name}/${p}`}>
+            {p}
+          </NavLink>
+        </div>
+      ))}
     </div>
   ));
 
@@ -26,7 +33,11 @@ export const LeftNavigation = ({ agents }) => {
 };
 
 LeftNavigation.propTypes = {
-  agents: PropTypes.arrayOf(PropTypes.string).isRequired
+  agents: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired
+    })
+  ).isRequired
 };
 
 function mapStateToProps(state, ownProps) {
@@ -35,7 +46,10 @@ function mapStateToProps(state, ownProps) {
 
   let agents = [];
   if (state.agents) {
-    agents = Object.keys(state.agents);
+    agents = Object.keys(state.agents).map(agentName => ({
+      name: agentName,
+      processes: Object.keys(state.agents[agentName].processes)
+    }));
   }
 
   return {

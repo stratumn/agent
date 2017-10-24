@@ -1,3 +1,7 @@
+/**
+ * This data builder class allows tests to build process objects that look like
+ * what the stratumn-agent's getAgent API will return.
+ */
 export default class {
   constructor(name) {
     this.name = name;
