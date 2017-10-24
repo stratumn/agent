@@ -26,6 +26,7 @@
     "url": "https://github.com/stratumn/agent-js/issues"
   },
   "dependencies": {
+    "async-middleware": "^1.2.1",
     "babel-runtime": "^6.26.0",
     "body-parser": "^1.15.2",
     "canonical-json": "0.0.4",

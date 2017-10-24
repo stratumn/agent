@@ -15,6 +15,7 @@
 */
 
 import express from 'express';
+import { wrap } from 'async-middleware';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import error from './error';
@@ -48,20 +49,11 @@ export default function httpServer(agent, opts = {}) {
     app.options('*', corsMiddleware);
   }
 
-  app.get('/', (req, res, next) => {
-    agent
-      .getInfo()
-      .then(res.json.bind(res))
-      .catch(next);
-  });
+  app.get('/', (req, res) => agent.getInfo().then(res.json.bind(res)));
 
-  app.get('/processes', (req, res, next) => {
-    try {
-      const processes = agent.getAllProcesses(req.query);
-      res.json(processes);
-    } catch (err) {
-      next(err);
-    }
+  app.get('/processes', (req, res) => {
+    const processes = agent.getAllProcesses(req.query);
+    return res.json(processes);
   });
 
   /**
@@ -72,108 +64,114 @@ export default function httpServer(agent, opts = {}) {
    * setup to restrict access to this API.
    */
   if (opts.enableProcessUpload) {
-    app.post('/:process/upload', (req, res, next) => {
-      try {
-        if (!req.body.script) {
-          return res.status(400).json({ error: 'missing script' });
-        }
+    app.post('/:process/upload', (req, res) => {
+      const err = new Error();
+      err.status = 400;
 
-        let exported;
-        try {
-          const processModule = new module.constructor();
-          /* eslint-disable no-underscore-dangle */
-          processModule._compile(
-            Buffer.from(req.body.script, 'base64').toString(),
-            '' // this parameter is actually required (undefined isn't accepted)
-          );
-          /* eslint-enable no-underscore-dangle */
-          exported = processModule.exports;
-        } catch (err) {
-          return res.status(400).json({ error: 'invalid script' });
-        }
-
-        if (!exported.init || typeof exported.init !== 'function') {
-          return res.status(400).json({
-            error: 'missing init function'
-          });
-        }
-
-        agent.addProcess(req.params.process, exported, memorystore(), null);
-
-        return res.json(agent.getAllProcesses());
-      } catch (err) {
-        return next(err);
+      if (!req.body.script) {
+        err.message = 'missing script';
+        throw err;
       }
+
+      let exported;
+      try {
+        const processModule = new module.constructor();
+        /* eslint-disable no-underscore-dangle */
+        processModule._compile(
+          Buffer.from(req.body.script, 'base64').toString(),
+          '' // this parameter is actually required (undefined isn't accepted)
+        );
+        /* eslint-enable no-underscore-dangle */
+        exported = processModule.exports;
+      } catch (e) {
+        err.message = 'invalid script';
+        throw err;
+      }
+
+      if (!exported.init || typeof exported.init !== 'function') {
+        err.message = 'missing init function';
+        throw err;
+      }
+
+      agent.addProcess(req.params.process, exported, memorystore(), null);
+
+      return res.json(agent.getAllProcesses());
     });
   }
 
-  app.get('/:process/remove', (req, res, next) => {
-    try {
-      const processes = agent.removeProcess(req.params.process);
-      res.json(processes);
-    } catch (err) {
-      next(err);
-    }
+  app.get('/:process/remove', (req, res) => {
+    const processes = agent.removeProcess(req.params.process);
+    return res.json(processes);
   });
 
-  app.post('/:process/segments', loadProcess, (req, res, next) => {
-    res.locals.renderErrorAsLink = true;
+  app.post(
+    '/:process/segments',
+    loadProcess,
+    wrap((req, res) => {
+      res.locals.renderErrorAsLink = true;
 
-    res.locals.process
-      .createMap(...parseArgs(req.body))
-      .then(res.json.bind(res))
-      .catch(next);
-  });
+      return res.locals.process
+        .createMap(...parseArgs(req.body))
+        .then(res.json.bind(res));
+    })
+  );
 
   app.post(
     '/:process/segments/:linkHash/:action',
     loadProcess,
-    (req, res, next) => {
+    wrap((req, res) => {
       res.locals.renderErrorAsLink = true;
 
-      res.locals.process
+      return res.locals.process
         .createSegment(
           req.params.linkHash,
           req.params.action,
           ...parseArgs(req.body)
         )
-        .then(res.json.bind(res))
-        .catch(next);
-    }
+        .then(res.json.bind(res));
+    })
   );
 
-  app.get('/:process/segments/:linkHash', loadProcess, (req, res, next) => {
-    res.locals.process
-      .getSegment(req.params.linkHash)
-      .then(res.json.bind(res))
-      .catch(next);
-  });
+  app.get(
+    '/:process/segments/:linkHash',
+    loadProcess,
+    wrap((req, res) =>
+      res.locals.process
+        .getSegment(req.params.linkHash)
+        .then(res.json.bind(res))
+    )
+  );
 
-  app.get('/:process/segments', loadProcess, (req, res, next) => {
-    res.locals.process
-      .findSegments(req.query)
-      .then(res.json.bind(res))
-      .catch(next);
-  });
+  app.get(
+    '/:process/segments',
+    loadProcess,
+    wrap((req, res) =>
+      res.locals.process.findSegments(req.query).then(res.json.bind(res))
+    )
+  );
 
-  app.post('/:process/evidence/:linkHash', loadProcess, (req, res, next) => {
-    res.locals.process
-      .insertEvidence(req.params.linkHash, req.body, req.query.secret)
-      .then(res.json.bind(res))
-      .catch(next);
-  });
+  app.post(
+    '/:process/evidence/:linkHash',
+    loadProcess,
+    wrap((req, res) =>
+      res.locals.process
+        .insertEvidence(req.params.linkHash, req.body, req.query.secret)
+        .then(res.json.bind(res))
+    )
+  );
 
-  app.get('/:process/maps', loadProcess, (req, res, next) => {
-    res.locals.process
-      .getMapIds(req.query)
-      .then(res.json.bind(res))
-      .catch(next);
-  });
+  app.get(
+    '/:process/maps',
+    loadProcess,
+    wrap((req, res) =>
+      res.locals.process.getMapIds(req.query).then(res.json.bind(res))
+    )
+  );
 
   app.use((req, res, next) => {
     const err = new Error('not found');
     err.status = 404;
-    next(err);
+    return next(err);
   });
 
   app.use(error());
