@@ -107,14 +107,18 @@ export default function httpServer(agent, opts = {}) {
       return process;
     };
 
-    const createFossilizers = reqFossilizers => {
+    const getOrCreateStore = store =>
+      storeHttpClient(store.url, {
+        name: store.name
+      });
+
+    const getOrCreateFossilizers = reqFossilizers => {
       let fossilizers = [];
       if (reqFossilizers) {
         fossilizers = reqFossilizers
           .map(f => {
-            if (f.url && f.evidenceCallbackUrl) {
+            if (f.url) {
               return fossilizerHttpClient(f.url, {
-                callbackUrl: f.evidenceCallbackUrl,
                 name: f.name
               });
             }
@@ -132,12 +136,8 @@ export default function httpServer(agent, opts = {}) {
 
     app.post('/:process/upload', (req, res) => {
       const process = validateProcessUpload(req);
-
-      const store = storeHttpClient(req.body.store.url, {
-        name: req.body.store.name
-      });
-
-      const fossilizers = createFossilizers(req.body.fossilizers);
+      const store = getOrCreateStore(req.body.store);
+      const fossilizers = getOrCreateFossilizers(req.body.fossilizers);
 
       agent.addProcess(req.params.process, process, store, fossilizers);
 

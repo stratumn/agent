@@ -196,35 +196,6 @@ describe('HttpServer()', () => {
       );
     });
 
-    it('skips invalid fossilizers', () => {
-      const request = createRequest(
-        validEncodedScript,
-        { name: 'store', url: 'http://store:5000' },
-        [
-          {
-            name: 'btc',
-            url: 'http://fossilizer:6000'
-          },
-          {
-            name: 'bch',
-            url: 'http://fossilizer:6001',
-            evidenceCallbackUrl: 'http://agent:3000'
-          }
-        ]
-      );
-
-      return uploadProcessAndValidate(
-        serverWithProcessUpload,
-        request,
-        res => {
-          res.status.should.be.exactly(200);
-          const newProcess = res.body.find(p => p.name === 'withStore');
-          newProcess.fossilizerClients.length.should.be.exactly(1);
-        },
-        'withStore'
-      );
-    });
-
     it('rejects process with missing script', () =>
       uploadProcessAndValidate(
         serverWithProcessUpload,
