@@ -53,6 +53,7 @@ describe('getAgent action', () => {
       expect(lastActionDispatched.type).to.equal(
         actionTypes.AGENT_INFO_FAILURE
       );
+      expect(lastActionDispatched.name).to.equal('invalidAgent');
     });
   });
 
@@ -66,6 +67,7 @@ describe('getAgent action', () => {
       expect(lastActionDispatched.type).to.equal(
         actionTypes.AGENT_INFO_SUCCESS
       );
+      expect(lastActionDispatched.name).to.equal('agent');
     });
   });
 
