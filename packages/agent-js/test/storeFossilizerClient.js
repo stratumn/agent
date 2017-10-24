@@ -74,6 +74,13 @@ describe('FossilizerHttpClient', () => {
       getAvailableFossilizers().length.should.be.exactly(1);
     });
 
+    it('does not create duplicate fossilizers for the same url', () => {
+      const fossilizerClient1 = fossilizerHttpClient('http://fossilizer:6000');
+      const fossilizerClient2 = fossilizerHttpClient('http://fossilizer:6000');
+
+      fossilizerClient1.should.equal(fossilizerClient2);
+    });
+
     it('accepts missing names for backwards compatibility', () => {
       fossilizerHttpClient('http://fossilizer:6000', { name: '1' });
       fossilizerHttpClient('http://fossilizer:6001');

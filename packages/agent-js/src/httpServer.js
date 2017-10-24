@@ -107,12 +107,12 @@ export default function httpServer(agent, opts = {}) {
       return process;
     };
 
-    const getOrCreateStore = store =>
+    const getStore = store =>
       storeHttpClient(store.url, {
         name: store.name
       });
 
-    const getOrCreateFossilizers = reqFossilizers => {
+    const getFossilizers = reqFossilizers => {
       let fossilizers = [];
       if (reqFossilizers) {
         fossilizers = reqFossilizers
@@ -123,9 +123,7 @@ export default function httpServer(agent, opts = {}) {
               });
             }
 
-            console.error(
-              'Fossilizer is missing url or evidenceCallbackUrl. Skipping...'
-            );
+            console.error('Fossilizer is missing url. Skipping...');
             return null;
           })
           .filter(f => f !== null);
@@ -136,8 +134,8 @@ export default function httpServer(agent, opts = {}) {
 
     app.post('/:process/upload', (req, res) => {
       const process = validateProcessUpload(req);
-      const store = getOrCreateStore(req.body.store);
-      const fossilizers = getOrCreateFossilizers(req.body.fossilizers);
+      const store = getStore(req.body.store);
+      const fossilizers = getFossilizers(req.body.fossilizers);
 
       agent.addProcess(req.params.process, process, store, fossilizers);
 

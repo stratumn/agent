@@ -51,11 +51,26 @@ describe('StoreHttpClient', () => {
       getAvailableStores().length.should.be.exactly(1);
     });
 
+    it('does not create duplicate stores for the same url', () => {
+      const storeClient1 = storeHttpClient('http://store:5000');
+      const storeClient2 = storeHttpClient('http://store:5000');
+
+      storeClient1.should.equal(storeClient2);
+    });
+
     it('accepts missing names for backwards compatibility', () => {
       storeHttpClient('http://store:5000', { name: '1' });
       storeHttpClient('http://store:5001');
 
       getAvailableStores().length.should.be.exactly(2);
+    });
+
+    it('enriches existing store with a name if provided', () => {
+      storeHttpClient('http://store:5000');
+      storeHttpClient('http://store:5000', { name: 'store' });
+
+      getAvailableStores().length.should.be.exactly(1);
+      getAvailableStores()[0].name.should.be.exactly('store');
     });
   });
 

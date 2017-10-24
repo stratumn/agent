@@ -26,18 +26,19 @@ import handleResponse from './handleResponse';
  * @returns {Client} a fossilizer HTTP client
  */
 export default function fossilizerHttpClient(url, opts = {}) {
-  if (
-    !fossilizerHttpClient.availableFossilizers.find(
-      fossilizer => fossilizer.url === url
-    )
-  ) {
-    fossilizerHttpClient.availableFossilizers.push({
-      name: opts.name,
-      url: url
-    });
+  // If we already have an existing fossilizer for that url, re-use it
+  const matchingFossilizerClient = fossilizerHttpClient.availableFossilizers.find(
+    foss => foss.url === url
+  );
+  if (matchingFossilizerClient) {
+    if (!matchingFossilizerClient.name && opts.name) {
+      matchingFossilizerClient.name = opts.name;
+    }
+
+    return matchingFossilizerClient.client;
   }
 
-  return {
+  const fossilizerClient = {
     /**
      * Gets information about the fossilizer.
      * @returns {Promise} a promise that resolve with the information
@@ -81,6 +82,14 @@ export default function fossilizerHttpClient(url, opts = {}) {
       });
     }
   };
+
+  fossilizerHttpClient.availableFossilizers.push({
+    name: opts.name,
+    url: url,
+    client: fossilizerClient
+  });
+
+  return fossilizerClient;
 }
 
 fossilizerHttpClient.availableFossilizers = [];
@@ -90,7 +99,10 @@ fossilizerHttpClient.availableFossilizers = [];
  * @returns {Array} an array of fossilizer HTTP clients basic information
  */
 export function getAvailableFossilizers() {
-  return JSON.parse(JSON.stringify(fossilizerHttpClient.availableFossilizers));
+  return fossilizerHttpClient.availableFossilizers.map(f => ({
+    name: f.name,
+    url: f.url
+  }));
 }
 
 /**

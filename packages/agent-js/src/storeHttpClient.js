@@ -36,11 +36,16 @@ import handleResponse from './handleResponse';
  * @returns {Client} a store HTTP client
  */
 export default function storeHttpClient(url, opt = {}) {
-  if (!storeHttpClient.availableStores.find(store => store.url === url)) {
-    storeHttpClient.availableStores.push({
-      name: opt.name,
-      url: url
-    });
+  // If we already have an existing store for that url, re-use it
+  const matchingStoreClient = storeHttpClient.availableStores.find(
+    store => store.url === url
+  );
+  if (matchingStoreClient) {
+    if (!matchingStoreClient.name && opt.name) {
+      matchingStoreClient.name = opt.name;
+    }
+
+    return matchingStoreClient.client;
   }
 
   // Web socket URL.
@@ -69,7 +74,7 @@ export default function storeHttpClient(url, opt = {}) {
     });
   }
 
-  return Object.assign(emitter, {
+  const storeClient = Object.assign(emitter, {
     /**
      * Gets information about the store.
      * @returns {Promise} a promise that resolve with the information
@@ -189,6 +194,14 @@ export default function storeHttpClient(url, opt = {}) {
       });
     }
   });
+
+  storeHttpClient.availableStores.push({
+    name: opt.name,
+    url: url,
+    client: storeClient
+  });
+
+  return storeClient;
 }
 
 storeHttpClient.availableStores = [];
@@ -198,7 +211,10 @@ storeHttpClient.availableStores = [];
  * @returns {Array} an array of store HTTP clients basic information
  */
 export function getAvailableStores() {
-  return JSON.parse(JSON.stringify(storeHttpClient.availableStores));
+  return storeHttpClient.availableStores.map(s => ({
+    name: s.name,
+    url: s.url
+  }));
 }
 
 /**
