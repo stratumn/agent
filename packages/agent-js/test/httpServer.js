@@ -117,16 +117,25 @@ describe('HttpServer()', () => {
       serverWithProcessUpload = agent.httpServer({ enableProcessUpload: true });
     });
 
+    const createRequest = (
+      encodedScript = validEncodedScript,
+      store = { name: 'test', url: 'http://localhost:5000' },
+      fossilizers = []
+    ) => ({
+      script: encodedScript,
+      store: store,
+      fossilizers: fossilizers
+    });
+
     const uploadProcessAndValidate = (
       testServer,
-      encodedScript,
+      request,
       validate,
       processName = 'newProcess'
     ) => {
-      const newProcess = { script: encodedScript };
       const req = supertest(testServer)
         .post(`/${processName}/upload`)
-        .send(newProcess);
+        .send(request);
 
       return testFn(req, (err, res) => {
         if (err) {
@@ -138,14 +147,14 @@ describe('HttpServer()', () => {
     };
 
     it('is disabled by default', () =>
-      uploadProcessAndValidate(server, validEncodedScript, res => {
+      uploadProcessAndValidate(server, createRequest(), res => {
         res.status.should.be.exactly(404);
       }));
 
     it('adds a new process and returns the updated list of processes', () =>
       uploadProcessAndValidate(
         serverWithProcessUpload,
-        validEncodedScript,
+        createRequest(),
         res => {
           res.status.should.be.exactly(200);
           const processes = res.body;
@@ -155,11 +164,76 @@ describe('HttpServer()', () => {
         'hot'
       ));
 
+    it('supports store and fossilizers', () => {
+      const request = createRequest(
+        validEncodedScript,
+        { name: 'store', url: 'http://store:5000' },
+        [
+          {
+            name: 'btc',
+            url: 'http://fossilizer:6000',
+            evidenceCallbackUrl: 'http://agent:3000'
+          },
+          {
+            name: 'bch',
+            url: 'http://fossilizer:6001',
+            evidenceCallbackUrl: 'http://agent:3000'
+          }
+        ]
+      );
+
+      return uploadProcessAndValidate(
+        serverWithProcessUpload,
+        request,
+        res => {
+          res.status.should.be.exactly(200);
+          const newProcess = res.body.find(p => p.name === 'withStore');
+          newProcess.should.not.be.empty();
+          newProcess.storeClient.should.not.be.empty();
+          newProcess.fossilizerClients.length.should.be.exactly(2);
+        },
+        'withStore'
+      );
+    });
+
+    it('skips invalid fossilizers', () => {
+      const request = createRequest(
+        validEncodedScript,
+        { name: 'store', url: 'http://store:5000' },
+        [
+          {
+            name: 'btc',
+            url: 'http://fossilizer:6000'
+          },
+          {
+            name: 'bch',
+            url: 'http://fossilizer:6001',
+            evidenceCallbackUrl: 'http://agent:3000'
+          }
+        ]
+      );
+
+      return uploadProcessAndValidate(
+        serverWithProcessUpload,
+        request,
+        res => {
+          res.status.should.be.exactly(200);
+          const newProcess = res.body.find(p => p.name === 'withStore');
+          newProcess.fossilizerClients.length.should.be.exactly(1);
+        },
+        'withStore'
+      );
+    });
+
     it('rejects process with missing script', () =>
-      uploadProcessAndValidate(serverWithProcessUpload, '', res => {
-        res.status.should.be.exactly(400);
-        res.body.error.should.be.exactly('missing script');
-      }));
+      uploadProcessAndValidate(
+        serverWithProcessUpload,
+        createRequest(''),
+        res => {
+          res.status.should.be.exactly(400);
+          res.body.error.should.be.exactly('missing script');
+        }
+      ));
 
     it('rejects process with no exported init function', () => {
       const missingFunctions = Buffer.from(
@@ -168,7 +242,7 @@ describe('HttpServer()', () => {
 
       return uploadProcessAndValidate(
         serverWithProcessUpload,
-        missingFunctions,
+        createRequest(missingFunctions),
         res => {
           res.status.should.be.exactly(400);
           res.body.error.should.be.exactly('missing init function');
@@ -180,12 +254,22 @@ describe('HttpServer()', () => {
       const invalidScript = 'this is definitely not a valid script';
       return uploadProcessAndValidate(
         serverWithProcessUpload,
-        invalidScript,
+        createRequest(invalidScript),
         res => {
           res.status.should.be.exactly(400);
           res.body.error.should.be.exactly('invalid script');
         }
       );
+    });
+
+    it('rejects process with missing store configuration', () => {
+      const request = createRequest(validEncodedScript, {
+        name: 'missing-url'
+      });
+      return uploadProcessAndValidate(serverWithProcessUpload, request, res => {
+        res.status.should.be.exactly(400);
+        res.body.error.should.be.exactly('missing store configuration');
+      });
     });
   });
 

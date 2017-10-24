@@ -20,7 +20,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import error from './error';
 import parseArgs from './parseArgs';
-import memorystore from './memoryStore';
+import storeHttpClient from './storeHttpClient';
+import fossilizerHttpClient from './fossilizerHttpClient';
 
 /**
  * Creates an HTTP server for an agent.
@@ -64,7 +65,18 @@ export default function httpServer(agent, opts = {}) {
    * setup to restrict access to this API.
    */
   if (opts.enableProcessUpload) {
-    app.post('/:process/upload', (req, res) => {
+    const parseProcessScript = script => {
+      const processModule = new module.constructor();
+      /* eslint-disable no-underscore-dangle */
+      processModule._compile(
+        Buffer.from(script, 'base64').toString(),
+        '' // this parameter is actually required (undefined isn't accepted)
+      );
+      /* eslint-enable no-underscore-dangle */
+      return processModule.exports;
+    };
+
+    const validateProcessUpload = req => {
       const err = new Error();
       err.status = 400;
 
@@ -73,27 +85,61 @@ export default function httpServer(agent, opts = {}) {
         throw err;
       }
 
-      let exported;
+      if (!req.body.store || !req.body.store.url) {
+        err.message = 'missing store configuration';
+        throw err;
+      }
+
+      let process;
       try {
-        const processModule = new module.constructor();
-        /* eslint-disable no-underscore-dangle */
-        processModule._compile(
-          Buffer.from(req.body.script, 'base64').toString(),
-          '' // this parameter is actually required (undefined isn't accepted)
-        );
-        /* eslint-enable no-underscore-dangle */
-        exported = processModule.exports;
+        process = parseProcessScript(req.body.script);
       } catch (e) {
+        console.error(`upload process: ${e}`);
         err.message = 'invalid script';
         throw err;
       }
 
-      if (!exported.init || typeof exported.init !== 'function') {
+      if (!process.init || typeof process.init !== 'function') {
         err.message = 'missing init function';
         throw err;
       }
 
-      agent.addProcess(req.params.process, exported, memorystore(), null);
+      return process;
+    };
+
+    const createFossilizers = reqFossilizers => {
+      let fossilizers = [];
+      if (reqFossilizers) {
+        fossilizers = reqFossilizers
+          .map(f => {
+            if (f.url && f.evidenceCallbackUrl) {
+              return fossilizerHttpClient(f.url, {
+                callbackUrl: f.evidenceCallbackUrl,
+                name: f.name
+              });
+            }
+
+            console.error(
+              'Fossilizer is missing url or evidenceCallbackUrl. Skipping...'
+            );
+            return null;
+          })
+          .filter(f => f !== null);
+      }
+
+      return fossilizers;
+    };
+
+    app.post('/:process/upload', (req, res) => {
+      const process = validateProcessUpload(req);
+
+      const store = storeHttpClient(req.body.store.url, {
+        name: req.body.store.name
+      });
+
+      const fossilizers = createFossilizers(req.body.fossilizers);
+
+      agent.addProcess(req.params.process, process, store, fossilizers);
 
       return res.json(agent.getAllProcesses());
     });
