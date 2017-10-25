@@ -19,7 +19,7 @@ describe('<ProcessSegmentsPage />', () => {
       segments: {}
     };
     const processSegmentsPage = mount(<ProcessSegmentsPage {...props} />);
-    expect(props.fetchSegments.calledOnce).to.be.true;
+    expect(props.fetchSegments.callCount).to.equal(1);
     const div = processSegmentsPage.find('div');
     expect(div).to.have.lengthOf(1);
     expect(div.contains('process segments')).to.be.true;
@@ -33,7 +33,7 @@ describe('<ProcessSegmentsPage />', () => {
       segments: { status: statusTypes.LOADING }
     };
     const processSegmentsPage = mount(<ProcessSegmentsPage {...props} />);
-    expect(props.fetchSegments.calledOnce).to.be.true;
+    expect(props.fetchSegments.callCount).to.equal(1);
     const div = processSegmentsPage.find('div');
     expect(div).to.have.lengthOf(1);
     expect(div.contains('loading...')).to.be.true;
@@ -47,7 +47,7 @@ describe('<ProcessSegmentsPage />', () => {
       segments: { status: statusTypes.FAILED, error: 'unreachable' }
     };
     const processSegmentsPage = mount(<ProcessSegmentsPage {...props} />);
-    expect(props.fetchSegments.calledOnce).to.be.true;
+    expect(props.fetchSegments.callCount).to.equal(1);
     const div = processSegmentsPage.find('div');
     expect(div).to.have.lengthOf(1);
     expect(div.contains('failed to load: unreachable')).to.be.true;
@@ -61,7 +61,7 @@ describe('<ProcessSegmentsPage />', () => {
       segments: { status: statusTypes.LOADED, segments: ['foo', 'bar'] }
     };
     const processSegmentsPage = mount(<ProcessSegmentsPage {...props} />);
-    expect(props.fetchSegments.calledOnce).to.be.true;
+    expect(props.fetchSegments.callCount).to.equal(1);
     const div = processSegmentsPage.find('div');
     expect(div).to.have.lengthOf(3);
     expect(div.contains('foo')).to.be.true;

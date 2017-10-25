@@ -75,7 +75,7 @@ describe('getSegments action', () => {
     getStateStub.returns({ agents: { foo: { url: '' } } });
 
     return getSegments('foo', 'bar')(dispatchSpy, getStateStub).then(() => {
-      expect(findSegmentsStub.calledOnce).to.be.true;
+      expect(findSegmentsStub.callCount).to.equal(1);
       expect(dispatchSpy.callCount).to.equal(2);
       const lastActionDispatched = dispatchSpy.getCall(1).args[0];
       expect(lastActionDispatched.type).to.equal(actionTypes.SEGMENTS_FAILURE);
@@ -95,7 +95,7 @@ describe('getSegments action', () => {
       dispatchSpy,
       getStateStub
     ).then(() => {
-      expect(findSegmentsStub.calledOnce).to.be.true;
+      expect(findSegmentsStub.callCount).to.equal(1);
       expect(dispatchSpy.callCount).to.equal(2);
       const lastActionDispatched = dispatchSpy.getCall(1).args[0];
       expect(lastActionDispatched.type).to.equal(actionTypes.SEGMENTS_SUCCESS);

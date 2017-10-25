@@ -17,7 +17,7 @@ describe('segments reducer', () => {
       type: actionTypes.SEGMENTS_REQUEST
     });
     const expected = { status: statusTypes.LOADING, segments: [] };
-    expect(newState).to.be.eql(expected);
+    expect(newState).to.deep.equal(expected);
   });
 
   it('update state on failure', () => {
@@ -31,7 +31,7 @@ describe('segments reducer', () => {
       segments: [1, 2, 3],
       error: 'unreachable'
     };
-    expect(newState).to.be.eql(expected);
+    expect(newState).to.deep.equal(expected);
   });
 
   it('update state on success', () => {
@@ -46,6 +46,6 @@ describe('segments reducer', () => {
       status: statusTypes.LOADED,
       segments: linkHashes
     };
-    expect(newState).to.be.eql(expected);
+    expect(newState).to.deep.equal(expected);
   });
 });
