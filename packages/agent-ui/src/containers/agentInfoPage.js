@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 
-export const AgentInfoPage = ({ name, url, fetchAgent }) => (
+export const AgentInfoPage = ({ name, url, status, fetchAgent }) => (
   <div>
     <p>{name}</p>
     <p>{url}</p>
+    {status !== 'LOADED' && (
+      <div className="error">There was an issue loading your agent</div>
+    )}
     <button
       onClick={e => {
         e.preventDefault();
@@ -24,19 +27,22 @@ export const AgentInfoPage = ({ name, url, fetchAgent }) => (
 AgentInfoPage.propTypes = {
   name: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
   fetchAgent: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
   const name = ownProps.match.params.agent;
   let url = '';
+  let status = '';
   if (state.agents[name]) {
-    ({ url } = state.agents[name]);
+    ({ url, status } = state.agents[name]);
   }
 
   return {
     name,
-    url
+    url,
+    status
   };
 }
 

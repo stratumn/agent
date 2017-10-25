@@ -48,6 +48,25 @@ describe('<AgentInfoPage />', () => {
     expect(fetchAgentArgs[1]).to.equal('http://my.awesome.agent');
   });
 
-  it('displays a custom message when agent was not loaded', () => {});
+  it('displays a custom error message when agent was not loaded', () => {
+    const agentInfoPage = mount(
+      <MemoryRouter>
+        <AgentInfoPage status="FAILED" />
+      </MemoryRouter>
+    );
+
+    expect(agentInfoPage.find('.error').length).to.equal(1);
+  });
+
+  it('does not display an error message when agent was loaded successfully', () => {
+    const agentInfoPage = mount(
+      <MemoryRouter>
+        <AgentInfoPage status="LOADED" />
+      </MemoryRouter>
+    );
+
+    expect(agentInfoPage.find('.error').length).to.equal(0);
+  });
+
   it('provides a link to the add agent page', () => {});
 });
