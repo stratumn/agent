@@ -1,4 +1,5 @@
 import { actionTypes } from '../actions';
+import { statusTypes } from './';
 
 const extractProcess = process => ({
   name: process.name,
@@ -31,7 +32,7 @@ export default function(state = {}, action) {
       return {
         ...state,
         [agentName]: {
-          status: 'LOADING',
+          status: statusTypes.LOADING,
           url: action.url,
           processes: {}
         }
@@ -40,7 +41,7 @@ export default function(state = {}, action) {
       return {
         ...state,
         [agentName]: {
-          status: 'FAILED',
+          status: statusTypes.FAILED,
           url: agentUrl,
           error: action.error
         }
@@ -49,7 +50,7 @@ export default function(state = {}, action) {
       return {
         ...state,
         [agentName]: {
-          status: 'LOADED',
+          status: statusTypes.LOADED,
           url: agentUrl,
           processes: extractProcesses(action.agent)
         }
