@@ -23,7 +23,7 @@ export class ProcessMapsPage extends Component {
         return (
           <div>
             process maps:
-            {mapIds.map(id => <div>{id}</div>)}
+            {mapIds.map(id => <div key={id}>{id}</div>)}
           </div>
         );
       default:

@@ -47,7 +47,6 @@
   },
   "overrides": [
     {
-      // this rule override is to allow for expect(something).to.be.true in react test files
       "files": "*.test.js",
       "rules": {
         "no-unused-expressions": "off"

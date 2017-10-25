@@ -75,7 +75,7 @@ describe('getMapIds action', () => {
     getStateStub.returns({ agents: { foo: { url: '' } } });
 
     return getMapIds('foo', '')(dispatchSpy, getStateStub).then(() => {
-      expect(getMapIdsStub.calledOnce).to.be.true;
+      expect(getMapIdsStub.callCount).to.equal(1);
       expect(dispatchSpy.callCount).to.equal(2);
       const lastActionDispatched = dispatchSpy.getCall(1).args[0];
       expect(lastActionDispatched.type).to.equal(actionTypes.MAP_IDS_FAILURE);
@@ -92,7 +92,7 @@ describe('getMapIds action', () => {
     getStateStub.returns({ agents: { foo: { url: '' } } });
 
     return getMapIds('foo', '')(dispatchSpy, getStateStub).then(() => {
-      expect(getMapIdsStub.calledOnce).to.be.true;
+      expect(getMapIdsStub.callCount).to.equal(1);
       expect(dispatchSpy.callCount).to.equal(2);
       const lastActionDispatched = dispatchSpy.getCall(1).args[0];
       expect(lastActionDispatched.type).to.equal(actionTypes.MAP_IDS_SUCCESS);

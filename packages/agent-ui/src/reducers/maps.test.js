@@ -15,7 +15,7 @@ describe('maps reducer', () => {
     const initialState = { status: 'foo', mapIds: [1, 2, 3] };
     const newState = maps(initialState, { type: actionTypes.MAP_IDS_REQUEST });
     const expected = { status: statusTypes.LOADING, mapIds: [] };
-    expect(newState).to.be.eql(expected);
+    expect(newState).to.deep.equal(expected);
   });
 
   it('update state on failure', () => {
@@ -29,7 +29,7 @@ describe('maps reducer', () => {
       mapIds: [1, 2, 3],
       error: 'unreachable'
     };
-    expect(newState).to.be.eql(expected);
+    expect(newState).to.deep.equal(expected);
   });
 
   it('update state on success', () => {
@@ -42,6 +42,6 @@ describe('maps reducer', () => {
       status: statusTypes.LOADED,
       mapIds: [4, 5, 6]
     };
-    expect(newState).to.be.eql(expected);
+    expect(newState).to.deep.equal(expected);
   });
 });
