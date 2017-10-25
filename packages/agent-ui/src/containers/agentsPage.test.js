@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
@@ -12,7 +12,7 @@ chai.use(sinonChai);
 describe('<AgentsPage />', () => {
   it('contains a form to add a new agent to monitor', () => {
     const fetchAgentSpy = sinon.spy();
-    const agentsPage = mount(<AgentsPage fetchAgent={fetchAgentSpy} />);
+    const agentsPage = shallow(<AgentsPage fetchAgent={fetchAgentSpy} />);
     const addAgentForm = agentsPage.find('form');
     expect(addAgentForm).to.have.lengthOf(1);
     expect(addAgentForm.find('button')).to.have.lengthOf(1);
