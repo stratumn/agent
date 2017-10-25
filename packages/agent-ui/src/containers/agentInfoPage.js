@@ -22,6 +22,7 @@ export const AgentInfoPage = ({ name, url, status, fetchAgent }) => (
     >
       Refresh
     </button>
+    <br />
     <NavLink to="/">Add a new agent</NavLink>
   </div>
 );
