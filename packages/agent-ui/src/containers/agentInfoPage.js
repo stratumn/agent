@@ -5,27 +5,33 @@ import { withRouter, NavLink } from 'react-router-dom';
 
 import { getAgent } from '../actions';
 
-export const AgentInfoPage = ({ name, url, status, fetchAgent }) => (
-  <div>
-    <p>{name}</p>
-    <p>{url}</p>
-    {status !== 'LOADED' && (
-      <div className="error">There was an issue loading your agent</div>
-    )}
-    <button
-      onClick={e => {
-        e.preventDefault();
-        if (url) {
-          fetchAgent(name, url);
-        }
-      }}
-    >
-      Refresh
-    </button>
-    <br />
-    <NavLink to="/">Add a new agent</NavLink>
-  </div>
-);
+export const AgentInfoPage = ({ name, url, status, fetchAgent }) => {
+  if (status === 'LOADING') {
+    return <div>loading...</div>;
+  }
+
+  return (
+    <div>
+      <p>{name}</p>
+      <p>{url}</p>
+      {status !== 'LOADED' && (
+        <div className="error">There was an issue loading your agent</div>
+      )}
+      <button
+        onClick={e => {
+          e.preventDefault();
+          if (url) {
+            fetchAgent(name, url);
+          }
+        }}
+      >
+        Refresh
+      </button>
+      <br />
+      <NavLink to="/">Add a new agent</NavLink>
+    </div>
+  );
+};
 
 AgentInfoPage.propTypes = {
   name: PropTypes.string.isRequired,

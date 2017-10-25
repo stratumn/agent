@@ -46,7 +46,12 @@ describe('<AgentInfoPage />', () => {
     expect(fetchAgentArgs[1]).to.equal('http://my.awesome.agent');
   });
 
-  it('displays a custom error message when agent was not loaded', () => {
+  it('displays a loading message when agent is loading', () => {
+    const agentInfoPage = shallow(<AgentInfoPage status="LOADING" />);
+    expect(agentInfoPage.find('div').contains('loading...')).to.equal(true);
+  });
+
+  it('displays a custom error message when agent loading failed', () => {
     const agentInfoPage = shallow(<AgentInfoPage status="FAILED" />);
     expect(agentInfoPage.find('.error').length).to.equal(1);
   });
