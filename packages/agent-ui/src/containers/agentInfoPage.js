@@ -17,8 +17,6 @@ AgentInfoPage.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  console.log('AgentInfoPage state', state);
-  console.log('AgentInfoPage ownProps', ownProps);
   const name = ownProps.match.params.agent;
   let url = '';
   if (state.agents[name]) {
