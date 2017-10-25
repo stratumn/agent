@@ -171,13 +171,11 @@ describe('HttpServer()', () => {
         [
           {
             name: 'btc',
-            url: 'http://fossilizer:6000',
-            evidenceCallbackUrl: 'http://agent:3000'
+            url: 'http://fossilizer:6000'
           },
           {
             name: 'bch',
-            url: 'http://fossilizer:6001',
-            evidenceCallbackUrl: 'http://agent:3000'
+            url: 'http://fossilizer:6001'
           }
         ]
       );
