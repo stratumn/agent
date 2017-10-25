@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 
+import { getAgent } from '../actions';
+
 export const AgentInfoPage = ({ name, url, status, fetchAgent }) => (
   <div>
     <p>{name}</p>
@@ -46,4 +48,6 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default withRouter(connect(mapStateToProps)(AgentInfoPage));
+export default withRouter(
+  connect(mapStateToProps, { fetchAgent: getAgent })(AgentInfoPage)
+);
