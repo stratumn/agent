@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { LeftNavigation } from './leftNavigation';
+import { LeftNavigation, mapStateToProps } from './leftNavigation';
 
 describe('<LeftNavigation />', () => {
   it('displays the list of agents and processes', () => {
@@ -27,5 +27,24 @@ describe('<LeftNavigation />', () => {
     ['a1', 'a2', 'a3', 'p1', 'p2', 'p3'].map(val =>
       expect(linksTexts.includes(val)).to.equal(true)
     );
+  });
+
+  it('correctly maps state to props', () => {
+    const state = {
+      agents: {
+        a1: {
+          processes: {
+            p1: {}
+          }
+        },
+        a2: {}
+      }
+    };
+
+    const props = mapStateToProps(state);
+    expect(props.agents).to.deep.equal([
+      { name: 'a1', processes: ['p1'] },
+      { name: 'a2', processes: [] }
+    ]);
   });
 });
