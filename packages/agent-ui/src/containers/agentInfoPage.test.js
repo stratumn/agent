@@ -68,5 +68,15 @@ describe('<AgentInfoPage />', () => {
     expect(agentInfoPage.find('.error').length).to.equal(0);
   });
 
-  it('provides a link to the add agent page', () => {});
+  it('provides a link to the add agent page', () => {
+    const agentInfoPage = mount(
+      <MemoryRouter>
+        <AgentInfoPage status="LOADED" />
+      </MemoryRouter>
+    );
+
+    expect(agentInfoPage.find('NavLink').length).to.equal(1);
+    const linkToAddAgent = agentInfoPage.find('NavLink').at(0);
+    expect(linkToAddAgent.props().to).to.equal('/');
+  });
 });
