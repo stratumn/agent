@@ -2,6 +2,7 @@ import { expect } from 'chai';
 
 import agents from './agents';
 import { actionTypes } from '../actions';
+import { statusTypes } from './';
 
 import { TestProcessBuilder, TestAgentBuilder } from '../test/builders';
 
@@ -14,7 +15,11 @@ describe('agents reducer', () => {
 
   it('loads new agent and keeps previously loaded agents', () => {
     const initialState = {
-      agent1: { status: 'LOADED', url: 'http://localhost:3000', processes: {} }
+      agent1: {
+        status: statusTypes.LOADED,
+        url: 'http://localhost:3000',
+        processes: {}
+      }
     };
 
     const loadAgentAction = {
@@ -25,14 +30,14 @@ describe('agents reducer', () => {
 
     const newState = agents(initialState, loadAgentAction);
     expect(newState.agent1).to.deep.equal(initialState.agent1);
-    expect(newState.agent2.status).to.equal('LOADING');
+    expect(newState.agent2.status).to.equal(statusTypes.LOADING);
     expect(newState.agent2.url).to.equal('http://localhost:3001');
     expect(newState.agent2.processes).to.deep.equal({});
   });
 
   it('updates state when fetching agent failed', () => {
     const initialState = {
-      agent1: { status: 'LOADING', url: 'http://localhost:3000' }
+      agent1: { status: statusTypes.LOADING, url: 'http://localhost:3000' }
     };
 
     const agentFailureAction = {
@@ -42,7 +47,7 @@ describe('agents reducer', () => {
     };
 
     const failedState = agents(initialState, agentFailureAction);
-    expect(failedState.agent1.status).to.equal('FAILED');
+    expect(failedState.agent1.status).to.equal(statusTypes.FAILED);
     expect(failedState.agent1.error).to.equal('invalid url');
     expect(failedState.agent1.url).to.equal('http://localhost:3000');
   });
@@ -56,13 +61,13 @@ describe('agents reducer', () => {
     };
 
     const loadedState = agents({}, agentSuccessAction);
-    expect(loadedState.agent1.status).to.equal('LOADED');
+    expect(loadedState.agent1.status).to.equal(statusTypes.LOADED);
     expect(Object.keys(loadedState.agent1.processes).length).to.equal(0);
   });
 
   it('updates state with processes details on success', () => {
     const initialState = {
-      agent1: { status: 'LOADING', url: 'http://localhost:3000' }
+      agent1: { status: statusTypes.LOADING, url: 'http://localhost:3000' }
     };
 
     const testProcess = new TestProcessBuilder('simpleprocess').build();
@@ -75,7 +80,7 @@ describe('agents reducer', () => {
     };
 
     const loadedState = agents(initialState, agentSuccessAction);
-    expect(loadedState.agent1.status).to.equal('LOADED');
+    expect(loadedState.agent1.status).to.equal(statusTypes.LOADED);
     expect(loadedState.agent1.url).to.equal('http://localhost:3000');
 
     const process = loadedState.agent1.processes.simpleprocess;

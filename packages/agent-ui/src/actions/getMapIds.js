@@ -17,17 +17,20 @@ const getMapIdsSuccess = mapIds => ({
   mapIds
 });
 
-export default function(agent, process) {
-  return dispatch => {
-    dispatch(getMapIdsRequest(agent, process));
-    // TODO: get agent url
-    const url = '';
-    return getAgent(url)
-      .then(a => {
-        const proc = a.getProcess(process);
-        return proc.getMapIds();
-      })
-      .then(mapIds => dispatch(getMapIdsSuccess(mapIds)))
-      .catch(err => dispatch(getMapIdsFailure(err)));
+export default function(agentName, processName) {
+  return (dispatch, getState) => {
+    dispatch(getMapIdsRequest(agentName, processName));
+    const { agents } = getState();
+    if (agents[agentName]) {
+      const { url } = agents[agentName];
+      return getAgent(url)
+        .then(a => {
+          const proc = a.getProcess(processName);
+          return proc.getMapIds();
+        })
+        .then(mapIds => dispatch(getMapIdsSuccess(mapIds)))
+        .catch(err => dispatch(getMapIdsFailure(err)));
+    }
+    return dispatch(getMapIdsFailure(`Can't find url for agent ${agentName}`));
   };
 }

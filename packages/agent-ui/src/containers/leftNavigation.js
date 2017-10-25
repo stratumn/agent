@@ -2,18 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
+import { statusTypes } from '../reducers';
+
+const LeftLink = ({ to, item }) => (
+  <div>
+    <NavLink to={to}>{item}</NavLink>
+  </div>
+);
+
+LeftLink.propTypes = {
+  to: PropTypes.string.isRequired,
+  item: PropTypes.string.isRequired
+};
 
 export const LeftNavigation = ({ agents }) => {
   const agentsList = agents.map(a => (
-    <div>
-      <NavLink key={a.name} to={`/${a.name}`}>
-        {a.name}
-      </NavLink>
+    <div key={a.name}>
+      <LeftLink to={`/${a.name}`} item={a.name} />
       {a.processes.map(p => (
-        <div>
-          <NavLink key={p} to={`/${a.name}/${p}`}>
-            {p}
-          </NavLink>
+        <div key={p}>
+          <LeftLink to={`/${a.name}/${p}`} item={p} />
+          <LeftLink to={`/${a.name}/${p}/maps`} item="maps" />
+          <LeftLink to={`/${a.name}/${p}/segments`} item="segments" />
         </div>
       ))}
     </div>
@@ -46,10 +56,16 @@ function mapStateToProps(state, ownProps) {
 
   let agents = [];
   if (state.agents) {
-    agents = Object.keys(state.agents).map(agentName => ({
-      name: agentName,
-      processes: Object.keys(state.agents[agentName].processes)
-    }));
+    agents = Object.keys(state.agents)
+      .filter(
+        agentName =>
+          state.agents[agentName].status &&
+          state.agents[agentName].status === statusTypes.LOADED
+      )
+      .map(agentName => ({
+        name: agentName,
+        processes: Object.keys(state.agents[agentName].processes)
+      }));
   }
 
   return {
