@@ -119,7 +119,7 @@ describe('HttpServer()', () => {
 
     const createRequest = (
       encodedScript = validEncodedScript,
-      store = { name: 'test', url: 'http://localhost:5000' },
+      store = { url: 'http://localhost:5000' },
       fossilizers = []
     ) => ({
       script: encodedScript,
@@ -167,14 +167,12 @@ describe('HttpServer()', () => {
     it('supports store and fossilizers', () => {
       const request = createRequest(
         validEncodedScript,
-        { name: 'store', url: 'http://store:5000' },
+        { url: 'http://store:5000' },
         [
           {
-            name: 'btc',
             url: 'http://fossilizer:6000'
           },
           {
-            name: 'bch',
             url: 'http://fossilizer:6001'
           }
         ]
@@ -232,12 +230,10 @@ describe('HttpServer()', () => {
     });
 
     it('rejects process with missing store configuration', () => {
-      const request = createRequest(validEncodedScript, {
-        name: 'missing-url'
-      });
+      const request = createRequest(validEncodedScript, { url: '' });
       return uploadProcessAndValidate(serverWithProcessUpload, request, res => {
         res.status.should.be.exactly(400);
-        res.body.error.should.be.exactly('missing store configuration');
+        res.body.error.should.be.exactly('missing store url');
       });
     });
   });

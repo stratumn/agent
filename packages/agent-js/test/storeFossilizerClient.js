@@ -51,41 +51,24 @@ describe('FossilizerHttpClient', () => {
     });
 
     it('tracks fossilizer clients that are created', () => {
-      fossilizerHttpClient('http://fossilizer1:6000', { name: '1' });
-      fossilizerHttpClient('http://fossilizer2:6001', { name: '2' });
+      fossilizerHttpClient('http://fossilizer1:6000');
+      fossilizerHttpClient('http://fossilizer2:6001');
 
       getAvailableFossilizers().length.should.be.exactly(2);
-
-      getAvailableFossilizers()[0].name.should.be.exactly('1');
       getAvailableFossilizers()[0].url.should.be.exactly(
         'http://fossilizer1:6000'
       );
-
-      getAvailableFossilizers()[1].name.should.be.exactly('2');
       getAvailableFossilizers()[1].url.should.be.exactly(
         'http://fossilizer2:6001'
       );
-    });
-
-    it('does not store duplicate fossilizers', () => {
-      fossilizerHttpClient('http://fossilizer:6000', { name: '1' });
-      fossilizerHttpClient('http://fossilizer:6000', { name: '2' });
-
-      getAvailableFossilizers().length.should.be.exactly(1);
     });
 
     it('does not create duplicate fossilizers for the same url', () => {
       const fossilizerClient1 = fossilizerHttpClient('http://fossilizer:6000');
       const fossilizerClient2 = fossilizerHttpClient('http://fossilizer:6000');
 
+      getAvailableFossilizers().length.should.be.exactly(1);
       fossilizerClient1.should.equal(fossilizerClient2);
-    });
-
-    it('accepts missing names for backwards compatibility', () => {
-      fossilizerHttpClient('http://fossilizer:6000', { name: '1' });
-      fossilizerHttpClient('http://fossilizer:6001');
-
-      getAvailableFossilizers().length.should.be.exactly(2);
     });
   });
 

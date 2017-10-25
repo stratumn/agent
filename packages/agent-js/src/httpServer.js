@@ -86,7 +86,7 @@ export default function httpServer(agent, opts = {}) {
       }
 
       if (!req.body.store || !req.body.store.url) {
-        err.message = 'missing store configuration';
+        err.message = 'missing store url';
         throw err;
       }
 
@@ -107,10 +107,7 @@ export default function httpServer(agent, opts = {}) {
       return process;
     };
 
-    const getStore = store =>
-      storeHttpClient(store.url, {
-        name: store.name
-      });
+    const getStore = store => storeHttpClient(store.url);
 
     const getFossilizers = reqFossilizers => {
       let fossilizers = [];
@@ -118,9 +115,7 @@ export default function httpServer(agent, opts = {}) {
         fossilizers = reqFossilizers
           .map(f => {
             if (f.url) {
-              return fossilizerHttpClient(f.url, {
-                name: f.name
-              });
+              return fossilizerHttpClient(f.url);
             }
 
             console.error('Fossilizer is missing url. Skipping...');

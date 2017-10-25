@@ -22,7 +22,6 @@ import handleResponse from './handleResponse';
  * @param {string} url - the base URL of the fossilizer
  * @param {object} [opts] - options
  * @param {function} [opts.callbackUrl] - builds a URL that will be called with the evidence
- * @param {string} [opts.name] - the name of the fossilizer
  * @returns {Client} a fossilizer HTTP client
  */
 export default function fossilizerHttpClient(url, opts = {}) {
@@ -31,10 +30,6 @@ export default function fossilizerHttpClient(url, opts = {}) {
     foss => foss.url === url
   );
   if (matchingFossilizerClient) {
-    if (!matchingFossilizerClient.name && opts.name) {
-      matchingFossilizerClient.name = opts.name;
-    }
-
     return matchingFossilizerClient.client;
   }
 
@@ -84,7 +79,6 @@ export default function fossilizerHttpClient(url, opts = {}) {
   };
 
   fossilizerHttpClient.availableFossilizers.push({
-    name: opts.name,
     url: url,
     client: fossilizerClient
   });
@@ -99,10 +93,7 @@ fossilizerHttpClient.availableFossilizers = [];
  * @returns {Array} an array of fossilizer HTTP clients basic information
  */
 export function getAvailableFossilizers() {
-  return fossilizerHttpClient.availableFossilizers.map(f => ({
-    name: f.name,
-    url: f.url
-  }));
+  return fossilizerHttpClient.availableFossilizers.map(f => ({ url: f.url }));
 }
 
 /**

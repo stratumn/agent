@@ -31,20 +31,14 @@ import handleResponse from './handleResponse';
  *   - 'didSave': a segment was saved
  *
  * @param {string} url - the base URL of the store
- * @param {object} [opt] - options
- * @param {string} [opt.name] - the name of the store
  * @returns {Client} a store HTTP client
  */
-export default function storeHttpClient(url, opt = {}) {
+export default function storeHttpClient(url) {
   // If we already have an existing store for that url, re-use it
   const matchingStoreClient = storeHttpClient.availableStores.find(
     store => store.url === url
   );
   if (matchingStoreClient) {
-    if (!matchingStoreClient.name && opt.name) {
-      matchingStoreClient.name = opt.name;
-    }
-
     return matchingStoreClient.client;
   }
 
@@ -196,7 +190,6 @@ export default function storeHttpClient(url, opt = {}) {
   });
 
   storeHttpClient.availableStores.push({
-    name: opt.name,
     url: url,
     client: storeClient
   });
@@ -211,10 +204,7 @@ storeHttpClient.availableStores = [];
  * @returns {Array} an array of store HTTP clients basic information
  */
 export function getAvailableStores() {
-  return storeHttpClient.availableStores.map(s => ({
-    name: s.name,
-    url: s.url
-  }));
+  return storeHttpClient.availableStores.map(s => ({ url: s.url }));
 }
 
 /**
