@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
@@ -14,10 +14,8 @@ describe('<AgentInfoPage />', () => {
   it('displays the agent name and url', () => {
     const agentName = 'test';
     const agentUrl = 'http://localhost:3000';
-    const agentInfoPage = mount(
-      <MemoryRouter>
-        <AgentInfoPage name={agentName} url={agentUrl} />
-      </MemoryRouter>
+    const agentInfoPage = shallow(
+      <AgentInfoPage name={agentName} url={agentUrl} />
     );
 
     const agentInfo = agentInfoPage.find('p').map(p => p.text());
@@ -49,31 +47,17 @@ describe('<AgentInfoPage />', () => {
   });
 
   it('displays a custom error message when agent was not loaded', () => {
-    const agentInfoPage = mount(
-      <MemoryRouter>
-        <AgentInfoPage status="FAILED" />
-      </MemoryRouter>
-    );
-
+    const agentInfoPage = shallow(<AgentInfoPage status="FAILED" />);
     expect(agentInfoPage.find('.error').length).to.equal(1);
   });
 
   it('does not display an error message when agent was loaded successfully', () => {
-    const agentInfoPage = mount(
-      <MemoryRouter>
-        <AgentInfoPage status="LOADED" />
-      </MemoryRouter>
-    );
-
+    const agentInfoPage = shallow(<AgentInfoPage status="LOADED" />);
     expect(agentInfoPage.find('.error').length).to.equal(0);
   });
 
   it('provides a link to the add agent page', () => {
-    const agentInfoPage = mount(
-      <MemoryRouter>
-        <AgentInfoPage status="LOADED" />
-      </MemoryRouter>
-    );
+    const agentInfoPage = shallow(<AgentInfoPage status="LOADED" />);
 
     expect(agentInfoPage.find('NavLink').length).to.equal(1);
     const linkToAddAgent = agentInfoPage.find('NavLink').at(0);
