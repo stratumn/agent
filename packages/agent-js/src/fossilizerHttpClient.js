@@ -26,11 +26,8 @@ import handleResponse from './handleResponse';
  */
 export default function fossilizerHttpClient(url, opts = {}) {
   // If we already have an existing fossilizer for that url, re-use it
-  const matchingFossilizerClient = fossilizerHttpClient.availableFossilizers.find(
-    foss => foss.url === url
-  );
-  if (matchingFossilizerClient) {
-    return matchingFossilizerClient.client;
+  if (fossilizerHttpClient.availableFossilizers[url]) {
+    return fossilizerHttpClient.availableFossilizers[url];
   }
 
   const fossilizerClient = {
@@ -78,22 +75,21 @@ export default function fossilizerHttpClient(url, opts = {}) {
     }
   };
 
-  fossilizerHttpClient.availableFossilizers.push({
-    url: url,
-    client: fossilizerClient
-  });
+  fossilizerHttpClient.availableFossilizers[url] = fossilizerClient;
 
   return fossilizerClient;
 }
 
-fossilizerHttpClient.availableFossilizers = [];
+fossilizerHttpClient.availableFossilizers = {};
 
 /**
  * Returns basic information about the fossilizer HTTP clients that have been created.
- * @returns {Array} an array of fossilizer HTTP clients basic information
+ * @returns {Array} an array of fossilizer HTTP clients basic information (currently only url).
  */
 export function getAvailableFossilizers() {
-  return fossilizerHttpClient.availableFossilizers.map(f => ({ url: f.url }));
+  return Object.keys(fossilizerHttpClient.availableFossilizers).map(url => ({
+    url
+  }));
 }
 
 /**
@@ -101,5 +97,5 @@ export function getAvailableFossilizers() {
  * Should only be used for tests setup.
  */
 export function clearAvailableFossilizers() {
-  fossilizerHttpClient.availableFossilizers = [];
+  fossilizerHttpClient.availableFossilizers = {};
 }

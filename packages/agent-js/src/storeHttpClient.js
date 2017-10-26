@@ -35,11 +35,8 @@ import handleResponse from './handleResponse';
  */
 export default function storeHttpClient(url) {
   // If we already have an existing store for that url, re-use it
-  const matchingStoreClient = storeHttpClient.availableStores.find(
-    store => store.url === url
-  );
-  if (matchingStoreClient) {
-    return matchingStoreClient.client;
+  if (storeHttpClient.availableStores[url]) {
+    return storeHttpClient.availableStores[url];
   }
 
   // Web socket URL.
@@ -189,22 +186,19 @@ export default function storeHttpClient(url) {
     }
   });
 
-  storeHttpClient.availableStores.push({
-    url: url,
-    client: storeClient
-  });
+  storeHttpClient.availableStores[url] = storeClient;
 
   return storeClient;
 }
 
-storeHttpClient.availableStores = [];
+storeHttpClient.availableStores = {};
 
 /**
  * Returns basic information about the store HTTP clients that have been created.
- * @returns {Array} an array of store HTTP clients basic information
+ * @returns {Array} an array of store HTTP clients basic information (currently only url).
  */
 export function getAvailableStores() {
-  return storeHttpClient.availableStores.map(s => ({ url: s.url }));
+  return Object.keys(storeHttpClient.availableStores).map(url => ({ url }));
 }
 
 /**
@@ -212,5 +206,5 @@ export function getAvailableStores() {
  * Should only be used for tests setup.
  */
 export function clearAvailableStores() {
-  storeHttpClient.availableStores = [];
+  storeHttpClient.availableStores = {};
 }
