@@ -90,21 +90,21 @@ export default function httpServer(agent, opts = {}) {
         throw err;
       }
 
-      let process;
+      let processActions;
       try {
-        process = parseProcessActions(req.body.actions);
+        processActions = parseProcessActions(req.body.actions);
       } catch (e) {
         console.error(`upload process: ${e}`);
         err.message = 'invalid actions';
         throw err;
       }
 
-      if (!process.init || typeof process.init !== 'function') {
+      if (!processActions.init || typeof processActions.init !== 'function') {
         err.message = 'missing init function';
         throw err;
       }
 
-      return process;
+      return processActions;
     };
 
     const getStore = store => storeHttpClient(store.url);
@@ -128,11 +128,11 @@ export default function httpServer(agent, opts = {}) {
     };
 
     app.post('/:process/upload', (req, res) => {
-      const process = validateProcessUpload(req);
+      const processActions = validateProcessUpload(req);
       const store = getStore(req.body.store);
       const fossilizers = getFossilizers(req.body.fossilizers);
 
-      agent.addProcess(req.params.process, process, store, fossilizers);
+      agent.addProcess(req.params.process, processActions, store, fossilizers);
 
       return res.json(agent.getAllProcesses());
     });
