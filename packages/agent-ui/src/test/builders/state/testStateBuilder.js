@@ -8,4 +8,17 @@ export default class {
     this.maps = {};
     this.segments = {};
   }
+
+  withAgent(name, agent) {
+    this.agents[name] = agent;
+    return this;
+  }
+
+  build() {
+    return {
+      agents: this.agents,
+      maps: this.maps,
+      segments: this.segments
+    };
+  }
 }
