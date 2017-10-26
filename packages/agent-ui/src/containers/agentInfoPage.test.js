@@ -7,6 +7,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import { AgentInfoPage } from './agentInfoPage';
+import { statusTypes } from '../reducers';
 
 chai.use(sinonChai);
 
@@ -47,22 +48,30 @@ describe('<AgentInfoPage />', () => {
   });
 
   it('displays a loading message when agent is loading', () => {
-    const agentInfoPage = shallow(<AgentInfoPage status="LOADING" />);
+    const agentInfoPage = shallow(
+      <AgentInfoPage status={statusTypes.LOADING} />
+    );
     expect(agentInfoPage.find('div').contains('loading...')).to.equal(true);
   });
 
   it('displays a custom error message when agent loading failed', () => {
-    const agentInfoPage = shallow(<AgentInfoPage status="FAILED" />);
+    const agentInfoPage = shallow(
+      <AgentInfoPage status={statusTypes.FAILED} />
+    );
     expect(agentInfoPage.find('.error').length).to.equal(1);
   });
 
   it('does not display an error message when agent was loaded successfully', () => {
-    const agentInfoPage = shallow(<AgentInfoPage status="LOADED" />);
+    const agentInfoPage = shallow(
+      <AgentInfoPage status={statusTypes.LOADED} />
+    );
     expect(agentInfoPage.find('.error').length).to.equal(0);
   });
 
   it('provides a link to the add agent page', () => {
-    const agentInfoPage = shallow(<AgentInfoPage status="LOADED" />);
+    const agentInfoPage = shallow(
+      <AgentInfoPage status={statusTypes.LOADED} />
+    );
 
     expect(agentInfoPage.find('NavLink').length).to.equal(1);
     const linkToAddAgent = agentInfoPage.find('NavLink').at(0);
