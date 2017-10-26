@@ -66,9 +66,17 @@ describe('<ProcessInfoPage />', () => {
     const processInfoPage = shallow(<ProcessInfoPage process={process} />);
 
     expect(processInfoPage.find('li')).to.have.length(2);
-    console.log(processInfoPage.debug());
     expect(processInfoPage.find('li').contains('login(name, password)')).to.be
       .true;
     expect(processInfoPage.find('li').contains('logout()')).to.be.true;
+  });
+
+  it('displays store information', () => {
+    const process = new TestProcessBuilder('warehouse42')
+      .withStore('candyStore', 'v1', 'c1', 'welcome to the candy store')
+      .build();
+    const processInfoPage = shallow(<ProcessInfoPage process={process} />);
+
+    expect(processInfoPage.find('div').contains('candyStore')).to.be.true;
   });
 });

@@ -41,6 +41,33 @@ export const ProcessInfoPage = ({ agent, process }) => {
           ))}
         </ul>
       </div>
+      <div>
+        <h3>Store</h3>
+        {process.store && (
+          <p>
+            {process.store.name}
+            <br />
+          </p>
+        )}
+        {process.store && (
+          <p>
+            {process.store.version}
+            <br />
+          </p>
+        )}
+        {process.store && (
+          <p>
+            {process.store.commit}
+            <br />
+          </p>
+        )}
+        {process.store && (
+          <p>
+            {process.store.description}
+            <br />
+          </p>
+        )}
+      </div>
     </div>
   );
 };
