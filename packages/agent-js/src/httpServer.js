@@ -65,23 +65,23 @@ export default function httpServer(agent, opts = {}) {
    * setup to restrict access to this API.
    */
   if (opts.enableProcessUpload) {
-    const parseProcessScript = script => {
-      const processModule = new module.constructor();
+    const parseProcessActions = actions => {
+      const processActionsModule = new module.constructor();
       /* eslint-disable no-underscore-dangle */
-      processModule._compile(
-        Buffer.from(script, 'base64').toString(),
+      processActionsModule._compile(
+        Buffer.from(actions, 'base64').toString(),
         '' // this parameter is actually required (undefined isn't accepted)
       );
       /* eslint-enable no-underscore-dangle */
-      return processModule.exports;
+      return processActionsModule.exports;
     };
 
     const validateProcessUpload = req => {
       const err = new Error();
       err.status = 400;
 
-      if (!req.body.script) {
-        err.message = 'missing script';
+      if (!req.body.actions) {
+        err.message = 'missing actions';
         throw err;
       }
 
@@ -92,10 +92,10 @@ export default function httpServer(agent, opts = {}) {
 
       let process;
       try {
-        process = parseProcessScript(req.body.script);
+        process = parseProcessActions(req.body.actions);
       } catch (e) {
         console.error(`upload process: ${e}`);
-        err.message = 'invalid script';
+        err.message = 'invalid actions';
         throw err;
       }
 
