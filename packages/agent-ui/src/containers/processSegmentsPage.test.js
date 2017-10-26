@@ -58,7 +58,7 @@ describe('<ProcessSegmentsPage />', () => {
       fetchSegments: sinon.spy(),
       agent: '',
       process: '',
-      segments: { status: statusTypes.LOADED, segments: ['foo', 'bar'] }
+      segments: { status: statusTypes.LOADED, details: ['foo', 'bar'] }
     };
     const processSegmentsPage = mount(<ProcessSegmentsPage {...props} />);
     expect(props.fetchSegments.callCount).to.equal(1);

@@ -13,7 +13,7 @@ export class ProcessSegmentsPage extends Component {
   }
 
   render() {
-    const { segments: { status, segments: details, error } } = this.props;
+    const { segments: { status, details, error } } = this.props;
     switch (status) {
       case statusTypes.LOADING:
         return <div>loading...</div>;

@@ -11,40 +11,45 @@ describe('segments reducer', () => {
     expect(newState).to.eql(initialState);
   });
 
-  it('update state when fetching maps', () => {
-    const initialState = { status: 'foo', segments: [1, 2, 3] };
-    const newState = segments(initialState, {
-      type: actionTypes.SEGMENTS_REQUEST
-    });
-    const expected = { status: statusTypes.LOADING, segments: [] };
+  it('update state when fetching segments', () => {
+    const newState = segments(
+      {},
+      {
+        type: actionTypes.SEGMENTS_REQUEST
+      }
+    );
+    const expected = { status: statusTypes.LOADING, details: [] };
     expect(newState).to.deep.equal(expected);
   });
 
   it('update state on failure', () => {
-    const initialState = { status: 'foo', segments: [1, 2, 3] };
-    const newState = segments(initialState, {
-      type: actionTypes.SEGMENTS_FAILURE,
-      error: 'unreachable'
-    });
+    const newState = segments(
+      {},
+      {
+        type: actionTypes.SEGMENTS_FAILURE,
+        error: 'unreachable'
+      }
+    );
     const expected = {
       status: statusTypes.FAILED,
-      segments: [1, 2, 3],
       error: 'unreachable'
     };
     expect(newState).to.deep.equal(expected);
   });
 
   it('update state on success', () => {
-    const initialState = { status: 'foo', segments: [1, 2, 3] };
     const segs = [{ meta: { linkHash: 'abc' } }, { meta: { linkHash: 'def' } }];
     const linkHashes = segs.map(({ meta: { linkHash } }) => linkHash);
-    const newState = segments(initialState, {
-      type: actionTypes.SEGMENTS_SUCCESS,
-      segments: segs
-    });
+    const newState = segments(
+      {},
+      {
+        type: actionTypes.SEGMENTS_SUCCESS,
+        segments: segs
+      }
+    );
     const expected = {
       status: statusTypes.LOADED,
-      segments: linkHashes
+      details: linkHashes
     };
     expect(newState).to.deep.equal(expected);
   });

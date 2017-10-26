@@ -30,7 +30,6 @@ describe('getSegments action', () => {
 
     return getSegments('foo')(dispatchSpy, getStateStub).then(() => {
       expect(stratumnClientStub.callCount).to.equal(1);
-      expect(getStateStub.callCount).to.equal(1);
     });
   });
 
@@ -65,7 +64,7 @@ describe('getSegments action', () => {
     });
   });
 
-  it('dispatches a failure action when fetching maps fails', () => {
+  it('dispatches a failure action when fetching segments fails', () => {
     const findSegmentsStub = sinon.stub().rejects('Unreachable');
     stratumnClientStub.resolves({
       getProcess: () => ({
@@ -82,7 +81,7 @@ describe('getSegments action', () => {
     });
   });
 
-  it('dispatches a success action when fetching maps succeeds', () => {
+  it('dispatches a success action when fetching segments succeeds', () => {
     const findSegmentsStub = sinon.stub().resolves(['1', '2']);
     stratumnClientStub.resolves({
       getProcess: () => ({
