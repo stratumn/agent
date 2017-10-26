@@ -108,4 +108,60 @@ describe('agents reducer', () => {
     expect(action.args.length).to.equal(1);
     expect(action.args[0]).to.equal('title');
   });
+
+  it('updates state with process store on success', () => {
+    const testProcess = new TestProcessBuilder('withStore')
+      .withStoreAdapter('dummyStore', 'v1', 'c1', 'desc')
+      .build();
+    const testAgent = new TestAgentBuilder().withProcess(testProcess).build();
+
+    const agentSuccessAction = {
+      type: actionTypes.AGENT_INFO_SUCCESS,
+      name: 'local',
+      agent: testAgent
+    };
+
+    const loadedState = agents({}, agentSuccessAction);
+
+    const process = loadedState.local.processes.withStore;
+    expect(process.store).to.deep.equal({
+      name: 'dummyStore',
+      version: 'v1',
+      commit: 'c1',
+      description: 'desc'
+    });
+  });
+
+  it('updates state with process fossilizers on success', () => {
+    const testProcess = new TestProcessBuilder('withFossilizers')
+      .withFossilizer('f1', 'v1', 'c1', 'd1', 'b1')
+      .withFossilizer('f2', 'v2', 'c2', 'd2', 'b2')
+      .build();
+    const testAgent = new TestAgentBuilder().withProcess(testProcess).build();
+
+    const agentSuccessAction = {
+      type: actionTypes.AGENT_INFO_SUCCESS,
+      name: 'local',
+      agent: testAgent
+    };
+
+    const loadedState = agents({}, agentSuccessAction);
+
+    const process = loadedState.local.processes.withFossilizers;
+    expect(process.fossilizers).to.have.length(2);
+    expect(process.fossilizers[0]).to.deep.equal({
+      name: 'f1',
+      version: 'v1',
+      commit: 'c1',
+      description: 'd1',
+      blockchain: 'b1'
+    });
+    expect(process.fossilizers[1]).to.deep.equal({
+      name: 'f2',
+      version: 'v2',
+      commit: 'c2',
+      description: 'd2',
+      blockchain: 'b2'
+    });
+  });
 });
