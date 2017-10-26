@@ -16,6 +16,34 @@ const formatAction = (name, args) => {
   return action;
 };
 
+const renderStore = store => (
+  <div>
+    <p>{store.name}</p>
+    <br />
+    <p>{store.version}</p>
+    <br />
+    <p>{store.commit}</p>
+    <br />
+    <p>{store.description}</p>
+    <br />
+  </div>
+);
+
+const renderFossilizer = fossilizer => (
+  <div>
+    <p>{fossilizer.name}</p>
+    <br />
+    <p>{fossilizer.version}</p>
+    <br />
+    <p>{fossilizer.commit}</p>
+    <br />
+    <p>{fossilizer.description}</p>
+    <br />
+    <p>{fossilizer.blockchain}</p>
+    <br />
+  </div>
+);
+
 export const ProcessInfoPage = ({ agent, process }) => {
   if (!process) {
     return (
@@ -43,30 +71,11 @@ export const ProcessInfoPage = ({ agent, process }) => {
       </div>
       <div>
         <h3>Store</h3>
-        {process.store && (
-          <p>
-            {process.store.name}
-            <br />
-          </p>
-        )}
-        {process.store && (
-          <p>
-            {process.store.version}
-            <br />
-          </p>
-        )}
-        {process.store && (
-          <p>
-            {process.store.commit}
-            <br />
-          </p>
-        )}
-        {process.store && (
-          <p>
-            {process.store.description}
-            <br />
-          </p>
-        )}
+        {process.store && renderStore(process.store)}
+      </div>
+      <div>
+        <h3>Fossilizers</h3>
+        {process.fossilizers.map(f => renderFossilizer(f))}
       </div>
     </div>
   );

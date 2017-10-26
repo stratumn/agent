@@ -79,4 +79,15 @@ describe('<ProcessInfoPage />', () => {
 
     expect(processInfoPage.find('div').contains('candyStore')).to.be.true;
   });
+
+  it('displays fossilizers information', () => {
+    const process = new TestProcessBuilder('warehouse42')
+      .withFossilizer('f1', 'v1', 'c1', 'd1', 'b1')
+      .withFossilizer('f2', 'v2', 'c2', 'd2', 'b2')
+      .build();
+    const processInfoPage = shallow(<ProcessInfoPage process={process} />);
+
+    expect(processInfoPage.find('div').contains('f1')).to.be.true;
+    expect(processInfoPage.find('div').contains('f2')).to.be.true;
+  });
 });
