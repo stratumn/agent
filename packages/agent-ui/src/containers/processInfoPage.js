@@ -75,7 +75,8 @@ export const ProcessInfoPage = ({ agent, process }) => {
       </div>
       <div>
         <h3>Fossilizers</h3>
-        {process.fossilizers.map(f => renderFossilizer(f))}
+        {process.fossilizers &&
+          process.fossilizers.map(f => renderFossilizer(f))}
       </div>
     </div>
   );
