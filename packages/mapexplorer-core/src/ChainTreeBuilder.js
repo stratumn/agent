@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { getAgent } from 'stratumn-agent-client';
-import ChainTree from './ChainTree';
-import compactHash from './compactHash';
-import resolveLinks from './resolveLinks';
-import wrap from './wrap';
-import parseIfJson from './parseIfJson';
-import tagsSet from './tagsSet';
+import { getAgent } from "stratumn-agent-client";
+import ChainTree from "./ChainTree";
+import compactHash from "./compactHash";
+import resolveLinks from "./resolveLinks";
+import wrap from "./wrap";
+import parseIfJson from "./parseIfJson";
+import tagsSet from "./tagsSet";
 
 function load(map) {
   return getAgent(map.agentUrl)
@@ -50,8 +50,8 @@ export const defaultOptions = {
     return (
       node.target.data.link.meta.action +
       (this.withArgs
-        ? `(${node.target.data.link.meta.arguments.join(', ')})`
-        : '')
+        ? `(${node.target.data.link.meta.arguments.join(", ")})`
+        : "")
     );
   },
   onclick() {},
