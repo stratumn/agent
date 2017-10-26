@@ -5,7 +5,10 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import { AgentsPage } from './agentsPage';
+import { TestStateBuilder, TestAgentBuilder } from '../test/builders/state';
+
+import { statusTypes } from '../reducers';
+import { AgentsPage, mapStateToProps } from './agentsPage';
 
 chai.use(sinonChai);
 
@@ -36,5 +39,43 @@ describe('<AgentsPage />', () => {
 
     agentsPage.find('form').simulate('submit');
     expect(fetchAgentSpy.callCount).to.equal(1);
+  });
+
+  it('extracts loaded agents from state', () => {
+    const loadedAgent1 = new TestAgentBuilder()
+      .withStatus(statusTypes.LOADED)
+      .withUrl('http://localhost:42')
+      .build();
+    const loadedAgent2 = new TestAgentBuilder()
+      .withStatus(statusTypes.LOADED)
+      .withUrl('http://localhost:43')
+      .build();
+    const notLoadedAgent = new TestAgentBuilder()
+      .withStatus(statusTypes.LOADING)
+      .build();
+
+    const state = new TestStateBuilder()
+      .withAgent('a1', loadedAgent1)
+      .withAgent('a0', notLoadedAgent)
+      .withAgent('a2', loadedAgent2)
+      .build();
+
+    const { agents } = mapStateToProps(state);
+
+    expect(agents).to.have.length(2);
+    expect(agents[0].name).to.equal('a1');
+    expect(agents[0].url).to.equal('http://localhost:42');
+    expect(agents[1].name).to.equal('a2');
+    expect(agents[1].url).to.equal('http://localhost:43');
+  });
+
+  it('displays loaded agents', () => {
+    const agents = [{ name: 'a1', url: 'u1' }, { name: 'a2', url: 'u2' }];
+    const agentsPage = mount(<AgentsPage agents={agents} />);
+
+    console.log(agentsPage.debug());
+
+    expect(agentsPage.find('div').contains('a1: u1')).to.be.true;
+    expect(agentsPage.find('div').contains('a2: u2')).to.be.true;
   });
 });

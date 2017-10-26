@@ -4,13 +4,18 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { getAgent } from '../actions';
+import { statusTypes } from '../reducers';
 
-export const AgentsPage = ({ fetchAgent }) => {
+const renderLoadedAgents = agents =>
+  agents.map(a => <div key={a.name}>{`${a.name}: ${a.url}`}</div>);
+
+export const AgentsPage = ({ agents, fetchAgent }) => {
   let agentName;
   let agentUrl;
 
   return (
     <div>
+      {agents && renderLoadedAgents(agents)}
       <form
         onSubmit={e => {
           e.preventDefault();
@@ -42,14 +47,35 @@ export const AgentsPage = ({ fetchAgent }) => {
   );
 };
 
+AgentsPage.defaultProps = {
+  agents: []
+};
 AgentsPage.propTypes = {
+  agents: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      url: PropTypes.string.isRequired
+    })
+  ),
   fetchAgent: PropTypes.func.isRequired
 };
 
-function mapStateToProps(state, ownProps) {
-  console.log('AgentsPage state', state);
-  console.log('AgentsPage ownProps', ownProps);
-  return {};
+export function mapStateToProps(state) {
+  const agents = Object.keys(state.agents || [])
+    .map(a => {
+      if (state.agents[a].status === statusTypes.LOADED) {
+        return {
+          name: a,
+          url: state.agents[a].url
+        };
+      }
+      return null;
+    })
+    .filter(a => a);
+
+  return {
+    agents
+  };
 }
 
 export default withRouter(
