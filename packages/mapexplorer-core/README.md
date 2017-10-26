@@ -65,7 +65,7 @@ Transition duration
 
 ##### verticalSpacing
 ```
-Default: 1.2
+Default: 1.4
 ```
 Vertical space factor between segment polygon
 

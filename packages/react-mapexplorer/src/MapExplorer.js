@@ -62,15 +62,8 @@ class MapExplorer extends Component {
   }
 
   componentDidMount() {
-    this.state.builder = new ChainTreeBuilder(this.element);
-
-    this.state.builder.build(
-      {
-        id: this.props.mapId,
-        agentUrl: this.props.agentUrl,
-        chainscript: this.props.chainscript,
-        process: this.props.process
-      },
+    this.state.builder = new ChainTreeBuilder(
+      this.element,
       Object.assign(
         {},
         {
@@ -80,6 +73,12 @@ class MapExplorer extends Component {
         this.props.options
       )
     );
+    this.state.builder.build({
+      id: this.props.mapId,
+      agentUrl: this.props.agentUrl,
+      chainscript: this.props.chainscript,
+      process: this.props.process
+    });
   }
 
   handleSegmentClick(d, onHide, element) {
@@ -207,7 +206,7 @@ class MapExplorer extends Component {
       >
         <Style scopeSelector=".react-mapexplorer" rules={rules} />
         {segmentContainer}
-        <svg>
+        <svg width="0">
           <marker
             id="triangle"
             viewBox="0 0 10 10"
@@ -220,6 +219,19 @@ class MapExplorer extends Component {
             style={styles.triangle}
           >
             <path fill="#CCCCCC" d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+          <marker
+            id="blackTriangle"
+            viewBox="0 0 10 10"
+            refX="0"
+            refY="5"
+            markerUnits="strokeWidth"
+            markerWidth="4"
+            markerHeight="3"
+            orient="auto"
+            style={styles.triangle}
+          >
+            <path fill="black" d="M 0 0 L 10 5 L 0 10 z" />
           </marker>
         </svg>
       </div>
