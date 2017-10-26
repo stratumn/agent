@@ -1,27 +1,32 @@
 import { expect } from 'chai';
 
-import maps from './maps';
+import segments from './segments';
 import { actionTypes } from '../actions';
 import { statusTypes } from './';
 
-describe('maps reducer', () => {
+describe('segments reducer', () => {
   it('returns previous state for unknown action', () => {
     const initialState = { random: 'junk' };
-    const newState = maps(initialState, { type: 'UNKNOWN_ACTION' });
+    const newState = segments(initialState, { type: 'UNKNOWN_ACTION' });
     expect(newState).to.eql(initialState);
   });
 
-  it('update state when fetching maps', () => {
-    const newState = maps({}, { type: actionTypes.MAP_IDS_REQUEST });
-    const expected = { status: statusTypes.LOADING, mapIds: [] };
+  it('update state when fetching segments', () => {
+    const newState = segments(
+      {},
+      {
+        type: actionTypes.SEGMENTS_REQUEST
+      }
+    );
+    const expected = { status: statusTypes.LOADING, details: [] };
     expect(newState).to.deep.equal(expected);
   });
 
   it('update state on failure', () => {
-    const newState = maps(
+    const newState = segments(
       {},
       {
-        type: actionTypes.MAP_IDS_FAILURE,
+        type: actionTypes.SEGMENTS_FAILURE,
         error: 'unreachable'
       }
     );
@@ -33,16 +38,18 @@ describe('maps reducer', () => {
   });
 
   it('update state on success', () => {
-    const newState = maps(
+    const segs = [{ meta: { linkHash: 'abc' } }, { meta: { linkHash: 'def' } }];
+    const linkHashes = segs.map(({ meta: { linkHash } }) => linkHash);
+    const newState = segments(
       {},
       {
-        type: actionTypes.MAP_IDS_SUCCESS,
-        mapIds: [4, 5, 6]
+        type: actionTypes.SEGMENTS_SUCCESS,
+        segments: segs
       }
     );
     const expected = {
       status: statusTypes.LOADED,
-      mapIds: [4, 5, 6]
+      details: linkHashes
     };
     expect(newState).to.deep.equal(expected);
   });
