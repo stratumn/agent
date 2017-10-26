@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 
 import { getAgent } from '../actions';
+import { statusTypes } from '../reducers';
 
 export const AgentInfoPage = ({ name, url, status, fetchAgent }) => {
-  if (status === 'LOADING') {
+  if (status === statusTypes.LOADING) {
     return <div>loading...</div>;
   }
 
@@ -14,7 +15,7 @@ export const AgentInfoPage = ({ name, url, status, fetchAgent }) => {
     <div>
       <p>{name}</p>
       <p>{url}</p>
-      {status !== 'LOADED' && (
+      {status === statusTypes.FAILED && (
         <div className="error">There was an issue loading your agent</div>
       )}
       <button
