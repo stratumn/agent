@@ -3,7 +3,11 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { TestAgentBuilder, TestProcessBuilder } from '../test/builders';
+import {
+  TestAgentBuilder,
+  TestProcessBuilder,
+  TestStateBuilder
+} from '../test/builders/state';
 
 import { ProcessInfoPage, mapStateToProps } from './processInfoPage';
 
@@ -17,13 +21,10 @@ describe('<ProcessInfoPage />', () => {
       .withProcess(otherProcess)
       .withProcess(selectedProcess)
       .build();
-
-    const state = {
-      agents: {
-        notA: new TestAgentBuilder().build(),
-        a: agent
-      }
-    };
+    const state = new TestStateBuilder()
+      .withAgent('notA', new TestAgentBuilder().build())
+      .withAgent('a', agent)
+      .build();
 
     const props = mapStateToProps(state, routeProps);
     expect(props.process).to.equal(selectedProcess);
@@ -34,12 +35,7 @@ describe('<ProcessInfoPage />', () => {
     const agent = new TestAgentBuilder()
       .withProcess(new TestProcessBuilder('notP').build())
       .build();
-
-    const state = {
-      agents: {
-        a: agent
-      }
-    };
+    const state = new TestStateBuilder().withAgent('a', agent).build();
 
     const props = mapStateToProps(state, routeProps);
     expect(props.process).to.be.undefined;
