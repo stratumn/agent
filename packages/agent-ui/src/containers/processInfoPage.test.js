@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import {
@@ -28,6 +28,7 @@ describe('<ProcessInfoPage />', () => {
 
     const props = mapStateToProps(state, routeProps);
     expect(props.process).to.equal(selectedProcess);
+    expect(props.agent).to.equal('a');
   });
 
   it('handles process not found in state', () => {
@@ -39,5 +40,21 @@ describe('<ProcessInfoPage />', () => {
 
     const props = mapStateToProps(state, routeProps);
     expect(props.process).to.be.undefined;
+  });
+
+  it('displays an error message when process is not found', () => {
+    const processInfoPage = shallow(<ProcessInfoPage />);
+    expect(processInfoPage.find('.error')).to.have.length(1);
+  });
+
+  it('displays agent and process name', () => {
+    const process = new TestProcessBuilder('warehouse42').build();
+    const processInfoPage = shallow(
+      <ProcessInfoPage agent="agent007" process={process} />
+    );
+
+    expect(processInfoPage.find('.error')).to.have.length(0);
+    expect(processInfoPage.find('div').contains('agent007')).to.be.true;
+    expect(processInfoPage.find('div').contains('warehouse42')).to.be.true;
   });
 });
