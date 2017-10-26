@@ -1,38 +1,87 @@
 .node {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .node polygon {
-    fill: $segment-primary-color;
+  fill: $segment-primary-color;
 }
 
 .node text {
-    font-family: $segment-text-font;
-    font-size: 14px;
-    fill: $segment-text-color;
+  font-family: $segment-text-font;
+  font-size: 14px;
+  fill: $segment-text-color;
 }
 
 .node rect {
-    fill: $segment-secondary-color;
+  fill: $segment-secondary-color;
 }
 
 .textpath {
-    font-family: $link-text-font;
-    font-size: 14px;
-    fill: $link-text-color;
+  font-family: $link-text-font;
+  font-size: 14px;
+  fill: $link-text-color;
 }
 
 .link {
-    fill: none;
-    stroke: $link-color;
-    stroke-width: 5px;
-    marker-end: url('#triangle');
+  fill: none;
+  stroke: $link-color;
+  stroke-width: 5px;
+  marker-end: url("#triangle");
+}
+
+path .link.ref:hover {
+  stroke: #000;
+  cursor: pointer;
+}
+
+text #ref-link-text:hover {
+  fill: #000;
+  cursor: pointer;
+  font-size: 24px;
 }
 
 .node.selected polygon {
-    fill: $selected-segment-primary-color;
+  fill: $selected-segment-primary-color;
 }
 
 .node.selected rect {
-    fill: $selected-segment-secondary-color;
+  fill: $selected-segment-secondary-color;
+}
+
+.node.childRef polygon {
+  fill: $foreign-segment-primary-color;
+}
+
+.node.childRef rect {
+  fill: $foreign-segment-secondary-color;
+}
+
+.node.ref polygon {
+  fill: $foreign-segment-primary-color;
+}
+
+.node.ref rect {
+  fill: $foreign-segment-secondary-color;
+}
+
+#ref-link {
+  stroke-width: 8;
+}
+
+#ref-link:hover {
+  stroke: black;
+  cursor: pointer;
+  stroke-width: 10;
+  marker-end: url("#blackTriangle");
+}
+
+text#linkLabelRef {
+  cursor: pointer;
+  font-family: $segment-text-font;
+  fill: white;
+}
+
+rect.refLinkBox {
+  cursor: pointer;
+  fill: $foreign-segment-secondary-color;
 }

@@ -34,7 +34,7 @@ function load(map) {
 export const defaultOptions = {
   withArgs: false,
   duration: 750,
-  verticalSpacing: 1.2,
+  verticalSpacing: 1.4,
   polygonSize: { width: 78, height: 91 },
   getBoxSize() {
     const self = this;
@@ -46,11 +46,20 @@ export const defaultOptions = {
   getSegmentText(node) {
     return compactHash(node.data.meta.linkHash);
   },
-  getLinkText(node) {
+  getRefLinkText(node) {
+    return `go to map ${compactHash(node.data.link.meta.mapId)}`;
+  },
+  getLinkText(link) {
+    if (
+      link.ref ||
+      link.target.data.parentRef === link.source.data.meta.linkHash
+    ) {
+      return 'reference';
+    }
     return (
-      node.target.data.link.meta.action +
+      link.target.data.link.meta.action +
       (this.withArgs
-        ? `(${node.target.data.link.meta.arguments.join(', ')})`
+        ? `(${link.target.data.link.meta.arguments.join(', ')})`
         : '')
     );
   },
@@ -59,18 +68,21 @@ export const defaultOptions = {
 };
 
 export default class ChainTreeBuilder {
-  constructor(element) {
-    this.chainTree = new ChainTree(element);
+  constructor(element, options) {
+    this.options = Object.assign(defaultOptions, options);
+    this.chainTree = new ChainTree(element, this.options);
   }
 
-  build(map, options) {
-    this.onTag = options.onTag;
+  build(map) {
+    this.options = Object.assign(this.options, {
+      agentUrl: map.agentUrl
+    });
     if (map.id && map.agentUrl && map.process) {
-      return load(map).then(segments => this.display(segments, options));
+      return load(map).then(segments => this.display(segments));
     } else if (map.chainscript && map.chainscript.length) {
       try {
         return resolveLinks(wrap(parseIfJson(map.chainscript))).then(segments =>
-          this.display(segments, options)
+          this.display(segments)
         );
       } catch (err) {
         return Promise.reject(err);
@@ -79,16 +91,13 @@ export default class ChainTreeBuilder {
     return Promise.resolve();
   }
 
-  display(segments, options) {
-    this.chainTree.display(
-      segments,
-      Object.assign({}, defaultOptions, options)
-    );
+  display(segments) {
+    this.chainTree.display(segments);
     this.notifyTags(segments);
     return segments;
   }
 
   notifyTags(chainscript) {
-    tagsSet(chainscript).forEach(this.onTag);
+    tagsSet(chainscript).forEach(this.options.onTag);
   }
 }
