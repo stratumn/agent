@@ -20,7 +20,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import error from './error';
 import parseArgs from './parseArgs';
-import memorystore from './memoryStore';
+import storeHttpClient from './storeHttpClient';
+import fossilizerHttpClient from './fossilizerHttpClient';
 
 /**
  * Creates an HTTP server for an agent.
@@ -64,36 +65,74 @@ export default function httpServer(agent, opts = {}) {
    * setup to restrict access to this API.
    */
   if (opts.enableProcessUpload) {
-    app.post('/:process/upload', (req, res) => {
+    const parseProcessActions = actions => {
+      const processActionsModule = new module.constructor();
+      /* eslint-disable no-underscore-dangle */
+      processActionsModule._compile(
+        Buffer.from(actions, 'base64').toString(),
+        '' // this parameter is actually required (undefined isn't accepted)
+      );
+      /* eslint-enable no-underscore-dangle */
+      return processActionsModule.exports;
+    };
+
+    const validateProcessUpload = req => {
       const err = new Error();
       err.status = 400;
 
-      if (!req.body.script) {
-        err.message = 'missing script';
+      if (!req.body.actions) {
+        err.message = 'missing actions';
         throw err;
       }
 
-      let exported;
+      if (!req.body.store || !req.body.store.url) {
+        err.message = 'missing store url';
+        throw err;
+      }
+
+      let processActions;
       try {
-        const processModule = new module.constructor();
-        /* eslint-disable no-underscore-dangle */
-        processModule._compile(
-          Buffer.from(req.body.script, 'base64').toString(),
-          '' // this parameter is actually required (undefined isn't accepted)
-        );
-        /* eslint-enable no-underscore-dangle */
-        exported = processModule.exports;
+        processActions = parseProcessActions(req.body.actions);
       } catch (e) {
-        err.message = 'invalid script';
+        console.error(`upload process: ${e}`);
+        err.message = 'invalid actions';
         throw err;
       }
 
-      if (!exported.init || typeof exported.init !== 'function') {
+      if (!processActions.init || typeof processActions.init !== 'function') {
         err.message = 'missing init function';
         throw err;
       }
 
-      agent.addProcess(req.params.process, exported, memorystore(), null);
+      return processActions;
+    };
+
+    const getStore = store => storeHttpClient(store.url);
+
+    const getFossilizers = reqFossilizers => {
+      let fossilizers = [];
+      if (reqFossilizers) {
+        fossilizers = reqFossilizers
+          .map(f => {
+            if (f.url) {
+              return fossilizerHttpClient(f.url);
+            }
+
+            console.error('Fossilizer is missing url. Skipping...');
+            return null;
+          })
+          .filter(f => f !== null);
+      }
+
+      return fossilizers;
+    };
+
+    app.post('/:process/upload', (req, res) => {
+      const processActions = validateProcessUpload(req);
+      const store = getStore(req.body.store);
+      const fossilizers = getFossilizers(req.body.fossilizers);
+
+      agent.addProcess(req.params.process, processActions, store, fossilizers);
 
       return res.json(agent.getAllProcesses());
     });

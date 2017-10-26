@@ -97,7 +97,7 @@ describe('HttpServer()', () => {
   });
 
   describe('POST "/<process>/upload"', () => {
-    const validEncodedScript = Buffer.from(
+    const validEncodedActions = Buffer.from(
       'module.exports = { ' +
         'init: function(title) {' +
         'if (!title) {' +
@@ -117,16 +117,25 @@ describe('HttpServer()', () => {
       serverWithProcessUpload = agent.httpServer({ enableProcessUpload: true });
     });
 
+    const createRequest = (
+      encodedActions = validEncodedActions,
+      store = { url: 'http://localhost:5000' },
+      fossilizers = []
+    ) => ({
+      actions: encodedActions,
+      store: store,
+      fossilizers: fossilizers
+    });
+
     const uploadProcessAndValidate = (
       testServer,
-      encodedScript,
+      request,
       validate,
       processName = 'newProcess'
     ) => {
-      const newProcess = { script: encodedScript };
       const req = supertest(testServer)
         .post(`/${processName}/upload`)
-        .send(newProcess);
+        .send(request);
 
       return testFn(req, (err, res) => {
         if (err) {
@@ -138,14 +147,14 @@ describe('HttpServer()', () => {
     };
 
     it('is disabled by default', () =>
-      uploadProcessAndValidate(server, validEncodedScript, res => {
+      uploadProcessAndValidate(server, createRequest(), res => {
         res.status.should.be.exactly(404);
       }));
 
     it('adds a new process and returns the updated list of processes', () =>
       uploadProcessAndValidate(
         serverWithProcessUpload,
-        validEncodedScript,
+        createRequest(),
         res => {
           res.status.should.be.exactly(200);
           const processes = res.body;
@@ -155,11 +164,43 @@ describe('HttpServer()', () => {
         'hot'
       ));
 
-    it('rejects process with missing script', () =>
-      uploadProcessAndValidate(serverWithProcessUpload, '', res => {
-        res.status.should.be.exactly(400);
-        res.body.error.should.be.exactly('missing script');
-      }));
+    it('supports store and fossilizers', () => {
+      const request = createRequest(
+        validEncodedActions,
+        { url: 'http://store:5000' },
+        [
+          {
+            url: 'http://fossilizer:6000'
+          },
+          {
+            url: 'http://fossilizer:6001'
+          }
+        ]
+      );
+
+      return uploadProcessAndValidate(
+        serverWithProcessUpload,
+        request,
+        res => {
+          res.status.should.be.exactly(200);
+          const newProcess = res.body.find(p => p.name === 'withStore');
+          newProcess.should.not.be.empty();
+          newProcess.storeClient.should.not.be.empty();
+          newProcess.fossilizerClients.length.should.be.exactly(2);
+        },
+        'withStore'
+      );
+    });
+
+    it('rejects process with missing actions', () =>
+      uploadProcessAndValidate(
+        serverWithProcessUpload,
+        createRequest(''),
+        res => {
+          res.status.should.be.exactly(400);
+          res.body.error.should.be.exactly('missing actions');
+        }
+      ));
 
     it('rejects process with no exported init function', () => {
       const missingFunctions = Buffer.from(
@@ -168,7 +209,7 @@ describe('HttpServer()', () => {
 
       return uploadProcessAndValidate(
         serverWithProcessUpload,
-        missingFunctions,
+        createRequest(missingFunctions),
         res => {
           res.status.should.be.exactly(400);
           res.body.error.should.be.exactly('missing init function');
@@ -176,16 +217,24 @@ describe('HttpServer()', () => {
       );
     });
 
-    it('rejects process with invalid script', () => {
-      const invalidScript = 'this is definitely not a valid script';
+    it('rejects process with invalid actions script', () => {
+      const invalidActions = 'this is definitely not a valid script';
       return uploadProcessAndValidate(
         serverWithProcessUpload,
-        invalidScript,
+        createRequest(invalidActions),
         res => {
           res.status.should.be.exactly(400);
-          res.body.error.should.be.exactly('invalid script');
+          res.body.error.should.be.exactly('invalid actions');
         }
       );
+    });
+
+    it('rejects process with missing store configuration', () => {
+      const request = createRequest(validEncodedActions, { url: '' });
+      return uploadProcessAndValidate(serverWithProcessUpload, request, res => {
+        res.status.should.be.exactly(400);
+        res.body.error.should.be.exactly('missing store url');
+      });
     });
   });
 

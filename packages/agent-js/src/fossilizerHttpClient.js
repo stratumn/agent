@@ -22,22 +22,15 @@ import handleResponse from './handleResponse';
  * @param {string} url - the base URL of the fossilizer
  * @param {object} [opts] - options
  * @param {function} [opts.callbackUrl] - builds a URL that will be called with the evidence
- * @param {string} [opts.name] - the name of the fossilizer
  * @returns {Client} a fossilizer HTTP client
  */
 export default function fossilizerHttpClient(url, opts = {}) {
-  if (
-    !fossilizerHttpClient.availableFossilizers.find(
-      fossilizer => fossilizer.url === url
-    )
-  ) {
-    fossilizerHttpClient.availableFossilizers.push({
-      name: opts.name,
-      url: url
-    });
+  // If we already have an existing fossilizer for that url, re-use it
+  if (fossilizerHttpClient.availableFossilizers[url]) {
+    return fossilizerHttpClient.availableFossilizers[url];
   }
 
-  return {
+  const fossilizerClient = {
     /**
      * Gets information about the fossilizer.
      * @returns {Promise} a promise that resolve with the information
@@ -81,16 +74,22 @@ export default function fossilizerHttpClient(url, opts = {}) {
       });
     }
   };
+
+  fossilizerHttpClient.availableFossilizers[url] = fossilizerClient;
+
+  return fossilizerClient;
 }
 
-fossilizerHttpClient.availableFossilizers = [];
+fossilizerHttpClient.availableFossilizers = {};
 
 /**
  * Returns basic information about the fossilizer HTTP clients that have been created.
- * @returns {Array} an array of fossilizer HTTP clients basic information
+ * @returns {Array} an array of fossilizer HTTP clients basic information (currently only url).
  */
 export function getAvailableFossilizers() {
-  return JSON.parse(JSON.stringify(fossilizerHttpClient.availableFossilizers));
+  return Object.keys(fossilizerHttpClient.availableFossilizers).map(url => ({
+    url
+  }));
 }
 
 /**
@@ -98,5 +97,5 @@ export function getAvailableFossilizers() {
  * Should only be used for tests setup.
  */
 export function clearAvailableFossilizers() {
-  fossilizerHttpClient.availableFossilizers = [];
+  fossilizerHttpClient.availableFossilizers = {};
 }

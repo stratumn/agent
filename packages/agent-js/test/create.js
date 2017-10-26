@@ -63,25 +63,21 @@ describe('Agent', () => {
     });
 
     it('returns a Promise resolving with information about the existing fossilizers', () => {
-      fossilizerHttpClient('http://fossilizer:6000', {
-        name: 'dummyfossilizer'
-      });
+      fossilizerHttpClient('http://fossilizer:6000');
 
       return agent.getInfo().then(infos => {
         infos.fossilizers.should.be.an.Object();
         infos.fossilizers.length.should.be.exactly(1);
-        infos.fossilizers[0].name.should.be.exactly('dummyfossilizer');
         infos.fossilizers[0].url.should.be.exactly('http://fossilizer:6000');
       });
     });
 
     it('returns a Promise resolving with information about the existing stores', () => {
-      storeHttpClient('http://store:5000', { name: 'tmstore' });
+      storeHttpClient('http://store:5000');
 
       return agent.getInfo().then(infos => {
         infos.stores.should.be.an.Object();
         infos.stores.length.should.be.exactly(1);
-        infos.stores[0].name.should.be.exactly('tmstore');
         infos.stores[0].url.should.be.exactly('http://store:5000');
       });
     });

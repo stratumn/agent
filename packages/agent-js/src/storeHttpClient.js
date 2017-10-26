@@ -31,16 +31,12 @@ import handleResponse from './handleResponse';
  *   - 'didSave': a segment was saved
  *
  * @param {string} url - the base URL of the store
- * @param {object} [opt] - options
- * @param {string} [opt.name] - the name of the store
  * @returns {Client} a store HTTP client
  */
-export default function storeHttpClient(url, opt = {}) {
-  if (!storeHttpClient.availableStores.find(store => store.url === url)) {
-    storeHttpClient.availableStores.push({
-      name: opt.name,
-      url: url
-    });
+export default function storeHttpClient(url) {
+  // If we already have an existing store for that url, re-use it
+  if (storeHttpClient.availableStores[url]) {
+    return storeHttpClient.availableStores[url];
   }
 
   // Web socket URL.
@@ -69,7 +65,7 @@ export default function storeHttpClient(url, opt = {}) {
     });
   }
 
-  return Object.assign(emitter, {
+  const storeClient = Object.assign(emitter, {
     /**
      * Gets information about the store.
      * @returns {Promise} a promise that resolve with the information
@@ -189,16 +185,20 @@ export default function storeHttpClient(url, opt = {}) {
       });
     }
   });
+
+  storeHttpClient.availableStores[url] = storeClient;
+
+  return storeClient;
 }
 
-storeHttpClient.availableStores = [];
+storeHttpClient.availableStores = {};
 
 /**
  * Returns basic information about the store HTTP clients that have been created.
- * @returns {Array} an array of store HTTP clients basic information
+ * @returns {Array} an array of store HTTP clients basic information (currently only url).
  */
 export function getAvailableStores() {
-  return JSON.parse(JSON.stringify(storeHttpClient.availableStores));
+  return Object.keys(storeHttpClient.availableStores).map(url => ({ url }));
 }
 
 /**
@@ -206,5 +206,5 @@ export function getAvailableStores() {
  * Should only be used for tests setup.
  */
 export function clearAvailableStores() {
-  storeHttpClient.availableStores = [];
+  storeHttpClient.availableStores = {};
 }
