@@ -57,4 +57,18 @@ describe('<ProcessInfoPage />', () => {
     expect(processInfoPage.find('div').contains('agent007')).to.be.true;
     expect(processInfoPage.find('div').contains('warehouse42')).to.be.true;
   });
+
+  it('displays process actions', () => {
+    const process = new TestProcessBuilder('warehouse42')
+      .withAction('login', ['name', 'password'])
+      .withAction('logout', [])
+      .build();
+    const processInfoPage = shallow(<ProcessInfoPage process={process} />);
+
+    expect(processInfoPage.find('li')).to.have.length(2);
+    console.log(processInfoPage.debug());
+    expect(processInfoPage.find('li').contains('login(name, password)')).to.be
+      .true;
+    expect(processInfoPage.find('li').contains('logout()')).to.be.true;
+  });
 });

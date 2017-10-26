@@ -3,6 +3,19 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+const formatAction = (name, args) => {
+  let action = `${name}(`;
+  const argsCount = (args || []).length;
+  for (let i = 0; i < argsCount; i += 1) {
+    action += args[i];
+    if (i !== argsCount - 1) {
+      action += ', ';
+    }
+  }
+  action += ')';
+  return action;
+};
+
 export const ProcessInfoPage = ({ agent, process }) => {
   if (!process) {
     return (
@@ -14,8 +27,20 @@ export const ProcessInfoPage = ({ agent, process }) => {
 
   return (
     <div>
-      <div>Agent name: {agent}</div>
-      <div>Process name: {process.name}</div>
+      <div>
+        <h1>Agent name: {agent}</h1>
+      </div>
+      <div>
+        <h2>Process name: {process.name}</h2>
+      </div>
+      <div>
+        <h3>Actions</h3>
+        <ul>
+          {Object.keys(process.actions || []).map(a => (
+            <li key={a}>{formatAction(a, process.actions[a].args)}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
