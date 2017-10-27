@@ -33,7 +33,7 @@ export const ContentPage = () => (
       path="/:agent/:process/segments"
       component={ProcessSegmentsPage}
     />
-    <Route exact path="/:agent/:process/map/:id" component={MapPage} />
+    <Route exact path="/:agent/:process/maps/:id" component={MapPage} />
     <Route exact path="/:agent/:process/segment/:id" component={SegmentPage} />
   </div>
 );

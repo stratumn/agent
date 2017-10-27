@@ -9,6 +9,7 @@ import { expect } from 'chai';
 import { ContentPage } from './contentPage';
 import { AgentsPage } from './agentsPage';
 import { AgentInfoPage } from './agentInfoPage';
+import { MapPage } from './mapPage';
 
 describe('<ContentPage />', () => {
   const mockStore = configureStore();
@@ -38,5 +39,17 @@ describe('<ContentPage />', () => {
 
     expect(agentInfoPage.find(AgentsPage)).to.have.length(0);
     expect(agentInfoPage.find(AgentInfoPage)).to.have.length(1);
+  });
+
+  it('renders the <MapPage /> if route contains a map id', () => {
+    const mapPage = mount(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/agent/process/maps/mapId']}>
+          <ContentPage />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    expect(mapPage.find(MapPage)).to.have.length(1);
   });
 });

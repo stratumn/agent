@@ -150,7 +150,7 @@ class MapExplorer extends Component {
         case 'Evidence':
           segmentContent = (
             <div style={evidencesContent}>
-              {segment.meta.evidences.map(e => renderEvidence(e))}
+              {(segment.meta.evidences || []).map(e => renderEvidence(e))}
             </div>
           );
           break;
