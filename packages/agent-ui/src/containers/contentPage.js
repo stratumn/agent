@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { withRouter, Route } from 'react-router-dom';
 
 import {
@@ -38,10 +37,4 @@ export const ContentPage = () => (
   </div>
 );
 
-function mapStateToProps(state, ownProps) {
-  console.log('ContentPage state', state);
-  console.log('ContentPage ownProps', ownProps);
-  return {};
-}
-
-export default withRouter(connect(mapStateToProps)(ContentPage));
+export default withRouter(ContentPage);
