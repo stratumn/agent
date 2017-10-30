@@ -3,7 +3,9 @@ import { statusTypes } from './';
 
 const extractProcess = process => ({
   name: process.name,
-  actions: process.processInfo.actions
+  actions: process.processInfo.actions,
+  store: process.storeInfo ? process.storeInfo.adapter : {},
+  fossilizers: (process.fossilizersInfo || []).map(f => f.adapter)
 });
 
 const extractProcesses = agent => {
