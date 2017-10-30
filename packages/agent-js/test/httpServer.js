@@ -19,6 +19,7 @@ import supertest from 'supertest';
 import create from '../src/create';
 import memoryStore from '../src/memoryStore';
 import hashJson from '../src/hashJson';
+import plugins from '../src/plugins';
 import generateSecret from '../src/generateSecret';
 import actions from './utils/basicActions';
 
@@ -120,11 +121,13 @@ describe('HttpServer()', () => {
     const createRequest = (
       encodedActions = validEncodedActions,
       store = { url: 'http://localhost:5000' },
-      fossilizers = []
+      fossilizers = [],
+      pluginIds = []
     ) => ({
       actions: encodedActions,
       store: store,
-      fossilizers: fossilizers
+      fossilizers: fossilizers,
+      plugins: pluginIds.map(id => ({ id }))
     });
 
     const uploadProcessAndValidate = (
@@ -189,6 +192,32 @@ describe('HttpServer()', () => {
           newProcess.fossilizerClients.length.should.be.exactly(2);
         },
         'withStore'
+      );
+    });
+
+    it('supports plugin configuration', () => {
+      // Setup some initial plugins on the agent
+      agent.addProcess('initialPlugins', actions, memoryStore(), null, {
+        plugins: [plugins.stateHash, plugins.localTime]
+      });
+
+      const request = createRequest(
+        validEncodedActions,
+        { url: 'localhost:5000' },
+        [],
+        ['2'] /* plugin ids start at 1 - id=2 is localTime here */
+      );
+
+      return uploadProcessAndValidate(
+        serverWithProcessUpload,
+        request,
+        res => {
+          res.status.should.be.exactly(200);
+          const newProcess = res.body.find(p => p.name === 'withPlugins');
+          newProcess.plugins.length.should.be.exactly(1);
+          newProcess.plugins[0].name.should.be.exactly(plugins.localTime.name);
+        },
+        'withPlugins'
       );
     });
 

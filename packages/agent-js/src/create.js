@@ -30,6 +30,8 @@ import { getAvailableStores } from './storeHttpClient';
 export default function create(options) {
   const processes = Object();
   const storeClients = [];
+  const activePlugins = {};
+  let activePluginsCount = 0;
 
   function connectStoreClient(storeClient, reconnectTimeout = 5000) {
     storeClients.push(storeClient);
@@ -65,6 +67,22 @@ export default function create(options) {
     fossilizerClients,
     opts
   ) {
+    // Store active plugins for re-use
+    if (opts.plugins) {
+      opts.plugins.map(plugin => {
+        // We don't want to re-add the exact same plugin instance twice
+        if (
+          Object.keys(activePlugins).find(id => plugin === activePlugins[id])
+        ) {
+          return activePluginsCount;
+        }
+
+        activePluginsCount += 1;
+        activePlugins[activePluginsCount] = plugin;
+        return activePluginsCount;
+      });
+    }
+
     const updatedOpts = Object.assign(opts, options);
     const p = new Process(
       processName,
@@ -81,6 +99,10 @@ export default function create(options) {
   }
 
   return {
+    getActivePlugins() {
+      return activePlugins;
+    },
+
     /**
     * Gets information about each process created by the agent.
     * @returns {Promise} - a promise resolving with the processes' info (indexed by process name)
@@ -97,7 +119,12 @@ export default function create(options) {
         .then(map => ({
           processes: map,
           stores: getAvailableStores(),
-          fossilizers: getAvailableFossilizers()
+          fossilizers: getAvailableFossilizers(),
+          plugins: Object.keys(activePlugins).map(plugin => ({
+            id: plugin,
+            name: activePlugins[plugin].name,
+            description: activePlugins[plugin].description
+          }))
         }));
     },
 
