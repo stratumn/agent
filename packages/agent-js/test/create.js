@@ -81,6 +81,40 @@ describe('Agent', () => {
         infos.stores[0].url.should.be.exactly('http://store:5000');
       });
     });
+
+    it('returns the list of indexed active plugins', () => {
+      agent.addProcess('plugins1', actions, memoryStore(), null, {
+        plugins: [plugins.stateHash, plugins.agentUrl('http://localhost:3000')]
+      });
+      agent.addProcess('plugins2', actions, memoryStore(), null, {
+        plugins: [plugins.localTime]
+      });
+
+      return agent.getInfo().then(infos => {
+        infos.plugins.should.be.an.Array();
+        infos.plugins.length.should.be.exactly(3);
+        infos.plugins[2].should.eql({
+          id: '3',
+          name: plugins.localTime.name,
+          description: plugins.localTime.description
+        });
+      });
+    });
+
+    it('does not store duplicate plugin instances', () => {
+      // Since plugins.stateHash doesn't take arguments, both processes will share the same first plugin
+      agent.addProcess('plugins1', actions, memoryStore(), null, {
+        plugins: [plugins.stateHash, plugins.agentUrl('http://localhost:3000')]
+      });
+      agent.addProcess('plugins2', actions, memoryStore(), null, {
+        plugins: [plugins.stateHash, plugins.agentUrl('http://localhost:3001')]
+      });
+
+      return agent.getInfo().then(infos => {
+        infos.plugins.should.be.an.Array();
+        infos.plugins.length.should.be.exactly(3);
+      });
+    });
   });
 
   describe('#addProcess', () => {

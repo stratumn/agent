@@ -127,12 +127,26 @@ export default function httpServer(agent, opts = {}) {
       return fossilizers;
     };
 
+    const getPlugins = reqPlugins => {
+      const activePlugins = agent.getActivePlugins();
+      if (!activePlugins || !reqPlugins) {
+        return [];
+      }
+
+      return reqPlugins
+        .filter(({ id }) => activePlugins[id])
+        .map(({ id }) => activePlugins[id]);
+    };
+
     app.post('/:process/upload', (req, res) => {
       const processActions = validateProcessUpload(req);
       const store = getStore(req.body.store);
       const fossilizers = getFossilizers(req.body.fossilizers);
+      const plugins = getPlugins(req.body.plugins);
 
-      agent.addProcess(req.params.process, processActions, store, fossilizers);
+      agent.addProcess(req.params.process, processActions, store, fossilizers, {
+        plugins: plugins
+      });
 
       return res.json(agent.getAllProcesses());
     });
