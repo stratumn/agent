@@ -62,16 +62,11 @@ AgentsPage.propTypes = {
 
 export function mapStateToProps(state) {
   const agents = Object.keys(state.agents || [])
-    .map(a => {
-      if (state.agents[a].status === statusTypes.LOADED) {
-        return {
-          name: a,
-          url: state.agents[a].url
-        };
-      }
-      return null;
-    })
-    .filter(a => a);
+    .filter(a => state.agents[a].status === statusTypes.LOADED)
+    .map(a => ({
+      name: a,
+      url: state.agents[a].url
+    }));
 
   return {
     agents
