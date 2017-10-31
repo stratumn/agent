@@ -2,13 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { TopBar, LeftNavigation, ContentPage } from './';
+import { TopBar, LeftNavigation, ContentPage, CreateMapDialog } from './';
 
 export const App = () => (
   <div>
     <TopBar />
     <LeftNavigation />
     <ContentPage />
+    <CreateMapDialog />
   </div>
 );
 
