@@ -52,6 +52,14 @@ describe('<CreateMapDialog />', () => {
     expect(createMapSpy.getCall(0).args[0]).to.equal('maps are awesome');
   });
 
+  it('does not create a new map if title is missing', () => {
+    const createMapSpy = sinon.spy();
+    const dialog = mount(<CreateMapDialog show createMap={createMapSpy} />);
+
+    dialog.find('form').simulate('submit');
+    expect(createMapSpy.callCount).to.equal(0);
+  });
+
   it('displays error message if creating map fails', () => {
     const dialog = shallow(<CreateMapDialog show error="Invalid title" />);
     expect(dialog.find('.error')).to.have.length(1);
