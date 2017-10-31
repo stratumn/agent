@@ -4,6 +4,7 @@ export const actionTypes = _actionTypes;
 
 export { default as getAgent } from './getAgent';
 export { default as getMapIds } from './getMapIds';
+export { default as getSegment, getSegmentSuccess } from './getSegment';
 export { default as getSegments } from './getSegments';
 export {
   createMap,
