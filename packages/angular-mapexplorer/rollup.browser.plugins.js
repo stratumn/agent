@@ -15,6 +15,7 @@ module.exports = [
     Object.assign(
       {
         exclude: [
+          'vendor/*',
           'node_modules/**',
           '../mapexplorer-core/node_modules/**',
           '../agent-client-js/node_modules/**'
@@ -25,9 +26,7 @@ module.exports = [
   ),
   builtins(),
   nodeResolve({
-    jsnext: true,
     browser: true,
-    preferBuiltins: true,
     externals: [
       'angular',
       'angular-animate',
