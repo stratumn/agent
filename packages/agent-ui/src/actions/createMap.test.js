@@ -1,0 +1,106 @@
+import * as StratumnAgentClient from 'stratumn-agent-client';
+
+import chai, { expect } from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
+
+import {
+  createMap,
+  openCreateMapDialog,
+  closeCreateMapDialog
+} from './createMap';
+import { actionTypes } from '../actions';
+
+chai.use(sinonChai);
+
+describe('openCreateMapDialog action', () => {
+  it('contains agent and process names', () => {
+    const action = openCreateMapDialog('a', 'p');
+    expect(action).to.deep.equal({
+      type: actionTypes.CREATE_MAP_DIALOG_OPEN,
+      agent: 'a',
+      process: 'p'
+    });
+  });
+});
+
+describe('closeCreateMapDialog action', () => {
+  it('clears agent and process names', () => {
+    const action = closeCreateMapDialog();
+    expect(action).to.deep.equal({
+      type: actionTypes.CREATE_MAP_DIALOG_CLOSE
+    });
+  });
+});
+
+describe('createMap action', () => {
+  let stratumnClientStub;
+  let createMapStub;
+  let dispatchSpy;
+  let getStateStub;
+
+  beforeEach(() => {
+    dispatchSpy = sinon.spy();
+
+    createMapStub = sinon.stub();
+    stratumnClientStub = sinon.stub(StratumnAgentClient, 'getAgent');
+    stratumnClientStub.resolves({
+      getProcess: () => ({
+        createMap: createMapStub
+      })
+    });
+
+    getStateStub = sinon.stub();
+    getStateStub.returns({
+      agents: { a: { url: '' } },
+      createMap: {
+        dialog: {
+          show: true,
+          agent: 'a',
+          process: 'p'
+        }
+      }
+    });
+  });
+
+  afterEach(() => {
+    stratumnClientStub.restore();
+  });
+
+  const verifyDispatchedActions = expectedActionTypes => {
+    expect(dispatchSpy.callCount).to.equal(expectedActionTypes.length);
+    for (let i = 0; i < expectedActionTypes.length; i += 1) {
+      expect(dispatchSpy.getCall(i).args[0].type).to.equal(
+        expectedActionTypes[i]
+      );
+    }
+  };
+
+  it('dispatches a failure action on failure', () => {
+    createMapStub.rejects('Unreachable');
+
+    return createMap('i will fail')(dispatchSpy, getStateStub).then(() => {
+      verifyDispatchedActions([
+        actionTypes.CREATE_MAP_REQUEST,
+        actionTypes.CREATE_MAP_FAILURE
+      ]);
+    });
+  });
+
+  it('closes dialog on success', () => {
+    createMapStub.resolves({});
+
+    return createMap('a new map')(dispatchSpy, getStateStub).then(() => {
+      expect(getStateStub.callCount).to.equal(1);
+
+      expect(createMapStub.getCall(0).args[0]).to.equal('a new map');
+      expect(createMapStub.callCount).to.equal(1);
+
+      verifyDispatchedActions([
+        actionTypes.CREATE_MAP_REQUEST,
+        actionTypes.CREATE_MAP_SUCCESS,
+        actionTypes.CREATE_MAP_DIALOG_CLOSE
+      ]);
+    });
+  });
+});

@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, NavLink } from 'react-router-dom';
+import { withRouter, NavLink, Route } from 'react-router-dom';
+
+import { CreateMapButton } from './';
 
 const renderTopBarLinks = path => {
   const parts = path.split('/').filter(p => p);
@@ -32,7 +34,12 @@ export const TopBar = ({ path }) => {
     return <div style={style}>Welcome to the Indigo Framework UI</div>;
   }
 
-  return <div style={style}>{renderTopBarLinks(path)}</div>;
+  return (
+    <div style={style}>
+      {renderTopBarLinks(path)}
+      <Route exact path="/:agent/:process/maps" component={CreateMapButton} />
+    </div>
+  );
 };
 
 TopBar.propTypes = {
