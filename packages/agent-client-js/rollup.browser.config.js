@@ -5,9 +5,7 @@ import config from './rollup.base.config';
 
 config.plugins.push(
   nodeResolve({
-    jsnext: true,
-    browser: true,
-    preferBuiltins: true
+    browser: true
   }),
   commonjs({
     namedExports: {
@@ -18,7 +16,7 @@ config.plugins.push(
 
 config.output = {
   format: 'umd',
-  file: 'dist/stratumn-agent-client.js',
+  file: 'dist/stratumn-agent-client.js'
 };
 
 export default config;
