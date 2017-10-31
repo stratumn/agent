@@ -14,88 +14,26 @@
   limitations under the License.
 */
 
-import { tree, hierarchy } from "d3-hierarchy";
-import { transition } from "d3-transition";
-import { easeLinear } from "d3-ease";
-import { select, selectAll, event } from "d3-selection";
-import { zoom } from "d3-zoom";
-import { max } from "d3-array";
-import { makeLink, finalLink, translate } from "./treeUtils";
-import parseChainscript from "./parseChainscript";
+import { tree } from 'd3-hierarchy';
+import { transition } from 'd3-transition';
+import { easeLinear } from 'd3-ease';
+import { select, selectAll, event } from 'd3-selection';
+import { zoom } from 'd3-zoom';
+import { max } from 'd3-array';
+import { makeLink, finalLink, translate } from './treeUtils';
+import parseChainscript from './parseChainscript';
+import { findExtraLinks, findExtraNodes, loadRef } from './Nodes';
 
 const margin = { top: 20, right: 120, bottom: 20, left: 120 };
 const height = 800 - margin.top - margin.bottom;
-
-function findNodeRefs(node) {
-  let refs = [];
-  if (node.children) {
-    for (let i = 0; i < node.children.length; i += 1) {
-      refs = refs.concat(findNodeRefs(node.children[i]));
-    }
-  }
-  if (node.data.link.meta.refs) {
-    return refs.concat(
-      node.data.link.meta.refs.map(r => ({
-        source: r.linkHash,
-        target: node.id
-      }))
-    );
-  }
-  return refs;
-}
-
-function findExtraLinks(root) {
-  const extraLinks = [];
-  const nodes = root.descendants();
-  const refs = findNodeRefs(root);
-  for (let i = 0; i < refs.length; i += 1) {
-    const source = nodes.find(e => e.id === refs[i].source);
-    const target = nodes.find(e => e.id === refs[i].target);
-    if (source && target) {
-      extraLinks.push({ source, target });
-    } else if (!source) {
-      let newSourceNode = extraLinks
-        .map(l => l.source.data)
-        .find(s => s.meta.linkHash === refs[i].source);
-      if (!newSourceNode) {
-        newSourceNode = hierarchy(
-          {
-            meta: {
-              linkHash: refs[i].source
-            }
-          },
-          () => null
-        );
-      }
-      extraLinks.push({
-        source: Object.assign(newSourceNode, { id: refs[i].source }),
-        target
-      });
-    }
-  }
-
-  return extraLinks;
-}
-
-function findExtraNodes(links, nodes) {
-  const extraNodes = [];
-  links.map(l => {
-    if (!nodes.find(n => n.id === l.source.id)) {
-      extraNodes.push(l.source);
-    }
-    return l;
-  });
-  return extraNodes;
-}
 
 export default class ChainTree {
   constructor(element) {
     this.tree = tree();
 
-    this.svg = select(element).append("svg");
-    this.innerG = this.svg.append("g");
-
-    this.zoomed = () => this.innerG.attr("transform", event.transform);
+    this.svg = select(element).append('svg');
+    this.innerG = this.svg.append('g');
+    this.zoomed = () => this.innerG.attr('transform', event.transform);
   }
 
   display(chainscript, options) {
@@ -110,57 +48,145 @@ export default class ChainTree {
 
   update(root, options) {
     const self = this;
-    const polygon = options.polygonSize;
     const nodes = root ? root.descendants() : [];
-    const links = root ? root.links() : [];
-    const extraLinks = findExtraLinks(root);
-    const extraNodes = findExtraNodes(extraLinks, nodes).map((n, index) => {
-      return Object.assign(n, {
+
+    const links = (root ? root.links() : []).concat(findExtraLinks(root));
+    const extraNodes = findExtraNodes(links, nodes).map((n, index) =>
+      Object.assign(n, {
         x:
-          polygon.height / 2 +
-          index * (polygon.height * options.verticalSpacing),
-        y: 0
-      });
-    });
-    console.log(
-      "RESULT LINKS == ",
-      extraLinks,
-      "\nRESULT NODES ==",
-      extraNodes,
-      "\nBASE NODES == ",
-      nodes
-    );
-    const maxDepth = max(nodes, x => x.depth) || 0;
-    const computedWidth = Math.max(
-      (maxDepth + 1) * (polygon.width + options.getArrowLength()),
-      500
+          options.polygonSize.height / 2 +
+          options.titleHeight +
+          index * (options.polygonSize.height * options.verticalSpacing),
+        y: options.getArrowLength(),
+        y0: 0
+      })
     );
 
+    // init tree
+    this.initTree(root, extraNodes, options);
+
+    // draw links
+    this.displayCurrentMapLinks(links);
+
+    // Update the nodes...
+    const node = this.innerG
+      .selectAll('g.node.base')
+      .data(nodes, function key(d) {
+        return d ? d.id : this.id;
+      });
+    // Enter any new nodes at the parent's previous position.
+    const nodeSelection = node
+      .enter()
+      .append('g')
+      .attr('class', d => ['node base'].concat(d.data.link.meta.tags).join(' '))
+      .attr('id', d => d.id)
+      .attr('transform', d => {
+        const origin = d.parent && d.parent.x0 ? d.parent : root;
+        return translate(origin.x0, origin.y0);
+      })
+      .on('click', function onClick(d) {
+        selectAll('g.node').classed('selected', false);
+        select(this).classed('selected', true);
+        if (d.data.link.meta.refs) {
+          self.displayNodeLinks(d, links);
+        } else {
+          self.displayCurrentMapLinks(links);
+        }
+        if (d.data.isRef) {
+          self.drawForeignChildRef(d, links);
+        }
+        options.onclick(
+          d,
+          () => {
+            self.displayCurrentMapLinks(links);
+            self.innerG.selectAll('g.node.selected').classed('selected', false);
+          },
+          this
+        );
+      });
+    // Draw nodes
+    this.drawNodes(nodeSelection);
+    // Transition all exiting nodes to the parent's new position.
+    const nodeExit = node.exit(); // .transition(treeTransition);
+    nodeExit.select('text').style('fill-opacity', 1e-6);
+    nodeExit.attr('transform', () => translate(0, 0)).remove();
+
+    // Update the extra nodes...
+    const extraNode = this.innerG
+      .selectAll('g.node.ref')
+      .data(extraNodes, function key(d) {
+        return d ? d.id : this.id;
+      });
+    // Enter any extra nodes at the parent's previous position.
+    const extraNodeSelection = extraNode
+      .enter()
+      .append('g')
+      .attr('class', () => 'node ref')
+      .attr('id', d => d.id)
+      .attr('transform', d => translate(d.x, d.y))
+      .on('click', function onClick(d) {
+        selectAll('g.node').classed('selected', false);
+        select(this).classed('selected', true);
+        self.displayNodeLinks(d, links);
+        self.drawAncestorsRef(d, links);
+        options.onclick(
+          d,
+          () => {
+            self.displayCurrentMapLinks(links);
+            self.innerG.selectAll('g.node.selected').classed('selected', false);
+          },
+          this
+        );
+      });
+    // Draw extra nodes
+    this.drawNodes(extraNodeSelection);
+    // Transition all exiting nodes to the parent's new position.
+    const extraNodeExit = extraNode.exit(); // .transition(treeTransition);
+    extraNodeExit.select('text').style('fill-opacity', 1e-6);
+    extraNodeExit.attr('transform', () => translate(0, 0)).remove();
+
+    // Draw init link
+    this.drawInit(root);
+
+    // Draw foreign child references
+    nodes
+      .filter(n => n.data.isRef === true)
+      .each(n => this.drawForeignChildRef(n, links));
+  }
+
+  initTree(root, extraNodes, options) {
+    const nodes = root ? root.descendants() : [];
+    const polygon = options.polygonSize;
+    const maxDepth = max(nodes, x => x.depth) || 0;
+    const treeWidth =
+      maxDepth * (polygon.width + options.getArrowLength()) +
+      options.getArrowLength();
+    const extraNodesWidth = extraNodes.length
+      ? options.getArrowLength() * 3
+      : 0;
+    const computedWidth = Math.max(
+      treeWidth + extraNodesWidth + options.getArrowLength() * 4,
+      500
+    );
     const branchesCount = nodes.reduce(
       (pre, cur) =>
         pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0),
       1
     );
     const computedHeight =
+      options.titleHeight +
       Math.max(branchesCount, extraNodes.length) *
-      polygon.height *
-      options.verticalSpacing;
+        polygon.height *
+        options.verticalSpacing;
 
-    const treeWidth =
-      computedWidth - (polygon.width + options.getArrowLength());
     this.tree.size([computedHeight, treeWidth]);
     this.svg
       .attr(
-        "width",
-        options.zoomable
-          ? 1200
-          : computedWidth +
-            margin.right +
-            margin.left +
-            options.getArrowLength()
+        'width',
+        options.zoomable ? 1200 : computedWidth + margin.right + margin.left
       )
       .attr(
-        "height",
+        'height',
         (options.zoomable ? height : computedHeight) +
           margin.top +
           margin.bottom
@@ -169,127 +195,130 @@ export default class ChainTree {
     // Compute the new tree layout.
     if (root) {
       root.x0 = computedHeight / 2;
-      root.y0 = options.getArrowLength() * 2;
+      root.y0 = extraNodesWidth;
       this.tree(root);
       root.each(node => {
-        node.y += polygon.width + options.getArrowLength() * 2;
+        node.y += root.y0 + options.getArrowLength();
       });
     }
 
     if (options.zoomable) {
-      this.svg.call(zoom().on("zoom", this.zoomed));
+      this.svg.call(zoom().on('zoom', this.zoomed));
     } else {
-      this.svg.on(".zoom", null);
+      this.svg.on('.zoom', null);
     }
-    this.innerG.attr("transform", () => translate(margin.top, margin.left));
-
-    // Update the links...
-    const link = this.innerG
-      .selectAll("path.link")
-      .data(links, function key(d) {
-        console.log("---", d);
-        return d ? d.target.id : this.id;
-      });
-
-    // draw links
-    this.drawLinks(link);
-
-    // Update the nodes...
-    const node = this.innerG.selectAll("g.node").data(nodes, function key(d) {
-      return d ? d.id : this.id;
-    });
-
-    // Enter any new nodes at the parent's previous position.
-    const nodeEnter = node
-      .enter()
-      .append("g")
-      .attr("class", d => ["node base"].concat(d.data.link.meta.tags).join(" "))
-      .attr("id", d => d.id)
-      .attr("transform", d => {
-        const origin = d.parent && d.parent.x0 ? d.parent : root;
-        return translate(origin.x0, origin.y0);
-      })
-      .on("click", function onClick(d) {
-        selectAll("g.node").classed("selected", false);
-        select(this).classed("selected", true);
-        console.log("clicked", d);
-        if (d.data.link.meta.refs) {
-          self.displayExtraLinks(d, extraLinks);
-        } else {
-          self.displayOriginalLinks(links);
-        }
-        options.onclick(
-          d,
-          () => {
-            self.displayOriginalLinks(links);
-            self.innerG.selectAll("g.node.selected").classed("selected", false);
-          },
-          this
-        );
-      });
-    // Draw nodes
-    this.drawNodes(nodeEnter);
-
-    // Update the extra nodes...
-    const extraNode = this.innerG
-      .selectAll("g.node")
-      .data(extraNodes, function key(d) {
-        return d ? d.id : this.id;
-      });
-
-    // Enter any extra nodes at the parent's previous position.
-    const extraNodeEnter = extraNode
-      .enter()
-      .append("g")
-      .attr("class", () => "node ref")
-      .attr("id", d => d.id)
-      .attr("transform", d => {
-        return translate(d.x, d.y);
-      })
-      .on("click", function onClick(d) {
-        selectAll("g.node").classed("selected", false);
-        select(this).classed("selected", true);
-        console.log("CLICKED REF SEGMENT", d);
-        self.displayExtraLinks(d, extraLinks);
-      });
-    //Draw extra nodes
-    this.drawNodes(extraNodeEnter);
-
-    // Transition all exiting nodes to the parent's new position.
-    const nodeExit = node.exit(); // .transition(treeTransition);
-    nodeExit.select("text").style("fill-opacity", 1e-6);
-    nodeExit.attr("transform", () => translate(0, 0)).remove();
-
-    this.drawInit(root);
+    this.innerG.attr('transform', () => translate(margin.top, margin.left));
   }
 
   drawInit(root) {
+    this.innerG.selectAll('#init-link').remove();
     this.innerG
-      .append("path")
-      .attr("class", "link init")
-      .attr("id", "init-link")
-      .attr("d", makeLink({ x: root.x, y: root.y0 }, root, 15));
+      .append('path')
+      .attr('class', 'link init')
+      .attr('id', 'init-link')
+      .attr('d', makeLink({ x: root.x, y: root.y0 }, root, 15));
 
     this.innerG
-      .append("text")
-      .attr("dx", 20)
-      .attr("dy", "-0.3em")
-      .append("textPath")
-      .attr("class", "textpath")
-      .attr("xlink:href", "#init-link")
-      .text("init");
+      .append('text')
+      .attr('dx', 20)
+      .attr('dy', '-0.3em')
+      .append('textPath')
+      .attr('class', 'textpath')
+      .attr('xlink:href', '#init-link')
+      .text('init');
   }
 
-  drawNodes(nodeEnter, type) {
+  drawAncestorsRef(refNode, links) {
+    const self = this;
+    const onClick = () =>
+      loadRef(self.options.agentUrl, refNode, links).then(cs =>
+        self.display(cs, self.options)
+      );
+
+    this.innerG.selectAll('path#ref-link').remove();
+    this.innerG
+      .append('path')
+      .attr('class', 'link ref')
+      .attr('id', 'ref-link')
+      .attr('d', makeLink({ x: refNode.x, y: refNode.y0 }, refNode, 20))
+      .on('click', onClick);
+
+    this.innerG.selectAll('rect.refLinkBox').remove();
+    this.innerG
+      .append('rect')
+      .attr('y', refNode.x + this.options.getArrowLength() / 2 + 5)
+      .attr('x', this.options.getArrowLength() / 2 - 5)
+      .attr('ry', 15)
+      .attr('rx', 15)
+      .attr('fill-opacity', 0.7)
+      .attr('width', this.options.getArrowLength() * 2 + 10)
+      .attr('height', this.options.getBoxSize().height)
+      .attr('class', 'refLinkBox')
+      .on('click', onClick);
+
+    this.innerG.selectAll('#linkLabelRef').remove();
+    this.innerG
+      .append('text')
+      .attr('id', 'linkLabelRef')
+      .attr('dx', this.options.getArrowLength() / 2)
+      .attr('dy', refNode.x + this.options.getArrowLength() - 17)
+      .text(this.options.getRefLinkText(refNode))
+      .on('click', onClick);
+  }
+
+  drawForeignChildRef(refNode, links) {
+    const self = this;
+    const foreignLink = makeLink(
+      { x: refNode.x, y: refNode.y + this.options.getArrowLength() },
+      { x: refNode.x, y: refNode.y + this.options.getArrowLength() * 2 },
+      15
+    );
+    const onClick = () => {
+      this.innerG.selectAll('g.childRef').attr('class', 'node base');
+      loadRef(self.options.agentUrl, refNode, links).then(cs =>
+        self.display(cs, self.options)
+      );
+    };
+    this.innerG
+      .append('path')
+      .attr('class', 'link ref')
+      .attr('id', 'ref-link')
+      .attr('d', foreignLink)
+      .on('click', onClick);
+
+    this.innerG
+      .append('rect')
+      .attr('y', refNode.x - this.options.getBoxSize().height / 2 - 2)
+      .attr('x', refNode.y + this.options.getArrowLength() * 2 + 10)
+      .attr('ry', 15)
+      .attr('rx', 15)
+      .attr('fill-opacity', 0.7)
+      .attr('width', this.options.getArrowLength() * 2 + 10)
+      .attr('height', this.options.getBoxSize().height)
+      .attr('class', 'refLinkBox')
+      .on('click', onClick);
+
+    this.innerG
+      .append('text')
+      .attr('id', 'linkLabelRef')
+      .attr('dx', refNode.y + this.options.getArrowLength() * 2 + 15)
+      .attr('dy', refNode.x + 2)
+      .text(this.options.getRefLinkText(refNode))
+      .on('click', onClick);
+
+    return refNode;
+  }
+
+  drawNodes(nodeEnter) {
     const polygon = this.options.polygonSize;
     const treeTransition = transition()
       .duration(this.options.duration)
       .ease(easeLinear);
 
     nodeEnter
-      .append("polygon")
+      .append('polygon')
       .attr(
-        "points",
+        'points',
         `0,${polygon.height / 4} ${polygon.width / 2},${polygon.height / 2} ` +
           `${polygon.width},${polygon.height /
             4} ${polygon.width},${-polygon.height / 4} ` +
@@ -297,110 +326,124 @@ export default class ChainTree {
       );
 
     nodeEnter
-      .append("rect")
-      .attr("y", -(this.options.getBoxSize().height / 2))
-      .attr("width", polygon.width)
-      .attr("height", this.options.getBoxSize().height)
-      .style("fill-opacity", 1e-6);
+      .append('rect')
+      .attr('y', -(this.options.getBoxSize().height / 2))
+      .attr('width', polygon.width)
+      .attr('height', this.options.getBoxSize().height)
+      .style('fill-opacity', 1e-6);
 
     nodeEnter
-      .append("text")
-      .attr("dx", 12)
-      .attr("dy", 4)
-      .attr("text-anchor", "begin")
+      .append('text')
+      .attr('class', 'shortHash')
+      .attr('dx', 12)
+      .attr('dy', 4)
+      .attr('text-anchor', 'begin')
       .text(this.options.getSegmentText)
-      .style("fill-opacity", 1e-6);
+      .style('fill-opacity', 1e-6);
+
+    this.innerG
+      .selectAll('g.node.base')
+      .filter(n => n.data.isRef === true)
+      .attr('class', 'node base childRef');
 
     // Transition all the nodes to their new position.
-    const nodeUpdate = this.svg.selectAll("g.node").transition(treeTransition);
-    nodeUpdate.attr("transform", d => translate(d.x, d.y));
-    nodeUpdate.select("text").style("fill-opacity", 1);
-    nodeUpdate.select("rect").style("fill-opacity", 1);
+    const nodeUpdate = this.svg.selectAll('g.node').transition(treeTransition);
+    nodeUpdate.attr('transform', d => translate(d.x, d.y));
+    nodeUpdate.select('text').style('fill-opacity', 1);
+    nodeUpdate.select('rect').style('fill-opacity', 1);
   }
 
-  drawLinks(link) {
+  drawLinks(links) {
     const polygon = this.options.polygonSize;
     const treeTransition = transition()
       .duration(this.options.duration)
       .ease(easeLinear);
 
-    link
-      .enter()
-      .insert("text")
-      .attr("dx", polygon.width + 20)
-      .attr("dy", "-0.3em")
-      .append("textPath")
-      .attr("class", "textpath")
-      .attr("xlink:href", d => `#link-${d.target.id}`)
-      .text(this.options.getLinkText);
+    this.innerG.selectAll('path.link').remove();
+    const link = this.innerG.selectAll('path.link').data(links, d => d);
 
     // Enter any new links at the parent's previous position.
     link
       .enter()
-      .insert("path", "g")
-      .attr("class", "link")
-      .attr("id", d => `link-${d.target.id}`);
+      .insert('path', 'g')
+      .attr('class', 'link')
+      .attr('id', d => `link-${d.source.id}-${d.target.id}`);
 
     // Transition links to their new position.
     const linkUpdate = this.innerG
-      .selectAll("path.link:not(.init)")
+      .selectAll('path.link:not(.init):not(.ref)')
       .transition(treeTransition);
-
-    linkUpdate.attr("d", d => finalLink(d, 15));
+    linkUpdate.attr('d', d => finalLink(d, 15));
 
     link.exit().remove();
+
+    // Add a transition label to the link
+    this.innerG.selectAll('text.actionLabel').remove();
+    link
+      .enter()
+      .insert('text')
+      .attr('class', 'actionLabel')
+      .attr('dx', polygon.width + 20)
+      .attr('dy', '-0.3em')
+      .append('textPath')
+      .attr('class', 'textpath')
+      .attr('xlink:href', d => `#link-${d.source.id}-${d.target.id}`)
+      .text(this.options.getLinkText);
   }
 
-  displayExtraLinks(node, links) {
+  displayNodeLinks(node, links) {
     const relatedLinks = links.filter(
       l => l.source.id === node.id || l.target.id === node.id
     );
-    console.log("RELATED LINKS = ", relatedLinks);
 
+    // remove ref links labels
+    this.innerG.selectAll('rect.refLinkBox').remove();
+    this.innerG.selectAll('#linkLabelRef').remove();
     if (relatedLinks) {
-      // make nodes THAT ARE NOT CONCERNED transparent
-      this.innerG.selectAll("g.node").style("fill-opacity", 1);
+      // make unrelated nodes transparent
+      this.innerG.selectAll('g.node').style('fill-opacity', 1);
       const selectedNodes = this.innerG
-        .selectAll("g.node")
-        .filter((d, i) => {
+        .selectAll('g.node')
+        .filter(d => {
           const isSourceOrTarget = relatedLinks.find(
             l => l.source.id === d.id || l.target.id === d.id
           );
           return isSourceOrTarget === undefined;
         })
-        .style("fill-opacity", 0.3);
+        .style('fill-opacity', 0.3);
 
-      this.innerG.selectAll("g.node rect").style("fill-opacity", 1);
-      selectedNodes.selectAll("rect").style("fill-opacity", 0.3);
+      this.innerG.selectAll('g.node rect').style('fill-opacity', 1);
+      selectedNodes.selectAll('rect').style('fill-opacity', 0.3);
 
-      //draw related links
-      const extraLinks = this.innerG
-        .selectAll("path.link")
-        .data(relatedLinks, function key(d) {
-          return d ? d.target.id : this.id;
-        });
-      this.drawLinks(extraLinks);
+      // draw related links
+      this.drawLinks(relatedLinks);
     }
   }
 
-  displayOriginalLinks(links) {
-    // make nodes and links transparent
-    let selectNode = this.innerG.selectAll("g.base");
-    selectNode.style("fill-opacity", 1);
-    let selectNodeRect = this.innerG.selectAll("g.base rect");
-    selectNodeRect.style("fill-opacity", 1);
-    selectNode = this.innerG.selectAll("g.ref");
-    selectNode.style("fill-opacity", 0.3);
-    selectNodeRect = this.innerG.selectAll("g.ref rect");
-    selectNodeRect.style("fill-opacity", 0.3);
+  displayCurrentMapLinks(links) {
+    // remove ref links labels
+    this.innerG.selectAll('rect.refLinkBox').remove();
+    this.innerG.selectAll('#linkLabelRef').remove();
 
-    //draw related links
-    const link = this.innerG
-      .selectAll("path.link")
-      .data(links, function key(d) {
-        return d ? d.target.id : this.id;
-      });
-    this.drawLinks(link);
-    this.drawInit(links.map(l => l.source).find(n => n.parent === null));
+    // make nodes and links transparent
+    let selectNode = this.innerG.selectAll('g.base');
+    selectNode.style('fill-opacity', 1);
+    let selectNodeRect = this.innerG.selectAll('g.base rect');
+    selectNodeRect.style('fill-opacity', 1);
+    selectNode = this.innerG.selectAll('g.ref');
+    selectNode.style('fill-opacity', 0.3);
+    selectNodeRect = this.innerG.selectAll('g.ref rect');
+    selectNodeRect.style('fill-opacity', 0.3);
+
+    // if the depth or the height of a node are 0, it belongs to the current map
+    const currentMapLinks = links.filter(
+      l => l.source.depth !== 0 || l.source.height !== 0
+    );
+
+    // draw related links
+    this.drawLinks(currentMapLinks);
+    this.drawInit(
+      currentMapLinks.map(l => l.source).find(n => n.parent === null)
+    );
   }
 }

@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { getAgent } from "stratumn-agent-client";
-import ChainTree from "./ChainTree";
-import compactHash from "./compactHash";
-import resolveLinks from "./resolveLinks";
-import wrap from "./wrap";
-import parseIfJson from "./parseIfJson";
-import tagsSet from "./tagsSet";
+import { getAgent } from 'stratumn-agent-client';
+import ChainTree from './ChainTree';
+import compactHash from './compactHash';
+import resolveLinks from './resolveLinks';
+import wrap from './wrap';
+import parseIfJson from './parseIfJson';
+import tagsSet from './tagsSet';
 
 function load(map) {
   return getAgent(map.agentUrl)
@@ -34,8 +34,11 @@ function load(map) {
 export const defaultOptions = {
   withArgs: false,
   duration: 750,
-  verticalSpacing: 1.2,
+  verticalSpacing: 1.4,
   polygonSize: { width: 78, height: 91 },
+  titleHeight: 50,
+  extraNodesLayoutColor: 'lightcoral',
+  mainTreeLayoutColor: 'lightblue',
   getBoxSize() {
     const self = this;
     return { width: self.polygonSize.width, height: 25 };
@@ -46,15 +49,23 @@ export const defaultOptions = {
   getSegmentText(node) {
     return compactHash(node.data.meta.linkHash);
   },
-  getLinkText(node) {
+  getRefLinkText(node) {
+    return `go to map ${compactHash(node.data.link.meta.mapId)}`;
+  },
+  getLinkText(link) {
+    if (link.ref) {
+      return 'reference';
+    }
     return (
-      node.target.data.link.meta.action +
+      link.target.data.link.meta.action +
       (this.withArgs
-        ? `(${node.target.data.link.meta.arguments.join(", ")})`
-        : "")
+        ? `(${link.target.data.link.meta.arguments.join(', ')})`
+        : '')
     );
   },
-  onclick() {},
+  onclick() {
+    console.log('hello');
+  },
   onTag() {}
 };
 
@@ -65,12 +76,17 @@ export default class ChainTreeBuilder {
 
   build(map, options) {
     this.onTag = options.onTag;
+    const optionsWithAgent = Object.assign(options, {
+      agentUrl: map.agentUrl
+    });
     if (map.id && map.agentUrl && map.process) {
-      return load(map).then(segments => this.display(segments, options));
+      return load(map).then(segments =>
+        this.display(segments, optionsWithAgent)
+      );
     } else if (map.chainscript && map.chainscript.length) {
       try {
         return resolveLinks(wrap(parseIfJson(map.chainscript))).then(segments =>
-          this.display(segments, options)
+          this.display(segments, optionsWithAgent)
         );
       } catch (err) {
         return Promise.reject(err);

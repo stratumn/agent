@@ -1,38 +1,49 @@
 .node {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .node polygon {
-    fill: $segment-primary-color;
+  fill: $segment-primary-color;
 }
 
 .node text {
-    font-family: $segment-text-font;
-    font-size: 14px;
-    fill: $segment-text-color;
+  font-family: $segment-text-font;
+  font-size: 14px;
+  fill: $segment-text-color;
 }
 
 .node rect {
-    fill: $segment-secondary-color;
+  fill: $segment-secondary-color;
 }
 
 .textpath {
-    font-family: $link-text-font;
-    font-size: 14px;
-    fill: $link-text-color;
+  font-family: $link-text-font;
+  font-size: 14px;
+  fill: $link-text-color;
 }
 
 .link {
-    fill: none;
-    stroke: $link-color;
-    stroke-width: 5px;
-    marker-end: url('#triangle');
+  fill: none;
+  stroke: $link-color;
+  stroke-width: 5px;
+  marker-end: url("#triangle");
+}
+
+path .link.ref:hover {
+  stroke: #000;
+  cursor: pointer;
+}
+
+text #ref-link-text:hover {
+  fill: #000;
+  cursor: pointer;
+  font-size: 24px;
 }
 
 .node.selected polygon {
-    fill: $selected-segment-primary-color;
+  fill: $selected-segment-primary-color;
 }
 
 .node.selected rect {
-    fill: $selected-segment-secondary-color;
+  fill: $selected-segment-secondary-color;
 }
