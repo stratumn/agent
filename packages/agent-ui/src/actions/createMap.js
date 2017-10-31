@@ -26,7 +26,7 @@ const createMapSuccess = () => ({
 
 export const createMap = title => (dispatch, getState) => {
   dispatch(createMapRequest());
-  const { agents, createMap: { agent, process } } = getState();
+  const { agents, createMap: { dialog: { agent, process } } } = getState();
   if (agents[agent]) {
     const { url } = agents[agent];
     return getAgent(url)

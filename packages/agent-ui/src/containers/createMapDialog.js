@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { statusTypes } from '../reducers';
+
 import { createMap as createMapAction, closeCreateMapDialog } from '../actions';
 
 export const CreateMapDialog = ({ show, error, closeDialog, createMap }) => {
@@ -78,12 +80,21 @@ CreateMapDialog.propTypes = {
 };
 
 export function mapStateToProps(state) {
-  const show = !!(state.createMap && state.createMap.showDialog);
-  const error = show ? state.createMap.error : null;
-  if (error) {
+  const show = !!(
+    state.createMap &&
+    state.createMap.dialog &&
+    state.createMap.dialog.show
+  );
+
+  if (
+    show &&
+    state.createMap.request &&
+    state.createMap.request.error &&
+    state.createMap.request.status === statusTypes.FAILED
+  ) {
     return {
       show,
-      error: error.toString()
+      error: state.createMap.request.error.toString()
     };
   }
 

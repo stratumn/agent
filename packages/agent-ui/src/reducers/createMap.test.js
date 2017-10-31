@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import createMap from './createMap';
 
 import { actionTypes } from '../actions';
+import { statusTypes } from './';
 
 describe('createMap reducer', () => {
   it('sets agent and process names when opening dialog', () => {
@@ -16,48 +17,57 @@ describe('createMap reducer', () => {
     );
 
     expect(openState).to.deep.equal({
-      showDialog: true,
-      agent: 'a',
-      process: 'p'
+      dialog: {
+        show: true,
+        agent: 'a',
+        process: 'p'
+      },
+      request: {}
     });
   });
 
   it('clears agent and process information on dialog close', () => {
     const closedState = createMap(
-      { agent: 'a', process: 'p' },
+      { dialog: { show: true, agent: 'a', process: 'p' } },
       { type: actionTypes.CREATE_MAP_DIALOG_CLOSE }
     );
 
     expect(closedState).to.deep.equal({
-      showDialog: false
+      dialog: {
+        show: false
+      },
+      request: {}
     });
   });
 
   it('keeps agent and process information during request processing', () => {
     const initialState = {
-      showDialog: true,
-      agent: 'a',
-      process: 'p'
+      dialog: {
+        show: true,
+        agent: 'a',
+        process: 'p'
+      }
     };
 
-    const validateAgentAndProcess = state => {
-      expect(state.agent).to.equal('a');
-      expect(state.process).to.equal('p');
+    const validateState = (state, expectedStatus) => {
+      expect(state.dialog.agent).to.equal('a');
+      expect(state.dialog.process).to.equal('p');
+      expect(state.request.status).to.equal(expectedStatus);
     };
 
     const requestState = createMap(initialState, {
       type: actionTypes.CREATE_MAP_REQUEST
     });
-    validateAgentAndProcess(requestState);
+    validateState(requestState, statusTypes.LOADING);
 
     const failedState = createMap(requestState, {
       type: actionTypes.CREATE_MAP_FAILURE
     });
-    validateAgentAndProcess(failedState);
+    validateState(failedState, statusTypes.FAILED);
 
     const successState = createMap(requestState, {
       type: actionTypes.CREATE_MAP_SUCCESS
     });
-    validateAgentAndProcess(successState);
+    validateState(successState, statusTypes.LOADED);
   });
 });

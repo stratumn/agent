@@ -53,7 +53,13 @@ describe('createMap action', () => {
     getStateStub = sinon.stub();
     getStateStub.returns({
       agents: { a: { url: '' } },
-      createMap: { agent: 'a', process: 'p' }
+      createMap: {
+        dialog: {
+          show: true,
+          agent: 'a',
+          process: 'p'
+        }
+      }
     });
   });
 

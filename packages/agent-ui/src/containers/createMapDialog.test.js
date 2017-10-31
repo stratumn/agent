@@ -5,13 +5,15 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
+import { statusTypes } from '../reducers';
+
 import { CreateMapDialog, mapStateToProps } from './createMapDialog';
 
 chai.use(sinonChai);
 
 describe('<CreateMapDialog />', () => {
   it('learns to show dialog from state', () => {
-    const props = mapStateToProps({ createMap: { showDialog: true } });
+    const props = mapStateToProps({ createMap: { dialog: { show: true } } });
     expect(props).to.deep.equal({ show: true });
   });
 
@@ -22,9 +24,22 @@ describe('<CreateMapDialog />', () => {
 
   it('extracts error from state', () => {
     const props = mapStateToProps({
-      createMap: { showDialog: true, error: 'err!!!' }
+      createMap: {
+        dialog: { show: true },
+        request: { status: statusTypes.FAILED, error: 'err!!!' }
+      }
     });
     expect(props.error).to.equal('err!!!');
+  });
+
+  it('only extracts error from state if status if failed', () => {
+    const props = mapStateToProps({
+      createMap: {
+        dialog: { show: true },
+        request: { status: statusTypes.LOADING, error: 'err!!!' }
+      }
+    });
+    expect(props.error).to.be.undefined;
   });
 
   it('does not show if it should not', () => {
