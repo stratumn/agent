@@ -11,17 +11,17 @@ import rootReducer from '../reducers';
  */
 
 const config = {
-  key: 'abc',
+  key: 'stratumn-agent-ui',
   storage,
   // only persist the agents part
   whitelist: ['agents']
 };
 
-const reducer = persistReducer(config, rootReducer);
+const persistentReducer = persistReducer(config, rootReducer);
 
 const configureStore = () => {
   const store = createStore(
-    reducer,
+    persistentReducer,
     composeWithDevTools(applyMiddleware(thunk))
   );
   const persistor = persistStore(store);
