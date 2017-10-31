@@ -50,7 +50,7 @@ export const CreateMapDialog = ({ show, error, closeDialog, createMap }) => {
             if (!mapTitle.value.trim()) {
               return;
             }
-            createMap(mapTitle.value);
+            createMap(mapTitle.value.trim());
           }}
         >
           <input

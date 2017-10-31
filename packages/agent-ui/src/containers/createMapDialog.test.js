@@ -45,10 +45,11 @@ describe('<CreateMapDialog />', () => {
     const dialog = mount(<CreateMapDialog show createMap={createMapSpy} />);
 
     const mapTitle = dialog.find('input').at(0);
-    mapTitle.instance().value = 'maps are awesome';
+    mapTitle.instance().value = '    maps are awesome   ';
 
     dialog.find('form').simulate('submit');
     expect(createMapSpy.callCount).to.equal(1);
+    expect(createMapSpy.getCall(0).args[0]).to.equal('maps are awesome');
   });
 
   it('displays error message if creating map fails', () => {
