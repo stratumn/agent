@@ -6,7 +6,7 @@ export default {
   input: 'src/index.js',
   output: {
     file: 'dist/mapexplorer-core.js',
-    format: 'umd',
+    format: 'umd'
   },
   name: 'mapexplorerCore'
 };

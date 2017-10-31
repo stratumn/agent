@@ -29,7 +29,9 @@ export default {
         '../agent-client-js/lib/stratumn-agent-client.js': [
           'getAgent',
           'fromSegment'
-        ]
+        ],
+        '../agent-client-js/node_modules/qs/lib/index.js': ['stringify'],
+        'node_modules/qs/lib/index.js': ['stringify']
       }
     }),
     postcss({}),

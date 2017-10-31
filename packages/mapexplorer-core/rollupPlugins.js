@@ -1,21 +1,24 @@
-var babel = require('rollup-plugin-babel');
-var babelrc = require('babelrc-rollup').default;
-var commonjs = require('rollup-plugin-commonjs');
-var nodeResolve = require('rollup-plugin-node-resolve');
-var json = require('rollup-plugin-json');
-var builtins = require('rollup-plugin-node-builtins');
-var globals = require('rollup-plugin-node-globals');
+const babel = require('rollup-plugin-babel');
+const babelrc = require('babelrc-rollup').default;
+const commonjs = require('rollup-plugin-commonjs');
+const nodeResolve = require('rollup-plugin-node-resolve');
+const json = require('rollup-plugin-json');
+const builtins = require('rollup-plugin-node-builtins');
+const globals = require('rollup-plugin-node-globals');
 
-var plugins = [
+const plugins = [
   json(),
-  babel(Object.assign({
-    exclude: ['node_modules/**', '../**/node_modules/**']
-  }, babelrc())),
+  babel(
+    Object.assign(
+      {
+        exclude: ['node_modules/**', '../**/node_modules/**']
+      },
+      babelrc()
+    )
+  ),
   builtins(),
   nodeResolve({
-    jsnext: true,
-    browser: true,
-    preferBuiltins: true
+    browser: true
   }),
   commonjs({
     namedExports: {
