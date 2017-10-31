@@ -1,8 +1,9 @@
-import * as StratumnAgentClient from 'stratumn-agent-client';
-
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
+
+import * as StratumnAgentClient from 'stratumn-agent-client';
+import { history } from '../store';
 
 import {
   createMap,
@@ -50,6 +51,7 @@ describe('closeCreateMapDialogAndClear action', () => {
 
 describe('createMap action', () => {
   let stratumnClientStub;
+  let historyStub;
   let createMapStub;
   let dispatchSpy;
   let getStateStub;
@@ -64,6 +66,8 @@ describe('createMap action', () => {
         createMap: createMapStub
       })
     });
+
+    historyStub = sinon.stub(history, 'push');
 
     getStateStub = sinon.stub();
     getStateStub.returns({
@@ -80,6 +84,7 @@ describe('createMap action', () => {
 
   afterEach(() => {
     stratumnClientStub.restore();
+    historyStub.restore();
   });
 
   const verifyDispatchedActions = expectedActionTypes => {
@@ -102,8 +107,8 @@ describe('createMap action', () => {
     });
   });
 
-  it('closes dialog on success', () => {
-    createMapStub.resolves({});
+  it('closes dialog on success, dispatches segment success and navigates to segment page', () => {
+    createMapStub.resolves({ meta: { linkHash: 'wowSuchHash' } });
 
     return createMap('a new map')(dispatchSpy, getStateStub).then(() => {
       expect(getStateStub.callCount).to.equal(1);
@@ -114,8 +119,14 @@ describe('createMap action', () => {
       verifyDispatchedActions([
         actionTypes.CREATE_MAP_REQUEST,
         actionTypes.CREATE_MAP_SUCCESS,
-        actionTypes.CREATE_MAP_DIALOG_CLOSE
+        actionTypes.CREATE_MAP_DIALOG_CLOSE,
+        actionTypes.SEGMENT_SUCCESS
       ]);
+
+      expect(historyStub.callCount).to.equal(1);
+      expect(historyStub.getCall(0).args[0]).to.equal(
+        '/a/p/segment/wowSuchHash'
+      );
     });
   });
 });
