@@ -35,6 +35,8 @@ const createMapRequestReducer = (state = {}, action) => {
       return {
         status: statusTypes.LOADED
       };
+    case actionTypes.CREATE_MAP_CLEAR:
+      return {};
     default:
       return state;
   }

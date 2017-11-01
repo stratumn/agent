@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 
 import { statusTypes } from '../reducers';
 
-import { createMap as createMapAction, closeCreateMapDialog } from '../actions';
+import {
+  createMap as createMapAction,
+  closeCreateMapDialogAndClear
+} from '../actions';
 
 export const CreateMapDialog = ({ show, error, closeDialog, createMap }) => {
   if (!show) {
@@ -104,6 +107,6 @@ export function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  closeDialog: closeCreateMapDialog,
+  closeDialog: closeCreateMapDialogAndClear,
   createMap: createMapAction
 })(CreateMapDialog);

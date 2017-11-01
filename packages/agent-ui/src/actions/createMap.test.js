@@ -7,7 +7,8 @@ import sinonChai from 'sinon-chai';
 import {
   createMap,
   openCreateMapDialog,
-  closeCreateMapDialog
+  closeCreateMapDialog,
+  closeCreateMapDialogAndClear
 } from './createMap';
 import { actionTypes } from '../actions';
 
@@ -30,6 +31,20 @@ describe('closeCreateMapDialog action', () => {
     expect(action).to.deep.equal({
       type: actionTypes.CREATE_MAP_DIALOG_CLOSE
     });
+  });
+});
+
+describe('closeCreateMapDialogAndClear action', () => {
+  it('dispatch clear and close actions', () => {
+    const dispatchSpy = sinon.spy();
+    closeCreateMapDialogAndClear()(dispatchSpy);
+    expect(dispatchSpy.callCount).to.deep.equal(2);
+    expect(dispatchSpy.getCall(0).args[0].type).to.equal(
+      actionTypes.CREATE_MAP_CLEAR
+    );
+    expect(dispatchSpy.getCall(1).args[0].type).to.equal(
+      actionTypes.CREATE_MAP_DIALOG_CLOSE
+    );
   });
 });
 

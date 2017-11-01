@@ -1,16 +1,6 @@
 import { getAgent } from 'stratumn-agent-client';
 import { actionTypes } from './';
 
-export const openCreateMapDialog = (agentName, processName) => ({
-  type: actionTypes.CREATE_MAP_DIALOG_OPEN,
-  agent: agentName,
-  process: processName
-});
-
-export const closeCreateMapDialog = () => ({
-  type: actionTypes.CREATE_MAP_DIALOG_CLOSE
-});
-
 const createMapRequest = () => ({
   type: actionTypes.CREATE_MAP_REQUEST
 });
@@ -23,6 +13,25 @@ const createMapFailure = error => ({
 const createMapSuccess = () => ({
   type: actionTypes.CREATE_MAP_SUCCESS
 });
+
+const createMapClear = () => ({
+  type: actionTypes.CREATE_MAP_CLEAR
+});
+
+export const openCreateMapDialog = (agentName, processName) => ({
+  type: actionTypes.CREATE_MAP_DIALOG_OPEN,
+  agent: agentName,
+  process: processName
+});
+
+export const closeCreateMapDialog = () => ({
+  type: actionTypes.CREATE_MAP_DIALOG_CLOSE
+});
+
+export const closeCreateMapDialogAndClear = () => dispatch => {
+  dispatch(createMapClear());
+  dispatch(closeCreateMapDialog());
+};
 
 export const createMap = title => (dispatch, getState) => {
   dispatch(createMapRequest());

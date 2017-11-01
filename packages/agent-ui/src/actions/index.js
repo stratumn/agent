@@ -8,5 +8,6 @@ export { default as getSegments } from './getSegments';
 export {
   createMap,
   openCreateMapDialog,
-  closeCreateMapDialog
+  closeCreateMapDialog,
+  closeCreateMapDialogAndClear
 } from './createMap';

@@ -40,6 +40,32 @@ describe('createMap reducer', () => {
     });
   });
 
+  it('update status on request', () => {
+    const { request } = createMap({}, { type: actionTypes.CREATE_MAP_REQUEST });
+    expect(request).to.deep.equal({ status: statusTypes.LOADING });
+  });
+
+  it('update status on success', () => {
+    const { request } = createMap({}, { type: actionTypes.CREATE_MAP_SUCCESS });
+    expect(request).to.deep.equal({ status: statusTypes.LOADED });
+  });
+
+  it('update status and error on fail', () => {
+    const { request } = createMap(
+      {},
+      { type: actionTypes.CREATE_MAP_FAILURE, error: 'foo' }
+    );
+    expect(request).to.deep.equal({ status: statusTypes.FAILED, error: 'foo' });
+  });
+
+  it('clears status and error on clear', () => {
+    const { request } = createMap(
+      { request: { status: 'foo', error: 'bar' } },
+      { type: actionTypes.CREATE_MAP_CLEAR }
+    );
+    expect(request).to.deep.equal({});
+  });
+
   it('keeps agent and process information during request processing', () => {
     const initialState = {
       dialog: {
