@@ -57,6 +57,10 @@ export default function(state = {}, action) {
           processes: extractProcesses(action.agent)
         }
       };
+    case actionTypes.AGENT_INFO_DELETE: {
+      const { [agentName]: thisAgent, ...otherAgents } = state;
+      return { ...otherAgents };
+    }
     default:
       return state;
   }
