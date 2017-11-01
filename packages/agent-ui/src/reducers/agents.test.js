@@ -164,4 +164,28 @@ describe('agents reducer', () => {
       blockchain: 'b2'
     });
   });
+
+  it('removes the agent from state on delete action', () => {
+    const state = {
+      foo: {},
+      bar: {}
+    };
+    const newState = agents(state, {
+      type: actionTypes.AGENT_INFO_DELETE,
+      name: 'foo'
+    });
+    expect(newState).to.deep.equal({ bar: {} });
+  });
+
+  it('do nothing if name to delete dpes not exist', () => {
+    const state = {
+      foo: {},
+      bar: {}
+    };
+    const newState = agents(state, {
+      type: actionTypes.AGENT_INFO_DELETE,
+      name: 'foobar'
+    });
+    expect(newState).to.deep.equal({ foo: {}, bar: {} });
+  });
 });

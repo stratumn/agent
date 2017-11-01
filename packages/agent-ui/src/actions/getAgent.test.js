@@ -4,7 +4,7 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import getAgent from './getAgent';
+import { getAgent, removeAgent } from './getAgent';
 import { actionTypes } from '../actions';
 
 chai.use(sinonChai);
@@ -80,6 +80,16 @@ describe('getAgent action', () => {
 
       const lastActionDispatched = dispatchSpy.getCall(1).args[0];
       expect(lastActionDispatched.agent).to.deep.equal(agent);
+    });
+  });
+});
+
+describe('removeAgent action', () => {
+  it('generate a delete action', () => {
+    const action = removeAgent('foo');
+    expect(action).to.deep.equal({
+      type: actionTypes.AGENT_INFO_DELETE,
+      name: 'foo'
     });
   });
 });
