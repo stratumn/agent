@@ -71,9 +71,9 @@ describe('<AgentsPage />', () => {
 
   it('displays loaded agents', () => {
     const agents = [{ name: 'a1', url: 'u1' }, { name: 'a2', url: 'u2' }];
-    const agentsPage = mount(<AgentsPage agents={agents} />);
-
-    console.log(agentsPage.debug());
+    const agentsPage = mount(
+      <AgentsPage agents={agents} fetchAgent={() => {}} />
+    );
 
     expect(agentsPage.find('div').contains('a1: u1')).to.be.true;
     expect(agentsPage.find('div').contains('a2: u2')).to.be.true;
