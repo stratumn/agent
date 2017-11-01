@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
 import { mount } from 'enzyme';
 import chai, { expect } from 'chai';
@@ -66,13 +67,17 @@ describe('<ProcessMapsPage />', () => {
       process: 'bar',
       maps: { status: statusTypes.LOADED, mapIds: ['foo', 'bar'] }
     };
-    const processMapsPage = mount(<ProcessMapsPage {...props} />);
+    const processMapsPage = mount(
+      <MemoryRouter>
+        <ProcessMapsPage {...props} />
+      </MemoryRouter>
+    );
     expect(props.fetchMapIds.callCount).to.equal(1);
     expect(props.fetchMapIds.getCall(0).args[0]).to.equal('foo');
     expect(props.fetchMapIds.getCall(0).args[1]).to.equal('bar');
-    const div = processMapsPage.find('div');
-    expect(div).to.have.lengthOf(3);
-    expect(div.contains('foo')).to.be.true;
-    expect(div.contains('bar')).to.be.true;
+    const links = processMapsPage.find('NavLink');
+    expect(links).to.have.lengthOf(2);
+    expect(links.contains('foo')).to.be.true;
+    expect(links.contains('bar')).to.be.true;
   });
 });
