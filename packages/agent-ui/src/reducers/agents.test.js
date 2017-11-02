@@ -177,7 +177,7 @@ describe('agents reducer', () => {
     expect(newState).to.deep.equal({ bar: {} });
   });
 
-  it('do nothing if name to delete dpes not exist', () => {
+  it('do nothing if name to delete does not exist', () => {
     const state = {
       foo: {},
       bar: {}

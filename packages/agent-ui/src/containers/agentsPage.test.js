@@ -8,7 +8,7 @@ import sinonChai from 'sinon-chai';
 import { TestStateBuilder, TestAgentBuilder } from '../test/builders/state';
 
 import { statusTypes } from '../reducers';
-import { AgentsPage, RenderLoadedAgents, mapStateToProps } from './agentsPage';
+import { AgentsPage, mapStateToProps } from './agentsPage';
 
 chai.use(sinonChai);
 
@@ -93,7 +93,7 @@ describe('<AgentsPage />', () => {
     const agentsPage = mount(
       <AgentsPage {...requiredProps} agents={agents} deleteAgent={deleteSpy} />
     );
-    const loadedAgents = agentsPage.find(RenderLoadedAgents);
+    const loadedAgents = agentsPage.find('RenderLoadedAgents');
     expect(loadedAgents.find('button')).to.have.length(2);
     const firstButton = loadedAgents.find('button').at(0);
     firstButton.simulate('click');
