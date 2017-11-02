@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import * as StratumnAgentClient from 'stratumn-agent-client';
-import { history } from '../store';
+import history from '../store/history';
 
 import {
   createMap,

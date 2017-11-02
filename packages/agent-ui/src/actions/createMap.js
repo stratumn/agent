@@ -1,6 +1,6 @@
 import { getAgent } from 'stratumn-agent-client';
 import { actionTypes, getSegmentSuccess } from './';
-import { history } from '../store';
+import history from '../store/history';
 
 export const openCreateMapDialog = (agentName, processName) => ({
   type: actionTypes.CREATE_MAP_DIALOG_OPEN,
