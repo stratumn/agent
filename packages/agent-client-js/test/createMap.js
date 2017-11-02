@@ -25,6 +25,34 @@ describe('#createMap', () => {
           segment.link.state.title.should.be.exactly('Test');
         }));
 
+    it('creates a map with references', () =>
+      processCb()
+        .withRefs([{ linkHash: 'test', process: 'test' }])
+        .createMap('Test')
+        .then(segment => {
+          segment.link.state.title.should.be.exactly('Test');
+          segment.link.meta.refs.should.deepEqual([
+            {
+              linkHash: 'test',
+              process: 'test'
+            }
+          ]);
+        }));
+
+    it('fails when creating a map with a bad reference', () =>
+      processCb()
+        .withRefs([{ process: 'test' }])
+        .createMap('Test')
+        .then(() => {
+          throw new Error('Should have failed');
+        })
+        .catch(err => {
+          err.status.should.be.exactly(400);
+          err.message.should.be.exactly(
+            'missing segment or (process and linkHash)'
+          );
+        }));
+
     it('handles error if arguments do not match those of "init" function', () =>
       processCb()
         .createMap()
