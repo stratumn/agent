@@ -110,7 +110,7 @@ describe('createMap action', () => {
 
       expect(historyStub.callCount).to.equal(1);
       expect(historyStub.getCall(0).args[0]).to.equal(
-        '/a/p/segment/wowSuchHash'
+        '/a/p/segments/wowSuchHash'
       );
     });
   });
