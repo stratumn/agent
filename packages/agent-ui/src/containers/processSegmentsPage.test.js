@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
 import { mount } from 'enzyme';
 import chai, { expect } from 'chai';
@@ -11,6 +12,13 @@ import { statusTypes } from '../reducers';
 chai.use(sinonChai);
 
 describe('<ProcessSegmentsPage />', () => {
+  const renderComponent = props =>
+    mount(
+      <MemoryRouter>
+        <ProcessSegmentsPage {...props} />
+      </MemoryRouter>
+    );
+
   it('calls fetch on mount', () => {
     const props = {
       fetchSegments: sinon.spy(),
@@ -18,7 +26,7 @@ describe('<ProcessSegmentsPage />', () => {
       process: '',
       segments: {}
     };
-    const processSegmentsPage = mount(<ProcessSegmentsPage {...props} />);
+    const processSegmentsPage = renderComponent(props);
     expect(props.fetchSegments.callCount).to.equal(1);
     const div = processSegmentsPage.find('div');
     expect(div).to.have.lengthOf(1);
@@ -32,7 +40,7 @@ describe('<ProcessSegmentsPage />', () => {
       process: '',
       segments: { status: statusTypes.LOADING }
     };
-    const processSegmentsPage = mount(<ProcessSegmentsPage {...props} />);
+    const processSegmentsPage = renderComponent(props);
     expect(props.fetchSegments.callCount).to.equal(1);
     const div = processSegmentsPage.find('div');
     expect(div).to.have.lengthOf(1);
@@ -46,7 +54,7 @@ describe('<ProcessSegmentsPage />', () => {
       process: '',
       segments: { status: statusTypes.FAILED, error: 'unreachable' }
     };
-    const processSegmentsPage = mount(<ProcessSegmentsPage {...props} />);
+    const processSegmentsPage = renderComponent(props);
     expect(props.fetchSegments.callCount).to.equal(1);
     const div = processSegmentsPage.find('div');
     expect(div).to.have.lengthOf(1);
@@ -60,7 +68,7 @@ describe('<ProcessSegmentsPage />', () => {
       process: '',
       segments: { status: statusTypes.LOADED, details: ['foo', 'bar'] }
     };
-    const processSegmentsPage = mount(<ProcessSegmentsPage {...props} />);
+    const processSegmentsPage = renderComponent(props);
     expect(props.fetchSegments.callCount).to.equal(1);
     const div = processSegmentsPage.find('div');
     expect(div).to.have.lengthOf(3);
