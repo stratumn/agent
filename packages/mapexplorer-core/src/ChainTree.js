@@ -50,8 +50,8 @@ export default class ChainTree {
     const self = this;
     const nodes = root ? root.descendants() : [];
 
-    const links = (root ? root.links() : []).concat(findExtraLinks(root));
-    const extraNodes = findExtraNodes(links, nodes).map((n, index) =>
+    this.links = (root ? root.links() : []).concat(findExtraLinks(root));
+    const extraNodes = findExtraNodes(this.links, nodes).map((n, index) =>
       Object.assign(n, {
         x:
           options.polygonSize.height / 2 +
@@ -66,7 +66,7 @@ export default class ChainTree {
     this.initTree(root, extraNodes, options);
 
     // draw links
-    this.displayCurrentMapLinks(links);
+    this.displayCurrentMapLinks();
 
     // Update the nodes...
     const node = this.innerG
@@ -88,17 +88,17 @@ export default class ChainTree {
         selectAll('g.node').classed('selected', false);
         select(this).classed('selected', true);
         if (d.data.link.meta.refs) {
-          self.displayNodeLinks(d, links);
+          self.displayNodeLinks(d);
         } else {
-          self.displayCurrentMapLinks(links);
+          self.displayCurrentMapLinks();
         }
         if (d.data.isRef) {
-          self.drawForeignChildRef(d, links);
+          self.drawForeignChildRef(d);
         }
         options.onclick(
           d,
           () => {
-            self.displayCurrentMapLinks(links);
+            self.displayCurrentMapLinks();
             self.innerG.selectAll('g.node.selected').classed('selected', false);
           },
           this
@@ -127,12 +127,12 @@ export default class ChainTree {
       .on('click', function onClick(d) {
         selectAll('g.node').classed('selected', false);
         select(this).classed('selected', true);
-        self.displayNodeLinks(d, links);
-        self.drawAncestorsRef(d, links);
+        self.displayNodeLinks(d);
+        self.drawAncestorsRef(d);
         options.onclick(
           d,
           () => {
-            self.displayCurrentMapLinks(links);
+            self.displayCurrentMapLinks();
             self.innerG.selectAll('g.node.selected').classed('selected', false);
           },
           this
@@ -151,7 +151,7 @@ export default class ChainTree {
     // Draw foreign child references
     nodes
       .filter(n => n.data.isRef === true)
-      .each(n => this.drawForeignChildRef(n, links));
+      .map(n => this.drawForeignChildRef(n));
   }
 
   initTree(root, extraNodes, options) {
@@ -228,10 +228,10 @@ export default class ChainTree {
       .text('init');
   }
 
-  drawAncestorsRef(refNode, links) {
+  drawAncestorsRef(refNode) {
     const self = this;
     const onClick = () =>
-      loadRef(self.options.agentUrl, refNode, links).then(cs =>
+      loadRef(self.options.agentUrl, refNode, this.links).then(cs =>
         self.display(cs, self.options)
       );
 
@@ -266,7 +266,7 @@ export default class ChainTree {
       .on('click', onClick);
   }
 
-  drawForeignChildRef(refNode, links) {
+  drawForeignChildRef(refNode) {
     const self = this;
     const foreignLink = makeLink(
       { x: refNode.x, y: refNode.y + this.options.getArrowLength() },
@@ -275,7 +275,7 @@ export default class ChainTree {
     );
     const onClick = () => {
       this.innerG.selectAll('g.childRef').attr('class', 'node base');
-      loadRef(self.options.agentUrl, refNode, links).then(cs =>
+      loadRef(self.options.agentUrl, refNode, this.links).then(cs =>
         self.display(cs, self.options)
       );
     };
@@ -391,8 +391,8 @@ export default class ChainTree {
       .text(this.options.getLinkText);
   }
 
-  displayNodeLinks(node, links) {
-    const relatedLinks = links.filter(
+  displayNodeLinks(node) {
+    const relatedLinks = this.links.filter(
       l => l.source.id === node.id || l.target.id === node.id
     );
 
@@ -420,7 +420,7 @@ export default class ChainTree {
     }
   }
 
-  displayCurrentMapLinks(links) {
+  displayCurrentMapLinks() {
     // remove ref links labels
     this.innerG.selectAll('rect.refLinkBox').remove();
     this.innerG.selectAll('#linkLabelRef').remove();
@@ -436,7 +436,7 @@ export default class ChainTree {
     selectNodeRect.style('fill-opacity', 0.3);
 
     // if the depth or the height of a node are 0, it belongs to the current map
-    const currentMapLinks = links.filter(
+    const currentMapLinks = this.links.filter(
       l => l.source.depth !== 0 || l.source.height !== 0
     );
 
