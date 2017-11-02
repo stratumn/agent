@@ -30,8 +30,8 @@ export default class httpAdaptor {
     return get(`${this.url}/processes`);
   }
 
-  createMap(processName, ...args) {
-    return post(`${this.url}/${processName}/segments`, args);
+  createMap(processName, refs, ...args) {
+    return post(`${this.url}/${processName}/segments`, [refs, ...args]);
   }
 
   getSegment(processName, linkHash) {
@@ -46,11 +46,11 @@ export default class httpAdaptor {
     return get(`${this.url}/${processName}/maps${makeQueryString(opts)}`);
   }
 
-  createSegment(processName, linkHash, action, ...args) {
-    return post(
-      `${this.url}/${processName}/segments/${linkHash}/${action}`,
-      args
-    );
+  createSegment(processName, linkHash, action, refs, ...args) {
+    return post(`${this.url}/${processName}/segments/${linkHash}/${action}`, [
+      refs,
+      ...args
+    ]);
   }
 
   get url() {
