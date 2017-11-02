@@ -39,6 +39,20 @@ describe('#createMap', () => {
           ]);
         }));
 
+    it('fails when creating a map with a bad reference', () =>
+      processCb()
+        .withRefs([{ process: 'test' }])
+        .createMap('Test')
+        .then(() => {
+          throw new Error('Should have failed');
+        })
+        .catch(err => {
+          err.status.should.be.exactly(400);
+          err.message.should.be.exactly(
+            'missing segment or (process and linkHash)'
+          );
+        }));
+
     it('handles error if arguments do not match those of "init" function', () =>
       processCb()
         .createMap()
