@@ -48,7 +48,7 @@ export const createMap = title => (dispatch, getState) => {
         dispatch(createMapSuccess());
         dispatch(closeCreateMapDialog());
         dispatch(getSegmentSuccess(segment));
-        history.push(`/${agent}/${process}/segment/${segment.meta.linkHash}`);
+        history.push(`/${agent}/${process}/segments/${segment.meta.linkHash}`);
       })
       .catch(err => {
         dispatch(createMapFailure(err));
