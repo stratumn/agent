@@ -30,7 +30,7 @@ const renderStore = store => (
 );
 
 const renderFossilizer = fossilizer => (
-  <div>
+  <div key={fossilizer.name}>
     <p>{fossilizer.name}</p>
     <br />
     <p>{fossilizer.version}</p>

@@ -12,6 +12,7 @@ import {
 import { ProcessInfoPage, mapStateToProps } from './processInfoPage';
 
 describe('<ProcessInfoPage />', () => {
+  const requiredProps = { agent: '', process: { name: '' } };
   it('extracts the right process from the state', () => {
     const routeProps = { match: { params: { agent: 'a', process: 'p' } } };
 
@@ -43,14 +44,14 @@ describe('<ProcessInfoPage />', () => {
   });
 
   it('displays an error message when process is not found', () => {
-    const processInfoPage = shallow(<ProcessInfoPage />);
+    const processInfoPage = shallow(<ProcessInfoPage agent="" />);
     expect(processInfoPage.find('.error')).to.have.length(1);
   });
 
   it('displays agent and process name', () => {
     const process = new TestProcessBuilder('warehouse42').build();
     const processInfoPage = shallow(
-      <ProcessInfoPage agent="agent007" process={process} />
+      <ProcessInfoPage {...requiredProps} agent="agent007" process={process} />
     );
 
     expect(processInfoPage.find('.error')).to.have.length(0);
@@ -63,7 +64,9 @@ describe('<ProcessInfoPage />', () => {
       .withAction('login', ['name', 'password'])
       .withAction('logout', [])
       .build();
-    const processInfoPage = shallow(<ProcessInfoPage process={process} />);
+    const processInfoPage = shallow(
+      <ProcessInfoPage {...requiredProps} process={process} />
+    );
 
     expect(processInfoPage.find('li')).to.have.length(2);
     expect(processInfoPage.find('li').contains('login(name, password)')).to.be
@@ -75,7 +78,9 @@ describe('<ProcessInfoPage />', () => {
     const process = new TestProcessBuilder('warehouse42')
       .withStore('candyStore', 'v1', 'c1', 'welcome to the candy store')
       .build();
-    const processInfoPage = shallow(<ProcessInfoPage process={process} />);
+    const processInfoPage = shallow(
+      <ProcessInfoPage {...requiredProps} process={process} />
+    );
 
     expect(processInfoPage.find('div').contains('candyStore')).to.be.true;
   });
@@ -85,7 +90,9 @@ describe('<ProcessInfoPage />', () => {
       .withFossilizer('f1', 'v1', 'c1', 'd1', 'b1')
       .withFossilizer('f2', 'v2', 'c2', 'd2', 'b2')
       .build();
-    const processInfoPage = shallow(<ProcessInfoPage process={process} />);
+    const processInfoPage = shallow(
+      <ProcessInfoPage {...requiredProps} process={process} />
+    );
 
     expect(processInfoPage.find('div').contains('f1')).to.be.true;
     expect(processInfoPage.find('div').contains('f2')).to.be.true;

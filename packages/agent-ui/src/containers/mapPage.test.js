@@ -32,7 +32,9 @@ describe('<MapPage />', () => {
   });
 
   it('should display an error if agent url is missing', () => {
-    const mapPage = shallow(<MapPage agent={{ name: 'missing-url' }} />);
+    const mapPage = shallow(
+      <MapPage {...validProps} agent={{ name: 'missing-url' }} />
+    );
     expect(mapPage.find(MapExplorer)).to.have.length(0);
     expect(mapPage.find('.error')).to.have.length(1);
   });

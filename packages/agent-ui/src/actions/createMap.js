@@ -43,8 +43,7 @@ export const createMap = title => (dispatch, getState) => {
         const proc = a.getProcess(process);
         return proc.createMap(title);
       })
-      .then(segment => {
-        console.log(segment);
+      .then((/* segment */) => {
         dispatch(createMapSuccess());
         dispatch(closeCreateMapDialog());
       })
