@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, NavLink } from 'react-router-dom';
 
 import { getMapIds } from '../actions';
 import { statusTypes } from '../reducers';
@@ -13,7 +13,7 @@ export class ProcessMapsPage extends Component {
   }
 
   render() {
-    const { maps: { status, mapIds, error } } = this.props;
+    const { maps: { status, mapIds, error }, agent, process } = this.props;
     switch (status) {
       case statusTypes.LOADING:
         return <div>loading...</div>;
@@ -23,7 +23,11 @@ export class ProcessMapsPage extends Component {
         return (
           <div>
             process maps:
-            {mapIds.map(id => <div key={id}>{id}</div>)}
+            {mapIds.map(id => (
+              <div key={id}>
+                <NavLink to={`/${agent}/${process}/maps/${id}`}>{id}</NavLink>
+              </div>
+            ))}
           </div>
         );
       default:
