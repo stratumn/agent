@@ -12,6 +12,14 @@ export class ProcessMapsPage extends Component {
     fetchMapIds(agent, process);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { agent, process, fetchMapIds } = nextProps;
+    const { agent: thisAgent, process: thisProcess } = this.props;
+    if (agent !== thisAgent || process !== thisProcess) {
+      fetchMapIds(agent, process);
+    }
+  }
+
   render() {
     const { maps: { status, mapIds, error }, agent, process } = this.props;
     switch (status) {

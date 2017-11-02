@@ -12,6 +12,14 @@ export class ProcessSegmentsPage extends Component {
     fetchSegments(agent, process);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { agent, process, fetchSegments } = nextProps;
+    const { agent: thisAgent, process: thisProcess } = this.props;
+    if (agent !== thisAgent || process !== thisProcess) {
+      fetchSegments(agent, process);
+    }
+  }
+
   render() {
     const { segments: { status, details, error } } = this.props;
     switch (status) {
