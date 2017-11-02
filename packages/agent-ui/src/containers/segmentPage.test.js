@@ -66,8 +66,8 @@ describe('<SegmentPage />', () => {
     const segmentPage = shallow(
       <SegmentPage {...requiredProps} segment={segment} />
     );
-    expect(segmentPage.find('div').contains(JSON.stringify(segment))).to.be
-      .true;
+    expect(segmentPage.find('div').contains(JSON.stringify(segment, null, 2)))
+      .to.be.true;
   });
 
   it('refreshes the segment when outdated', () => {

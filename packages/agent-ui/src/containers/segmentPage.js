@@ -35,7 +35,7 @@ export class SegmentPage extends Component {
       return <div className="error">Could not find segment</div>;
     }
 
-    return <div>{JSON.stringify(segment)}</div>;
+    return <div>{JSON.stringify(segment, null, 2)}</div>;
   }
 }
 
