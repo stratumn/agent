@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { getAgent, removeAgent } from '../actions';
 import { statusTypes } from '../reducers';
 
-export const RenderLoadedAgents = ({ agents, deleteAgent }) =>
+const RenderLoadedAgents = ({ agents, deleteAgent }) =>
   agents &&
   agents.map(({ name, url }) => (
     <div key={name}>
