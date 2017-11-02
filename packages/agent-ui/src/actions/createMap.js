@@ -37,7 +37,7 @@ export const createMap = title => (dispatch, getState) => {
       })
       .then(segment => {
         dispatch(createMapSuccess());
-        dispatch(closeCreateMapDialog(true));
+        dispatch(closeCreateMapDialog());
         dispatch(getSegmentSuccess(segment));
         history.push(`/${agent}/${process}/segments/${segment.meta.linkHash}`);
       })
