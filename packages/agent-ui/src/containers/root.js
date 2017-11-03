@@ -4,7 +4,7 @@ import { Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 
-import { history } from '../store';
+import history from '../store/history';
 import { App } from './';
 
 const Root = ({ store, persistor }) => (
