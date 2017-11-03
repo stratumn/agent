@@ -15,35 +15,21 @@ describe('<SegmentPage />', () => {
   const segment = { meta: { linkHash: 'this is so meta' } };
   const routeWithLinkHash = { match: { params: { id: 'l' } } };
 
-  it('refreshes segment if not initialized', () => {
-    const state = {};
-    const props = mapStateToProps(state, routeWithLinkHash);
-    expect(props.refresh).to.be.true;
-  });
-
-  it('refreshes segment if mismatch with url', () => {
-    const state = { segment: { details: segment } };
-    const props = mapStateToProps(state, routeWithLinkHash);
-    expect(props.refresh).to.be.true;
-  });
-
-  it('does not refresh segment if already loading', () => {
+  it('extracts segment loading status', () => {
     const state = { segment: { status: statusTypes.LOADING } };
     const props = mapStateToProps(state, routeWithLinkHash);
-    expect(props.refresh).to.be.false;
     expect(props.status).to.equal(statusTypes.LOADING);
   });
 
-  it('does not refresh segment if fetch failed', () => {
+  it('extracts segment error if fetch failed', () => {
     const state = { segment: { status: statusTypes.FAILED, error: 'err!!!' } };
     const props = mapStateToProps(state, routeWithLinkHash);
-    expect(props.refresh).to.be.false;
     expect(props.status).to.equal(statusTypes.FAILED);
     expect(props.error).to.equal('err!!!');
   });
 
   const requiredProps = {
-    getSegmentAction: () => {},
+    getSegmentIfNeeded: () => {},
     agent: 'a',
     process: 'p',
     linkHash: 'l',
@@ -70,14 +56,13 @@ describe('<SegmentPage />', () => {
       .to.be.true;
   });
 
-  it('refreshes the segment when outdated', () => {
+  it('refreshes the segment when receiving props', () => {
     const segmentSpy = sinon.spy();
     const props = {
-      getSegmentAction: segmentSpy,
+      getSegmentIfNeeded: segmentSpy,
       agent: 'a',
       process: 'p',
-      linkHash: 'l',
-      refresh: true
+      linkHash: 'l'
     };
 
     const segmentPage = mount(<SegmentPage {...props} />);

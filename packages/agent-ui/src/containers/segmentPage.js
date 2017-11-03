@@ -8,17 +8,13 @@ import { statusTypes } from '../reducers';
 
 export class SegmentPage extends Component {
   componentDidMount() {
-    const { agent, process, linkHash, refresh, getSegmentAction } = this.props;
-    if (refresh) {
-      getSegmentAction(agent, process, linkHash);
-    }
+    const { agent, process, linkHash, getSegmentIfNeeded } = this.props;
+    getSegmentIfNeeded(agent, process, linkHash);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { agent, process, linkHash, refresh, getSegmentAction } = nextProps;
-    if (refresh) {
-      getSegmentAction(agent, process, linkHash);
-    }
+    const { agent, process, linkHash, getSegmentIfNeeded } = nextProps;
+    getSegmentIfNeeded(agent, process, linkHash);
   }
 
   render() {
@@ -46,11 +42,10 @@ SegmentPage.defaultProps = {
 };
 
 SegmentPage.propTypes = {
-  getSegmentAction: PropTypes.func.isRequired,
+  getSegmentIfNeeded: PropTypes.func.isRequired,
   agent: PropTypes.string.isRequired,
   process: PropTypes.string.isRequired,
   linkHash: PropTypes.string.isRequired,
-  refresh: PropTypes.bool.isRequired,
   status: PropTypes.string,
   error: PropTypes.string,
   segment: PropTypes.shape({
@@ -65,8 +60,7 @@ export function mapStateToProps(state, ownProps) {
   const props = {
     agent,
     process,
-    linkHash,
-    refresh: true
+    linkHash
   };
 
   if (!state.segment) {
@@ -75,20 +69,12 @@ export function mapStateToProps(state, ownProps) {
 
   const { status, error, details } = state.segment;
   props.status = status;
-
-  if (status === statusTypes.LOADING) {
-    props.refresh = false;
-  } else if (status === statusTypes.FAILED) {
-    props.refresh = false;
-    props.error = error;
-  } else {
-    props.refresh = !details || details.meta.linkHash !== linkHash;
-    props.segment = details;
-  }
+  props.error = error;
+  props.segment = details;
 
   return props;
 }
 
 export default withRouter(
-  connect(mapStateToProps, { getSegmentAction: getSegment })(SegmentPage)
+  connect(mapStateToProps, { getSegmentIfNeeded: getSegment })(SegmentPage)
 );
