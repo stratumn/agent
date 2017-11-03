@@ -1,0 +1,540 @@
+[
+  {
+    "link": {
+      "state": { "author": "zzz", "body": "ez" },
+      "meta": {
+        "action": "message",
+        "arguments": ["ez", "zzz"],
+        "mapId": "ddde0416-c772-478c-b64f-4a095f5de11b",
+        "prevLinkHash":
+          "e687b125c14a3a9897a6b97d0cfa49b71367943c984006ac58463087d4b251aa",
+        "process": "z",
+        "stateHash":
+          "2f96e62fd7ef8f06127d56608ef923137907f0a223bfcb20a8069676085f415d"
+      }
+    },
+    "meta": {
+      "agentUrl": "http://localhost:3000",
+      "evidence": {
+        "currentHeader": {
+          "app_hash": "tlw/i1LVGNJLHNtBuNJJWCTD9gk=",
+          "chain_id": "test-chain-69TRBi",
+          "height": 15955,
+          "last_block_id": {
+            "hash": "Fjunph4mb7z34OyK3cKhlE+GDYM=",
+            "parts": { "hash": "5BSL0huITQZaM+5Y0uDhscjeVwE=", "total": 1 }
+          },
+          "last_commit_hash": "7ir5ORM8dRz5ah/Zl7P5DLG1ZT0=",
+          "time": 1509641265
+        },
+        "currentProof": {
+          "InnerNodes": [
+            {
+              "Height": 1,
+              "Left": "KBK88B2JzXR8wilayWSCuoZl8g4=",
+              "Right": "",
+              "Size": 2
+            },
+            {
+              "Height": 3,
+              "Left": "",
+              "Right": "2lLELjkt5HJgtitTVXPA0ojTmuk=",
+              "Size": 6
+            },
+            {
+              "Height": 4,
+              "Left": "R2ufIBVuiZBnOdlD4szH/uwlWek=",
+              "Right": "",
+              "Size": 9
+            },
+            {
+              "Height": 5,
+              "Left": "",
+              "Right": "w61jm9zL8JXjQ2BbIffTl6Vu0Ns=",
+              "Size": 18
+            }
+          ],
+          "LeafHash": "r+T9+soC2ouE1x94bFfTS2JyUiE=",
+          "RootHash": "tlw/i1LVGNJLHNtBuNJJWCTD9gk="
+        },
+        "originalHeader": {
+          "app_hash": "pJ8N3hU2GwUO0dHb+ihG2rRP4Fw=",
+          "chain_id": "test-chain-69TRBi",
+          "height": 83,
+          "last_block_id": {
+            "hash": "43b7yBzuH42/vBA57omYzjt1uII=",
+            "parts": { "hash": "wVmJfT3redVnHKQkvx7RR6qIVCo=", "total": 1 }
+          },
+          "last_commit_hash": "mu3MzulMjVUbxa5BEIk6mn3ZtBs=",
+          "time": 1509466300
+        },
+        "originalProof": {
+          "InnerNodes": [
+            {
+              "Height": 1,
+              "Left": "KBK88B2JzXR8wilayWSCuoZl8g4=",
+              "Right": "",
+              "Size": 2
+            },
+            {
+              "Height": 2,
+              "Left": "Z+cZjFQZWvkkKUpwyLs75xR+xFc=",
+              "Right": "",
+              "Size": 4
+            },
+            {
+              "Height": 4,
+              "Left": "",
+              "Right": "5IMN/8t4wKwASq58BrnBim3px4M=",
+              "Size": 9
+            }
+          ],
+          "LeafHash": "r+T9+soC2ouE1x94bFfTS2JyUiE=",
+          "RootHash": "pJ8N3hU2GwUO0dHb+ihG2rRP4Fw="
+        },
+        "state": "COMPLETE",
+        "transactions": { "[TMPop]:[test-chain-69TRBi]": "82" }
+      },
+      "linkHash":
+        "2dac436d07d784d5871de2ae521e67945780c080f6a5949d75659fd43fd13e56",
+      "segmentUrl":
+        "http://localhost:3000/segments/2dac436d07d784d5871de2ae521e67945780c080f6a5949d75659fd43fd13e56"
+    }
+  },
+  {
+    "link": {
+      "state": { "author": "zer", "body": "re" },
+      "meta": {
+        "action": "message",
+        "arguments": ["re", "zer"],
+        "mapId": "ddde0416-c772-478c-b64f-4a095f5de11b",
+        "prevLinkHash":
+          "2dac436d07d784d5871de2ae521e67945780c080f6a5949d75659fd43fd13e56",
+        "process": "z",
+        "stateHash":
+          "989a3dca8855296d7ba275cefd2b3c68749830c7ad4f1d3b256a744f3354d455"
+      }
+    },
+    "meta": {
+      "agentUrl": "http://localhost:3000",
+      "evidence": {
+        "currentHeader": {
+          "app_hash": "tlw/i1LVGNJLHNtBuNJJWCTD9gk=",
+          "chain_id": "test-chain-69TRBi",
+          "height": 15955,
+          "last_block_id": {
+            "hash": "Fjunph4mb7z34OyK3cKhlE+GDYM=",
+            "parts": { "hash": "5BSL0huITQZaM+5Y0uDhscjeVwE=", "total": 1 }
+          },
+          "last_commit_hash": "7ir5ORM8dRz5ah/Zl7P5DLG1ZT0=",
+          "time": 1509641265
+        },
+        "currentProof": {
+          "InnerNodes": [
+            {
+              "Height": 1,
+              "Left": "",
+              "Right": "ocg8gC597/ZellonCcyYT0DeUGk=",
+              "Size": 2
+            },
+            {
+              "Height": 2,
+              "Left": "",
+              "Right": "13EzIcfDh5st1CUToI0o4el9TPk=",
+              "Size": 4
+            },
+            {
+              "Height": 3,
+              "Left": "A4XidID4kOn9ddVYbcPXohe7p3Q=",
+              "Right": "",
+              "Size": 6
+            },
+            {
+              "Height": 4,
+              "Left": "R2ufIBVuiZBnOdlD4szH/uwlWek=",
+              "Right": "",
+              "Size": 9
+            },
+            {
+              "Height": 5,
+              "Left": "",
+              "Right": "w61jm9zL8JXjQ2BbIffTl6Vu0Ns=",
+              "Size": 18
+            }
+          ],
+          "LeafHash": "xbwUWNCT2RQ+5mjAJvxcvgrVFE4=",
+          "RootHash": "tlw/i1LVGNJLHNtBuNJJWCTD9gk="
+        },
+        "originalHeader": {
+          "app_hash": "PchosQcNgi6SCRE9rHcQ3CMez5k=",
+          "chain_id": "test-chain-69TRBi",
+          "height": 94,
+          "last_block_id": {
+            "hash": "tWgqd0Se2a5cIB3gXcAiVDn++WE=",
+            "parts": { "hash": "HAkfTP0dObi3+hxNJggNysEx1hA=", "total": 1 }
+          },
+          "last_commit_hash": "8pcUWk4lLLHk1yMzwtzF++XbIBI=",
+          "time": 1509466312
+        },
+        "originalProof": {
+          "InnerNodes": [
+            {
+              "Height": 1,
+              "Left": "r+T9+soC2ouE1x94bFfTS2JyUiE=",
+              "Right": "",
+              "Size": 2
+            },
+            {
+              "Height": 2,
+              "Left": "KBK88B2JzXR8wilayWSCuoZl8g4=",
+              "Right": "",
+              "Size": 3
+            },
+            {
+              "Height": 3,
+              "Left": "Z+cZjFQZWvkkKUpwyLs75xR+xFc=",
+              "Right": "",
+              "Size": 5
+            },
+            {
+              "Height": 4,
+              "Left": "",
+              "Right": "2LggCLd9ifk8zi/64CIqv//QnKQ=",
+              "Size": 11
+            }
+          ],
+          "LeafHash": "xbwUWNCT2RQ+5mjAJvxcvgrVFE4=",
+          "RootHash": "PchosQcNgi6SCRE9rHcQ3CMez5k="
+        },
+        "state": "COMPLETE",
+        "transactions": { "[TMPop]:[test-chain-69TRBi]": "93" }
+      },
+      "linkHash":
+        "2f180484b71cff45b56db241859f4122c9865257d44444ebe6754f715a356903",
+      "segmentUrl":
+        "http://localhost:3000/segments/2f180484b71cff45b56db241859f4122c9865257d44444ebe6754f715a356903"
+    }
+  },
+  {
+    "link": {
+      "state": { "title": "aez" },
+      "meta": {
+        "action": "init",
+        "arguments": ["aez"],
+        "mapId": "ddde0416-c772-478c-b64f-4a095f5de11b",
+        "process": "z",
+        "stateHash":
+          "c5709d373510f44a3416d12ca2d3e33d1ef7dc4b4426462400ba9a76ba342f4f"
+      }
+    },
+    "meta": {
+      "agentUrl": "http://localhost:3000",
+      "evidence": {
+        "currentHeader": {
+          "app_hash": "tlw/i1LVGNJLHNtBuNJJWCTD9gk=",
+          "chain_id": "test-chain-69TRBi",
+          "height": 15955,
+          "last_block_id": {
+            "hash": "Fjunph4mb7z34OyK3cKhlE+GDYM=",
+            "parts": { "hash": "5BSL0huITQZaM+5Y0uDhscjeVwE=", "total": 1 }
+          },
+          "last_commit_hash": "7ir5ORM8dRz5ah/Zl7P5DLG1ZT0=",
+          "time": 1509641265
+        },
+        "currentProof": {
+          "InnerNodes": [
+            {
+              "Height": 1,
+              "Left": "n9Rubr7wxpr4yovYxCKVJ9lXO6g=",
+              "Right": "",
+              "Size": 2
+            },
+            {
+              "Height": 2,
+              "Left": "",
+              "Right": "T2KHoGHBAAaNa5cCTi7n+Yvzx4w=",
+              "Size": 4
+            },
+            {
+              "Height": 4,
+              "Left": "",
+              "Right": "1REA+6PSKM4RxOhhPgVMvnxImLM=",
+              "Size": 9
+            },
+            {
+              "Height": 5,
+              "Left": "Shbf28KDspOVxsYPsb9RnNra9Jw=",
+              "Right": "",
+              "Size": 18
+            }
+          ],
+          "LeafHash": "B+QnS/ZB1SmTlBJ8c6UzqXp0HH8=",
+          "RootHash": "tlw/i1LVGNJLHNtBuNJJWCTD9gk="
+        },
+        "originalHeader": {
+          "app_hash": "qdM0ELwUn4Xq/YD132EnggYRVkk=",
+          "chain_id": "test-chain-69TRBi",
+          "height": 71,
+          "last_block_id": {
+            "hash": "r2/qo4ycODDC+Xs0MG8Sifly1r4=",
+            "parts": { "hash": "UtEZEY5ForZuYB1XJ5dP8XigE0I=", "total": 1 }
+          },
+          "last_commit_hash": "PYC/XytFBXr9j2a1mJAaCefn62g=",
+          "time": 1509466288
+        },
+        "originalProof": {
+          "InnerNodes": [
+            {
+              "Height": 1,
+              "Left": "n9Rubr7wxpr4yovYxCKVJ9lXO6g=",
+              "Right": "",
+              "Size": 2
+            },
+            {
+              "Height": 2,
+              "Left": "",
+              "Right": "LnfsBkSm9AzZgbqqmL4vOVsE+rY=",
+              "Size": 4
+            },
+            {
+              "Height": 3,
+              "Left": "dH0D9SwGP4NXg45UCHNeQmvOF5E=",
+              "Right": "",
+              "Size": 7
+            }
+          ],
+          "LeafHash": "B+QnS/ZB1SmTlBJ8c6UzqXp0HH8=",
+          "RootHash": "qdM0ELwUn4Xq/YD132EnggYRVkk="
+        },
+        "state": "COMPLETE",
+        "transactions": { "[TMPop]:[test-chain-69TRBi]": "70" }
+      },
+      "linkHash":
+        "6ae53b2cac86ef0a5b959e929c155237f6ee6e965bb7d7598cc25a00288de56c",
+      "segmentUrl":
+        "http://localhost:3000/segments/6ae53b2cac86ef0a5b959e929c155237f6ee6e965bb7d7598cc25a00288de56c"
+    }
+  },
+  {
+    "link": {
+      "state": { "author": "ez", "body": "e" },
+      "meta": {
+        "action": "message",
+        "arguments": ["e", "ez"],
+        "mapId": "ddde0416-c772-478c-b64f-4a095f5de11b",
+        "prevLinkHash":
+          "2dac436d07d784d5871de2ae521e67945780c080f6a5949d75659fd43fd13e56",
+        "process": "z",
+        "stateHash":
+          "92b3c0aa511425110afd34ca67d9ef96590bf4cbe2b351d81d070baeb6d0c8a6"
+      }
+    },
+    "meta": {
+      "agentUrl": "http://localhost:3000",
+      "evidence": {
+        "currentHeader": {
+          "app_hash": "tlw/i1LVGNJLHNtBuNJJWCTD9gk=",
+          "chain_id": "test-chain-69TRBi",
+          "height": 15955,
+          "last_block_id": {
+            "hash": "Fjunph4mb7z34OyK3cKhlE+GDYM=",
+            "parts": { "hash": "5BSL0huITQZaM+5Y0uDhscjeVwE=", "total": 1 }
+          },
+          "last_commit_hash": "7ir5ORM8dRz5ah/Zl7P5DLG1ZT0=",
+          "time": 1509641265
+        },
+        "currentProof": {
+          "InnerNodes": [
+            {
+              "Height": 1,
+              "Left": "JB3SGHdOxHS+FwU+Y0ee5dhc2gM=",
+              "Right": "",
+              "Size": 2
+            },
+            {
+              "Height": 3,
+              "Left": "",
+              "Right": "3FpN9P9m6IPpc2oU9kBLLnlD1P4=",
+              "Size": 5
+            },
+            {
+              "Height": 4,
+              "Left": "vsmKyX4gniqD7BabB3Nvvj6cNUM=",
+              "Right": "",
+              "Size": 9
+            },
+            {
+              "Height": 5,
+              "Left": "Shbf28KDspOVxsYPsb9RnNra9Jw=",
+              "Right": "",
+              "Size": 18
+            }
+          ],
+          "LeafHash": "+l/uwfv4J890bYWCPjOh/OHaG24=",
+          "RootHash": "tlw/i1LVGNJLHNtBuNJJWCTD9gk="
+        },
+        "originalHeader": {
+          "app_hash": "62XxdyjvJ5YZErpaxc6KAKYm0nM=",
+          "chain_id": "test-chain-69TRBi",
+          "height": 89,
+          "last_block_id": {
+            "hash": "milS5eN0M8gEv7DbkVV9wcIplNE=",
+            "parts": { "hash": "U2ldAdpuaYZFG+MCZfvazeY7kXk=", "total": 1 }
+          },
+          "last_commit_hash": "B2KaZeB21kQ2NaUNsQs/rIovPhs=",
+          "time": 1509466306
+        },
+        "originalProof": {
+          "InnerNodes": [
+            {
+              "Height": 1,
+              "Left": "",
+              "Right": "ZgsIFVen8jwHG+QKKIqZ6uEsBek=",
+              "Size": 2
+            },
+            {
+              "Height": 2,
+              "Left": "LnfsBkSm9AzZgbqqmL4vOVsE+rY=",
+              "Right": "",
+              "Size": 4
+            },
+            {
+              "Height": 3,
+              "Left": "TZwPfQ/b7Zo3nPgwOJ3E18W23S0=",
+              "Right": "",
+              "Size": 6
+            },
+            {
+              "Height": 4,
+              "Left": "hx7cUpXGbo3tS7Ey+fCq7ErCVyI=",
+              "Right": "",
+              "Size": 10
+            }
+          ],
+          "LeafHash": "+l/uwfv4J890bYWCPjOh/OHaG24=",
+          "RootHash": "62XxdyjvJ5YZErpaxc6KAKYm0nM="
+        },
+        "state": "COMPLETE",
+        "transactions": { "[TMPop]:[test-chain-69TRBi]": "88" }
+      },
+      "linkHash":
+        "e4e599fefeec3e114e0129e07a2d21d497de685cf0d589843bdd5ebaeb362391",
+      "segmentUrl":
+        "http://localhost:3000/segments/e4e599fefeec3e114e0129e07a2d21d497de685cf0d589843bdd5ebaeb362391"
+    }
+  },
+  {
+    "link": {
+      "state": { "author": "e", "body": "e" },
+      "meta": {
+        "action": "message",
+        "arguments": ["e", "e"],
+        "mapId": "ddde0416-c772-478c-b64f-4a095f5de11b",
+        "prevLinkHash":
+          "6ae53b2cac86ef0a5b959e929c155237f6ee6e965bb7d7598cc25a00288de56c",
+        "process": "z",
+        "stateHash":
+          "023c275a9843537d8cf41652765cbf40203f2dd9a51533bf4c3df81c795d4cf9"
+      }
+    },
+    "meta": {
+      "agentUrl": "http://localhost:3000",
+      "evidence": {
+        "currentHeader": {
+          "app_hash": "tlw/i1LVGNJLHNtBuNJJWCTD9gk=",
+          "chain_id": "test-chain-69TRBi",
+          "height": 15955,
+          "last_block_id": {
+            "hash": "Fjunph4mb7z34OyK3cKhlE+GDYM=",
+            "parts": { "hash": "5BSL0huITQZaM+5Y0uDhscjeVwE=", "total": 1 }
+          },
+          "last_commit_hash": "7ir5ORM8dRz5ah/Zl7P5DLG1ZT0=",
+          "time": 1509641265
+        },
+        "currentProof": {
+          "InnerNodes": [
+            {
+              "Height": 1,
+              "Left": "",
+              "Right": "3iYoQ42y5AyChSjXzbJUSjX7iCo=",
+              "Size": 2
+            },
+            {
+              "Height": 2,
+              "Left": "",
+              "Right": "CBdr9vOKfyS1SkfxtBsGDMulBa0=",
+              "Size": 3
+            },
+            {
+              "Height": 3,
+              "Left": "pHZLxcwhR5ky/WjYoK3QUxjwuxo=",
+              "Right": "",
+              "Size": 5
+            },
+            {
+              "Height": 4,
+              "Left": "vsmKyX4gniqD7BabB3Nvvj6cNUM=",
+              "Right": "",
+              "Size": 9
+            },
+            {
+              "Height": 5,
+              "Left": "Shbf28KDspOVxsYPsb9RnNra9Jw=",
+              "Right": "",
+              "Size": 18
+            }
+          ],
+          "LeafHash": "ZgsIFVen8jwHG+QKKIqZ6uEsBek=",
+          "RootHash": "tlw/i1LVGNJLHNtBuNJJWCTD9gk="
+        },
+        "originalHeader": {
+          "app_hash": "CYgd6vsjvXSNyOYkWXVWKQDjDLs=",
+          "chain_id": "test-chain-69TRBi",
+          "height": 76,
+          "last_block_id": {
+            "hash": "rkVOCMBQhHJKrwCgIO+D/koyze8=",
+            "parts": { "hash": "GwUVfE0xfDist8eLuEH4Su1gVcI=", "total": 1 }
+          },
+          "last_commit_hash": "MkQlJJHYGLw9xuMAJ0b+WU6tpPM=",
+          "time": 1509466293
+        },
+        "originalProof": {
+          "InnerNodes": [
+            {
+              "Height": 1,
+              "Left": "JB3SGHdOxHS+FwU+Y0ee5dhc2gM=",
+              "Right": "",
+              "Size": 2
+            },
+            {
+              "Height": 2,
+              "Left": "w1/h9AQLJnZU31llaVo4D5R0zXE=",
+              "Right": "",
+              "Size": 3
+            },
+            {
+              "Height": 3,
+              "Left": "TZwPfQ/b7Zo3nPgwOJ3E18W23S0=",
+              "Right": "",
+              "Size": 5
+            },
+            {
+              "Height": 4,
+              "Left": "dH0D9SwGP4NXg45UCHNeQmvOF5E=",
+              "Right": "",
+              "Size": 8
+            }
+          ],
+          "LeafHash": "ZgsIFVen8jwHG+QKKIqZ6uEsBek=",
+          "RootHash": "CYgd6vsjvXSNyOYkWXVWKQDjDLs="
+        },
+        "state": "COMPLETE",
+        "transactions": { "[TMPop]:[test-chain-69TRBi]": "75" }
+      },
+      "linkHash":
+        "e687b125c14a3a9897a6b97d0cfa49b71367943c984006ac58463087d4b251aa",
+      "segmentUrl":
+        "http://localhost:3000/segments/e687b125c14a3a9897a6b97d0cfa49b71367943c984006ac58463087d4b251aa"
+    }
+  }
+]

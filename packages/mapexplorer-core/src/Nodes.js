@@ -19,12 +19,12 @@ import { getAgent } from 'stratumn-agent-client';
 
 function findNodeRefs(node) {
   let refs = [];
-  if (node.children) {
+  if (node && node.children) {
     for (let i = 0; i < node.children.length; i += 1) {
       refs = refs.concat(findNodeRefs(node.children[i]));
     }
   }
-  if (node.data.link.meta.refs) {
+  if (node && node.data.link.meta.refs) {
     return refs.concat(
       node.data.link.meta.refs.map(r => ({
         source: r,
@@ -37,36 +37,52 @@ function findNodeRefs(node) {
 
 function findExtraLinks(root) {
   const extraLinks = [];
-  const nodes = root.descendants();
+  const nodes = root ? root.descendants() : [];
   const refs = findNodeRefs(root);
   for (let i = 0; i < refs.length; i += 1) {
     const source = nodes.find(e => e.id === refs[i].source.linkHash);
     const target = nodes.find(e => e.id === refs[i].target.id);
-    if (source && target) {
-      extraLinks.push({ source, target, ref: true });
-    } else if (!source) {
-      let newSourceNode = extraLinks
-        .map(l => l.source)
-        .find(n => n.data.meta.linkHash === refs[i].source.linkHash);
-      if (!newSourceNode) {
-        newSourceNode = hierarchy(
-          {
-            link: {
-              meta: {
-                mapId: refs[i].source.mapId,
-                process: refs[i].source.process
-              }
+    if (
+      !extraLinks.find(
+        l =>
+          l.source.id === refs[i].source.linkHash && l.target.id === target.id
+      )
+    ) {
+      if (source && target) {
+        extraLinks.push({ source, target, ref: true });
+      } else if (!source && target) {
+        let newSourceNode = extraLinks
+          .map(l => l.source)
+          .find(n => n.data.meta.linkHash === refs[i].source.linkHash);
+        if (!newSourceNode) {
+          if (
+            !refs[i].source.mapId ||
+            !refs[i].source.process ||
+            !refs[i].source.linkHash
+          ) {
+            throw new Error(
+              `findExtraLinks: wrong reference format (should have process, mapId, linkHash)`
+            );
+          }
+          newSourceNode = hierarchy(
+            {
+              link: {
+                meta: {
+                  mapId: refs[i].source.mapId,
+                  process: refs[i].source.process
+                }
+              },
+              meta: { linkHash: refs[i].source.linkHash }
             },
-            meta: { linkHash: refs[i].source.linkHash }
-          },
-          () => null
-        );
+            () => null
+          );
+        }
+        extraLinks.push({
+          source: Object.assign(newSourceNode, { id: refs[i].source.linkHash }),
+          target,
+          ref: true
+        });
       }
-      extraLinks.push({
-        source: Object.assign(newSourceNode, { id: refs[i].source.linkHash }),
-        target,
-        ref: true
-      });
     }
   }
 
@@ -93,7 +109,9 @@ function loadRef(agentUrl, ref, links) {
       .then(agent => {
         const process = agent.processes[ref.data.link.meta.process];
         if (!process) {
-          throw new Error('process', ref.data.link.meta.process, 'not found');
+          throw new Error(
+            `loadRef: process ${ref.data.link.meta.process} not found`
+          );
         }
         return process;
       })
@@ -106,7 +124,7 @@ function loadRef(agentUrl, ref, links) {
       .then(segments => {
         if (!segments || segments.length === 0) {
           throw new Error(
-            `no segments for map ${ref.data.link.meta.process} not found`
+            `loadRef: no segments for map ${ref.data.link.meta.mapId}`
           );
         }
         const foreignChildren = links
@@ -126,10 +144,9 @@ function loadRef(agentUrl, ref, links) {
           });
         const fullSegments = segments.concat(foreignChildren);
         return fullSegments;
-      })
-      .catch(res => console.log(res));
+      });
   }
-  throw new Error('unknown agent url');
+  throw new Error('loadRef: unknown agent url');
 }
 
 export { findExtraLinks, findExtraNodes, loadRef };

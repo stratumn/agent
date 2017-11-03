@@ -63,9 +63,7 @@ export const defaultOptions = {
         : '')
     );
   },
-  onclick() {
-    console.log('hello');
-  },
+  onclick() {},
   onTag() {}
 };
 
