@@ -5,7 +5,7 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import { CreateMapButton } from './createMapButton';
+import CreateMapButton from './createMapButton';
 
 chai.use(sinonChai);
 

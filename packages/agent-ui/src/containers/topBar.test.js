@@ -7,10 +7,14 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { TopBar } from './topBar';
-import { CreateMapButton } from './createMapButton';
-import { AppendSegmentButton } from './appendSegmentButton';
+import { AppendSegmentButton, CreateMapButton } from '../components';
 
 describe('<TopBar />', () => {
+  const requiredProps = {
+    match: { params: { agent: 'a', process: 'p' } },
+    mapDialog: () => {}
+  };
+
   const mockStore = configureStore();
   const store = mockStore({ agents: {} });
 
@@ -18,13 +22,13 @@ describe('<TopBar />', () => {
     mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={[path]}>
-          <TopBar path={path} />
+          <TopBar path={path} {...requiredProps} />
         </MemoryRouter>
       </Provider>
     );
 
   it('renders a title on index page', () => {
-    const topBarNoLinks = shallow(<TopBar path="/" />);
+    const topBarNoLinks = shallow(<TopBar path="/" {...requiredProps} />);
     expect(
       topBarNoLinks.find('div').contains('Welcome to the Indigo Framework UI')
     ).to.be.true;

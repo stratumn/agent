@@ -5,7 +5,7 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import { AppendSegmentButton } from './appendSegmentButton';
+import AppendSegmentButton from './appendSegmentButton';
 
 chai.use(sinonChai);
 
@@ -16,7 +16,7 @@ describe('<AppendSegmentButton />', () => {
       <AppendSegmentButton
         agent="a"
         process="p"
-        mapId="m"
+        id="m"
         openDialog={openDialogSpy}
       />
     );
