@@ -56,8 +56,6 @@ ProcessMapsPage.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  console.log('ProcessMapsPage state', state);
-  console.log('ProcessMapsPage ownProps', ownProps);
   const { match: { params: { agent, process } } } = ownProps;
   const { maps } = state;
   return { agent, process, maps };

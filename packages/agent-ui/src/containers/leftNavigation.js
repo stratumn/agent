@@ -50,10 +50,7 @@ LeftNavigation.propTypes = {
   ).isRequired
 };
 
-export function mapStateToProps(state, ownProps) {
-  console.log('LeftNavigation state', state);
-  console.log('LeftNavigation ownProps', ownProps);
-
+export function mapStateToProps(state) {
   let agents = [];
   if (state.agents) {
     agents = Object.keys(state.agents)
