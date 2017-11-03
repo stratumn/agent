@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, NavLink } from 'react-router-dom';
 
 import { getSegments } from '../actions';
 import { statusTypes } from '../reducers';
@@ -21,7 +21,7 @@ export class ProcessSegmentsPage extends Component {
   }
 
   render() {
-    const { segments: { status, details, error } } = this.props;
+    const { segments: { status, details, error }, agent, process } = this.props;
     switch (status) {
       case statusTypes.LOADING:
         return <div>loading...</div>;
@@ -31,7 +31,13 @@ export class ProcessSegmentsPage extends Component {
         return (
           <div>
             process segments:
-            {details.map(id => <div key={id}>{id}</div>)}
+            {details.map(id => (
+              <div key={id}>
+                <NavLink to={`/${agent}/${process}/segments/${id}`}>
+                  {id}
+                </NavLink>
+              </div>
+            ))}
           </div>
         );
       default:
@@ -52,8 +58,6 @@ ProcessSegmentsPage.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  console.log('ProcessSegmentsPage state', state);
-  console.log('ProcessSegmentsPage ownProps', ownProps);
   const { match: { params: { agent, process } } } = ownProps;
   const { segments } = state;
   return { agent, process, segments };

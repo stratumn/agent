@@ -1,5 +1,6 @@
 import { getAgent } from 'stratumn-agent-client';
-import { actionTypes } from './';
+import { actionTypes, getSegmentSuccess } from './';
+import history from '../store/history';
 
 const createMapRequest = () => ({
   type: actionTypes.CREATE_MAP_REQUEST
@@ -43,9 +44,11 @@ export const createMap = title => (dispatch, getState) => {
         const proc = a.getProcess(process);
         return proc.createMap(title);
       })
-      .then((/* segment */) => {
+      .then(segment => {
         dispatch(createMapSuccess());
         dispatch(closeCreateMapDialog());
+        dispatch(getSegmentSuccess(segment));
+        history.push(`/${agent}/${process}/segments/${segment.meta.linkHash}`);
       })
       .catch(err => {
         dispatch(createMapFailure(err));

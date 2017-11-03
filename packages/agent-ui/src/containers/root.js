@@ -1,15 +1,18 @@
-import { PersistGate } from 'redux-persist/lib/integration/react';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { Route } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/lib/integration/react';
 
+import { history } from '../store';
 import { App } from './';
 
 const Root = ({ store, persistor }) => (
   <Provider store={store}>
     <PersistGate persistor={persistor} loading={null}>
-      <Route path="/" component={App} />
+      <Router history={history}>
+        <Route path="/" component={App} />
+      </Router>
     </PersistGate>
   </Provider>
 );
