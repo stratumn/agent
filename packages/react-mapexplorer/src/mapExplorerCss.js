@@ -25,6 +25,9 @@ export function getRules() {
   const selectedSegmentPrimaryColor = '#3E3E3E';
   const selectedSegmentSecondaryColor = '#2E2E2E';
 
+  const foreignSegmentPrimaryColor = '#CD5C5C';
+  const foreignSegmentSecondaryColor = '#8B0000';
+  const textPathColor = '#6E6E6E';
   const linkTextColor = '#C1C1C1';
   const linkColor = '#CCC';
 
@@ -116,7 +119,7 @@ export function getRules() {
     '.textpath': {
       fontFamily: linkTextFont,
       fontSize: 14,
-      fill: linkTextColor
+      fill: textPathColor
     },
 
     '.link': {
@@ -132,6 +135,44 @@ export function getRules() {
 
     '.node.selected rect': {
       fill: selectedSegmentSecondaryColor
+    },
+
+    '.node.childRef polygon': {
+      fill: foreignSegmentPrimaryColor
+    },
+
+    '.node.childRef rect': {
+      fill: foreignSegmentSecondaryColor
+    },
+
+    '.node.ref polygon': {
+      fill: foreignSegmentPrimaryColor
+    },
+
+    '.node.ref rect': {
+      fill: foreignSegmentSecondaryColor
+    },
+
+    '#ref-link': {
+      strokeWidth: 8
+    },
+
+    '#ref-link:hover': {
+      stroke: 'black',
+      cursor: 'pointer',
+      strokeWidth: 10,
+      markerEnd: 'url("#blackTriangle")'
+    },
+
+    'text#linkLabelRef': {
+      cursor: 'pointer',
+      fontFamily: segmentTextFont,
+      fill: 'white'
+    },
+
+    'rect.refLinkBox': {
+      cursor: 'pointer',
+      fill: foreignSegmentSecondaryColor
     }
   };
 }

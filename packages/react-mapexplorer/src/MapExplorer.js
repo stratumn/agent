@@ -14,24 +14,24 @@
   limitations under the License.
 */
 
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { ChainTreeBuilder } from "mapexplorer-core";
-import radium from "radium";
-import { getStyles, getRules } from "./mapExplorerCss";
-import BitcoinEvidence from "./BitcoinEvidence";
-import DummyEvidence from "./DummyEvidence";
-import TMPopEvidence from "./TMPopEvidence";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { ChainTreeBuilder } from 'mapexplorer-core';
+import radium from 'radium';
+import { getStyles, getRules } from './mapExplorerCss';
+import BitcoinEvidence from './BitcoinEvidence';
+import DummyEvidence from './DummyEvidence';
+import TMPopEvidence from './TMPopEvidence';
 
 const { Style } = radium;
 
 const evidencesContent = {
-  display: "flex",
-  flexDirection: "row"
+  display: 'flex',
+  flexDirection: 'row'
 };
 
 const evidenceStyle = {
-  paddingRight: "3rem"
+  paddingRight: '3rem'
 };
 
 function renderEvidence(evidence) {
@@ -54,7 +54,7 @@ class MapExplorer extends Component {
 
     this.state = {
       segment: null,
-      content: "State"
+      content: 'State'
     };
     this.handleSegmentClick = this.handleSegmentClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -63,7 +63,6 @@ class MapExplorer extends Component {
 
   componentDidMount() {
     this.state.builder = new ChainTreeBuilder(this.element);
-
     this.state.builder.build(
       {
         id: this.props.mapId,
@@ -117,12 +116,12 @@ class MapExplorer extends Component {
     if (segment) {
       let segmentContent;
       switch (this.state.content) {
-        case "State":
+        case 'State':
           segmentContent = (
             <pre>{JSON.stringify(segment.link.state, undefined, 2)}</pre>
           );
           break;
-        case "Link":
+        case 'Link':
           segmentContent = (
             <div className="link">
               <h4>Map ID</h4>
@@ -142,19 +141,19 @@ class MapExplorer extends Component {
                 {segment.link.meta.action}
                 ({(segment.link.meta.arguments || [])
                   .map(arg => JSON.stringify(arg, undefined, 2))
-                  .join(", ")})
+                  .join(', ')})
               </p>
             </div>
           );
           break;
-        case "Evidence":
+        case 'Evidence':
           segmentContent = (
             <div style={evidencesContent}>
               {(segment.meta.evidences || []).map(e => renderEvidence(e))}
             </div>
           );
           break;
-        case "JSON":
+        case 'JSON':
           segmentContent = <pre>{JSON.stringify(segment, undefined, 2)}</pre>;
           break;
         default:
@@ -180,9 +179,9 @@ class MapExplorer extends Component {
           <div style={styles.body}>
             <div className="menu">
               <ul>
-                {["State", "Link", "Evidence", "JSON"].map(item => (
+                {['State', 'Link', 'Evidence', 'JSON'].map(item => (
                   <li
-                    className={this.state.content === item ? "active" : ""}
+                    className={this.state.content === item ? 'active' : ''}
                     onClick={this.handleShow(item)}
                     onKeyDown={this.handleShow(item)}
                     role="presentation"
@@ -221,6 +220,19 @@ class MapExplorer extends Component {
           >
             <path fill="#CCCCCC" d="M 0 0 L 10 5 L 0 10 z" />
           </marker>
+          <marker
+            id="blackTriangle"
+            viewBox="0 0 10 10"
+            refX="0"
+            refY="5"
+            markerUnits="strokeWidth"
+            markerWidth="4"
+            markerHeight="3"
+            orient="auto"
+            style={styles.triangle}
+          >
+            <path fill="black" d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
         </svg>
       </div>
     );
@@ -237,10 +249,10 @@ MapExplorer.propTypes = {
 };
 
 MapExplorer.defaultProps = {
-  agentUrl: "",
-  process: "",
-  chainscript: "",
-  mapId: "",
+  agentUrl: '',
+  process: '',
+  chainscript: '',
+  mapId: '',
   onSelectSegment: () => {},
   options: {}
 };
