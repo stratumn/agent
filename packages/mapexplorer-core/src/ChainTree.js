@@ -55,7 +55,6 @@ export default class ChainTree {
       Object.assign(n, {
         x:
           options.polygonSize.height / 2 +
-          options.titleHeight +
           index * (options.polygonSize.height * options.verticalSpacing),
         y: options.getArrowLength(),
         y0: 0
@@ -174,10 +173,9 @@ export default class ChainTree {
       1
     );
     const computedHeight =
-      options.titleHeight +
       Math.max(branchesCount, extraNodes.length) *
-        polygon.height *
-        options.verticalSpacing;
+      polygon.height *
+      options.verticalSpacing;
 
     this.tree.size([computedHeight, treeWidth]);
     this.svg

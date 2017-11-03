@@ -27,7 +27,7 @@ export function getRules() {
 
   const foreignSegmentPrimaryColor = '#CD5C5C';
   const foreignSegmentSecondaryColor = '#8B0000';
-  const textPathColor = '#6E6E6E';
+  const linkTextColor = '#6E6E6E';
   const linkColor = '#CCC';
 
   return {
@@ -118,7 +118,7 @@ export function getRules() {
     '.textpath': {
       fontFamily: linkTextFont,
       fontSize: 14,
-      fill: textPathColor
+      fill: linkTextColor
     },
 
     '.link': {

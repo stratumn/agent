@@ -36,9 +36,6 @@ export const defaultOptions = {
   duration: 750,
   verticalSpacing: 1.4,
   polygonSize: { width: 78, height: 91 },
-  titleHeight: 50,
-  extraNodesLayoutColor: 'lightcoral',
-  mainTreeLayoutColor: 'lightblue',
   getBoxSize() {
     const self = this;
     return { width: self.polygonSize.width, height: 25 };
