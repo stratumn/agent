@@ -8,6 +8,7 @@ import { expect } from 'chai';
 
 import { TopBar } from './topBar';
 import { CreateMapButton } from './createMapButton';
+import { AppendSegmentButton } from './appendSegmentButton';
 
 describe('<TopBar />', () => {
   const mockStore = configureStore();
@@ -50,8 +51,16 @@ describe('<TopBar />', () => {
     expect(topBarWithCreateMap.find(CreateMapButton)).to.have.length(1);
   });
 
-  it('does not render a create map button on other pages', () => {
-    const topBarWithCreateMap = renderTopBarWithRoute('/agent');
-    expect(topBarWithCreateMap.find(CreateMapButton)).to.have.length(0);
+  it('does not render buttons on irrelevant pages', () => {
+    const topBarWithoutButtons = renderTopBarWithRoute('/agent');
+    expect(topBarWithoutButtons.find(CreateMapButton)).to.have.length(0);
+    expect(topBarWithoutButtons.find(AppendSegmentButton)).to.have.length(0);
+  });
+
+  it('renders an append segment button on map page', () => {
+    const topBarWithAppendSegment = renderTopBarWithRoute(
+      '/agent/process/maps/thisIsAMapId'
+    );
+    expect(topBarWithAppendSegment.find(AppendSegmentButton)).to.have.length(1);
   });
 });

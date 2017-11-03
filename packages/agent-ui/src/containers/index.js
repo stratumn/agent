@@ -17,3 +17,4 @@ export { default as MapPage } from './mapPage';
 export { default as SegmentPage } from './segmentPage';
 export { default as CreateMapButton } from './createMapButton';
 export { default as CreateMapDialog } from './createMapDialog';
+export { default as AppendSegmentButton } from './appendSegmentButton';

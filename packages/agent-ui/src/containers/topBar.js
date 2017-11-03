@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, NavLink, Route } from 'react-router-dom';
 
-import { CreateMapButton } from './';
+import { AppendSegmentButton, CreateMapButton } from './';
 
 const renderTopBarLinks = path => {
   const parts = path.split('/').filter(p => p);
@@ -38,6 +38,11 @@ export const TopBar = ({ path }) => {
     <div style={style}>
       {renderTopBarLinks(path)}
       <Route exact path="/:agent/:process/maps" component={CreateMapButton} />
+      <Route
+        exact
+        path="/:agent/:process/maps/:id"
+        component={AppendSegmentButton}
+      />
     </div>
   );
 };
