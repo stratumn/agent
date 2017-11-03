@@ -13,9 +13,15 @@ import { AgentsPage, mapStateToProps } from './agentsPage';
 chai.use(sinonChai);
 
 describe('<AgentsPage />', () => {
+  const requiredProps = {
+    fetchAgent: () => {},
+    deleteAgent: () => {}
+  };
   it('contains a form to add a new agent to monitor', () => {
     const fetchAgentSpy = sinon.spy();
-    const agentsPage = shallow(<AgentsPage fetchAgent={fetchAgentSpy} />);
+    const agentsPage = shallow(
+      <AgentsPage {...requiredProps} fetchAgent={fetchAgentSpy} />
+    );
     const addAgentForm = agentsPage.find('form');
     expect(addAgentForm).to.have.lengthOf(1);
     expect(addAgentForm.find('button')).to.have.lengthOf(1);
@@ -23,14 +29,18 @@ describe('<AgentsPage />', () => {
 
   it('does not fetch agent if name or url is not filled in', () => {
     const fetchAgentSpy = sinon.spy();
-    const agentsPage = mount(<AgentsPage fetchAgent={fetchAgentSpy} />);
+    const agentsPage = mount(
+      <AgentsPage {...requiredProps} fetchAgent={fetchAgentSpy} />
+    );
     agentsPage.find('form').simulate('submit');
     expect(fetchAgentSpy.callCount).to.equal(0);
   });
 
   it('fetches agent when form is submitted', () => {
     const fetchAgentSpy = sinon.spy();
-    const agentsPage = mount(<AgentsPage fetchAgent={fetchAgentSpy} />);
+    const agentsPage = mount(
+      <AgentsPage {...requiredProps} fetchAgent={fetchAgentSpy} />
+    );
 
     const agentName = agentsPage.find('input').at(0);
     agentName.instance().value = 'Agent Name';
@@ -71,11 +81,23 @@ describe('<AgentsPage />', () => {
 
   it('displays loaded agents', () => {
     const agents = [{ name: 'a1', url: 'u1' }, { name: 'a2', url: 'u2' }];
-    const agentsPage = mount(
-      <AgentsPage agents={agents} fetchAgent={() => {}} />
-    );
+    const agentsPage = mount(<AgentsPage {...requiredProps} agents={agents} />);
 
     expect(agentsPage.find('div').contains('a1: u1')).to.be.true;
     expect(agentsPage.find('div').contains('a2: u2')).to.be.true;
+  });
+
+  it('has delete agent button', () => {
+    const agents = [{ name: 'a1', url: 'u1' }, { name: 'a2', url: 'u2' }];
+    const deleteSpy = sinon.spy();
+    const agentsPage = mount(
+      <AgentsPage {...requiredProps} agents={agents} deleteAgent={deleteSpy} />
+    );
+    const loadedAgents = agentsPage.find('RenderLoadedAgents');
+    expect(loadedAgents.find('button')).to.have.length(2);
+    const firstButton = loadedAgents.find('button').at(0);
+    firstButton.simulate('click');
+    expect(deleteSpy.callCount).to.equal(1);
+    expect(deleteSpy.getCall(0).args[0]).to.equal('a1');
   });
 });

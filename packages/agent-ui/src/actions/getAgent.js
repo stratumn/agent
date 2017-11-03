@@ -1,4 +1,4 @@
-import { getAgent } from 'stratumn-agent-client';
+import { getAgent as getAgentClient } from 'stratumn-agent-client';
 import { actionTypes } from './';
 
 const getAgentRequest = (name, url) => ({
@@ -19,11 +19,14 @@ const getAgentSuccess = (name, agent) => ({
   agent
 });
 
-export default function(name, url) {
-  return dispatch => {
-    dispatch(getAgentRequest(name, url));
-    return getAgent(url)
-      .then(agent => dispatch(getAgentSuccess(name, agent)))
-      .catch(err => dispatch(getAgentFailure(name, err)));
-  };
-}
+export const removeAgent = name => ({
+  type: actionTypes.AGENT_INFO_DELETE,
+  name
+});
+
+export const getAgent = (name, url) => dispatch => {
+  dispatch(getAgentRequest(name, url));
+  return getAgentClient(url)
+    .then(agent => dispatch(getAgentSuccess(name, agent)))
+    .catch(err => dispatch(getAgentFailure(name, err)));
+};

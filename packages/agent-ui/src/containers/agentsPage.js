@@ -3,19 +3,32 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { getAgent } from '../actions';
+import { getAgent, removeAgent } from '../actions';
 import { statusTypes } from '../reducers';
 
-const renderLoadedAgents = agents =>
-  agents.map(a => <div key={a.name}>{`${a.name}: ${a.url}`}</div>);
+const RenderLoadedAgents = ({ agents, deleteAgent }) =>
+  agents &&
+  agents.map(({ name, url }) => (
+    <div key={name}>
+      {`${name}: ${url}`}{' '}
+      <button
+        onClick={e => {
+          e.preventDefault();
+          deleteAgent(name);
+        }}
+      >
+        X
+      </button>
+    </div>
+  ));
 
-export const AgentsPage = ({ agents, fetchAgent }) => {
+export const AgentsPage = ({ agents, fetchAgent, deleteAgent }) => {
   let agentName;
   let agentUrl;
 
   return (
     <div>
-      {agents && renderLoadedAgents(agents)}
+      <RenderLoadedAgents agents={agents} deleteAgent={deleteAgent} />
       <form
         onSubmit={e => {
           e.preventDefault();
@@ -57,7 +70,8 @@ AgentsPage.propTypes = {
       url: PropTypes.string.isRequired
     })
   ),
-  fetchAgent: PropTypes.func.isRequired
+  fetchAgent: PropTypes.func.isRequired,
+  deleteAgent: PropTypes.func.isRequired
 };
 
 export function mapStateToProps(state) {
@@ -75,6 +89,7 @@ export function mapStateToProps(state) {
 
 export default withRouter(
   connect(mapStateToProps, {
-    fetchAgent: getAgent
+    fetchAgent: getAgent,
+    deleteAgent: removeAgent
   })(AgentsPage)
 );
