@@ -7,9 +7,14 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { TopBar } from './topBar';
-import { CreateMapButton } from './createMapButton';
+import { AppendSegmentButton, CreateMapButton } from '../components';
 
 describe('<TopBar />', () => {
+  const requiredProps = {
+    match: { params: { agent: 'a', process: 'p' } },
+    mapDialog: () => {}
+  };
+
   const mockStore = configureStore();
   const store = mockStore({ agents: {} });
 
@@ -17,13 +22,13 @@ describe('<TopBar />', () => {
     mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={[path]}>
-          <TopBar path={path} />
+          <TopBar path={path} {...requiredProps} />
         </MemoryRouter>
       </Provider>
     );
 
   it('renders a title on index page', () => {
-    const topBarNoLinks = shallow(<TopBar path="/" />);
+    const topBarNoLinks = shallow(<TopBar path="/" {...requiredProps} />);
     expect(
       topBarNoLinks.find('div').contains('Welcome to the Indigo Framework UI')
     ).to.be.true;
@@ -50,8 +55,16 @@ describe('<TopBar />', () => {
     expect(topBarWithCreateMap.find(CreateMapButton)).to.have.length(1);
   });
 
-  it('does not render a create map button on other pages', () => {
-    const topBarWithCreateMap = renderTopBarWithRoute('/agent');
-    expect(topBarWithCreateMap.find(CreateMapButton)).to.have.length(0);
+  it('does not render buttons on irrelevant pages', () => {
+    const topBarWithoutButtons = renderTopBarWithRoute('/agent');
+    expect(topBarWithoutButtons.find(CreateMapButton)).to.have.length(0);
+    expect(topBarWithoutButtons.find(AppendSegmentButton)).to.have.length(0);
+  });
+
+  it('renders an append segment button on map page', () => {
+    const topBarWithAppendSegment = renderTopBarWithRoute(
+      '/agent/process/maps/thisIsAMapId'
+    );
+    expect(topBarWithAppendSegment.find(AppendSegmentButton)).to.have.length(1);
   });
 });
