@@ -11,7 +11,8 @@ import {
   openDialog,
   selectAction
 } from './appendSegment';
-import { actionTypes } from '../actions';
+
+import * as actionTypes from '../actions/actionTypes';
 
 chai.use(sinonChai);
 

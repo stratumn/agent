@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import agents from './agents';
-import { actionTypes } from '../actions';
+import * as actionTypes from '../actions/actionTypes';
 import { statusTypes } from './';
 
 import { TestProcessBuilder, TestAgentBuilder } from '../test/builders/api';

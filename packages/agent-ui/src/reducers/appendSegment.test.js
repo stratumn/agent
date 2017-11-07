@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import appendSegment from './appendSegment';
 
-import { actionTypes } from '../actions';
+import * as actionTypes from '../actions/actionTypes';
 import { statusTypes } from './';
 
 describe('appendSegment reducer', () => {
