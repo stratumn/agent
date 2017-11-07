@@ -532,9 +532,9 @@
         "transactions": { "[TMPop]:[test-chain-69TRBi]": "546" }
       },
       "linkHash":
-        "66c12f3621882a44d2619d094056de6ccdc5b5726c344b1b4387417a6f1d268e",
+        "a6c12f3621882a44d2619d094056de6ccdc5b5726c344b1b4387417a6f1d268e",
       "segmentUrl":
-        "http://localhost:3000/segments/66c12f3621882a44d2619d094056de6ccdc5b5726c344b1b4387417a6f1d268e"
+        "http://localhost:3000/segments/a6c12f3621882a44d2619d094056de6ccdc5b5726c344b1b4387417a6f1d268e"
     }
   },
   {

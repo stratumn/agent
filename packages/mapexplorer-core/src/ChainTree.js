@@ -145,8 +145,9 @@ export default class ChainTree {
     extraNodeExit.attr('transform', () => translate(0, 0)).remove();
 
     // Draw init link
-    this.drawInit(root);
-
+    if (root) {
+      this.drawInit(root);
+    }
     // Draw foreign child references
     nodes
       .filter(n => n.data.isRef === true)
@@ -440,8 +441,11 @@ export default class ChainTree {
 
     // draw related links
     this.drawLinks(currentMapLinks);
-    this.drawInit(
-      currentMapLinks.map(l => l.source).find(n => n.parent === null)
-    );
+    const rootNode = currentMapLinks
+      .map(l => l.source)
+      .find(n => n.parent === null);
+    if (rootNode) {
+      this.drawInit(rootNode);
+    }
   }
 }

@@ -16,13 +16,32 @@
 
 import { select, selectAll } from 'd3-selection';
 import { ChainTree, defaultOptions } from '../../src/index';
-
 import validMap from '../fixtures/fullMap.json';
 import validMapWithRefs from '../fixtures/fullMapWithRefs.json';
 
 describe('ChainTree', () => {
   let tree;
   let svg;
+
+  describe('using an empty map', () => {
+    beforeEach(() => {
+      tree = new ChainTree('body');
+      tree.display(null, defaultOptions);
+
+      svg = select('body').select('svg');
+    });
+
+    afterEach(() => {
+      selectAll('svg').remove();
+    });
+
+    it('should draw an empty svg', () => {
+      svg
+        .selectAll('g.node')
+        .size()
+        .should.be.eql(0);
+    });
+  });
 
   describe('using a regular map', () => {
     beforeEach(() => {
@@ -145,6 +164,42 @@ describe('ChainTree', () => {
         .selectAll('.actionLabel')
         .size()
         .should.be.eql(validMapWithRefs.length + internalRefs.length - 1);
+    });
+
+    it('displays ref node related links', () => {
+      const e = document.createEvent('UIEvents');
+      e.initUIEvent('click', true, true);
+      svg
+        .select('g.node.ref')
+        .node()
+        .dispatchEvent(e);
+      svg
+        .selectAll('path.link')
+        .size()
+        .should.be.eql(3);
+      svg
+        .selectAll('#ref-link')
+        .size()
+        .should.be.eql(1);
+    });
+
+    it('displays base node related links', () => {
+      const e = document.createEvent('UIEvents');
+      e.initUIEvent('click', true, true);
+      svg
+        .select(
+          'g .node.base#a6c12f3621882a44d2619d094056de6ccdc5b5726c344b1b4387417a6f1d268e'
+        )
+        .node()
+        .dispatchEvent(e);
+      svg
+        .selectAll('path.link')
+        .size()
+        .should.be.eql(4);
+      svg
+        .selectAll('#ref-link')
+        .size()
+        .should.be.eql(0);
     });
   });
 });
