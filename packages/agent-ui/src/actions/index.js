@@ -12,3 +12,10 @@ export {
   closeCreateMapDialog,
   closeCreateMapDialogAndClear
 } from './createMap';
+export {
+  appendSegment,
+  openDialog as openAppendSegmentDialog,
+  closeDialog as closeAppendSegmentDialog,
+  closeDialogAndClear as closeAppendSegmentDialogAndClear,
+  selectAction as selectAppendSegmentAction
+} from './appendSegment';
