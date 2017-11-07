@@ -1,4 +1,4 @@
-import { actionTypes } from '../actions';
+import * as actionTypes from '../actions/actionTypes';
 import { statusTypes } from './';
 
 export default function(state = {}, action) {
