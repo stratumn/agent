@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { getAgent, removeAgent } from '../actions';
-import { statusTypes } from '../reducers';
+import { getAgent, removeAgent } from '../actions/getAgent';
+import * as statusTypes from '../reducers/status';
 
 const RenderLoadedAgents = ({ agents, deleteAgent }) =>
   agents &&

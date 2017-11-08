@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { statusTypes } from '../reducers';
+import * as statusTypes from '../reducers/status';
 
 import {
   createMap as createMapAction,
   closeCreateMapDialogAndClear
-} from '../actions';
+} from '../actions/createMap';
 
 export const CreateMapDialog = ({ show, error, closeDialog, createMap }) => {
   if (!show) {

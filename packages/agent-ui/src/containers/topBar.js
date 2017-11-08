@@ -5,7 +5,7 @@ import { withRouter, NavLink, Route } from 'react-router-dom';
 
 import { AppendSegmentButton, CreateMapButton } from '../components';
 
-import { openCreateMapDialog } from '../actions';
+import { openCreateMapDialog } from '../actions/createMap';
 
 const renderTopBarLinks = path => {
   const parts = path.split('/').filter(p => p);

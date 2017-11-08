@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 
-import { getAgent } from '../actions';
-import { statusTypes } from '../reducers';
+import { getAgent } from '../actions/getAgent';
+import * as statusTypes from '../reducers/status';
 
 export const AgentInfoPage = ({ name, url, status, fetchAgent }) => {
   if (status === statusTypes.LOADING) {

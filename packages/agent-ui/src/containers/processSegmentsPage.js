@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 
-import { getSegments } from '../actions';
-import { statusTypes } from '../reducers';
+import getSegments from '../actions/getSegments';
+import * as statusTypes from '../reducers/status';
 
 export class ProcessSegmentsPage extends Component {
   componentDidMount() {

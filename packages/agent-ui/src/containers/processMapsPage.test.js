@@ -7,7 +7,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import { ProcessMapsPage } from './processMapsPage';
-import { statusTypes } from '../reducers';
+import * as statusTypes from '../reducers/status';
 
 chai.use(sinonChai);
 

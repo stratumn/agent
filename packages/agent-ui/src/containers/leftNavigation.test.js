@@ -5,7 +5,7 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { LeftNavigation, mapStateToProps } from './leftNavigation';
-import { statusTypes } from '../reducers';
+import * as statusTypes from '../reducers/status';
 
 describe('<LeftNavigation />', () => {
   it('displays the list of agents, processes, maps and segments', () => {
