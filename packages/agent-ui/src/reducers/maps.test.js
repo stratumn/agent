@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import maps from './maps';
-import { actionTypes } from '../actions';
+import * as actionTypes from '../actions/actionTypes';
 import { statusTypes } from './';
 
 describe('maps reducer', () => {

@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import * as _statusTypes from './status';
 
 import agents from './agents';
+import appendSegment from './appendSegment';
 import createMap from './createMap';
 import maps from './maps';
 import segment from './segment';
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
   maps,
   segment,
   segments,
-  createMap
+  createMap,
+  appendSegment
 });
 
 export const statusTypes = _statusTypes;

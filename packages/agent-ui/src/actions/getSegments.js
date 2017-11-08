@@ -1,5 +1,5 @@
 import { getAgent } from 'stratumn-agent-client';
-import { actionTypes } from './';
+import * as actionTypes from './actionTypes';
 
 const getSegmentsRequest = (agent, process) => ({
   type: actionTypes.SEGMENTS_REQUEST,

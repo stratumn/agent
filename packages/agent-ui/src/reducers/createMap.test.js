@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import createMap from './createMap';
 
-import { actionTypes } from '../actions';
+import * as actionTypes from '../actions/actionTypes';
 import { statusTypes } from './';
 
 describe('createMap reducer', () => {

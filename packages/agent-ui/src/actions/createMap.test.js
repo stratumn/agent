@@ -11,7 +11,8 @@ import {
   closeCreateMapDialog,
   closeCreateMapDialogAndClear
 } from './createMap';
-import { actionTypes } from '../actions';
+
+import * as actionTypes from '../actions/actionTypes';
 
 chai.use(sinonChai);
 

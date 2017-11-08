@@ -1,7 +1,3 @@
-import * as _actionTypes from './actionTypes';
-
-export const actionTypes = _actionTypes;
-
 export { getAgent, removeAgent } from './getAgent';
 export { default as getMapIds } from './getMapIds';
 export { default as getSegment, getSegmentSuccess } from './getSegment';
@@ -12,3 +8,10 @@ export {
   closeCreateMapDialog,
   closeCreateMapDialogAndClear
 } from './createMap';
+export {
+  appendSegment,
+  openDialog as openAppendSegmentDialog,
+  closeDialog as closeAppendSegmentDialog,
+  closeDialogAndClear as closeAppendSegmentDialogAndClear,
+  selectAction as selectAppendSegmentAction
+} from './appendSegment';
