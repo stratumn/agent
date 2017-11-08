@@ -22,7 +22,7 @@ import { zoom } from 'd3-zoom';
 import { max } from 'd3-array';
 import { makeLink, finalLink, translate } from './treeUtils';
 import parseChainscript from './parseChainscript';
-import { findExtraLinks, findExtraNodes, loadRef } from './Nodes';
+import { findExtraLinks, findExtraNodes, loadRef } from './nodes';
 
 const margin = { top: 20, right: 120, bottom: 20, left: 120 };
 const height = 800 - margin.top - margin.bottom;

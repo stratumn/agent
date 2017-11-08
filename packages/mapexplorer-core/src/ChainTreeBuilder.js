@@ -73,10 +73,14 @@ export default class ChainTreeBuilder {
     this.chainTree = new ChainTree(element, this.options);
   }
 
-  build(map) {
-    this.options = Object.assign(this.options, {
-      agentUrl: map.agentUrl
-    });
+  build(map, options) {
+    this.options = Object.assign(
+      this.options,
+      {
+        agentUrl: map.agentUrl
+      },
+      options
+    );
     if (map.id && map.agentUrl && map.process) {
       return load(map).then(segments => this.display(segments));
     } else if (map.chainscript && map.chainscript.length) {
