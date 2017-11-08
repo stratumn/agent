@@ -4,6 +4,1555 @@
 	(factory((global.mapexplorerCore = {})));
 }(this, (function (exports) { 'use strict';
 
+var global$1 = typeof global !== "undefined" ? global :
+            typeof self !== "undefined" ? self :
+            typeof window !== "undefined" ? window : {};
+
+// shim for using process in browser
+// based off https://github.com/defunctzombie/node-process/blob/master/browser.js
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+var cachedSetTimeout = defaultSetTimout;
+var cachedClearTimeout = defaultClearTimeout;
+if (typeof global$1.setTimeout === 'function') {
+    cachedSetTimeout = setTimeout;
+}
+if (typeof global$1.clearTimeout === 'function') {
+    cachedClearTimeout = clearTimeout;
+}
+
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+function nextTick(fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+}
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+var title = 'browser';
+var platform = 'browser';
+var browser = true;
+var env = {};
+var argv = [];
+var version = ''; // empty string to avoid regexp issues
+var versions = {};
+var release = {};
+var config = {};
+
+function noop() {}
+
+var on = noop;
+var addListener = noop;
+var once = noop;
+var off = noop;
+var removeListener = noop;
+var removeAllListeners = noop;
+var emit = noop;
+
+function binding(name) {
+    throw new Error('process.binding is not supported');
+}
+
+function cwd () { return '/' }
+function chdir (dir) {
+    throw new Error('process.chdir is not supported');
+}
+function umask() { return 0; }
+
+// from https://github.com/kumavis/browser-process-hrtime/blob/master/index.js
+var performance$1 = global$1.performance || {};
+var performanceNow =
+  performance$1.now        ||
+  performance$1.mozNow     ||
+  performance$1.msNow      ||
+  performance$1.oNow       ||
+  performance$1.webkitNow  ||
+  function(){ return (new Date()).getTime() };
+
+// generate timestamp or delta
+// see http://nodejs.org/api/process.html#process_process_hrtime
+function hrtime(previousTimestamp){
+  var clocktime = performanceNow.call(performance$1)*1e-3;
+  var seconds = Math.floor(clocktime);
+  var nanoseconds = Math.floor((clocktime%1)*1e9);
+  if (previousTimestamp) {
+    seconds = seconds - previousTimestamp[0];
+    nanoseconds = nanoseconds - previousTimestamp[1];
+    if (nanoseconds<0) {
+      seconds--;
+      nanoseconds += 1e9;
+    }
+  }
+  return [seconds,nanoseconds]
+}
+
+var startTime = new Date();
+function uptime() {
+  var currentTime = new Date();
+  var dif = currentTime - startTime;
+  return dif / 1000;
+}
+
+var process = {
+  nextTick: nextTick,
+  title: title,
+  browser: browser,
+  env: env,
+  argv: argv,
+  version: version,
+  versions: versions,
+  on: on,
+  addListener: addListener,
+  once: once,
+  off: off,
+  removeListener: removeListener,
+  removeAllListeners: removeAllListeners,
+  emit: emit,
+  binding: binding,
+  cwd: cwd,
+  chdir: chdir,
+  umask: umask,
+  hrtime: hrtime,
+  platform: platform,
+  release: release,
+  config: config,
+  uptime: uptime
+};
+
+var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+
+
+
+
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+(function (global, undefined) {
+    "use strict";
+
+    if (global.setImmediate) {
+        return;
+    }
+
+    var nextHandle = 1; // Spec says greater than zero
+    var tasksByHandle = {};
+    var currentlyRunningATask = false;
+    var doc = global.document;
+    var registerImmediate;
+
+    function setImmediate(callback) {
+      // Callback can either be a function or a string
+      if (typeof callback !== "function") {
+        callback = new Function("" + callback);
+      }
+      // Copy function arguments
+      var args = new Array(arguments.length - 1);
+      for (var i = 0; i < args.length; i++) {
+          args[i] = arguments[i + 1];
+      }
+      // Store and register the task
+      var task = { callback: callback, args: args };
+      tasksByHandle[nextHandle] = task;
+      registerImmediate(nextHandle);
+      return nextHandle++;
+    }
+
+    function clearImmediate(handle) {
+        delete tasksByHandle[handle];
+    }
+
+    function run(task) {
+        var callback = task.callback;
+        var args = task.args;
+        switch (args.length) {
+        case 0:
+            callback();
+            break;
+        case 1:
+            callback(args[0]);
+            break;
+        case 2:
+            callback(args[0], args[1]);
+            break;
+        case 3:
+            callback(args[0], args[1], args[2]);
+            break;
+        default:
+            callback.apply(undefined, args);
+            break;
+        }
+    }
+
+    function runIfPresent(handle) {
+        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
+        // So if we're currently running a task, we'll need to delay this invocation.
+        if (currentlyRunningATask) {
+            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
+            // "too much recursion" error.
+            setTimeout(runIfPresent, 0, handle);
+        } else {
+            var task = tasksByHandle[handle];
+            if (task) {
+                currentlyRunningATask = true;
+                try {
+                    run(task);
+                } finally {
+                    clearImmediate(handle);
+                    currentlyRunningATask = false;
+                }
+            }
+        }
+    }
+
+    function installNextTickImplementation() {
+        registerImmediate = function(handle) {
+            nextTick(function () { runIfPresent(handle); });
+        };
+    }
+
+    function canUsePostMessage() {
+        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
+        // where `global.postMessage` means something completely different and can't be used for this purpose.
+        if (global.postMessage && !global.importScripts) {
+            var postMessageIsAsynchronous = true;
+            var oldOnMessage = global.onmessage;
+            global.onmessage = function() {
+                postMessageIsAsynchronous = false;
+            };
+            global.postMessage("", "*");
+            global.onmessage = oldOnMessage;
+            return postMessageIsAsynchronous;
+        }
+    }
+
+    function installPostMessageImplementation() {
+        // Installs an event handler on `global` for the `message` event: see
+        // * https://developer.mozilla.org/en/DOM/window.postMessage
+        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
+
+        var messagePrefix = "setImmediate$" + Math.random() + "$";
+        var onGlobalMessage = function(event) {
+            if (event.source === global &&
+                typeof event.data === "string" &&
+                event.data.indexOf(messagePrefix) === 0) {
+                runIfPresent(+event.data.slice(messagePrefix.length));
+            }
+        };
+
+        if (global.addEventListener) {
+            global.addEventListener("message", onGlobalMessage, false);
+        } else {
+            global.attachEvent("onmessage", onGlobalMessage);
+        }
+
+        registerImmediate = function(handle) {
+            global.postMessage(messagePrefix + handle, "*");
+        };
+    }
+
+    function installMessageChannelImplementation() {
+        var channel = new MessageChannel();
+        channel.port1.onmessage = function(event) {
+            var handle = event.data;
+            runIfPresent(handle);
+        };
+
+        registerImmediate = function(handle) {
+            channel.port2.postMessage(handle);
+        };
+    }
+
+    function installReadyStateChangeImplementation() {
+        var html = doc.documentElement;
+        registerImmediate = function(handle) {
+            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
+            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
+            var script = doc.createElement("script");
+            script.onreadystatechange = function () {
+                runIfPresent(handle);
+                script.onreadystatechange = null;
+                html.removeChild(script);
+                script = null;
+            };
+            html.appendChild(script);
+        };
+    }
+
+    function installSetTimeoutImplementation() {
+        registerImmediate = function(handle) {
+            setTimeout(runIfPresent, 0, handle);
+        };
+    }
+
+    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
+    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
+    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
+
+    // Don't get fooled by e.g. browserify environments.
+    if ({}.toString.call(global.process) === "[object process]") {
+        // For Node.js before 0.9
+        installNextTickImplementation();
+
+    } else if (canUsePostMessage()) {
+        // For non-IE10 modern browsers
+        installPostMessageImplementation();
+
+    } else if (global.MessageChannel) {
+        // For web workers, where supported
+        installMessageChannelImplementation();
+
+    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
+        // For IE 6–8
+        installReadyStateChangeImplementation();
+
+    } else {
+        // For older browsers
+        installSetTimeoutImplementation();
+    }
+
+    attachTo.setImmediate = setImmediate;
+    attachTo.clearImmediate = clearImmediate;
+}(typeof self === "undefined" ? typeof commonjsGlobal === "undefined" ? commonjsGlobal : commonjsGlobal : self));
+
+var jsonrequest = {
+  processRequest: function(req) {
+    var
+      contentType = req.header('Content-Type'),
+      hasJsonContentType = contentType &&
+                           contentType.indexOf('application/json') !== -1;
+
+    if (contentType != null && !hasJsonContentType) {
+      return;
+    }
+
+    if (req.body) {
+      if (!contentType) {
+        req.header('Content-Type', 'application/json');
+      }
+
+      req.body = JSON.stringify(req.body);
+    }
+  }
+};
+
+var jsonresponse = {
+  processRequest: function(req) {
+    var accept = req.header('Accept');
+    if (accept == null) {
+      req.header('Accept', 'application/json');
+    }
+  },
+  processResponse: function(res) {
+    // Check to see if the contentype is "something/json" or
+    // "something/somethingelse+json"
+    if (res.contentType && /^.*\/(?:.*\+)?json(;|$)/i.test(res.contentType)) {
+      var raw = typeof res.body === 'string' ? res.body : res.text;
+      if (raw) {
+        res.body = JSON.parse(raw);
+      }
+    }
+  }
+};
+
+var json = {
+  processRequest: function(req) {
+    jsonrequest.processRequest.call(this, req);
+    jsonresponse.processRequest.call(this, req);
+  },
+  processResponse: function(res) {
+    jsonresponse.processResponse.call(this, res);
+  }
+};
+
+var cleanurl = {
+  processRequest: function(req) {
+    req.url = req.url.replace(/[^%]+/g, function(s) {
+      return encodeURI(s);
+    });
+  }
+};
+
+var xhrBrowser = window.XMLHttpRequest;
+
+// Wrap a function in a `setTimeout` call. This is used to guarantee async
+// behavior, which can avoid unexpected errors.
+
+var delay = function(fn) {
+  return function() {
+    var
+      args = Array.prototype.slice.call(arguments, 0),
+      newFunc = function() {
+        return fn.apply(null, args);
+      };
+    setTimeout(newFunc, 0);
+  };
+};
+
+function Request(optsOrUrl) {
+  var opts = typeof optsOrUrl === 'string' ? {url: optsOrUrl} : optsOrUrl || {};
+  this.method = opts.method ? opts.method.toUpperCase() : 'GET';
+  this.url = opts.url;
+  this.headers = opts.headers || {};
+  this.body = opts.body;
+  this.timeout = opts.timeout || 0;
+  this.errorOn404 = opts.errorOn404 != null ? opts.errorOn404 : true;
+  this.onload = opts.onload;
+  this.onerror = opts.onerror;
+}
+
+Request.prototype.abort = function() {
+  if (this.aborted) return;
+  this.aborted = true;
+  this.xhr.abort();
+  return this;
+};
+
+Request.prototype.header = function(name, value) {
+  var k;
+  for (k in this.headers) {
+    if (this.headers.hasOwnProperty(k)) {
+      if (name.toLowerCase() === k.toLowerCase()) {
+        if (arguments.length === 1) {
+          return this.headers[k];
+        }
+
+        delete this.headers[k];
+        break;
+      }
+    }
+  }
+  if (value != null) {
+    this.headers[name] = value;
+    return value;
+  }
+};
+
+
+var request$1 = Request;
+
+var xtend = extend;
+
+function extend() {
+    var target = {};
+
+    for (var i = 0; i < arguments.length; i++) {
+        var source = arguments[i];
+
+        for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+                target[key] = source[key];
+            }
+        }
+    }
+
+    return target
+}
+
+var extractResponseProps = function(req) {
+  var xhr = req.xhr;
+  var props = {request: req, xhr: xhr};
+
+  // Try to create the response from the request. If the request was aborted,
+  // accesssing properties of the XHR may throw an error, so we wrap in a
+  // try/catch.
+  try {
+    var lines, i, m, headers = {};
+    if (xhr.getAllResponseHeaders) {
+      lines = xhr.getAllResponseHeaders().split('\n');
+      for (i = 0; i < lines.length; i++) {
+        if ((m = lines[i].match(/\s*([^\s]+):\s+([^\s]+)/))) {
+          headers[m[1]] = m[2];
+        }
+      }
+    }
+
+    props = xtend(props, {
+      status: xhr.status,
+      contentType: xhr.contentType || (xhr.getResponseHeader && xhr.getResponseHeader('Content-Type')),
+      headers: headers,
+      text: xhr.responseText,
+      body: xhr.response || xhr.responseText
+    });
+  } catch (err) {}
+
+  return props;
+};
+
+function Response(props) {
+  this.request = props.request;
+  this.xhr = props.xhr;
+  this.headers = props.headers || {};
+  this.status = props.status || 0;
+  this.text = props.text;
+  this.body = props.body;
+  this.contentType = props.contentType;
+  this.isHttpError = props.status >= 400;
+}
+
+Response.prototype.header = request$1.prototype.header;
+
+Response.fromRequest = function(req) {
+  return new Response(extractResponseProps(req));
+};
+
+
+var response = Response;
+
+function RequestError(message, props) {
+  var err = new Error(message);
+  err.name = 'RequestError';
+  this.name = err.name;
+  this.message = err.message;
+  if (err.stack) {
+    this.stack = err.stack;
+  }
+
+  this.toString = function() {
+    return this.message;
+  };
+
+  for (var k in props) {
+    if (props.hasOwnProperty(k)) {
+      this[k] = props[k];
+    }
+  }
+}
+
+RequestError.prototype = xtend(Error.prototype);
+RequestError.prototype.constructor = RequestError;
+
+RequestError.create = function(message, req, props) {
+  var err = new RequestError(message, props);
+  response.call(err, extractResponseProps(req));
+  return err;
+};
+
+var error = RequestError;
+
+// A "once" utility.
+var once$1 = function(fn) {
+  var result, called = false;
+  return function() {
+    if (!called) {
+      called = true;
+      result = fn.apply(this, arguments);
+    }
+    return result;
+  };
+};
+
+var i;
+var createError = error.create;
+
+function factory(defaults, plugins) {
+  defaults = defaults || {};
+  plugins = plugins || [];
+
+  function http(req, cb) {
+    var xhr, plugin, done, k, timeoutId, supportsLoadAndErrorEvents;
+
+    req = new request$1(xtend(defaults, req));
+
+    for (i = 0; i < plugins.length; i++) {
+      plugin = plugins[i];
+      if (plugin.processRequest) {
+        plugin.processRequest(req);
+      }
+    }
+
+    // Give the plugins a chance to create the XHR object
+    for (i = 0; i < plugins.length; i++) {
+      plugin = plugins[i];
+      if (plugin.createXHR) {
+        xhr = plugin.createXHR(req);
+        break; // First come, first serve
+      }
+    }
+    xhr = xhr || new xhrBrowser();
+
+    req.xhr = xhr;
+
+    // Use a single completion callback. This can be called with or without
+    // an error. If no error is passed, the request will be examined to see
+    // if it was successful.
+    done = once$1(delay(function(rawError) {
+      clearTimeout(timeoutId);
+      xhr.onload = xhr.onerror = xhr.onabort = xhr.onreadystatechange = xhr.ontimeout = xhr.onprogress = null;
+
+      var err = getError(req, rawError);
+
+      var res = err || response.fromRequest(req);
+      for (i = 0; i < plugins.length; i++) {
+        plugin = plugins[i];
+        if (plugin.processResponse) {
+          plugin.processResponse(res);
+        }
+      }
+
+      // Invoke callbacks
+      if (err && req.onerror) req.onerror(err);
+      if (!err && req.onload) req.onload(res);
+      if (cb) cb(err, err ? undefined : res);
+
+    }));
+
+    supportsLoadAndErrorEvents = ('onload' in xhr) && ('onerror' in xhr);
+    xhr.onload = function() { done(); };
+    xhr.onerror = done;
+    xhr.onabort = function() { done(); };
+
+    // We'd rather use `onload`, `onerror`, and `onabort` since they're the
+    // only way to reliably detect successes and failures but, if they
+    // aren't available, we fall back to using `onreadystatechange`.
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState !== 4) return;
+
+      if (req.aborted) return done();
+
+      if (!supportsLoadAndErrorEvents) {
+        // Assume a status of 0 is an error. This could be a false
+        // positive, but there's no way to tell when using
+        // `onreadystatechange` ):
+        // See matthewwithanm/react-inlinesvg#10.
+
+        // Some browsers don't like you reading XHR properties when the
+        // XHR has been aborted. In case we've gotten here as a result
+        // of that (either our calling `about()` in the timeout handler
+        // or the user calling it directly even though they shouldn't),
+        // be careful about accessing it.
+        var status;
+        try {
+          status = xhr.status;
+        } catch (err) {}
+        var err = status === 0 ? new Error('Internal XHR Error') : null;
+        return done(err);
+      }
+    };
+
+    // IE sometimes fails if you don't specify every handler.
+    // See http://social.msdn.microsoft.com/Forums/ie/en-US/30ef3add-767c-4436-b8a9-f1ca19b4812e/ie9-rtm-xdomainrequest-issued-requests-may-abort-if-all-event-handlers-not-specified?forum=iewebdevelopment
+    xhr.ontimeout = function() { /* noop */ };
+    xhr.onprogress = function() { /* noop */ };
+
+    xhr.open(req.method, req.url);
+
+    if (req.timeout) {
+      // If we use the normal XHR timeout mechanism (`xhr.timeout` and
+      // `xhr.ontimeout`), `onreadystatechange` will be triggered before
+      // `ontimeout`. There's no way to recognize that it was triggered by
+      // a timeout, and we'd be unable to dispatch the right error.
+      timeoutId = setTimeout(function() {
+        req.timedOut = true;
+        done();
+        try {
+          xhr.abort();
+        } catch (err) {}
+      }, req.timeout);
+    }
+
+    for (k in req.headers) {
+      if (req.headers.hasOwnProperty(k)) {
+        xhr.setRequestHeader(k, req.headers[k]);
+      }
+    }
+
+    xhr.send(req.body);
+
+    return req;
+  }
+
+  var method,
+    methods = ['get', 'post', 'put', 'head', 'patch', 'delete'],
+    verb = function(method) {
+      return function(req, cb) {
+        req = new request$1(req);
+        req.method = method;
+        return http(req, cb);
+      };
+    };
+  for (i = 0; i < methods.length; i++) {
+    method = methods[i];
+    http[method] = verb(method);
+  }
+
+  http.plugins = function() {
+    return plugins;
+  };
+
+  http.defaults = function(newValues) {
+    if (newValues) {
+      return factory(xtend(defaults, newValues), plugins);
+    }
+    return defaults;
+  };
+
+  http.use = function() {
+    var newPlugins = Array.prototype.slice.call(arguments, 0);
+    return factory(defaults, plugins.concat(newPlugins));
+  };
+
+  http.bare = function() {
+    return factory();
+  };
+
+  http.Request = request$1;
+  http.Response = response;
+  http.RequestError = error;
+
+  return http;
+}
+
+var lib = factory({}, [cleanurl]);
+
+/**
+ * Analyze the request to see if it represents an error. If so, return it! An
+ * original error object can be passed as a hint.
+ */
+function getError(req, err) {
+  if (req.aborted) return createError('Request aborted', req, {name: 'Abort'});
+
+  if (req.timedOut) return createError('Request timeout', req, {name: 'Timeout'});
+
+  var xhr = req.xhr;
+  var type = Math.floor(xhr.status / 100);
+
+  var kind;
+  switch (type) {
+    case 0:
+    case 2:
+      // These don't represent errors unless the function was passed an
+      // error object explicitly.
+      if (!err) return;
+      return createError(err.message, req);
+    case 4:
+      // Sometimes 4XX statuses aren't errors.
+      if (xhr.status === 404 && !req.errorOn404) return;
+      kind = 'Client';
+      break;
+    case 5:
+      kind = 'Server';
+      break;
+    default:
+      kind = 'HTTP';
+  }
+  var msg = kind + ' Error: ' +
+        'The server returned a status of ' + xhr.status +
+        ' for the request "' +
+        req.method.toUpperCase() + ' ' + req.url + '"';
+  return createError(msg, req);
+}
+
+var utils = createCommonjsModule(function (module, exports) {
+'use strict';
+
+var has = Object.prototype.hasOwnProperty;
+
+var hexTable = (function () {
+    var array = [];
+    for (var i = 0; i < 256; ++i) {
+        array.push('%' + ((i < 16 ? '0' : '') + i.toString(16)).toUpperCase());
+    }
+
+    return array;
+}());
+
+var compactQueue = function compactQueue(queue) {
+    var obj;
+
+    while (queue.length) {
+        var item = queue.pop();
+        obj = item.obj[item.prop];
+
+        if (Array.isArray(obj)) {
+            var compacted = [];
+
+            for (var j = 0; j < obj.length; ++j) {
+                if (typeof obj[j] !== 'undefined') {
+                    compacted.push(obj[j]);
+                }
+            }
+
+            item.obj[item.prop] = compacted;
+        }
+    }
+
+    return obj;
+};
+
+exports.arrayToObject = function arrayToObject(source, options) {
+    var obj = options && options.plainObjects ? Object.create(null) : {};
+    for (var i = 0; i < source.length; ++i) {
+        if (typeof source[i] !== 'undefined') {
+            obj[i] = source[i];
+        }
+    }
+
+    return obj;
+};
+
+exports.merge = function merge(target, source, options) {
+    if (!source) {
+        return target;
+    }
+
+    if (typeof source !== 'object') {
+        if (Array.isArray(target)) {
+            target.push(source);
+        } else if (typeof target === 'object') {
+            if (options.plainObjects || options.allowPrototypes || !has.call(Object.prototype, source)) {
+                target[source] = true;
+            }
+        } else {
+            return [target, source];
+        }
+
+        return target;
+    }
+
+    if (typeof target !== 'object') {
+        return [target].concat(source);
+    }
+
+    var mergeTarget = target;
+    if (Array.isArray(target) && !Array.isArray(source)) {
+        mergeTarget = exports.arrayToObject(target, options);
+    }
+
+    if (Array.isArray(target) && Array.isArray(source)) {
+        source.forEach(function (item, i) {
+            if (has.call(target, i)) {
+                if (target[i] && typeof target[i] === 'object') {
+                    target[i] = exports.merge(target[i], item, options);
+                } else {
+                    target.push(item);
+                }
+            } else {
+                target[i] = item;
+            }
+        });
+        return target;
+    }
+
+    return Object.keys(source).reduce(function (acc, key) {
+        var value = source[key];
+
+        if (has.call(acc, key)) {
+            acc[key] = exports.merge(acc[key], value, options);
+        } else {
+            acc[key] = value;
+        }
+        return acc;
+    }, mergeTarget);
+};
+
+exports.assign = function assignSingleSource(target, source) {
+    return Object.keys(source).reduce(function (acc, key) {
+        acc[key] = source[key];
+        return acc;
+    }, target);
+};
+
+exports.decode = function (str) {
+    try {
+        return decodeURIComponent(str.replace(/\+/g, ' '));
+    } catch (e) {
+        return str;
+    }
+};
+
+exports.encode = function encode(str) {
+    // This code was originally written by Brian White (mscdex) for the io.js core querystring library.
+    // It has been adapted here for stricter adherence to RFC 3986
+    if (str.length === 0) {
+        return str;
+    }
+
+    var string = typeof str === 'string' ? str : String(str);
+
+    var out = '';
+    for (var i = 0; i < string.length; ++i) {
+        var c = string.charCodeAt(i);
+
+        if (
+            c === 0x2D // -
+            || c === 0x2E // .
+            || c === 0x5F // _
+            || c === 0x7E // ~
+            || (c >= 0x30 && c <= 0x39) // 0-9
+            || (c >= 0x41 && c <= 0x5A) // a-z
+            || (c >= 0x61 && c <= 0x7A) // A-Z
+        ) {
+            out += string.charAt(i);
+            continue;
+        }
+
+        if (c < 0x80) {
+            out = out + hexTable[c];
+            continue;
+        }
+
+        if (c < 0x800) {
+            out = out + (hexTable[0xC0 | (c >> 6)] + hexTable[0x80 | (c & 0x3F)]);
+            continue;
+        }
+
+        if (c < 0xD800 || c >= 0xE000) {
+            out = out + (hexTable[0xE0 | (c >> 12)] + hexTable[0x80 | ((c >> 6) & 0x3F)] + hexTable[0x80 | (c & 0x3F)]);
+            continue;
+        }
+
+        i += 1;
+        c = 0x10000 + (((c & 0x3FF) << 10) | (string.charCodeAt(i) & 0x3FF));
+        out += hexTable[0xF0 | (c >> 18)]
+            + hexTable[0x80 | ((c >> 12) & 0x3F)]
+            + hexTable[0x80 | ((c >> 6) & 0x3F)]
+            + hexTable[0x80 | (c & 0x3F)];
+    }
+
+    return out;
+};
+
+exports.compact = function compact(value) {
+    var queue = [{ obj: { o: value }, prop: 'o' }];
+    var refs = [];
+
+    for (var i = 0; i < queue.length; ++i) {
+        var item = queue[i];
+        var obj = item.obj[item.prop];
+
+        var keys = Object.keys(obj);
+        for (var j = 0; j < keys.length; ++j) {
+            var key = keys[j];
+            var val = obj[key];
+            if (typeof val === 'object' && val !== null && refs.indexOf(val) === -1) {
+                queue.push({ obj: obj, prop: key });
+                refs.push(val);
+            }
+        }
+    }
+
+    return compactQueue(queue);
+};
+
+exports.isRegExp = function isRegExp(obj) {
+    return Object.prototype.toString.call(obj) === '[object RegExp]';
+};
+
+exports.isBuffer = function isBuffer(obj) {
+    if (obj === null || typeof obj === 'undefined') {
+        return false;
+    }
+
+    return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
+};
+});
+
+var replace = String.prototype.replace;
+var percentTwenties = /%20/g;
+
+var formats = {
+    defaultFormat: 'RFC3986',
+    formatters: {
+        RFC1738: function (value) {
+            return replace.call(value, percentTwenties, '+');
+        },
+        RFC3986: function (value) {
+            return value;
+        }
+    },
+    RFC1738: 'RFC1738',
+    RFC3986: 'RFC3986'
+};
+
+var arrayPrefixGenerators = {
+    brackets: function brackets(prefix) { // eslint-disable-line func-name-matching
+        return prefix + '[]';
+    },
+    indices: function indices(prefix, key) { // eslint-disable-line func-name-matching
+        return prefix + '[' + key + ']';
+    },
+    repeat: function repeat(prefix) { // eslint-disable-line func-name-matching
+        return prefix;
+    }
+};
+
+var toISO = Date.prototype.toISOString;
+
+var defaults = {
+    delimiter: '&',
+    encode: true,
+    encoder: utils.encode,
+    encodeValuesOnly: false,
+    serializeDate: function serializeDate(date) { // eslint-disable-line func-name-matching
+        return toISO.call(date);
+    },
+    skipNulls: false,
+    strictNullHandling: false
+};
+
+var stringify = function stringify( // eslint-disable-line func-name-matching
+    object,
+    prefix,
+    generateArrayPrefix,
+    strictNullHandling,
+    skipNulls,
+    encoder,
+    filter,
+    sort,
+    allowDots,
+    serializeDate,
+    formatter,
+    encodeValuesOnly
+) {
+    var obj = object;
+    if (typeof filter === 'function') {
+        obj = filter(prefix, obj);
+    } else if (obj instanceof Date) {
+        obj = serializeDate(obj);
+    } else if (obj === null) {
+        if (strictNullHandling) {
+            return encoder && !encodeValuesOnly ? encoder(prefix, defaults.encoder) : prefix;
+        }
+
+        obj = '';
+    }
+
+    if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean' || utils.isBuffer(obj)) {
+        if (encoder) {
+            var keyValue = encodeValuesOnly ? prefix : encoder(prefix, defaults.encoder);
+            return [formatter(keyValue) + '=' + formatter(encoder(obj, defaults.encoder))];
+        }
+        return [formatter(prefix) + '=' + formatter(String(obj))];
+    }
+
+    var values = [];
+
+    if (typeof obj === 'undefined') {
+        return values;
+    }
+
+    var objKeys;
+    if (Array.isArray(filter)) {
+        objKeys = filter;
+    } else {
+        var keys = Object.keys(obj);
+        objKeys = sort ? keys.sort(sort) : keys;
+    }
+
+    for (var i = 0; i < objKeys.length; ++i) {
+        var key = objKeys[i];
+
+        if (skipNulls && obj[key] === null) {
+            continue;
+        }
+
+        if (Array.isArray(obj)) {
+            values = values.concat(stringify(
+                obj[key],
+                generateArrayPrefix(prefix, key),
+                generateArrayPrefix,
+                strictNullHandling,
+                skipNulls,
+                encoder,
+                filter,
+                sort,
+                allowDots,
+                serializeDate,
+                formatter,
+                encodeValuesOnly
+            ));
+        } else {
+            values = values.concat(stringify(
+                obj[key],
+                prefix + (allowDots ? '.' + key : '[' + key + ']'),
+                generateArrayPrefix,
+                strictNullHandling,
+                skipNulls,
+                encoder,
+                filter,
+                sort,
+                allowDots,
+                serializeDate,
+                formatter,
+                encodeValuesOnly
+            ));
+        }
+    }
+
+    return values;
+};
+
+var stringify_1 = function (object, opts) {
+    var obj = object;
+    var options = opts ? utils.assign({}, opts) : {};
+
+    if (options.encoder !== null && options.encoder !== undefined && typeof options.encoder !== 'function') {
+        throw new TypeError('Encoder has to be a function.');
+    }
+
+    var delimiter = typeof options.delimiter === 'undefined' ? defaults.delimiter : options.delimiter;
+    var strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults.strictNullHandling;
+    var skipNulls = typeof options.skipNulls === 'boolean' ? options.skipNulls : defaults.skipNulls;
+    var encode = typeof options.encode === 'boolean' ? options.encode : defaults.encode;
+    var encoder = typeof options.encoder === 'function' ? options.encoder : defaults.encoder;
+    var sort = typeof options.sort === 'function' ? options.sort : null;
+    var allowDots = typeof options.allowDots === 'undefined' ? false : options.allowDots;
+    var serializeDate = typeof options.serializeDate === 'function' ? options.serializeDate : defaults.serializeDate;
+    var encodeValuesOnly = typeof options.encodeValuesOnly === 'boolean' ? options.encodeValuesOnly : defaults.encodeValuesOnly;
+    if (typeof options.format === 'undefined') {
+        options.format = formats.defaultFormat;
+    } else if (!Object.prototype.hasOwnProperty.call(formats.formatters, options.format)) {
+        throw new TypeError('Unknown format option provided.');
+    }
+    var formatter = formats.formatters[options.format];
+    var objKeys;
+    var filter;
+
+    if (typeof options.filter === 'function') {
+        filter = options.filter;
+        obj = filter('', obj);
+    } else if (Array.isArray(options.filter)) {
+        filter = options.filter;
+        objKeys = filter;
+    }
+
+    var keys = [];
+
+    if (typeof obj !== 'object' || obj === null) {
+        return '';
+    }
+
+    var arrayFormat;
+    if (options.arrayFormat in arrayPrefixGenerators) {
+        arrayFormat = options.arrayFormat;
+    } else if ('indices' in options) {
+        arrayFormat = options.indices ? 'indices' : 'repeat';
+    } else {
+        arrayFormat = 'indices';
+    }
+
+    var generateArrayPrefix = arrayPrefixGenerators[arrayFormat];
+
+    if (!objKeys) {
+        objKeys = Object.keys(obj);
+    }
+
+    if (sort) {
+        objKeys.sort(sort);
+    }
+
+    for (var i = 0; i < objKeys.length; ++i) {
+        var key = objKeys[i];
+
+        if (skipNulls && obj[key] === null) {
+            continue;
+        }
+
+        keys = keys.concat(stringify(
+            obj[key],
+            key,
+            generateArrayPrefix,
+            strictNullHandling,
+            skipNulls,
+            encode ? encoder : null,
+            filter,
+            sort,
+            allowDots,
+            serializeDate,
+            formatter,
+            encodeValuesOnly
+        ));
+    }
+
+    var joined = keys.join(delimiter);
+    var prefix = options.addQueryPrefix === true ? '?' : '';
+
+    return joined.length > 0 ? prefix + joined : '';
+};
+
+var has = Object.prototype.hasOwnProperty;
+
+var defaults$1 = {
+    allowDots: false,
+    allowPrototypes: false,
+    arrayLimit: 20,
+    decoder: utils.decode,
+    delimiter: '&',
+    depth: 5,
+    parameterLimit: 1000,
+    plainObjects: false,
+    strictNullHandling: false
+};
+
+var parseValues = function parseQueryStringValues(str, options) {
+    var obj = {};
+    var cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, '') : str;
+    var limit = options.parameterLimit === Infinity ? undefined : options.parameterLimit;
+    var parts = cleanStr.split(options.delimiter, limit);
+
+    for (var i = 0; i < parts.length; ++i) {
+        var part = parts[i];
+
+        var bracketEqualsPos = part.indexOf(']=');
+        var pos = bracketEqualsPos === -1 ? part.indexOf('=') : bracketEqualsPos + 1;
+
+        var key, val;
+        if (pos === -1) {
+            key = options.decoder(part, defaults$1.decoder);
+            val = options.strictNullHandling ? null : '';
+        } else {
+            key = options.decoder(part.slice(0, pos), defaults$1.decoder);
+            val = options.decoder(part.slice(pos + 1), defaults$1.decoder);
+        }
+        if (has.call(obj, key)) {
+            obj[key] = [].concat(obj[key]).concat(val);
+        } else {
+            obj[key] = val;
+        }
+    }
+
+    return obj;
+};
+
+var parseObject = function (chain, val, options) {
+    var leaf = val;
+
+    for (var i = chain.length - 1; i >= 0; --i) {
+        var obj;
+        var root = chain[i];
+
+        if (root === '[]') {
+            obj = [];
+            obj = obj.concat(leaf);
+        } else {
+            obj = options.plainObjects ? Object.create(null) : {};
+            var cleanRoot = root.charAt(0) === '[' && root.charAt(root.length - 1) === ']' ? root.slice(1, -1) : root;
+            var index = parseInt(cleanRoot, 10);
+            if (
+                !isNaN(index)
+                && root !== cleanRoot
+                && String(index) === cleanRoot
+                && index >= 0
+                && (options.parseArrays && index <= options.arrayLimit)
+            ) {
+                obj = [];
+                obj[index] = leaf;
+            } else {
+                obj[cleanRoot] = leaf;
+            }
+        }
+
+        leaf = obj;
+    }
+
+    return leaf;
+};
+
+var parseKeys = function parseQueryStringKeys(givenKey, val, options) {
+    if (!givenKey) {
+        return;
+    }
+
+    // Transform dot notation to bracket notation
+    var key = options.allowDots ? givenKey.replace(/\.([^.[]+)/g, '[$1]') : givenKey;
+
+    // The regex chunks
+
+    var brackets = /(\[[^[\]]*])/;
+    var child = /(\[[^[\]]*])/g;
+
+    // Get the parent
+
+    var segment = brackets.exec(key);
+    var parent = segment ? key.slice(0, segment.index) : key;
+
+    // Stash the parent if it exists
+
+    var keys = [];
+    if (parent) {
+        // If we aren't using plain objects, optionally prefix keys
+        // that would overwrite object prototype properties
+        if (!options.plainObjects && has.call(Object.prototype, parent)) {
+            if (!options.allowPrototypes) {
+                return;
+            }
+        }
+
+        keys.push(parent);
+    }
+
+    // Loop through children appending to the array until we hit depth
+
+    var i = 0;
+    while ((segment = child.exec(key)) !== null && i < options.depth) {
+        i += 1;
+        if (!options.plainObjects && has.call(Object.prototype, segment[1].slice(1, -1))) {
+            if (!options.allowPrototypes) {
+                return;
+            }
+        }
+        keys.push(segment[1]);
+    }
+
+    // If there's a remainder, just add whatever is left
+
+    if (segment) {
+        keys.push('[' + key.slice(segment.index) + ']');
+    }
+
+    return parseObject(keys, val, options);
+};
+
+var parse = function (str, opts) {
+    var options = opts ? utils.assign({}, opts) : {};
+
+    if (options.decoder !== null && options.decoder !== undefined && typeof options.decoder !== 'function') {
+        throw new TypeError('Decoder has to be a function.');
+    }
+
+    options.ignoreQueryPrefix = options.ignoreQueryPrefix === true;
+    options.delimiter = typeof options.delimiter === 'string' || utils.isRegExp(options.delimiter) ? options.delimiter : defaults$1.delimiter;
+    options.depth = typeof options.depth === 'number' ? options.depth : defaults$1.depth;
+    options.arrayLimit = typeof options.arrayLimit === 'number' ? options.arrayLimit : defaults$1.arrayLimit;
+    options.parseArrays = options.parseArrays !== false;
+    options.decoder = typeof options.decoder === 'function' ? options.decoder : defaults$1.decoder;
+    options.allowDots = typeof options.allowDots === 'boolean' ? options.allowDots : defaults$1.allowDots;
+    options.plainObjects = typeof options.plainObjects === 'boolean' ? options.plainObjects : defaults$1.plainObjects;
+    options.allowPrototypes = typeof options.allowPrototypes === 'boolean' ? options.allowPrototypes : defaults$1.allowPrototypes;
+    options.parameterLimit = typeof options.parameterLimit === 'number' ? options.parameterLimit : defaults$1.parameterLimit;
+    options.strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults$1.strictNullHandling;
+
+    if (str === '' || str === null || typeof str === 'undefined') {
+        return options.plainObjects ? Object.create(null) : {};
+    }
+
+    var tempObj = typeof str === 'string' ? parseValues(str, options) : str;
+    var obj = options.plainObjects ? Object.create(null) : {};
+
+    // Iterate over the keys and setup the new object
+
+    var keys = Object.keys(tempObj);
+    for (var i = 0; i < keys.length; ++i) {
+        var key = keys[i];
+        var newObj = parseKeys(key, tempObj[key], options);
+        obj = utils.merge(obj, newObj, options);
+    }
+
+    return utils.compact(obj);
+};
+
+var lib$1 = {
+    formats: formats,
+    parse: parse,
+    stringify: stringify_1
+};
+
+var lib_1 = lib$1.stringify;
+
+var _typeof$1 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+
+
+
+
+
+
+
+
+
+
+var classCallCheck$1 = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass$1 = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var toConsumableArray$1 = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
+
 /*
   Copyright 2017 Stratumn SAS. All rights reserved.
 
@@ -20,21 +1569,662 @@
   limitations under the License.
 */
 
-function makeLink(source, target) {
-  var margin = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-
-  var finalTarget = target || source;
-  var targetX = finalTarget.x;
-  var targetY = finalTarget.y - margin;
-  return "M" + source.y + "," + source.x + "\n    C" + (source.y + targetY) / 2 + "," + source.x + " " + (source.y + targetY) / 2 + ",\n    " + targetX + " " + targetY + "," + targetX;
+function getProcess(agent, name) {
+  var process = agent.processes[name];
+  if (!process) {
+    throw new Error("process '" + name + "' not found");
+  }
+  return process;
 }
 
-function finalLink(d, margin) {
-  return makeLink(d.source, d.target, margin);
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function segmentify(adaptor, process, obj) {
+  Object.keys(process.processInfo.actions).filter(function (key) {
+    return ['init'].indexOf(key) < 0;
+  }).forEach(function (key) {
+    obj[key] = function () {
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      return adaptor.createSegment.apply(adaptor, [process.name, obj.meta.linkHash, key].concat(args)).then(function (res) {
+        return segmentify(adaptor, process, res.body);
+      });
+    };
+  });
+
+  obj.getPrev = function () {
+    if (obj.link.meta.prevLinkHash) {
+      return process.getSegment(obj.link.meta.prevLinkHash);
+    }
+
+    return Promise.resolve(null);
+  };
+
+  return obj;
 }
 
-function translate(x, y) {
-  return "translate(" + y + ", " + x + ")";
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function createMap(adaptor, process) {
+  for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    args[_key - 2] = arguments[_key];
+  }
+
+  return adaptor.createMap.apply(adaptor, [process.name].concat(args)).then(function (res) {
+    return segmentify(adaptor, process, res.body);
+  });
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function getSegment(adaptor, process, linkHash) {
+  return adaptor.getSegment(process.name, linkHash).then(function (res) {
+    return segmentify(adaptor, process, res.body);
+  });
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/**
+ * Calls a function that returns a Promise until a condition is reached
+ * @param {function} condition - while condition is true body will keep being called
+ * @param {function} body - a function that is repeatedly called while condition is true
+ * @returns {Promise} a Promise that resolves when the condition is no longer true
+ */
+function promiseWhile(condition, body) {
+  return new Promise(function (resolve, reject) {
+    function loop() {
+      body().then(function () {
+        // When the result of calling `condition` is no longer true, we are
+        // done.
+        if (!condition()) {
+          resolve();
+        } else {
+          loop();
+        }
+      }).catch(reject);
+    }
+
+    // Start running the loop in the next tick so that this function is
+    // completely async. It would be unexpected if `body` was called
+    // synchronously the first time.
+    setImmediate(loop);
+  });
+}
+
+var _typeof = typeof Symbol === "function" && _typeof$1(Symbol.iterator) === "symbol" ? function (obj) {
+  return typeof obj === 'undefined' ? 'undefined' : _typeof$1(obj);
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj === 'undefined' ? 'undefined' : _typeof$1(obj);
+};
+
+var classCallCheck = function classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+var toConsumableArray = function toConsumableArray(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+      arr2[i] = arr[i];
+    }return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+var DEFAULT_BATCH_SIZE = 20;
+
+function findSegments(adaptor, process) {
+  var opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  var options = Object.assign({}, opts);
+  if (opts.limit === -1) {
+    options.limit = options.batchSize || DEFAULT_BATCH_SIZE;
+    delete options.batchSize;
+    options.offset = 0;
+    var lastBatch = [];
+    var result = [];
+
+    return promiseWhile(function () {
+      return lastBatch.length === options.limit;
+    }, function () {
+      return findSegments(adaptor, process, options).then(function (newSegments) {
+        lastBatch = newSegments;
+        result.push.apply(result, toConsumableArray(newSegments));
+        options.offset += options.limit;
+      });
+    }).then(function () {
+      return result;
+    });
+  }
+  return adaptor.findSegments(process.name, opts).then(function (res) {
+    return res.body.map(function (obj) {
+      return segmentify(adaptor, process, obj);
+    });
+  });
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function getMapIds(adaptor, process) {
+  var opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  return adaptor.getMapIds(process.name, opts).then(function (res) {
+    return res.body;
+  });
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function processify(adaptor, process) {
+  var updatedProcess = process;
+  if (adaptor.url) {
+    updatedProcess.agentUrl = adaptor.url;
+    updatedProcess.prefixUrl = adaptor.url + '/' + process.name;
+  }
+  updatedProcess.createMap = createMap.bind(null, adaptor, updatedProcess);
+  updatedProcess.getSegment = getSegment.bind(null, adaptor, updatedProcess);
+  updatedProcess.findSegments = findSegments.bind(null, adaptor, updatedProcess);
+  updatedProcess.getMapIds = getMapIds.bind(null, adaptor, updatedProcess);
+
+  return updatedProcess;
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function getProcesses(adaptor) {
+  return adaptor.getProcesses().then(function (res) {
+    return res.body.map(processify.bind(null, adaptor));
+  });
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+var request = lib.use(json);
+
+function send(method, url, args) {
+  return new Promise(function (resolve, reject) {
+    request({ method: method, url: url, body: args }, function (err, res) {
+      if (err) {
+        var error = err && err.body && err.body.meta && err.body.meta.errorMessage ? new Error(err.body.meta.errorMessage) : err;
+        error.status = err.status;
+        reject(error);
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
+function get$1(url) {
+  return send('GET', url);
+}
+
+function post(url, args) {
+  return send('POST', url, args);
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+/**
+ * Makes a query string.
+ * @param {object} obj - an object of keys
+ * @returns {string} a query string
+ */
+function makeQueryString(obj) {
+  // use brackets format for compatibility with GO:
+  // https://github.com/google/go-querystring
+  // see also conversation in:
+  // https://github.com/stratumn/indigo-js/pull/18
+  var query = lib_1(obj, { arrayFormat: 'brackets' });
+  if (query.length) {
+    return '?' + query;
+  }
+  return '';
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+var httpAdaptor = function () {
+  function httpAdaptor(url) {
+    classCallCheck(this, httpAdaptor);
+
+    this.agentUrl = url;
+  }
+
+  createClass(httpAdaptor, [{
+    key: 'getInfo',
+    value: function getInfo() {
+      return get$1(this.url);
+    }
+  }, {
+    key: 'getProcesses',
+    value: function getProcesses() {
+      return get$1(this.url + '/processes');
+    }
+  }, {
+    key: 'createMap',
+    value: function createMap(processName) {
+      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      return post(this.url + '/' + processName + '/segments', args);
+    }
+  }, {
+    key: 'getSegment',
+    value: function getSegment(processName, linkHash) {
+      return get$1(this.url + '/' + processName + '/segments/' + linkHash);
+    }
+  }, {
+    key: 'findSegments',
+    value: function findSegments(processName) {
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      return get$1(this.url + '/' + processName + '/segments' + makeQueryString(opts));
+    }
+  }, {
+    key: 'getMapIds',
+    value: function getMapIds(processName) {
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      return get$1(this.url + '/' + processName + '/maps' + makeQueryString(opts));
+    }
+  }, {
+    key: 'createSegment',
+    value: function createSegment(processName, linkHash, action) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 3 ? _len2 - 3 : 0), _key2 = 3; _key2 < _len2; _key2++) {
+        args[_key2 - 3] = arguments[_key2];
+      }
+
+      return post(this.url + '/' + processName + '/segments/' + linkHash + '/' + action, args);
+    }
+  }, {
+    key: 'url',
+    get: function get$$1() {
+      return this.agentUrl;
+    }
+  }]);
+  return httpAdaptor;
+}();
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+// need to clone data as client will modify it!
+var decorateBody = function decorateBody(res) {
+  return { body: JSON.parse(JSON.stringify(res)) };
+};
+
+var objectAdaptor = function () {
+  function objectAdaptor(agent) {
+    classCallCheck(this, objectAdaptor);
+
+    this.agent = agent;
+  }
+
+  createClass(objectAdaptor, [{
+    key: "getInfo",
+    value: function getInfo() {
+      return this.agent.getInfo().then(decorateBody);
+    }
+  }, {
+    key: "getProcesses",
+    value: function getProcesses() {
+      return Promise.resolve(decorateBody(this.agent.getAllProcesses()));
+    }
+  }, {
+    key: "createMap",
+    value: function createMap(processName) {
+      try {
+        var _agent$getProcess;
+
+        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          args[_key - 1] = arguments[_key];
+        }
+
+        return (_agent$getProcess = this.agent.getProcess(processName)).createMap.apply(_agent$getProcess, args).then(decorateBody);
+      } catch (err) {
+        return Promise.reject(err);
+      }
+    }
+  }, {
+    key: "getSegment",
+    value: function getSegment(processName, linkHash) {
+      try {
+        return this.agent.getProcess(processName).getSegment(linkHash).then(decorateBody);
+      } catch (err) {
+        return Promise.reject(err);
+      }
+    }
+  }, {
+    key: "findSegments",
+    value: function findSegments(processName) {
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      try {
+        return this.agent.getProcess(processName).findSegments(opts).then(decorateBody);
+      } catch (err) {
+        return Promise.reject(err);
+      }
+    }
+  }, {
+    key: "getMapIds",
+    value: function getMapIds(processName) {
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      try {
+        return this.agent.getProcess(processName).getMapIds(opts).then(decorateBody);
+      } catch (err) {
+        return Promise.reject(err);
+      }
+    }
+  }, {
+    key: "createSegment",
+    value: function createSegment(processName, linkHash, action) {
+      try {
+        var _agent$getProcess2;
+
+        for (var _len2 = arguments.length, args = Array(_len2 > 3 ? _len2 - 3 : 0), _key2 = 3; _key2 < _len2; _key2++) {
+          args[_key2 - 3] = arguments[_key2];
+        }
+
+        return (_agent$getProcess2 = this.agent.getProcess(processName)).createSegment.apply(_agent$getProcess2, [linkHash, action].concat(args)).then(decorateBody);
+      } catch (err) {
+        return Promise.reject(err);
+      }
+    }
+
+    /* eslint-disable */
+
+  }, {
+    key: "url",
+    get: function get$$1() {
+      return null;
+    }
+    /* eslint-enable */
+
+  }]);
+  return objectAdaptor;
+}();
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function getAdaptor(objectOrUrl) {
+  if (typeof objectOrUrl === 'string') {
+    return new httpAdaptor(objectOrUrl);
+  } else if ((typeof objectOrUrl === 'undefined' ? 'undefined' : _typeof(objectOrUrl)) === 'object') {
+    return new objectAdaptor(objectOrUrl);
+  }
+
+  throw new Error('The argument passed is neither a url or an object!');
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function getAgent(objectOrUrl) {
+  try {
+    var adaptor = getAdaptor(objectOrUrl);
+    return adaptor.getInfo().then(function (res) {
+      var agent = res.body;
+      agent.url = adaptor.url;
+      agent.getProcess = getProcess.bind(null, agent);
+      agent.getProcesses = getProcesses.bind(null, adaptor);
+      agent.processes = Object.keys(agent.processes).map(function (key) {
+        return agent.processes[key];
+      }).reduce(function (map, p) {
+        var updatedMap = map;
+        updatedMap[p.name] = processify(adaptor, p);
+        return updatedMap;
+      }, {});
+      return agent;
+    });
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function fromSegment(obj) {
+  return getAgent(obj.meta.agentUrl || obj.meta.applicationLocation).then(function (agent) {
+    var process = agent.getProcess(obj.link.meta.process);
+    var adaptor = getAdaptor(agent.url);
+    var segment = segmentify(adaptor, process, obj);
+    return { process: process, segment: segment };
+  });
 }
 
 function count(node) {
@@ -242,10 +2432,83 @@ Node.prototype = hierarchy.prototype = {
   copy: node_copy
 };
 
+function enclosesNot(a, b) {
+  var dr = a.r - b.r, dx = b.x - a.x, dy = b.y - a.y;
+  return dr < 0 || dr * dr < dx * dx + dy * dy;
+}
+
+function enclosesWeak(a, b) {
+  var dr = a.r - b.r + 1e-6, dx = b.x - a.x, dy = b.y - a.y;
+  return dr > 0 && dr * dr > dx * dx + dy * dy;
+}
+
+function enclosesWeakAll(a, B) {
+  for (var i = 0; i < B.length; ++i) {
+    if (!enclosesWeak(a, B[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function encloseBasis2(a, b) {
+  var x1 = a.x, y1 = a.y, r1 = a.r,
+      x2 = b.x, y2 = b.y, r2 = b.r,
+      x21 = x2 - x1, y21 = y2 - y1, r21 = r2 - r1,
+      l = Math.sqrt(x21 * x21 + y21 * y21);
+  return {
+    x: (x1 + x2 + x21 / l * r21) / 2,
+    y: (y1 + y2 + y21 / l * r21) / 2,
+    r: (l + r1 + r2) / 2
+  };
+}
+
+function encloseBasis3(a, b, c) {
+  var x1 = a.x, y1 = a.y, r1 = a.r,
+      x2 = b.x, y2 = b.y, r2 = b.r,
+      x3 = c.x, y3 = c.y, r3 = c.r,
+      a2 = x1 - x2,
+      a3 = x1 - x3,
+      b2 = y1 - y2,
+      b3 = y1 - y3,
+      c2 = r2 - r1,
+      c3 = r3 - r1,
+      d1 = x1 * x1 + y1 * y1 - r1 * r1,
+      d2 = d1 - x2 * x2 - y2 * y2 + r2 * r2,
+      d3 = d1 - x3 * x3 - y3 * y3 + r3 * r3,
+      ab = a3 * b2 - a2 * b3,
+      xa = (b2 * d3 - b3 * d2) / (ab * 2) - x1,
+      xb = (b3 * c2 - b2 * c3) / ab,
+      ya = (a3 * d2 - a2 * d3) / (ab * 2) - y1,
+      yb = (a2 * c3 - a3 * c2) / ab,
+      A = xb * xb + yb * yb - 1,
+      B = 2 * (r1 + xa * xb + ya * yb),
+      C = xa * xa + ya * ya - r1 * r1,
+      r = -(A ? (B + Math.sqrt(B * B - 4 * A * C)) / (2 * A) : C / B);
+  return {
+    x: x1 + xa + xb * r,
+    y: y1 + ya + yb * r,
+    r: r
+  };
+}
+
 function required(f) {
   if (typeof f !== "function") throw new Error;
   return f;
 }
+
+var treemapDice = function(parent, x0, y0, x1, y1) {
+  var nodes = parent.children,
+      node,
+      i = -1,
+      n = nodes.length,
+      k = parent.value && (x1 - x0) / parent.value;
+
+  while (++i < n) {
+    node = nodes[i], node.y0 = y0, node.y1 = y1;
+    node.x0 = x0, node.x1 = x0 += node.value * k;
+  }
+};
 
 var keyPrefix = "$";
 var preroot = {depth: -1};
@@ -554,28 +2817,66 @@ var tree = function() {
   return tree;
 };
 
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
+var treemapSlice = function(parent, x0, y0, x1, y1) {
+  var nodes = parent.children,
+      node,
+      i = -1,
+      n = nodes.length,
+      k = parent.value && (y1 - y0) / parent.value;
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+  while (++i < n) {
+    node = nodes[i], node.x0 = x0, node.x1 = x1;
+    node.y0 = y0, node.y1 = y0 += node.value * k;
+  }
+};
 
-      http://www.apache.org/licenses/LICENSE-2.0
+function squarifyRatio(ratio, parent, x0, y0, x1, y1) {
+  var rows = [],
+      nodes = parent.children,
+      row,
+      nodeValue,
+      i0 = 0,
+      i1 = 0,
+      n = nodes.length,
+      dx, dy,
+      value = parent.value,
+      sumValue,
+      minValue,
+      maxValue,
+      newRatio,
+      minRatio,
+      alpha,
+      beta;
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
+  while (i0 < n) {
+    dx = x1 - x0, dy = y1 - y0;
 
-function parseChainscript(chainscript) {
-  return stratify().id(function (d) {
-    return d.meta.linkHash;
-  }).parentId(function (d) {
-    return d.link.meta.prevLinkHash;
-  })(chainscript);
+    // Find the next non-empty node.
+    do sumValue = nodes[i1++].value; while (!sumValue && i1 < n);
+    minValue = maxValue = sumValue;
+    alpha = Math.max(dy / dx, dx / dy) / (value * ratio);
+    beta = sumValue * sumValue * alpha;
+    minRatio = Math.max(maxValue / beta, beta / minValue);
+
+    // Keep adding nodes while the aspect ratio maintains or improves.
+    for (; i1 < n; ++i1) {
+      sumValue += nodeValue = nodes[i1].value;
+      if (nodeValue < minValue) minValue = nodeValue;
+      if (nodeValue > maxValue) maxValue = nodeValue;
+      beta = sumValue * sumValue * alpha;
+      newRatio = Math.max(maxValue / beta, beta / minValue);
+      if (newRatio > minRatio) { sumValue -= nodeValue; break; }
+      minRatio = newRatio;
+    }
+
+    // Position and record the row orientation.
+    rows.push(row = {value: sumValue, dice: dx < dy, children: nodes.slice(i0, i1)});
+    if (row.dice) treemapDice(row, x0, y0, x1, value ? y0 += dy * sumValue / value : y1);
+    else treemapSlice(row, x0, y0, value ? x0 += dx * sumValue / value : x1, y1);
+    value -= sumValue, i0 = i1;
+  }
+
+  return rows;
 }
 
 var xhtml = "http://www.w3.org/1999/xhtml";
@@ -1489,7 +3790,7 @@ var touch = function(node, touches, identifier) {
   return null;
 };
 
-var noop = {value: function() {}};
+var noop$1 = {value: function() {}};
 
 function dispatch() {
   for (var i = 0, n = arguments.length, _ = {}, t; i < n; ++i) {
@@ -1523,7 +3824,7 @@ Dispatch.prototype = dispatch.prototype = {
 
     // If no callback was specified, return the callback of the given type and name.
     if (arguments.length < 2) {
-      while (++i < n) if ((t = (typename = T[i]).type) && (t = get$1(_[t], typename.name))) return t;
+      while (++i < n) if ((t = (typename = T[i]).type) && (t = get$2(_[t], typename.name))) return t;
       return;
     }
 
@@ -1531,8 +3832,8 @@ Dispatch.prototype = dispatch.prototype = {
     // Otherwise, if a null callback was specified, remove callbacks of the given name.
     if (callback != null && typeof callback !== "function") throw new Error("invalid callback: " + callback);
     while (++i < n) {
-      if (t = (typename = T[i]).type) _[t] = set$1(_[t], typename.name, callback);
-      else if (callback == null) for (t in _) _[t] = set$1(_[t], typename.name, null);
+      if (t = (typename = T[i]).type) _[t] = set$2(_[t], typename.name, callback);
+      else if (callback == null) for (t in _) _[t] = set$2(_[t], typename.name, null);
     }
 
     return this;
@@ -1553,7 +3854,7 @@ Dispatch.prototype = dispatch.prototype = {
   }
 };
 
-function get$1(type, name) {
+function get$2(type, name) {
   for (var i = 0, n = type.length, c; i < n; ++i) {
     if ((c = type[i]).name === name) {
       return c.value;
@@ -1561,10 +3862,10 @@ function get$1(type, name) {
   }
 }
 
-function set$1(type, name, callback) {
+function set$2(type, name, callback) {
   for (var i = 0, n = type.length; i < n; ++i) {
     if (type[i].name === name) {
-      type[i] = noop, type = type.slice(0, i).concat(type.slice(i + 1));
+      type[i] = noop$1, type = type.slice(0, i).concat(type.slice(i + 1));
       break;
     }
   }
@@ -1729,13 +4030,13 @@ function init(node, id) {
   return schedule;
 }
 
-function set(node, id) {
+function set$1(node, id) {
   var schedule = node.__transition;
   if (!schedule || !(schedule = schedule[id]) || schedule.state > STARTING) throw new Error("too late");
   return schedule;
 }
 
-function get(node, id) {
+function get$1$1(node, id) {
   var schedule = node.__transition;
   if (!schedule || !(schedule = schedule[id])) throw new Error("too late");
   return schedule;
@@ -1875,12 +4176,12 @@ var selection_interrupt = function(name) {
   });
 };
 
-var define$1 = function(constructor, factory, prototype) {
+var define = function(constructor, factory, prototype) {
   constructor.prototype = factory.prototype = prototype;
   prototype.constructor = constructor;
 };
 
-function extend(parent, definition) {
+function extend$2(parent, definition) {
   var prototype = Object.create(parent.prototype);
   for (var key in definition) prototype[key] = definition[key];
   return prototype;
@@ -2054,7 +4355,7 @@ var named = {
   yellowgreen: 0x9acd32
 };
 
-define$1(Color, color, {
+define(Color, color, {
   displayable: function() {
     return this.rgb().displayable();
   },
@@ -2106,7 +4407,7 @@ function Rgb(r, g, b, opacity) {
   this.opacity = +opacity;
 }
 
-define$1(Rgb, rgb, extend(Color, {
+define(Rgb, rgb, extend$2(Color, {
   brighter: function(k) {
     k = k == null ? brighter : Math.pow(brighter, k);
     return new Rgb(this.r * k, this.g * k, this.b * k, this.opacity);
@@ -2178,7 +4479,7 @@ function Hsl(h, s, l, opacity) {
   this.opacity = +opacity;
 }
 
-define$1(Hsl, hsl, extend(Color, {
+define(Hsl, hsl, extend$2(Color, {
   brighter: function(k) {
     k = k == null ? brighter : Math.pow(brighter, k);
     return new Hsl(this.h, this.s, this.l * k, this.opacity);
@@ -2254,7 +4555,7 @@ function Lab(l, a, b, opacity) {
   this.opacity = +opacity;
 }
 
-define$1(Lab, lab, extend(Color, {
+define(Lab, lab, extend$2(Color, {
   brighter: function(k) {
     return new Lab(this.l + Kn * (k == null ? 1 : k), this.a, this.b, this.opacity);
   },
@@ -2311,7 +4612,7 @@ function Hcl(h, c, l, opacity) {
   this.opacity = +opacity;
 }
 
-define$1(Hcl, hcl, extend(Color, {
+define(Hcl, hcl, extend$2(Color, {
   brighter: function(k) {
     return new Hcl(this.h, this.c, this.l + Kn * (k == null ? 1 : k), this.opacity);
   },
@@ -2357,7 +4658,7 @@ function Cubehelix(h, s, l, opacity) {
   this.opacity = +opacity;
 }
 
-define$1(Cubehelix, cubehelix, extend(Color, {
+define(Cubehelix, cubehelix, extend$2(Color, {
   brighter: function(k) {
     k = k == null ? brighter : Math.pow(brighter, k);
     return new Cubehelix(this.h, this.s, this.l * k, this.opacity);
@@ -2381,6 +4682,14 @@ define$1(Cubehelix, cubehelix, extend(Color, {
   }
 }));
 
+function basis(t1, v0, v1, v2, v3) {
+  var t2 = t1 * t1, t3 = t2 * t1;
+  return ((1 - 3 * t1 + 3 * t2 - t3) * v0
+      + (4 - 6 * t2 + 3 * t3) * v1
+      + (1 + 3 * t1 + 3 * t2 - 3 * t3) * v2
+      + t3 * v3) / 6;
+}
+
 var constant$2 = function(x) {
   return function() {
     return x;
@@ -2399,7 +4708,10 @@ function exponential(a, b, y) {
   };
 }
 
-
+function hue(a, b) {
+  var d = b - a;
+  return d ? linear(a, d > 180 || d < -180 ? d - 360 * Math.round(d / 360) : d) : constant$2(isNaN(a) ? b : a);
+}
 
 function gamma(y) {
   return (y = +y) === 1 ? nogamma : function(a, b) {
@@ -2680,10 +4992,37 @@ var interpolateZoom = function(p0, p1) {
   return i;
 };
 
+function cubehelix$1(hue$$1) {
+  return (function cubehelixGamma(y) {
+    y = +y;
+
+    function cubehelix$$1(start, end) {
+      var h = hue$$1((start = cubehelix(start)).h, (end = cubehelix(end)).h),
+          s = nogamma(start.s, end.s),
+          l = nogamma(start.l, end.l),
+          opacity = nogamma(start.opacity, end.opacity);
+      return function(t) {
+        start.h = h(t);
+        start.s = s(t);
+        start.l = l(Math.pow(t, y));
+        start.opacity = opacity(t);
+        return start + "";
+      };
+    }
+
+    cubehelix$$1.gamma = cubehelixGamma;
+
+    return cubehelix$$1;
+  })(1);
+}
+
+cubehelix$1(hue);
+var cubehelixLong = cubehelix$1(nogamma);
+
 function tweenRemove(id, name) {
   var tween0, tween1;
   return function() {
-    var schedule$$1 = set(this, id),
+    var schedule$$1 = set$1(this, id),
         tween = schedule$$1.tween;
 
     // If this node shared tween with the previous node,
@@ -2708,7 +5047,7 @@ function tweenFunction(id, name, value) {
   var tween0, tween1;
   if (typeof value !== "function") throw new Error;
   return function() {
-    var schedule$$1 = set(this, id),
+    var schedule$$1 = set$1(this, id),
         tween = schedule$$1.tween;
 
     // If this node shared tween with the previous node,
@@ -2735,7 +5074,7 @@ var transition_tween = function(name, value) {
   name += "";
 
   if (arguments.length < 2) {
-    var tween = get(this.node(), id).tween;
+    var tween = get$1$1(this.node(), id).tween;
     for (var i = 0, n = tween.length, t; i < n; ++i) {
       if ((t = tween[i]).name === name) {
         return t.value;
@@ -2751,12 +5090,12 @@ function tweenValue(transition, name, value) {
   var id = transition._id;
 
   transition.each(function() {
-    var schedule$$1 = set(this, id);
+    var schedule$$1 = set$1(this, id);
     (schedule$$1.value || (schedule$$1.value = {}))[name] = value.apply(this, arguments);
   });
 
   return function(node) {
-    return get(node, id).value[name];
+    return get$1$1(node, id).value[name];
   };
 }
 
@@ -2888,18 +5227,18 @@ var transition_delay = function(value) {
       ? this.each((typeof value === "function"
           ? delayFunction
           : delayConstant)(id, value))
-      : get(this.node(), id).delay;
+      : get$1$1(this.node(), id).delay;
 };
 
 function durationFunction(id, value) {
   return function() {
-    set(this, id).duration = +value.apply(this, arguments);
+    set$1(this, id).duration = +value.apply(this, arguments);
   };
 }
 
 function durationConstant(id, value) {
   return value = +value, function() {
-    set(this, id).duration = value;
+    set$1(this, id).duration = value;
   };
 }
 
@@ -2910,13 +5249,13 @@ var transition_duration = function(value) {
       ? this.each((typeof value === "function"
           ? durationFunction
           : durationConstant)(id, value))
-      : get(this.node(), id).duration;
+      : get$1$1(this.node(), id).duration;
 };
 
 function easeConstant(id, value) {
   if (typeof value !== "function") throw new Error;
   return function() {
-    set(this, id).ease = value;
+    set$1(this, id).ease = value;
   };
 }
 
@@ -2925,7 +5264,7 @@ var transition_ease = function(value) {
 
   return arguments.length
       ? this.each(easeConstant(id, value))
-      : get(this.node(), id).ease;
+      : get$1$1(this.node(), id).ease;
 };
 
 var transition_filter = function(match) {
@@ -2969,7 +5308,7 @@ function start(name) {
 }
 
 function onFunction(id, name, listener) {
-  var on0, on1, sit = start(name) ? init : set;
+  var on0, on1, sit = start(name) ? init : set$1;
   return function() {
     var schedule$$1 = sit(this, id),
         on = schedule$$1.on;
@@ -2987,7 +5326,7 @@ var transition_on = function(name, listener) {
   var id = this._id;
 
   return arguments.length < 2
-      ? get(this.node(), id).on.on(name)
+      ? get$1$1(this.node(), id).on.on(name)
       : this.each(onFunction(id, name, listener));
 };
 
@@ -3014,7 +5353,7 @@ var transition_select = function(select) {
       if ((node = group[i]) && (subnode = select.call(node, node.__data__, i, group))) {
         if ("__data__" in node) subnode.__data__ = node.__data__;
         subgroup[i] = subnode;
-        schedule(subgroup[i], name, id, i, subgroup, get(node, id));
+        schedule(subgroup[i], name, id, i, subgroup, get$1$1(node, id));
       }
     }
   }
@@ -3031,7 +5370,7 @@ var transition_selectAll = function(select) {
   for (var groups = this._groups, m = groups.length, subgroups = [], parents = [], j = 0; j < m; ++j) {
     for (var group = groups[j], n = group.length, node, i = 0; i < n; ++i) {
       if (node = group[i]) {
-        for (var children = select.call(node, node.__data__, i, group), child, inherit = get(node, id), k = 0, l = children.length; k < l; ++k) {
+        for (var children = select.call(node, node.__data__, i, group), child, inherit = get$1$1(node, id), k = 0, l = children.length; k < l; ++k) {
           if (child = children[k]) {
             schedule(child, name, id, k, children, inherit);
           }
@@ -3151,7 +5490,7 @@ var transition_transition = function() {
   for (var groups = this._groups, m = groups.length, j = 0; j < m; ++j) {
     for (var group = groups[j], n = group.length, node, i = 0; i < n; ++i) {
       if (node = group[i]) {
-        var inherit = get(node, id0);
+        var inherit = get$1$1(node, id0);
         schedule(node, name, id1, i, group, {
           time: inherit.time + inherit.delay + inherit.duration,
           delay: 0,
@@ -3218,6 +5557,127 @@ function linear$1(t) {
 function cubicInOut(t) {
   return ((t *= 2) <= 1 ? t * t * t : (t -= 2) * t * t + 2) / 2;
 }
+
+var exponent = 3;
+
+var polyIn = (function custom(e) {
+  e = +e;
+
+  function polyIn(t) {
+    return Math.pow(t, e);
+  }
+
+  polyIn.exponent = custom;
+
+  return polyIn;
+})(exponent);
+
+var polyOut = (function custom(e) {
+  e = +e;
+
+  function polyOut(t) {
+    return 1 - Math.pow(1 - t, e);
+  }
+
+  polyOut.exponent = custom;
+
+  return polyOut;
+})(exponent);
+
+var polyInOut = (function custom(e) {
+  e = +e;
+
+  function polyInOut(t) {
+    return ((t *= 2) <= 1 ? Math.pow(t, e) : 2 - Math.pow(2 - t, e)) / 2;
+  }
+
+  polyInOut.exponent = custom;
+
+  return polyInOut;
+})(exponent);
+
+var overshoot = 1.70158;
+
+var backIn = (function custom(s) {
+  s = +s;
+
+  function backIn(t) {
+    return t * t * ((s + 1) * t - s);
+  }
+
+  backIn.overshoot = custom;
+
+  return backIn;
+})(overshoot);
+
+var backOut = (function custom(s) {
+  s = +s;
+
+  function backOut(t) {
+    return --t * t * ((s + 1) * t + s) + 1;
+  }
+
+  backOut.overshoot = custom;
+
+  return backOut;
+})(overshoot);
+
+var backInOut = (function custom(s) {
+  s = +s;
+
+  function backInOut(t) {
+    return ((t *= 2) < 1 ? t * t * ((s + 1) * t - s) : (t -= 2) * t * ((s + 1) * t + s) + 2) / 2;
+  }
+
+  backInOut.overshoot = custom;
+
+  return backInOut;
+})(overshoot);
+
+var tau = 2 * Math.PI;
+var amplitude = 1;
+var period = 0.3;
+
+var elasticIn = (function custom(a, p) {
+  var s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau);
+
+  function elasticIn(t) {
+    return a * Math.pow(2, 10 * --t) * Math.sin((s - t) / p);
+  }
+
+  elasticIn.amplitude = function(a) { return custom(a, p * tau); };
+  elasticIn.period = function(p) { return custom(a, p); };
+
+  return elasticIn;
+})(amplitude, period);
+
+var elasticOut = (function custom(a, p) {
+  var s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau);
+
+  function elasticOut(t) {
+    return 1 - a * Math.pow(2, -10 * (t = +t)) * Math.sin((t + s) / p);
+  }
+
+  elasticOut.amplitude = function(a) { return custom(a, p * tau); };
+  elasticOut.period = function(p) { return custom(a, p); };
+
+  return elasticOut;
+})(amplitude, period);
+
+var elasticInOut = (function custom(a, p) {
+  var s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau);
+
+  function elasticInOut(t) {
+    return ((t = t * 2 - 1) < 0
+        ? a * Math.pow(2, 10 * t) * Math.sin((s - t) / p)
+        : 2 - a * Math.pow(2, -10 * t) * Math.sin((s + t) / p)) / 2;
+  }
+
+  elasticInOut.amplitude = function(a) { return custom(a, p * tau); };
+  elasticInOut.period = function(p) { return custom(a, p); };
+
+  return elasticInOut;
+})(amplitude, period);
 
 var defaultTiming = {
   time: null, // Set on use.
@@ -3290,24 +5750,6 @@ function yesdrag(view, noclick) {
     delete root.__noselect;
   }
 }
-
-function DragEvent(target, type, subject, id, active, x, y, dx, dy, dispatch) {
-  this.target = target;
-  this.type = type;
-  this.subject = subject;
-  this.identifier = id;
-  this.active = active;
-  this.x = x;
-  this.y = y;
-  this.dx = dx;
-  this.dy = dy;
-  this._ = dispatch;
-}
-
-DragEvent.prototype.on = function() {
-  var value = this._.on.apply(this._, arguments);
-  return value === this._ ? this : value;
-};
 
 var constant$4 = function(x) {
   return function() {
@@ -3401,7 +5843,7 @@ function defaultWheelDelta() {
   return -event.deltaY * (event.deltaMode ? 120 : 1) / 500;
 }
 
-function touchable() {
+function defaultTouchable() {
   return "ontouchstart" in this;
 }
 
@@ -3409,6 +5851,7 @@ var zoom = function() {
   var filter = defaultFilter,
       extent = defaultExtent,
       wheelDelta = defaultWheelDelta,
+      touchable = defaultTouchable,
       k0 = 0,
       k1 = Infinity,
       x0 = -k1,
@@ -3753,6 +6196,10 @@ var zoom = function() {
     return arguments.length ? (filter = typeof _ === "function" ? _ : constant$4(!!_), zoom) : filter;
   };
 
+  zoom.touchable = function(_) {
+    return arguments.length ? (touchable = typeof _ === "function" ? _ : constant$4(!!_), zoom) : touchable;
+  };
+
   zoom.extent = function(_) {
     return arguments.length ? (extent = typeof _ === "function" ? _ : constant$4([[+_[0][0], +_[0][1]], [+_[1][0], +_[1][1]]]), zoom) : extent;
   };
@@ -3783,6 +6230,149 @@ var zoom = function() {
   };
 
   return zoom;
+};
+
+var ascending$1 = function(a, b) {
+  return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
+};
+
+var bisector = function(compare) {
+  if (compare.length === 1) compare = ascendingComparator(compare);
+  return {
+    left: function(a, x, lo, hi) {
+      if (lo == null) lo = 0;
+      if (hi == null) hi = a.length;
+      while (lo < hi) {
+        var mid = lo + hi >>> 1;
+        if (compare(a[mid], x) < 0) lo = mid + 1;
+        else hi = mid;
+      }
+      return lo;
+    },
+    right: function(a, x, lo, hi) {
+      if (lo == null) lo = 0;
+      if (hi == null) hi = a.length;
+      while (lo < hi) {
+        var mid = lo + hi >>> 1;
+        if (compare(a[mid], x) > 0) hi = mid;
+        else lo = mid + 1;
+      }
+      return lo;
+    }
+  };
+};
+
+function ascendingComparator(f) {
+  return function(d, x) {
+    return ascending$1(f(d), x);
+  };
+}
+
+var ascendingBisect = bisector(ascending$1);
+var bisectRight = ascendingBisect.right;
+
+function pair(a, b) {
+  return [a, b];
+}
+
+var number = function(x) {
+  return x === null ? NaN : +x;
+};
+
+var extent = function(values, valueof) {
+  var n = values.length,
+      i = -1,
+      value,
+      min,
+      max;
+
+  if (valueof == null) {
+    while (++i < n) { // Find the first comparable value.
+      if ((value = values[i]) != null && value >= value) {
+        min = max = value;
+        while (++i < n) { // Compare the remaining values.
+          if ((value = values[i]) != null) {
+            if (min > value) min = value;
+            if (max < value) max = value;
+          }
+        }
+      }
+    }
+  }
+
+  else {
+    while (++i < n) { // Find the first comparable value.
+      if ((value = valueof(values[i], i, values)) != null && value >= value) {
+        min = max = value;
+        while (++i < n) { // Compare the remaining values.
+          if ((value = valueof(values[i], i, values)) != null) {
+            if (min > value) min = value;
+            if (max < value) max = value;
+          }
+        }
+      }
+    }
+  }
+
+  return [min, max];
+};
+
+var identity$2 = function(x) {
+  return x;
+};
+
+var range = function(start, stop, step) {
+  start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
+
+  var i = -1,
+      n = Math.max(0, Math.ceil((stop - start) / step)) | 0,
+      range = new Array(n);
+
+  while (++i < n) {
+    range[i] = start + i * step;
+  }
+
+  return range;
+};
+
+var e10 = Math.sqrt(50);
+var e5 = Math.sqrt(10);
+var e2 = Math.sqrt(2);
+
+function tickIncrement(start, stop, count) {
+  var step = (stop - start) / Math.max(0, count),
+      power = Math.floor(Math.log(step) / Math.LN10),
+      error = step / Math.pow(10, power);
+  return power >= 0
+      ? (error >= e10 ? 10 : error >= e5 ? 5 : error >= e2 ? 2 : 1) * Math.pow(10, power)
+      : -Math.pow(10, -power) / (error >= e10 ? 10 : error >= e5 ? 5 : error >= e2 ? 2 : 1);
+}
+
+function tickStep(start, stop, count) {
+  var step0 = Math.abs(stop - start) / Math.max(0, count),
+      step1 = Math.pow(10, Math.floor(Math.log(step0) / Math.LN10)),
+      error = step0 / step1;
+  if (error >= e10) step1 *= 10;
+  else if (error >= e5) step1 *= 5;
+  else if (error >= e2) step1 *= 2;
+  return stop < start ? -step1 : step1;
+}
+
+var sturges = function(values) {
+  return Math.ceil(Math.log(values.length) / Math.LN2) + 1;
+};
+
+var quantile = function(values, p, valueof) {
+  if (valueof == null) valueof = number;
+  if (!(n = values.length)) return;
+  if ((p = +p) <= 0 || n < 2) return +valueof(values[0], 0, values);
+  if (p >= 1) return +valueof(values[n - 1], n - 1, values);
+  var n,
+      i = (n - 1) * p,
+      i0 = Math.floor(i),
+      value0 = +valueof(values[i0], i0, values),
+      value1 = +valueof(values[i0 + 1], i0 + 1, values);
+  return value0 + (value1 - value0) * (i - i0);
 };
 
 var max = function(values, valueof) {
@@ -3820,206 +6410,229 @@ var max = function(values, valueof) {
   return max;
 };
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-  return typeof obj;
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+var min = function(values, valueof) {
+  var n = values.length,
+      i = -1,
+      value,
+      min;
+
+  if (valueof == null) {
+    while (++i < n) { // Find the first comparable value.
+      if ((value = values[i]) != null && value >= value) {
+        min = value;
+        while (++i < n) { // Compare the remaining values.
+          if ((value = values[i]) != null && min > value) {
+            min = value;
+          }
+        }
+      }
+    }
+  }
+
+  else {
+    while (++i < n) { // Find the first comparable value.
+      if ((value = valueof(values[i], i, values)) != null && value >= value) {
+        min = value;
+        while (++i < n) { // Compare the remaining values.
+          if ((value = valueof(values[i], i, values)) != null && min > value) {
+            min = value;
+          }
+        }
+      }
+    }
+  }
+
+  return min;
 };
 
+function length(d) {
+  return d.length;
+}
 
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
+      http://www.apache.org/licenses/LICENSE-2.0
 
-var asyncGenerator = function () {
-  function AwaitValue(value) {
-    this.value = value;
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function makeLink(source, target) {
+  var margin = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+  var finalTarget = target || source;
+  var targetX = finalTarget.x;
+  var targetY = finalTarget.y - margin;
+  return "M" + source.y + "," + source.x + "\n    C" + (source.y + targetY) / 2 + "," + source.x + " " + (source.y + targetY) / 2 + ",\n    " + targetX + " " + targetY + "," + targetX;
+}
+
+function finalLink(d, margin) {
+  return makeLink(d.source, d.target, margin);
+}
+
+function translate(x, y) {
+  return "translate(" + y + ", " + x + ")";
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function parseChainscript(chainscript) {
+  return stratify().id(function (d) {
+    return d.meta.linkHash;
+  }).parentId(function (d) {
+    return d.parentRef ? d.parentRef : d.link.meta.prevLinkHash;
+  })(chainscript);
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function findNodeRefs(node) {
+  var refs = [];
+  if (node && node.children) {
+    node.children.forEach(function (child) {
+      refs = refs.concat(findNodeRefs(child));
+    });
   }
-
-  function AsyncGenerator(gen) {
-    var front, back;
-
-    function send(key, arg) {
-      return new Promise(function (resolve, reject) {
-        var request = {
-          key: key,
-          arg: arg,
-          resolve: resolve,
-          reject: reject,
-          next: null
-        };
-
-        if (back) {
-          back = back.next = request;
-        } else {
-          front = back = request;
-          resume(key, arg);
-        }
-      });
-    }
-
-    function resume(key, arg) {
-      try {
-        var result = gen[key](arg);
-        var value = result.value;
-
-        if (value instanceof AwaitValue) {
-          Promise.resolve(value.value).then(function (arg) {
-            resume("next", arg);
-          }, function (arg) {
-            resume("throw", arg);
-          });
-        } else {
-          settle(result.done ? "return" : "normal", result.value);
-        }
-      } catch (err) {
-        settle("throw", err);
-      }
-    }
-
-    function settle(type, value) {
-      switch (type) {
-        case "return":
-          front.resolve({
-            value: value,
-            done: true
-          });
-          break;
-
-        case "throw":
-          front.reject(value);
-          break;
-
-        default:
-          front.resolve({
-            value: value,
-            done: false
-          });
-          break;
-      }
-
-      front = front.next;
-
-      if (front) {
-        resume(front.key, front.arg);
-      } else {
-        back = null;
-      }
-    }
-
-    this._invoke = send;
-
-    if (typeof gen.return !== "function") {
-      this.return = undefined;
-    }
-  }
-
-  if (typeof Symbol === "function" && Symbol.asyncIterator) {
-    AsyncGenerator.prototype[Symbol.asyncIterator] = function () {
-      return this;
-    };
-  }
-
-  AsyncGenerator.prototype.next = function (arg) {
-    return this._invoke("next", arg);
-  };
-
-  AsyncGenerator.prototype.throw = function (arg) {
-    return this._invoke("throw", arg);
-  };
-
-  AsyncGenerator.prototype.return = function (arg) {
-    return this._invoke("return", arg);
-  };
-
-  return {
-    wrap: function (fn) {
-      return function () {
-        return new AsyncGenerator(fn.apply(this, arguments));
+  if (node && node.data.link.meta.refs) {
+    return refs.concat(node.data.link.meta.refs.map(function (r) {
+      return {
+        source: r,
+        target: node
       };
-    },
-    await: function (value) {
-      return new AwaitValue(value);
+    }));
+  }
+  return refs;
+}
+
+function findExtraLinks(root) {
+  var extraLinks = [];
+  var nodes = root ? root.descendants() : [];
+  var refs = findNodeRefs(root);
+  refs.forEach(function (ref) {
+    var source = nodes.find(function (e) {
+      return e.id === ref.source.linkHash;
+    });
+    var target = nodes.find(function (e) {
+      return e.id === ref.target.id;
+    });
+    if (!extraLinks.find(function (l) {
+      return l.source.id === ref.source.linkHash && l.target.id === target.id;
+    })) {
+      if (source && target) {
+        extraLinks.push({ source: source, target: target, ref: true });
+      } else if (!source && target) {
+        var newSourceNode = extraLinks.map(function (l) {
+          return l.source;
+        }).find(function (n) {
+          return n.data.meta.linkHash === ref.source.linkHash;
+        });
+        if (!newSourceNode) {
+          if (!ref.source.mapId || !ref.source.process || !ref.source.linkHash) {
+            throw new Error('findExtraLinks: wrong reference format for linkHash \'' + ref.source.linkHash + '\' (should have process, mapId, linkHash)');
+          }
+          newSourceNode = hierarchy({
+            link: {
+              meta: {
+                mapId: ref.source.mapId,
+                process: ref.source.process
+              }
+            },
+            meta: { linkHash: ref.source.linkHash }
+          }, function () {
+            return null;
+          });
+        }
+        extraLinks.push({
+          source: Object.assign(newSourceNode, { id: ref.source.linkHash }),
+          target: target,
+          ref: true
+        });
+      }
     }
-  };
-}();
+  });
 
+  return extraLinks;
+}
 
-
-
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
+function findExtraNodes(links, nodes) {
+  var extraNodes = [];
+  links.filter(function (l) {
+    return l.ref === true;
+  }).map(function (l) {
+    if (!nodes.find(function (n) {
+      return n.id === l.source.id;
+    }) && !extraNodes.find(function (n) {
+      return n.id === l.source.id;
+    })) {
+      extraNodes.push(l.source);
     }
+    return l;
+  });
+  return extraNodes;
+}
+
+function loadRef(agentUrl, ref, links) {
+  if (agentUrl) {
+    return getAgent(agentUrl).then(function (agent) {
+      return agent.getProcess(ref.data.link.meta.process);
+    }).then(function (process) {
+      return process.findSegments({
+        mapIds: [ref.data.link.meta.mapId],
+        limit: -1
+      });
+    }).then(function (segments) {
+      if (!segments || segments.length === 0) {
+        throw new Error('loadRef: no segments for map ' + ref.data.link.meta.mapId);
+      }
+      var foreignChildren = links.filter(function (l) {
+        return l.ref === true && l.source.data.meta.linkHash === ref.data.meta.linkHash;
+      }).map(function (l) {
+        var child = l.target.data;
+        child.link.meta.refs = null;
+        child.parentRef = ref.data.meta.linkHash;
+        return child;
+      });
+      return segments.concat(foreignChildren);
+    });
   }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var toConsumableArray = function (arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  } else {
-    return Array.from(arr);
-  }
-};
+  throw new Error('loadRef: unknown agent url');
+}
 
 /*
   Copyright 2017 Stratumn SAS. All rights reserved.
@@ -4041,102 +6654,61 @@ var margin = { top: 20, right: 120, bottom: 20, left: 120 };
 var height = 800 - margin.top - margin.bottom;
 
 var ChainTree = function () {
-  function ChainTree(element) {
+  function ChainTree(element, options) {
     var _this = this;
 
-    classCallCheck(this, ChainTree);
+    classCallCheck$1(this, ChainTree);
 
+    this.options = options;
     this.tree = tree();
 
     this.svg = select(element).append('svg');
     this.innerG = this.svg.append('g');
-
     this.zoomed = function () {
       return _this.innerG.attr('transform', event.transform);
     };
   }
 
-  createClass(ChainTree, [{
+  createClass$1(ChainTree, [{
     key: 'display',
-    value: function display(chainscript, options) {
+    value: function display(chainscript) {
       if (chainscript && chainscript.length) {
         var root = parseChainscript(chainscript);
-        this._update(root, options);
+        this.update(root);
       } else {
-        this._update(null, options);
+        this.update(null);
       }
     }
   }, {
-    key: '_update',
-    value: function _update(root, options) {
+    key: 'update',
+    value: function update(root) {
+      var _this2 = this;
+
+      console.log('update using', this.options);
       var self = this;
-      var polygon = options.polygonSize;
       var nodes = root ? root.descendants() : [];
-      var links = root ? root.links() : [];
-      var maxDepth = max(nodes, function (x) {
-        return x.depth;
-      }) || 0;
-      var computedWidth = Math.max(maxDepth * (polygon.width + options.getArrowLength()), 500);
-      var treeTransition = transition().duration(options.duration).ease(linear$1);
-
-      var branchesCount = nodes.reduce(function (pre, cur) {
-        return pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0);
-      }, 1);
-      var computedHeight = branchesCount * polygon.height * options.verticalSpacing;
-
-      this.tree.size([computedHeight, computedWidth]);
-      this.svg.attr('width', options.zoomable ? 1200 : computedWidth + margin.right + margin.left + options.getArrowLength()).attr('height', (options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
-
-      // Compute the new tree layout.
-      if (root) {
-        root.x0 = computedHeight / 2;
-        root.y0 = 0;
-        this.tree(root);
-        root.each(function (node) {
-          node.y += options.getArrowLength();
+      this.links = (root ? root.links() : []).concat(findExtraLinks(root));
+      var extraNodes = findExtraNodes(this.links, nodes).map(function (n, index) {
+        return Object.assign(n, {
+          x: _this2.options.polygonSize.height / 2 + index * (_this2.options.polygonSize.height * _this2.options.verticalSpacing),
+          y: _this2.options.getArrowLength(),
+          y0: 0
         });
-      }
-
-      if (options.zoomable) {
-        this.svg.call(zoom().on('zoom', this.zoomed));
-      } else {
-        this.svg.on('.zoom', null);
-      }
-      this.innerG.attr('transform', function () {
-        return translate(margin.top, margin.left);
       });
 
-      // Update the links...
-      var link = this.innerG.selectAll('path.link').data(links, function key(d) {
-        return d ? d.target.id : this.id;
-      });
+      // init tree
+      this.initTree(root, extraNodes);
 
-      link.enter().insert('text').attr('dx', polygon.width + 20).attr('dy', '-0.3em').append('textPath').attr('class', 'textpath').attr('xlink:href', function (d) {
-        return '#link-' + d.target.id;
-      }).text(options.getLinkText);
-
-      // Enter any new links at the parent's previous position.
-      link.enter().insert('path', 'g').attr('class', 'link').attr('id', function (d) {
-        return 'link-' + d.target.id;
-      });
-
-      var linkUpdate = this.innerG.selectAll('path.link:not(.init)').transition(treeTransition);
-
-      // Transition links to their new position.
-      linkUpdate.attr('d', function (d) {
-        return finalLink(d, 15);
-      });
-
-      link.exit().remove();
+      // draw links
+      this.displayCurrentMapLinks();
 
       // Update the nodes...
-      var node = this.innerG.selectAll('g.node').data(nodes, function key(d) {
+      var node = this.innerG.selectAll('g.node.base').data(nodes, function key(d) {
         return d ? d.id : this.id;
       });
-
       // Enter any new nodes at the parent's previous position.
-      var nodeEnter = node.enter().append('g').attr('class', function (d) {
-        return ['node'].concat(d.data.link.meta.tags).join(' ');
+      var nodeSelection = node.enter().append('g').attr('class', function (d) {
+        return ['node base'].concat(d.data.link.meta.tags).join(' ');
       }).attr('id', function (d) {
         return d.id;
       }).attr('transform', function (d) {
@@ -4145,41 +6717,300 @@ var ChainTree = function () {
       }).on('click', function onClick(d) {
         selectAll('g.node').classed('selected', false);
         select(this).classed('selected', true);
-        options.onclick(d, function () {
+        if (d.data.link.meta.refs) {
+          self.displayNodeLinks(d);
+        } else {
+          self.displayCurrentMapLinks();
+        }
+        if (d.data.parentRef != null) {
+          self.drawForeignChildRef(d);
+        }
+        self.options.onclick(d, function () {
+          self.displayCurrentMapLinks();
           self.innerG.selectAll('g.node.selected').classed('selected', false);
         }, this);
       });
-
-      nodeEnter.append('polygon').attr('points', '0,' + polygon.height / 4 + ' ' + polygon.width / 2 + ',' + polygon.height / 2 + ' ' + (polygon.width + ',' + polygon.height / 4 + ' ' + polygon.width + ',' + -polygon.height / 4 + ' ') + (polygon.width / 2 + ',' + -polygon.height / 2 + ' 0,' + -polygon.height / 4));
-
-      nodeEnter.append('rect').attr('y', -(options.getBoxSize().height / 2)).attr('width', polygon.width).attr('height', options.getBoxSize().height).style('fill-opacity', 1e-6);
-
-      nodeEnter.append('text').attr('dx', 12).attr('dy', 4).attr('text-anchor', 'begin').text(options.getSegmentText).style('fill-opacity', 1e-6);
-
-      // Transition nodes to their new position.
-      var nodeUpdate = this.svg.selectAll('g.node').transition(treeTransition);
-
-      nodeUpdate.attr('transform', function (d) {
-        return translate(d.x, d.y);
-      });
-      nodeUpdate.select('text').style('fill-opacity', 1);
-      nodeUpdate.select('rect').style('fill-opacity', 1);
-
-      // Transition exiting nodes to the parent's new position.
+      // Draw nodes
+      this.drawNodes(nodeSelection);
+      // Transition all exiting nodes to the parent's new position.
       var nodeExit = node.exit(); // .transition(treeTransition);
       nodeExit.select('text').style('fill-opacity', 1e-6);
       nodeExit.attr('transform', function () {
         return translate(0, 0);
       }).remove();
 
-      this._drawInit(root);
+      // Update the extra nodes...
+      var extraNode = this.innerG.selectAll('g.node.ref').data(extraNodes, function key(d) {
+        return d ? d.id : this.id;
+      });
+      // Enter any extra nodes at the parent's previous position.
+      var extraNodeSelection = extraNode.enter().append('g').attr('class', function () {
+        return 'node ref';
+      }).attr('id', function (d) {
+        return d.id;
+      }).attr('transform', function (d) {
+        return translate(d.x, d.y);
+      }).on('click', function onClick(d) {
+        selectAll('g.node').classed('selected', false);
+        select(this).classed('selected', true);
+        self.displayNodeLinks(d);
+        self.drawAncestorsRef(d);
+        self.options.onclick(d, function () {
+          self.displayCurrentMapLinks();
+          self.innerG.selectAll('g.node.selected').classed('selected', false);
+        }, this);
+      });
+      // Draw extra nodes
+      this.drawNodes(extraNodeSelection);
+      // Transition all exiting nodes to the parent's new position.
+      var extraNodeExit = extraNode.exit(); // .transition(treeTransition);
+      extraNodeExit.select('text').style('fill-opacity', 1e-6);
+      extraNodeExit.attr('transform', function () {
+        return translate(0, 0);
+      }).remove();
+
+      // Draw init link
+      if (root) {
+        this.drawInit(root);
+      }
+      // Draw foreign child references
+      nodes.filter(function (n) {
+        return n.data.parentRef != null;
+      }).map(function (n) {
+        return _this2.drawForeignChildRef(n);
+      });
     }
   }, {
-    key: '_drawInit',
-    value: function _drawInit(root) {
+    key: 'initTree',
+    value: function initTree(root, extraNodes) {
+      var _this3 = this;
+
+      var nodes = root ? root.descendants() : [];
+      var polygon = this.options.polygonSize;
+      var maxDepth = max(nodes, function (x) {
+        return x.depth;
+      }) || 0;
+      var treeWidth = maxDepth * (polygon.width + this.options.getArrowLength()) + this.options.getArrowLength();
+      var extraNodesWidth = extraNodes.length ? this.options.getArrowLength() * 3 : 0;
+      var ancestorsAndChildWidth = polygon.width * 4;
+      var computedWidth = Math.max(treeWidth + extraNodesWidth + ancestorsAndChildWidth, 500);
+      var branchesCount = nodes.reduce(function (pre, cur) {
+        return pre + (cur.children ? Math.max(cur.children.length - 1, 0) : 0);
+      }, 1);
+      var computedHeight = Math.max(branchesCount, extraNodes.length) * polygon.height * this.options.verticalSpacing;
+
+      this.tree.size([computedHeight, treeWidth]);
+      this.svg.attr('width', this.options.zoomable ? 1200 : computedWidth + margin.right + margin.left).attr('height', (this.options.zoomable ? height : computedHeight) + margin.top + margin.bottom);
+
+      // Compute the new tree layout.
+      if (root) {
+        root.x0 = computedHeight / 2;
+        root.y0 = extraNodesWidth;
+        this.tree(root);
+        root.each(function (node) {
+          node.y += root.y0 + _this3.options.getArrowLength();
+        });
+      }
+
+      if (this.options.zoomable) {
+        this.svg.call(zoom().on('zoom', this.zoomed));
+      } else {
+        this.svg.on('.zoom', null);
+      }
+      this.innerG.attr('transform', function () {
+        return translate(margin.top, margin.left);
+      });
+    }
+  }, {
+    key: 'drawInit',
+    value: function drawInit(root) {
+      console.log('draw init', root);
+      this.innerG.selectAll('#init-link').remove();
       this.innerG.append('path').attr('class', 'link init').attr('id', 'init-link').attr('d', makeLink({ x: root.x, y: root.y0 }, root, 15));
 
       this.innerG.append('text').attr('dx', 20).attr('dy', '-0.3em').append('textPath').attr('class', 'textpath').attr('xlink:href', '#init-link').text('init');
+    }
+  }, {
+    key: 'drawForeignRef',
+    value: function drawForeignRef(refNode, onClick, link, rect, linkLabel) {
+      var xRadius = 15;
+      var yRadius = 15;
+      var boxOpacity = 0.7;
+
+      this.innerG.append('path').attr('class', 'link ref').attr('id', 'ref-link').attr('d', link).on('click', onClick);
+
+      this.innerG.append('rect').attr('y', rect.y).attr('x', rect.x).attr('ry', xRadius).attr('rx', yRadius).attr('fill-opacity', boxOpacity).attr('width', rect.width).attr('height', rect.height).attr('class', 'refLinkBox').on('click', onClick);
+
+      this.innerG.append('text').attr('id', 'linkLabelRef').attr('dx', linkLabel.dx).attr('dy', linkLabel.dy).text(this.options.getRefLinkText(refNode)).on('click', onClick);
+    }
+  }, {
+    key: 'drawForeignChildRef',
+    value: function drawForeignChildRef(refNode) {
+      var _this4 = this;
+
+      var self = this;
+      var foreignLink = makeLink({ x: refNode.x, y: refNode.y + this.options.getArrowLength() }, { x: refNode.x, y: refNode.y + this.options.getArrowLength() * 2 }, 15);
+      var onClick = function onClick() {
+        _this4.innerG.selectAll('g.childRef').attr('class', 'node base');
+        loadRef(self.options.agentUrl, refNode, _this4.links).then(function (cs) {
+          return self.display(cs, self.options);
+        });
+      };
+      var rect = {
+        x: refNode.y + this.options.getArrowLength() * 2 + 10,
+        y: refNode.x - this.options.getBoxSize().height / 2 - 2,
+        width: this.options.getArrowLength() * 2 + 10,
+        height: this.options.getBoxSize().height
+      };
+      var linkLabel = {
+        dx: refNode.y + this.options.getArrowLength() * 2 + 15,
+        dy: refNode.x + 2
+      };
+      this.drawForeignRef(refNode, onClick, foreignLink, rect, linkLabel);
+
+      return refNode;
+    }
+  }, {
+    key: 'drawAncestorsRef',
+    value: function drawAncestorsRef(refNode) {
+      var _this5 = this;
+
+      var self = this;
+      var foreignLink = makeLink({ x: refNode.x, y: refNode.y0 }, refNode, 20);
+      var onClick = function onClick() {
+        return loadRef(self.options.agentUrl, refNode, _this5.links).then(function (cs) {
+          return self.display(cs, self.options);
+        });
+      };
+      var rect = {
+        x: this.options.getArrowLength() / 2 - 5,
+        y: refNode.x + this.options.getArrowLength() / 2 + 5,
+        width: this.options.getArrowLength() * 2 + 10,
+        height: this.options.getBoxSize().height
+      };
+      var linkLabel = {
+        dx: this.options.getArrowLength() / 2,
+        dy: refNode.x + this.options.getArrowLength() - 17
+      };
+
+      this.innerG.selectAll('path#ref-link').remove();
+      this.innerG.selectAll('rect.refLinkBox').remove();
+      this.innerG.selectAll('#linkLabelRef').remove();
+      this.drawForeignRef(refNode, onClick, foreignLink, rect, linkLabel);
+    }
+  }, {
+    key: 'drawNodes',
+    value: function drawNodes(nodeEnter) {
+      var polygon = this.options.polygonSize;
+      var treeTransition = transition().duration(this.options.duration).ease(linear$1);
+
+      nodeEnter.append('polygon').attr('points', '0,' + polygon.height / 4 + ' ' + polygon.width / 2 + ',' + polygon.height / 2 + ' ' + (polygon.width + ',' + polygon.height / 4 + ' ' + polygon.width + ',' + -polygon.height / 4 + ' ') + (polygon.width / 2 + ',' + -polygon.height / 2 + ' 0,' + -polygon.height / 4));
+
+      nodeEnter.append('rect').attr('y', -(this.options.getBoxSize().height / 2)).attr('width', polygon.width).attr('height', this.options.getBoxSize().height).style('fill-opacity', 1e-6);
+
+      nodeEnter.append('text').attr('class', 'shortHash').attr('dx', 12).attr('dy', 4).attr('text-anchor', 'begin').text(this.options.getSegmentText).style('fill-opacity', 1e-6);
+
+      this.innerG.selectAll('g.node.base').filter(function (n) {
+        return n.data.parentRef != null === true;
+      }).attr('class', 'node base childRef');
+
+      // Transition all the nodes to their new position.
+      var nodeUpdate = this.svg.selectAll('g.node').transition(treeTransition);
+      nodeUpdate.attr('transform', function (d) {
+        return translate(d.x, d.y);
+      });
+      nodeUpdate.select('text').style('fill-opacity', 1);
+      nodeUpdate.select('rect').style('fill-opacity', 1);
+    }
+  }, {
+    key: 'drawLinks',
+    value: function drawLinks(links) {
+      var polygon = this.options.polygonSize;
+      var treeTransition = transition().duration(this.options.duration).ease(linear$1);
+
+      this.innerG.selectAll('path.link').remove();
+      var link = this.innerG.selectAll('path.link').data(links, function (d) {
+        return d;
+      });
+
+      // Enter any new links at the parent's previous position.
+      link.enter().insert('path', 'g').attr('class', 'link').attr('id', function (d) {
+        return 'link-' + d.source.id + '-' + d.target.id;
+      });
+
+      // Transition links to their new position.
+      var linkUpdate = this.innerG.selectAll('path.link:not(.init):not(.ref)').transition(treeTransition);
+      linkUpdate.attr('d', function (d) {
+        return finalLink(d, 15);
+      });
+
+      link.exit().remove();
+
+      // Add a transition label to the link
+      this.innerG.selectAll('text.actionLabel').remove();
+      link.enter().insert('text').attr('class', 'actionLabel').attr('dx', polygon.width + 20).attr('dy', '-0.3em').append('textPath').attr('class', 'textpath').attr('xlink:href', function (d) {
+        return '#link-' + d.source.id + '-' + d.target.id;
+      }).text(this.options.getLinkText);
+    }
+  }, {
+    key: 'displayNodeLinks',
+    value: function displayNodeLinks(node) {
+      var relatedLinks = this.links.filter(function (l) {
+        return l.source.id === node.id || l.target.id === node.id;
+      });
+
+      // remove ref links labels
+      this.innerG.selectAll('rect.refLinkBox').remove();
+      this.innerG.selectAll('#linkLabelRef').remove();
+      if (relatedLinks) {
+        // make unrelated nodes transparent
+        this.innerG.selectAll('g.node').style('fill-opacity', 1);
+        var selectedNodes = this.innerG.selectAll('g.node').filter(function (d) {
+          var isSourceOrTarget = relatedLinks.find(function (l) {
+            return l.source.id === d.id || l.target.id === d.id;
+          });
+          return isSourceOrTarget === undefined;
+        }).style('fill-opacity', 0.3);
+
+        this.innerG.selectAll('g.node rect').style('fill-opacity', 1);
+        selectedNodes.selectAll('rect').style('fill-opacity', 0.3);
+
+        // draw related links
+        this.drawLinks(relatedLinks);
+      }
+    }
+  }, {
+    key: 'displayCurrentMapLinks',
+    value: function displayCurrentMapLinks() {
+      // remove ref links labels
+      this.innerG.selectAll('rect.refLinkBox').remove();
+      this.innerG.selectAll('#linkLabelRef').remove();
+
+      // make nodes and links transparent
+      var selectNode = this.innerG.selectAll('g.base');
+      selectNode.style('fill-opacity', 1);
+      var selectNodeRect = this.innerG.selectAll('g.base rect');
+      selectNodeRect.style('fill-opacity', 1);
+      selectNode = this.innerG.selectAll('g.ref');
+      selectNode.style('fill-opacity', 0.3);
+      selectNodeRect = this.innerG.selectAll('g.ref rect');
+      selectNodeRect.style('fill-opacity', 0.3);
+
+      // if the depth or the height of a node are 0, it belongs to the current map
+      var currentMapLinks = this.links.filter(function (l) {
+        return l.source.depth !== 0 || l.source.height !== 0;
+      });
+
+      // draw related links
+      this.drawLinks(currentMapLinks);
+      var rootNode = currentMapLinks.map(function (l) {
+        return l.source;
+      }).find(function (n) {
+        return n.parent === null;
+      });
+      if (rootNode) {
+        this.drawInit(rootNode);
+      }
     }
   }]);
   return ChainTree;
@@ -4205,24 +7036,12 @@ var compactHash = function (hash) {
   return "" + hash.slice(0, 3) + hash.slice(hash.length - 3);
 };
 
-var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-function interopDefault(ex) {
-	return ex && typeof ex === 'object' && 'default' in ex ? ex['default'] : ex;
-}
-
-function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}
-
-var index$2 = createCommonjsModule(function (module, exports) {
+var deepmerge = createCommonjsModule(function (module, exports) {
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define(factory);
-    } else if (typeof exports === 'object') {
-        module.exports = factory();
+    if (typeof undefined === 'function' && undefined.amd) {
+        undefined(factory);
     } else {
-        root.deepmerge = factory();
+        module.exports = factory();
     }
 }(commonjsGlobal, function () {
 
@@ -4270,549 +7089,239 @@ return function deepmerge(target, src) {
 }));
 });
 
-var merge$1 = interopDefault(index$2);
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-var global$1 = typeof global !== "undefined" ? global :
-            typeof self !== "undefined" ? self :
-            typeof window !== "undefined" ? window : {};
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-// shim for using process in browser
-// based off https://github.com/defunctzombie/node-process/blob/master/browser.js
+      http://www.apache.org/licenses/LICENSE-2.0
 
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-var cachedSetTimeout = defaultSetTimout;
-var cachedClearTimeout = defaultClearTimeout;
-if (typeof global$1.setTimeout === 'function') {
-    cachedSetTimeout = setTimeout;
-}
-if (typeof global$1.clearTimeout === 'function') {
-    cachedClearTimeout = clearTimeout;
-}
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
 
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
+function resolveLinks(segments) {
+  return Promise.all(segments.map(function (segment) {
+    if (!segment.link.state) {
+      return fromSegment(segment).then(function (res) {
+        return deepmerge(res, segment);
+      });
     }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
+    return Promise.resolve(segment);
+  }));
 }
 
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-function nextTick(fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-}
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-var title = 'browser';
-var platform = 'browser';
-var browser = true;
-var env = {};
-var argv = [];
-var version = ''; // empty string to avoid regexp issues
-var versions = {};
-var release = {};
-var config$1 = {};
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-function noop$1() {}
+      http://www.apache.org/licenses/LICENSE-2.0
 
-var on = noop$1;
-var addListener = noop$1;
-var once = noop$1;
-var off = noop$1;
-var removeListener = noop$1;
-var removeAllListeners = noop$1;
-var emit = noop$1;
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
 
-function binding(name) {
-    throw new Error('process.binding is not supported');
-}
-
-function cwd () { return '/' }
-function chdir (dir) {
-    throw new Error('process.chdir is not supported');
-}
-function umask() { return 0; }
-
-// from https://github.com/kumavis/browser-process-hrtime/blob/master/index.js
-var performance$1 = global$1.performance || {};
-var performanceNow =
-  performance$1.now        ||
-  performance$1.mozNow     ||
-  performance$1.msNow      ||
-  performance$1.oNow       ||
-  performance$1.webkitNow  ||
-  function(){ return (new Date()).getTime() };
-
-// generate timestamp or delta
-// see http://nodejs.org/api/process.html#process_process_hrtime
-function hrtime(previousTimestamp){
-  var clocktime = performanceNow.call(performance$1)*1e-3;
-  var seconds = Math.floor(clocktime);
-  var nanoseconds = Math.floor((clocktime%1)*1e9);
-  if (previousTimestamp) {
-    seconds = seconds - previousTimestamp[0];
-    nanoseconds = nanoseconds - previousTimestamp[1];
-    if (nanoseconds<0) {
-      seconds--;
-      nanoseconds += 1e9;
-    }
+function wrap(arrayOrObject) {
+  if (arrayOrObject instanceof Array) {
+    return arrayOrObject;
   }
-  return [seconds,nanoseconds]
+  return [arrayOrObject];
 }
 
-var startTime = new Date();
-function uptime() {
-  var currentTime = new Date();
-  var dif = currentTime - startTime;
-  return dif / 1000;
-}
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-var process = {
-  nextTick: nextTick,
-  title: title,
-  browser: browser,
-  env: env,
-  argv: argv,
-  version: version,
-  versions: versions,
-  on: on,
-  addListener: addListener,
-  once: once,
-  off: off,
-  removeListener: removeListener,
-  removeAllListeners: removeAllListeners,
-  emit: emit,
-  binding: binding,
-  cwd: cwd,
-  chdir: chdir,
-  umask: umask,
-  hrtime: hrtime,
-  platform: platform,
-  release: release,
-  config: config$1,
-  uptime: uptime
-};
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-var setImmediate$1 = createCommonjsModule(function (module) {
-(function (global, undefined) {
-    "use strict";
+      http://www.apache.org/licenses/LICENSE-2.0
 
-    if (global.setImmediate) {
-        return;
-    }
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
 
-    var nextHandle = 1; // Spec says greater than zero
-    var tasksByHandle = {};
-    var currentlyRunningATask = false;
-    var doc = global.document;
-    var registerImmediate;
-
-    function setImmediate(callback) {
-      // Callback can either be a function or a string
-      if (typeof callback !== "function") {
-        callback = new Function("" + callback);
-      }
-      // Copy function arguments
-      var args = new Array(arguments.length - 1);
-      for (var i = 0; i < args.length; i++) {
-          args[i] = arguments[i + 1];
-      }
-      // Store and register the task
-      var task = { callback: callback, args: args };
-      tasksByHandle[nextHandle] = task;
-      registerImmediate(nextHandle);
-      return nextHandle++;
-    }
-
-    function clearImmediate(handle) {
-        delete tasksByHandle[handle];
-    }
-
-    function run(task) {
-        var callback = task.callback;
-        var args = task.args;
-        switch (args.length) {
-        case 0:
-            callback();
-            break;
-        case 1:
-            callback(args[0]);
-            break;
-        case 2:
-            callback(args[0], args[1]);
-            break;
-        case 3:
-            callback(args[0], args[1], args[2]);
-            break;
-        default:
-            callback.apply(undefined, args);
-            break;
-        }
-    }
-
-    function runIfPresent(handle) {
-        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
-        // So if we're currently running a task, we'll need to delay this invocation.
-        if (currentlyRunningATask) {
-            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
-            // "too much recursion" error.
-            setTimeout(runIfPresent, 0, handle);
-        } else {
-            var task = tasksByHandle[handle];
-            if (task) {
-                currentlyRunningATask = true;
-                try {
-                    run(task);
-                } finally {
-                    clearImmediate(handle);
-                    currentlyRunningATask = false;
-                }
-            }
-        }
-    }
-
-    function installNextTickImplementation() {
-        registerImmediate = function(handle) {
-            nextTick(function () { runIfPresent(handle); });
-        };
-    }
-
-    function canUsePostMessage() {
-        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
-        // where `global.postMessage` means something completely different and can't be used for this purpose.
-        if (global.postMessage && !global.importScripts) {
-            var postMessageIsAsynchronous = true;
-            var oldOnMessage = global.onmessage;
-            global.onmessage = function() {
-                postMessageIsAsynchronous = false;
-            };
-            global.postMessage("", "*");
-            global.onmessage = oldOnMessage;
-            return postMessageIsAsynchronous;
-        }
-    }
-
-    function installPostMessageImplementation() {
-        // Installs an event handler on `global` for the `message` event: see
-        // * https://developer.mozilla.org/en/DOM/window.postMessage
-        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
-
-        var messagePrefix = "setImmediate$" + Math.random() + "$";
-        var onGlobalMessage = function(event) {
-            if (event.source === global &&
-                typeof event.data === "string" &&
-                event.data.indexOf(messagePrefix) === 0) {
-                runIfPresent(+event.data.slice(messagePrefix.length));
-            }
-        };
-
-        if (global.addEventListener) {
-            global.addEventListener("message", onGlobalMessage, false);
-        } else {
-            global.attachEvent("onmessage", onGlobalMessage);
-        }
-
-        registerImmediate = function(handle) {
-            global.postMessage(messagePrefix + handle, "*");
-        };
-    }
-
-    function installMessageChannelImplementation() {
-        var channel = new MessageChannel();
-        channel.port1.onmessage = function(event) {
-            var handle = event.data;
-            runIfPresent(handle);
-        };
-
-        registerImmediate = function(handle) {
-            channel.port2.postMessage(handle);
-        };
-    }
-
-    function installReadyStateChangeImplementation() {
-        var html = doc.documentElement;
-        registerImmediate = function(handle) {
-            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
-            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
-            var script = doc.createElement("script");
-            script.onreadystatechange = function () {
-                runIfPresent(handle);
-                script.onreadystatechange = null;
-                html.removeChild(script);
-                script = null;
-            };
-            html.appendChild(script);
-        };
-    }
-
-    function installSetTimeoutImplementation() {
-        registerImmediate = function(handle) {
-            setTimeout(runIfPresent, 0, handle);
-        };
-    }
-
-    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
-    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
-    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
-
-    // Don't get fooled by e.g. browserify environments.
-    if ({}.toString.call(global.process) === "[object process]") {
-        // For Node.js before 0.9
-        installNextTickImplementation();
-
-    } else if (canUsePostMessage()) {
-        // For non-IE10 modern browsers
-        installPostMessageImplementation();
-
-    } else if (global.MessageChannel) {
-        // For web workers, where supported
-        installMessageChannelImplementation();
-
-    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
-        // For IE 6–8
-        installReadyStateChangeImplementation();
-
-    } else {
-        // For older browsers
-        installSetTimeoutImplementation();
-    }
-
-    attachTo.setImmediate = setImmediate;
-    attachTo.clearImmediate = clearImmediate;
-}(typeof self === "undefined" ? typeof commonjsGlobal === "undefined" ? commonjsGlobal : commonjsGlobal : self));
-});
-
-interopDefault(setImmediate$1);
-
-var jsonrequest = createCommonjsModule(function (module) {
-'use strict';
-
-module.exports = {
-  processRequest: function(req) {
-    var
-      contentType = req.header('Content-Type'),
-      hasJsonContentType = contentType &&
-                           contentType.indexOf('application/json') !== -1;
-
-    if (contentType != null && !hasJsonContentType) {
-      return;
-    }
-
-    if (req.body) {
-      if (!contentType) {
-        req.header('Content-Type', 'application/json');
-      }
-
-      req.body = JSON.stringify(req.body);
-    }
+function parseIfJson(object) {
+  if ((typeof object === 'undefined' ? 'undefined' : _typeof$1(object)) !== 'object') {
+    return JSON.parse(object);
   }
-};
-});
+  return object;
+}
 
-var jsonrequest$1 = interopDefault(jsonrequest);
-var processRequest$1 = jsonrequest.processRequest;
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
 
-var require$$1 = Object.freeze({
-	default: jsonrequest$1,
-	processRequest: processRequest$1
-});
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-var jsonresponse = createCommonjsModule(function (module) {
-'use strict';
+      http://www.apache.org/licenses/LICENSE-2.0
 
-module.exports = {
-  processRequest: function(req) {
-    var accept = req.header('Accept');
-    if (accept == null) {
-      req.header('Accept', 'application/json');
-    }
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function flatten(arr) {
+  var _ref;
+
+  var flat = (_ref = []).concat.apply(_ref, toConsumableArray$1(arr));
+  return flat.some(Array.isArray) ? flatten(flat) : flat;
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function tagsSet(chainscript) {
+  return new Set(flatten(chainscript.map(function (segment) {
+    return segment.link.meta.tags;
+  })));
+}
+
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+function load(map) {
+  return getAgent(map.agentUrl).then(function (agent) {
+    var process = agent.processes[map.process];
+    return process.findSegments({ mapIds: [map.id], limit: -1 });
+  }).catch(function (res) {
+    return console.log(res);
+  });
+}
+
+var defaultOptions = {
+  withArgs: false,
+  duration: 750,
+  verticalSpacing: 1.4,
+  polygonSize: { width: 78, height: 91 },
+  getBoxSize: function getBoxSize() {
+    var self = this;
+    return { width: self.polygonSize.width, height: 25 };
   },
-  processResponse: function(res) {
-    // Check to see if the contentype is "something/json" or
-    // "something/somethingelse+json"
-    if (res.contentType && /^.*\/(?:.*\+)?json(;|$)/i.test(res.contentType)) {
-      var raw = typeof res.body === 'string' ? res.body : res.text;
-      if (raw) {
-        res.body = JSON.parse(raw);
-      }
-    }
-  }
-};
-});
-
-var jsonresponse$1 = interopDefault(jsonresponse);
-var processRequest$2 = jsonresponse.processRequest;
-var processResponse$1 = jsonresponse.processResponse;
-
-var require$$0 = Object.freeze({
-	default: jsonresponse$1,
-	processRequest: processRequest$2,
-	processResponse: processResponse$1
-});
-
-var json = createCommonjsModule(function (module) {
-'use strict';
-
-var jsonrequest = interopDefault(require$$1),
-    jsonresponse = interopDefault(require$$0);
-
-module.exports = {
-  processRequest: function(req) {
-    jsonrequest.processRequest.call(this, req);
-    jsonresponse.processRequest.call(this, req);
+  getArrowLength: function getArrowLength() {
+    return this.polygonSize.width;
   },
-  processResponse: function(res) {
-    jsonresponse.processResponse.call(this, res);
-  }
+  getSegmentText: function getSegmentText(node) {
+    return compactHash(node.data.meta.linkHash);
+  },
+  getRefLinkText: function getRefLinkText(node) {
+    return 'go to map ' + compactHash(node.data.link.meta.mapId);
+  },
+  getLinkText: function getLinkText(link) {
+    if (link.ref || link.target.data.parentRef === link.source.data.meta.linkHash) {
+      return 'reference';
+    }
+    return link.target.data.link.meta.action + (this.withArgs ? '(' + link.target.data.link.meta.arguments.join(', ') + ')' : '');
+  },
+  onclick: function onclick() {},
+  onTag: function onTag() {}
 };
-});
 
-var json$1 = interopDefault(json);
+var ChainTreeBuilder = function () {
+  function ChainTreeBuilder(element, options) {
+    classCallCheck$1(this, ChainTreeBuilder);
 
-var cleanurl = createCommonjsModule(function (module) {
-'use strict';
+    console.log('builder : ', options);
+    this.options = Object.assign(defaultOptions, options);
+    this.chainTree = new ChainTree(element, this.options);
+  }
 
-module.exports = {
+  createClass$1(ChainTreeBuilder, [{
+    key: 'build',
+    value: function build(map) {
+      var _this = this;
+
+      this.options = Object.assign(this.options, {
+        agentUrl: map.agentUrl
+      });
+      if (map.id && map.agentUrl && map.process) {
+        return load(map).then(function (segments) {
+          return _this.display(segments);
+        });
+      } else if (map.chainscript && map.chainscript.length) {
+        try {
+          return resolveLinks(wrap(parseIfJson(map.chainscript))).then(function (segments) {
+            return _this.display(segments);
+          });
+        } catch (err) {
+          return Promise.reject(err);
+        }
+      }
+      return Promise.resolve();
+    }
+  }, {
+    key: 'display',
+    value: function display(segments) {
+      this.chainTree.display(segments);
+      this.notifyTags(segments);
+      return segments;
+    }
+  }, {
+    key: 'notifyTags',
+    value: function notifyTags(chainscript) {
+      tagsSet(chainscript).forEach(this.options.onTag);
+    }
+  }]);
+  return ChainTreeBuilder;
+}();
+
+var cleanurl$2 = {
   processRequest: function(req) {
     req.url = req.url.replace(/[^%]+/g, function(s) {
       return encodeURI(s);
     });
   }
 };
-});
 
-var cleanurl$1 = interopDefault(cleanurl);
-var processRequest$3 = cleanurl.processRequest;
-
-var require$$7 = Object.freeze({
-	default: cleanurl$1,
-	processRequest: processRequest$3
-});
-
-var xhrBrowser = createCommonjsModule(function (module) {
-module.exports = window.XMLHttpRequest;
-});
-
-var xhrBrowser$1 = interopDefault(xhrBrowser);
-
-
-var require$$6 = Object.freeze({
-	default: xhrBrowser$1
-});
-
-var delay = createCommonjsModule(function (module) {
-'use strict';
+var xhrBrowser$2 = window.XMLHttpRequest;
 
 // Wrap a function in a `setTimeout` call. This is used to guarantee async
 // behavior, which can avoid unexpected errors.
 
-module.exports = function(fn) {
+var delay$3 = function(fn) {
   return function() {
     var
       args = Array.prototype.slice.call(arguments, 0),
@@ -4822,19 +7331,8 @@ module.exports = function(fn) {
     setTimeout(newFunc, 0);
   };
 };
-});
 
-var delay$1 = interopDefault(delay);
-
-
-var require$$5 = Object.freeze({
-	default: delay$1
-});
-
-var request$1 = createCommonjsModule(function (module) {
-'use strict';
-
-function Request(optsOrUrl) {
+function Request$2(optsOrUrl) {
   var opts = typeof optsOrUrl === 'string' ? {url: optsOrUrl} : optsOrUrl || {};
   this.method = opts.method ? opts.method.toUpperCase() : 'GET';
   this.url = opts.url;
@@ -4846,14 +7344,14 @@ function Request(optsOrUrl) {
   this.onerror = opts.onerror;
 }
 
-Request.prototype.abort = function() {
+Request$2.prototype.abort = function() {
   if (this.aborted) return;
   this.aborted = true;
   this.xhr.abort();
   return this;
 };
 
-Request.prototype.header = function(name, value) {
+Request$2.prototype.header = function(name, value) {
   var k;
   for (k in this.headers) {
     if (this.headers.hasOwnProperty(k)) {
@@ -4874,20 +7372,11 @@ Request.prototype.header = function(name, value) {
 };
 
 
-module.exports = Request;
-});
+var request$3 = Request$2;
 
-var request$2 = interopDefault(request$1);
+var xtend$2 = extend$3;
 
-
-var require$$1$1 = Object.freeze({
-	default: request$2
-});
-
-var index$4 = createCommonjsModule(function (module) {
-module.exports = extend;
-
-function extend() {
+function extend$3() {
     var target = {};
 
     for (var i = 0; i < arguments.length; i++) {
@@ -4902,21 +7391,8 @@ function extend() {
 
     return target
 }
-});
 
-var index$5 = interopDefault(index$4);
-
-
-var require$$0$2 = Object.freeze({
-	default: index$5
-});
-
-var extractResponseProps = createCommonjsModule(function (module) {
-'use strict';
-
-var extend = interopDefault(require$$0$2);
-
-module.exports = function(req) {
+var extractResponseProps$3 = function(req) {
   var xhr = req.xhr;
   var props = {request: req, xhr: xhr};
 
@@ -4934,7 +7410,7 @@ module.exports = function(req) {
       }
     }
 
-    props = extend(props, {
+    props = xtend$2(props, {
       status: xhr.status,
       contentType: xhr.contentType || (xhr.getResponseHeader && xhr.getResponseHeader('Content-Type')),
       headers: headers,
@@ -4945,22 +7421,8 @@ module.exports = function(req) {
 
   return props;
 };
-});
 
-var extractResponseProps$1 = interopDefault(extractResponseProps);
-
-
-var require$$0$1 = Object.freeze({
-	default: extractResponseProps$1
-});
-
-var response = createCommonjsModule(function (module) {
-'use strict';
-
-var Request = interopDefault(require$$1$1);
-var extractResponseProps = interopDefault(require$$0$1);
-
-function Response(props) {
+function Response$2(props) {
   this.request = props.request;
   this.xhr = props.xhr;
   this.headers = props.headers || {};
@@ -4971,31 +7433,16 @@ function Response(props) {
   this.isHttpError = props.status >= 400;
 }
 
-Response.prototype.header = Request.prototype.header;
+Response$2.prototype.header = request$3.prototype.header;
 
-Response.fromRequest = function(req) {
-  return new Response(extractResponseProps(req));
+Response$2.fromRequest = function(req) {
+  return new Response$2(extractResponseProps$3(req));
 };
 
 
-module.exports = Response;
-});
+var response$2 = Response$2;
 
-var response$1 = interopDefault(response);
-
-
-var require$$2 = Object.freeze({
-	default: response$1
-});
-
-var error = createCommonjsModule(function (module) {
-'use strict';
-
-var Response = interopDefault(require$$2);
-var extractResponseProps = interopDefault(require$$0$1);
-var extend = interopDefault(require$$0$2);
-
-function RequestError(message, props) {
+function RequestError$2(message, props) {
   var err = new Error(message);
   err.name = 'RequestError';
   this.name = err.name;
@@ -5015,30 +7462,19 @@ function RequestError(message, props) {
   }
 }
 
-RequestError.prototype = extend(Error.prototype);
-RequestError.prototype.constructor = RequestError;
+RequestError$2.prototype = xtend$2(Error.prototype);
+RequestError$2.prototype.constructor = RequestError$2;
 
-RequestError.create = function(message, req, props) {
-  var err = new RequestError(message, props);
-  Response.call(err, extractResponseProps(req));
+RequestError$2.create = function(message, req, props) {
+  var err = new RequestError$2(message, props);
+  response$2.call(err, extractResponseProps$3(req));
   return err;
 };
 
-module.exports = RequestError;
-});
-
-var error$1 = interopDefault(error);
-
-
-var require$$4 = Object.freeze({
-	default: error$1
-});
-
-var once$1 = createCommonjsModule(function (module) {
-'use strict';
+var error$2 = RequestError$2;
 
 // A "once" utility.
-module.exports = function(fn) {
+var once$4 = function(fn) {
   var result, called = false;
   return function() {
     if (!called) {
@@ -5048,71 +7484,50 @@ module.exports = function(fn) {
     return result;
   };
 };
-});
 
-var once$2 = interopDefault(once$1);
+var i$1;
+var createError$1 = error$2.create;
 
-
-var require$$0$3 = Object.freeze({
-	default: once$2
-});
-
-var index$3 = createCommonjsModule(function (module) {
-'use strict';
-
-var
-  cleanURL = interopDefault(require$$7),
-  XHR = interopDefault(require$$6),
-  delay = interopDefault(require$$5),
-  RequestError = interopDefault(require$$4),
-  Response = interopDefault(require$$2),
-  Request = interopDefault(require$$1$1),
-  extend = interopDefault(require$$0$2),
-  once = interopDefault(require$$0$3);
-
-var i,
-    createError = RequestError.create;
-
-function factory(defaults, plugins) {
+function factory$1(defaults, plugins) {
   defaults = defaults || {};
   plugins = plugins || [];
 
   function http(req, cb) {
     var xhr, plugin, done, k, timeoutId, supportsLoadAndErrorEvents;
 
-    req = new Request(extend(defaults, req));
+    req = new request$3(xtend$2(defaults, req));
 
-    for (i = 0; i < plugins.length; i++) {
-      plugin = plugins[i];
+    for (i$1 = 0; i$1 < plugins.length; i$1++) {
+      plugin = plugins[i$1];
       if (plugin.processRequest) {
         plugin.processRequest(req);
       }
     }
 
     // Give the plugins a chance to create the XHR object
-    for (i = 0; i < plugins.length; i++) {
-      plugin = plugins[i];
+    for (i$1 = 0; i$1 < plugins.length; i$1++) {
+      plugin = plugins[i$1];
       if (plugin.createXHR) {
         xhr = plugin.createXHR(req);
         break; // First come, first serve
       }
     }
-    xhr = xhr || new XHR();
+    xhr = xhr || new xhrBrowser$2();
 
     req.xhr = xhr;
 
     // Use a single completion callback. This can be called with or without
     // an error. If no error is passed, the request will be examined to see
     // if it was successful.
-    done = once(delay(function(rawError) {
+    done = once$4(delay$3(function(rawError) {
       clearTimeout(timeoutId);
       xhr.onload = xhr.onerror = xhr.onabort = xhr.onreadystatechange = xhr.ontimeout = xhr.onprogress = null;
 
-      var err = getError(req, rawError);
+      var err = getError$1(req, rawError);
 
-      var res = err || Response.fromRequest(req);
-      for (i = 0; i < plugins.length; i++) {
-        plugin = plugins[i];
+      var res = err || response$2.fromRequest(req);
+      for (i$1 = 0; i$1 < plugins.length; i$1++) {
+        plugin = plugins[i$1];
         if (plugin.processResponse) {
           plugin.processResponse(res);
         }
@@ -5194,13 +7609,13 @@ function factory(defaults, plugins) {
     methods = ['get', 'post', 'put', 'head', 'patch', 'delete'],
     verb = function(method) {
       return function(req, cb) {
-        req = new Request(req);
+        req = new request$3(req);
         req.method = method;
         return http(req, cb);
       };
     };
-  for (i = 0; i < methods.length; i++) {
-    method = methods[i];
+  for (i$1 = 0; i$1 < methods.length; i$1++) {
+    method = methods[i$1];
     http[method] = verb(method);
   }
 
@@ -5210,37 +7625,37 @@ function factory(defaults, plugins) {
 
   http.defaults = function(newValues) {
     if (newValues) {
-      return factory(extend(defaults, newValues), plugins);
+      return factory$1(xtend$2(defaults, newValues), plugins);
     }
     return defaults;
   };
 
   http.use = function() {
     var newPlugins = Array.prototype.slice.call(arguments, 0);
-    return factory(defaults, plugins.concat(newPlugins));
+    return factory$1(defaults, plugins.concat(newPlugins));
   };
 
   http.bare = function() {
-    return factory();
+    return factory$1();
   };
 
-  http.Request = Request;
-  http.Response = Response;
-  http.RequestError = RequestError;
+  http.Request = request$3;
+  http.Response = response$2;
+  http.RequestError = error$2;
 
   return http;
 }
 
-module.exports = factory({}, [cleanURL]);
+var lib$3 = factory$1({}, [cleanurl$2]);
 
 /**
  * Analyze the request to see if it represents an error. If so, return it! An
  * original error object can be passed as a hint.
  */
-function getError(req, err) {
-  if (req.aborted) return createError('Request aborted', req, {name: 'Abort'});
+function getError$1(req, err) {
+  if (req.aborted) return createError$1('Request aborted', req, {name: 'Abort'});
 
-  if (req.timedOut) return createError('Request timeout', req, {name: 'Timeout'});
+  if (req.timedOut) return createError$1('Request timeout', req, {name: 'Timeout'});
 
   var xhr = req.xhr;
   var type = Math.floor(xhr.status / 100);
@@ -5252,7 +7667,7 @@ function getError(req, err) {
       // These don't represent errors unless the function was passed an
       // error object explicitly.
       if (!err) return;
-      return createError(err.message, req);
+      return createError$1(err.message, req);
     case 4:
       // Sometimes 4XX statuses aren't errors.
       if (xhr.status === 404 && !req.errorOn404) return;
@@ -5268,1820 +7683,9 @@ function getError(req, err) {
         'The server returned a status of ' + xhr.status +
         ' for the request "' +
         req.method.toUpperCase() + ' ' + req.url + '"';
-  return createError(msg, req);
-}
-});
-
-var httpplease = interopDefault(index$3);
-
-var utils = createCommonjsModule(function (module, exports) {
-'use strict';
-
-var has = Object.prototype.hasOwnProperty;
-
-var hexTable = (function () {
-    var array = [];
-    for (var i = 0; i < 256; ++i) {
-        array.push('%' + ((i < 16 ? '0' : '') + i.toString(16)).toUpperCase());
-    }
-
-    return array;
-}());
-
-var compactQueue = function compactQueue(queue) {
-    var obj;
-
-    while (queue.length) {
-        var item = queue.pop();
-        obj = item.obj[item.prop];
-
-        if (Array.isArray(obj)) {
-            var compacted = [];
-
-            for (var j = 0; j < obj.length; ++j) {
-                if (typeof obj[j] !== 'undefined') {
-                    compacted.push(obj[j]);
-                }
-            }
-
-            item.obj[item.prop] = compacted;
-        }
-    }
-
-    return obj;
-};
-
-exports.arrayToObject = function arrayToObject(source, options) {
-    var obj = options && options.plainObjects ? Object.create(null) : {};
-    for (var i = 0; i < source.length; ++i) {
-        if (typeof source[i] !== 'undefined') {
-            obj[i] = source[i];
-        }
-    }
-
-    return obj;
-};
-
-exports.merge = function merge(target, source, options) {
-    if (!source) {
-        return target;
-    }
-
-    if (typeof source !== 'object') {
-        if (Array.isArray(target)) {
-            target.push(source);
-        } else if (typeof target === 'object') {
-            if (options.plainObjects || options.allowPrototypes || !has.call(Object.prototype, source)) {
-                target[source] = true;
-            }
-        } else {
-            return [target, source];
-        }
-
-        return target;
-    }
-
-    if (typeof target !== 'object') {
-        return [target].concat(source);
-    }
-
-    var mergeTarget = target;
-    if (Array.isArray(target) && !Array.isArray(source)) {
-        mergeTarget = exports.arrayToObject(target, options);
-    }
-
-    if (Array.isArray(target) && Array.isArray(source)) {
-        source.forEach(function (item, i) {
-            if (has.call(target, i)) {
-                if (target[i] && typeof target[i] === 'object') {
-                    target[i] = exports.merge(target[i], item, options);
-                } else {
-                    target.push(item);
-                }
-            } else {
-                target[i] = item;
-            }
-        });
-        return target;
-    }
-
-    return Object.keys(source).reduce(function (acc, key) {
-        var value = source[key];
-
-        if (has.call(acc, key)) {
-            acc[key] = exports.merge(acc[key], value, options);
-        } else {
-            acc[key] = value;
-        }
-        return acc;
-    }, mergeTarget);
-};
-
-exports.assign = function assignSingleSource(target, source) {
-    return Object.keys(source).reduce(function (acc, key) {
-        acc[key] = source[key];
-        return acc;
-    }, target);
-};
-
-exports.decode = function (str) {
-    try {
-        return decodeURIComponent(str.replace(/\+/g, ' '));
-    } catch (e) {
-        return str;
-    }
-};
-
-exports.encode = function encode(str) {
-    // This code was originally written by Brian White (mscdex) for the io.js core querystring library.
-    // It has been adapted here for stricter adherence to RFC 3986
-    if (str.length === 0) {
-        return str;
-    }
-
-    var string = typeof str === 'string' ? str : String(str);
-
-    var out = '';
-    for (var i = 0; i < string.length; ++i) {
-        var c = string.charCodeAt(i);
-
-        if (
-            c === 0x2D // -
-            || c === 0x2E // .
-            || c === 0x5F // _
-            || c === 0x7E // ~
-            || (c >= 0x30 && c <= 0x39) // 0-9
-            || (c >= 0x41 && c <= 0x5A) // a-z
-            || (c >= 0x61 && c <= 0x7A) // A-Z
-        ) {
-            out += string.charAt(i);
-            continue;
-        }
-
-        if (c < 0x80) {
-            out = out + hexTable[c];
-            continue;
-        }
-
-        if (c < 0x800) {
-            out = out + (hexTable[0xC0 | (c >> 6)] + hexTable[0x80 | (c & 0x3F)]);
-            continue;
-        }
-
-        if (c < 0xD800 || c >= 0xE000) {
-            out = out + (hexTable[0xE0 | (c >> 12)] + hexTable[0x80 | ((c >> 6) & 0x3F)] + hexTable[0x80 | (c & 0x3F)]);
-            continue;
-        }
-
-        i += 1;
-        c = 0x10000 + (((c & 0x3FF) << 10) | (string.charCodeAt(i) & 0x3FF));
-        out += hexTable[0xF0 | (c >> 18)]
-            + hexTable[0x80 | ((c >> 12) & 0x3F)]
-            + hexTable[0x80 | ((c >> 6) & 0x3F)]
-            + hexTable[0x80 | (c & 0x3F)];
-    }
-
-    return out;
-};
-
-exports.compact = function compact(value) {
-    var queue = [{ obj: { o: value }, prop: 'o' }];
-    var refs = [];
-
-    for (var i = 0; i < queue.length; ++i) {
-        var item = queue[i];
-        var obj = item.obj[item.prop];
-
-        var keys = Object.keys(obj);
-        for (var j = 0; j < keys.length; ++j) {
-            var key = keys[j];
-            var val = obj[key];
-            if (typeof val === 'object' && val !== null && refs.indexOf(val) === -1) {
-                queue.push({ obj: obj, prop: key });
-                refs.push(val);
-            }
-        }
-    }
-
-    return compactQueue(queue);
-};
-
-exports.isRegExp = function isRegExp(obj) {
-    return Object.prototype.toString.call(obj) === '[object RegExp]';
-};
-
-exports.isBuffer = function isBuffer(obj) {
-    if (obj === null || typeof obj === 'undefined') {
-        return false;
-    }
-
-    return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
-};
-});
-
-var utils$1 = interopDefault(utils);
-var isBuffer = utils.isBuffer;
-var isRegExp = utils.isRegExp;
-var compact = utils.compact;
-var encode = utils.encode;
-var decode = utils.decode;
-var assign = utils.assign;
-var merge$2 = utils.merge;
-var arrayToObject = utils.arrayToObject;
-
-var require$$0$4 = Object.freeze({
-	default: utils$1,
-	isBuffer: isBuffer,
-	isRegExp: isRegExp,
-	compact: compact,
-	encode: encode,
-	decode: decode,
-	assign: assign,
-	merge: merge$2,
-	arrayToObject: arrayToObject
-});
-
-var formats$1 = createCommonjsModule(function (module) {
-'use strict';
-
-var replace = String.prototype.replace;
-var percentTwenties = /%20/g;
-
-module.exports = {
-    defaultFormat: 'RFC3986',
-    formatters: {
-        RFC1738: function (value) {
-            return replace.call(value, percentTwenties, '+');
-        },
-        RFC3986: function (value) {
-            return value;
-        }
-    },
-    RFC1738: 'RFC1738',
-    RFC3986: 'RFC3986'
-};
-});
-
-var formats$2 = interopDefault(formats$1);
-var defaultFormat = formats$1.defaultFormat;
-var formatters = formats$1.formatters;
-var RFC1738 = formats$1.RFC1738;
-var RFC3986 = formats$1.RFC3986;
-
-var require$$0$5 = Object.freeze({
-	default: formats$2,
-	defaultFormat: defaultFormat,
-	formatters: formatters,
-	RFC1738: RFC1738,
-	RFC3986: RFC3986
-});
-
-var stringify$1 = createCommonjsModule(function (module) {
-'use strict';
-
-var utils = interopDefault(require$$0$4);
-var formats = interopDefault(require$$0$5);
-
-var arrayPrefixGenerators = {
-    brackets: function brackets(prefix) { // eslint-disable-line func-name-matching
-        return prefix + '[]';
-    },
-    indices: function indices(prefix, key) { // eslint-disable-line func-name-matching
-        return prefix + '[' + key + ']';
-    },
-    repeat: function repeat(prefix) { // eslint-disable-line func-name-matching
-        return prefix;
-    }
-};
-
-var toISO = Date.prototype.toISOString;
-
-var defaults = {
-    delimiter: '&',
-    encode: true,
-    encoder: utils.encode,
-    encodeValuesOnly: false,
-    serializeDate: function serializeDate(date) { // eslint-disable-line func-name-matching
-        return toISO.call(date);
-    },
-    skipNulls: false,
-    strictNullHandling: false
-};
-
-var stringify = function stringify( // eslint-disable-line func-name-matching
-    object,
-    prefix,
-    generateArrayPrefix,
-    strictNullHandling,
-    skipNulls,
-    encoder,
-    filter,
-    sort,
-    allowDots,
-    serializeDate,
-    formatter,
-    encodeValuesOnly
-) {
-    var obj = object;
-    if (typeof filter === 'function') {
-        obj = filter(prefix, obj);
-    } else if (obj instanceof Date) {
-        obj = serializeDate(obj);
-    } else if (obj === null) {
-        if (strictNullHandling) {
-            return encoder && !encodeValuesOnly ? encoder(prefix, defaults.encoder) : prefix;
-        }
-
-        obj = '';
-    }
-
-    if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean' || utils.isBuffer(obj)) {
-        if (encoder) {
-            var keyValue = encodeValuesOnly ? prefix : encoder(prefix, defaults.encoder);
-            return [formatter(keyValue) + '=' + formatter(encoder(obj, defaults.encoder))];
-        }
-        return [formatter(prefix) + '=' + formatter(String(obj))];
-    }
-
-    var values = [];
-
-    if (typeof obj === 'undefined') {
-        return values;
-    }
-
-    var objKeys;
-    if (Array.isArray(filter)) {
-        objKeys = filter;
-    } else {
-        var keys = Object.keys(obj);
-        objKeys = sort ? keys.sort(sort) : keys;
-    }
-
-    for (var i = 0; i < objKeys.length; ++i) {
-        var key = objKeys[i];
-
-        if (skipNulls && obj[key] === null) {
-            continue;
-        }
-
-        if (Array.isArray(obj)) {
-            values = values.concat(stringify(
-                obj[key],
-                generateArrayPrefix(prefix, key),
-                generateArrayPrefix,
-                strictNullHandling,
-                skipNulls,
-                encoder,
-                filter,
-                sort,
-                allowDots,
-                serializeDate,
-                formatter,
-                encodeValuesOnly
-            ));
-        } else {
-            values = values.concat(stringify(
-                obj[key],
-                prefix + (allowDots ? '.' + key : '[' + key + ']'),
-                generateArrayPrefix,
-                strictNullHandling,
-                skipNulls,
-                encoder,
-                filter,
-                sort,
-                allowDots,
-                serializeDate,
-                formatter,
-                encodeValuesOnly
-            ));
-        }
-    }
-
-    return values;
-};
-
-module.exports = function (object, opts) {
-    var obj = object;
-    var options = opts ? utils.assign({}, opts) : {};
-
-    if (options.encoder !== null && options.encoder !== undefined && typeof options.encoder !== 'function') {
-        throw new TypeError('Encoder has to be a function.');
-    }
-
-    var delimiter = typeof options.delimiter === 'undefined' ? defaults.delimiter : options.delimiter;
-    var strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults.strictNullHandling;
-    var skipNulls = typeof options.skipNulls === 'boolean' ? options.skipNulls : defaults.skipNulls;
-    var encode$$1 = typeof options.encode === 'boolean' ? options.encode : defaults.encode;
-    var encoder = typeof options.encoder === 'function' ? options.encoder : defaults.encoder;
-    var sort = typeof options.sort === 'function' ? options.sort : null;
-    var allowDots = typeof options.allowDots === 'undefined' ? false : options.allowDots;
-    var serializeDate = typeof options.serializeDate === 'function' ? options.serializeDate : defaults.serializeDate;
-    var encodeValuesOnly = typeof options.encodeValuesOnly === 'boolean' ? options.encodeValuesOnly : defaults.encodeValuesOnly;
-    if (typeof options.format === 'undefined') {
-        options.format = formats.defaultFormat;
-    } else if (!Object.prototype.hasOwnProperty.call(formats.formatters, options.format)) {
-        throw new TypeError('Unknown format option provided.');
-    }
-    var formatter = formats.formatters[options.format];
-    var objKeys;
-    var filter;
-
-    if (typeof options.filter === 'function') {
-        filter = options.filter;
-        obj = filter('', obj);
-    } else if (Array.isArray(options.filter)) {
-        filter = options.filter;
-        objKeys = filter;
-    }
-
-    var keys = [];
-
-    if (typeof obj !== 'object' || obj === null) {
-        return '';
-    }
-
-    var arrayFormat;
-    if (options.arrayFormat in arrayPrefixGenerators) {
-        arrayFormat = options.arrayFormat;
-    } else if ('indices' in options) {
-        arrayFormat = options.indices ? 'indices' : 'repeat';
-    } else {
-        arrayFormat = 'indices';
-    }
-
-    var generateArrayPrefix = arrayPrefixGenerators[arrayFormat];
-
-    if (!objKeys) {
-        objKeys = Object.keys(obj);
-    }
-
-    if (sort) {
-        objKeys.sort(sort);
-    }
-
-    for (var i = 0; i < objKeys.length; ++i) {
-        var key = objKeys[i];
-
-        if (skipNulls && obj[key] === null) {
-            continue;
-        }
-
-        keys = keys.concat(stringify(
-            obj[key],
-            key,
-            generateArrayPrefix,
-            strictNullHandling,
-            skipNulls,
-            encode$$1 ? encoder : null,
-            filter,
-            sort,
-            allowDots,
-            serializeDate,
-            formatter,
-            encodeValuesOnly
-        ));
-    }
-
-    var joined = keys.join(delimiter);
-    var prefix = options.addQueryPrefix === true ? '?' : '';
-
-    return joined.length > 0 ? prefix + joined : '';
-};
-});
-
-var stringify$2 = interopDefault(stringify$1);
-
-
-var require$$2$1 = Object.freeze({
-	default: stringify$2
-});
-
-var parse$1 = createCommonjsModule(function (module) {
-'use strict';
-
-var utils = interopDefault(require$$0$4);
-
-var has = Object.prototype.hasOwnProperty;
-
-var defaults = {
-    allowDots: false,
-    allowPrototypes: false,
-    arrayLimit: 20,
-    decoder: utils.decode,
-    delimiter: '&',
-    depth: 5,
-    parameterLimit: 1000,
-    plainObjects: false,
-    strictNullHandling: false
-};
-
-var parseValues = function parseQueryStringValues(str, options) {
-    var obj = {};
-    var cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, '') : str;
-    var limit = options.parameterLimit === Infinity ? undefined : options.parameterLimit;
-    var parts = cleanStr.split(options.delimiter, limit);
-
-    for (var i = 0; i < parts.length; ++i) {
-        var part = parts[i];
-
-        var bracketEqualsPos = part.indexOf(']=');
-        var pos = bracketEqualsPos === -1 ? part.indexOf('=') : bracketEqualsPos + 1;
-
-        var key, val;
-        if (pos === -1) {
-            key = options.decoder(part, defaults.decoder);
-            val = options.strictNullHandling ? null : '';
-        } else {
-            key = options.decoder(part.slice(0, pos), defaults.decoder);
-            val = options.decoder(part.slice(pos + 1), defaults.decoder);
-        }
-        if (has.call(obj, key)) {
-            obj[key] = [].concat(obj[key]).concat(val);
-        } else {
-            obj[key] = val;
-        }
-    }
-
-    return obj;
-};
-
-var parseObject = function (chain, val, options) {
-    var leaf = val;
-
-    for (var i = chain.length - 1; i >= 0; --i) {
-        var obj;
-        var root = chain[i];
-
-        if (root === '[]') {
-            obj = [];
-            obj = obj.concat(leaf);
-        } else {
-            obj = options.plainObjects ? Object.create(null) : {};
-            var cleanRoot = root.charAt(0) === '[' && root.charAt(root.length - 1) === ']' ? root.slice(1, -1) : root;
-            var index = parseInt(cleanRoot, 10);
-            if (
-                !isNaN(index)
-                && root !== cleanRoot
-                && String(index) === cleanRoot
-                && index >= 0
-                && (options.parseArrays && index <= options.arrayLimit)
-            ) {
-                obj = [];
-                obj[index] = leaf;
-            } else {
-                obj[cleanRoot] = leaf;
-            }
-        }
-
-        leaf = obj;
-    }
-
-    return leaf;
-};
-
-var parseKeys = function parseQueryStringKeys(givenKey, val, options) {
-    if (!givenKey) {
-        return;
-    }
-
-    // Transform dot notation to bracket notation
-    var key = options.allowDots ? givenKey.replace(/\.([^.[]+)/g, '[$1]') : givenKey;
-
-    // The regex chunks
-
-    var brackets = /(\[[^[\]]*])/;
-    var child = /(\[[^[\]]*])/g;
-
-    // Get the parent
-
-    var segment = brackets.exec(key);
-    var parent = segment ? key.slice(0, segment.index) : key;
-
-    // Stash the parent if it exists
-
-    var keys = [];
-    if (parent) {
-        // If we aren't using plain objects, optionally prefix keys
-        // that would overwrite object prototype properties
-        if (!options.plainObjects && has.call(Object.prototype, parent)) {
-            if (!options.allowPrototypes) {
-                return;
-            }
-        }
-
-        keys.push(parent);
-    }
-
-    // Loop through children appending to the array until we hit depth
-
-    var i = 0;
-    while ((segment = child.exec(key)) !== null && i < options.depth) {
-        i += 1;
-        if (!options.plainObjects && has.call(Object.prototype, segment[1].slice(1, -1))) {
-            if (!options.allowPrototypes) {
-                return;
-            }
-        }
-        keys.push(segment[1]);
-    }
-
-    // If there's a remainder, just add whatever is left
-
-    if (segment) {
-        keys.push('[' + key.slice(segment.index) + ']');
-    }
-
-    return parseObject(keys, val, options);
-};
-
-module.exports = function (str, opts) {
-    var options = opts ? utils.assign({}, opts) : {};
-
-    if (options.decoder !== null && options.decoder !== undefined && typeof options.decoder !== 'function') {
-        throw new TypeError('Decoder has to be a function.');
-    }
-
-    options.ignoreQueryPrefix = options.ignoreQueryPrefix === true;
-    options.delimiter = typeof options.delimiter === 'string' || utils.isRegExp(options.delimiter) ? options.delimiter : defaults.delimiter;
-    options.depth = typeof options.depth === 'number' ? options.depth : defaults.depth;
-    options.arrayLimit = typeof options.arrayLimit === 'number' ? options.arrayLimit : defaults.arrayLimit;
-    options.parseArrays = options.parseArrays !== false;
-    options.decoder = typeof options.decoder === 'function' ? options.decoder : defaults.decoder;
-    options.allowDots = typeof options.allowDots === 'boolean' ? options.allowDots : defaults.allowDots;
-    options.plainObjects = typeof options.plainObjects === 'boolean' ? options.plainObjects : defaults.plainObjects;
-    options.allowPrototypes = typeof options.allowPrototypes === 'boolean' ? options.allowPrototypes : defaults.allowPrototypes;
-    options.parameterLimit = typeof options.parameterLimit === 'number' ? options.parameterLimit : defaults.parameterLimit;
-    options.strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults.strictNullHandling;
-
-    if (str === '' || str === null || typeof str === 'undefined') {
-        return options.plainObjects ? Object.create(null) : {};
-    }
-
-    var tempObj = typeof str === 'string' ? parseValues(str, options) : str;
-    var obj = options.plainObjects ? Object.create(null) : {};
-
-    // Iterate over the keys and setup the new object
-
-    var keys = Object.keys(tempObj);
-    for (var i = 0; i < keys.length; ++i) {
-        var key = keys[i];
-        var newObj = parseKeys(key, tempObj[key], options);
-        obj = utils.merge(obj, newObj, options);
-    }
-
-    return utils.compact(obj);
-};
-});
-
-var parse$2 = interopDefault(parse$1);
-
-
-var require$$1$2 = Object.freeze({
-	default: parse$2
-});
-
-var index$6 = createCommonjsModule(function (module) {
-'use strict';
-
-var stringify = interopDefault(require$$2$1);
-var parse = interopDefault(require$$1$2);
-var formats = interopDefault(require$$0$5);
-
-module.exports = {
-    formats: formats,
-    parse: parse,
-    stringify: stringify
-};
-});
-
-interopDefault(index$6);
-
-
-var stringify = index$6.stringify;
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function deprecated(oldFunc, newFunc) {
-  if (!newFunc) {
-    console.warn("WARNING: " + oldFunc + " is deprecated.");
-  } else {
-    console.warn("WARNING: " + oldFunc + " is deprecated. Please use " + newFunc + " instead.");
-  }
+  return createError$1(msg, req);
 }
 
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-/**
- * Calls a function that returns a Promise until a condition is reached
- * @param {function} condition - while condition is true body will keep being called
- * @param {function} body - a function that is repeatedly called while condition is true
- * @returns {Promise} a Promise that resolves when the condition is no longer true
- */
-function promiseWhile(condition, body) {
-  return new Promise(function (resolve, reject) {
-    function loop() {
-      body().then(function () {
-        // When the result of calling `condition` is no longer true, we are
-        // done.
-        if (!condition()) {
-          resolve();
-        } else {
-          loop();
-        }
-      }).catch(reject);
-    }
-
-    // Start running the loop in the next tick so that this function is
-    // completely async. It would be unexpected if `body` was called
-    // synchronously the first time.
-    setImmediate(loop);
-  });
-}
-
-var _typeof$1 = typeof Symbol === "function" && _typeof(Symbol.iterator) === "symbol" ? function (obj) {
-  return typeof obj === 'undefined' ? 'undefined' : _typeof(obj);
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj === 'undefined' ? 'undefined' : _typeof(obj);
-};
-
-var asyncGenerator$1 = function () {
-  function AwaitValue(value) {
-    this.value = value;
-  }
-
-  function AsyncGenerator(gen) {
-    var front, back;
-
-    function send(key, arg) {
-      return new Promise(function (resolve, reject) {
-        var request = {
-          key: key,
-          arg: arg,
-          resolve: resolve,
-          reject: reject,
-          next: null
-        };
-
-        if (back) {
-          back = back.next = request;
-        } else {
-          front = back = request;
-          resume(key, arg);
-        }
-      });
-    }
-
-    function resume(key, arg) {
-      try {
-        var result = gen[key](arg);
-        var value = result.value;
-
-        if (value instanceof AwaitValue) {
-          Promise.resolve(value.value).then(function (arg) {
-            resume("next", arg);
-          }, function (arg) {
-            resume("throw", arg);
-          });
-        } else {
-          settle(result.done ? "return" : "normal", result.value);
-        }
-      } catch (err) {
-        settle("throw", err);
-      }
-    }
-
-    function settle(type, value) {
-      switch (type) {
-        case "return":
-          front.resolve({
-            value: value,
-            done: true
-          });
-          break;
-
-        case "throw":
-          front.reject(value);
-          break;
-
-        default:
-          front.resolve({
-            value: value,
-            done: false
-          });
-          break;
-      }
-
-      front = front.next;
-
-      if (front) {
-        resume(front.key, front.arg);
-      } else {
-        back = null;
-      }
-    }
-
-    this._invoke = send;
-
-    if (typeof gen.return !== "function") {
-      this.return = undefined;
-    }
-  }
-
-  if (typeof Symbol === "function" && Symbol.asyncIterator) {
-    AsyncGenerator.prototype[Symbol.asyncIterator] = function () {
-      return this;
-    };
-  }
-
-  AsyncGenerator.prototype.next = function (arg) {
-    return this._invoke("next", arg);
-  };
-
-  AsyncGenerator.prototype.throw = function (arg) {
-    return this._invoke("throw", arg);
-  };
-
-  AsyncGenerator.prototype.return = function (arg) {
-    return this._invoke("return", arg);
-  };
-
-  return {
-    wrap: function wrap(fn) {
-      return function () {
-        return new AsyncGenerator(fn.apply(this, arguments));
-      };
-    },
-    await: function _await(value) {
-      return new AwaitValue(value);
-    }
-  };
-}();
-
-var classCallCheck$1 = function classCallCheck$$1(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass$1 = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-var toConsumableArray$1 = function toConsumableArray$$1(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
-      arr2[i] = arr[i];
-    }return arr2;
-  } else {
-    return Array.from(arr);
-  }
-};
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-var DEFAULT_BATCH_SIZE = 20;
-
-function findSegments(adaptor, process) {
-  var opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-  var options = Object.assign({}, opts);
-  if (opts.limit === -1) {
-    options.limit = options.batchSize || DEFAULT_BATCH_SIZE;
-    delete options.batchSize;
-    options.offset = 0;
-    var lastBatch = [];
-    var result = [];
-
-    return promiseWhile(function () {
-      return lastBatch.length === options.limit;
-    }, function () {
-      return findSegments(adaptor, process, options).then(function (newSegments) {
-        lastBatch = newSegments;
-        result.push.apply(result, toConsumableArray$1(newSegments));
-        options.offset += options.limit;
-      });
-    }).then(function () {
-      return result;
-    });
-  }
-  return adaptor.findSegments(process.name, opts).then(function (res) {
-    return res.body.map(function (obj) {
-      return segmentify(adaptor, process, obj);
-    });
-  });
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function getBranches(adaptor, agent, prevLinkHash) {
-  var tags = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-
-  deprecated('Agent#getBranches(agent, prevLinkHash, tags = [])', 'Agent#findSegments(agent, filter)');
-
-  var opts = tags ? { prevLinkHash: prevLinkHash, tags: tags } : { prevLinkHash: prevLinkHash };
-
-  return findSegments(adaptor, agent, opts);
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function segmentify(adaptor, process, obj) {
-  Object.keys(process.processInfo.actions).filter(function (key) {
-    return ['init'].indexOf(key) < 0;
-  }).forEach(function (key) {
-    /*eslint-disable*/
-    obj[key] = function () {
-      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      return adaptor.createSegment.apply(adaptor, [process.name, obj.meta.linkHash, key].concat(args)).then(function (res) {
-        return segmentify(adaptor, process, res.body);
-      });
-    };
-  });
-
-  /*eslint-disable*/
-  obj.getPrev = function () {
-    /*eslint-enable*/
-    if (obj.link.meta.prevLinkHash) {
-      return process.getSegment(obj.link.meta.prevLinkHash);
-    }
-
-    return Promise.resolve(null);
-  };
-
-  // Deprecated.
-  /*eslint-disable*/
-  obj.load = function () {
-    /*eslint-enable*/
-    deprecated('segment#load()');
-    return Promise.resolve(segmentify(adaptor, process, {
-      link: JSON.parse(JSON.stringify(obj.link)),
-      meta: JSON.parse(JSON.stringify(obj.meta))
-    }));
-  };
-
-  // Deprecated.
-  /*eslint-disable*/
-  obj.getBranches = function () {
-    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      args[_key2] = arguments[_key2];
-    }
-
-    /*eslint-enable*/
-    return getBranches.apply(undefined, [adaptor, process, obj.meta.linkHash].concat(args));
-  };
-
-  return obj;
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function createMap(adaptor, process) {
-  for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    args[_key - 2] = arguments[_key];
-  }
-
-  return adaptor.createMap.apply(adaptor, [process.name].concat(args)).then(function (res) {
-    return segmentify(adaptor, process, res.body);
-  });
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function getSegment(adaptor, process, linkHash) {
-  return adaptor.getSegment(process.name, linkHash).then(function (res) {
-    return segmentify(adaptor, process, res.body);
-  });
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function getMapIds(adaptor, process) {
-  var opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-  return adaptor.getMapIds(process.name, opts).then(function (res) {
-    return res.body;
-  });
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function getLink(adaptor, process, hash) {
-  deprecated('Agent#getLink(agent, hash)', 'Agent#getSegment(agent, hash)');
-
-  return getSegment(adaptor, process, hash);
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function getMap(adaptor, process, mapId) {
-  var tags = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-
-  deprecated('getMap(agent, mapId, tags = [])', 'findSegments(agent, filter)');
-
-  var opts = tags ? { mapIds: mapId, tags: tags } : { mapIds: mapId };
-  return findSegments(adaptor, process, opts);
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-// Deprecated.
-function processify(adaptor, process) {
-  var updatedProcess = process;
-  if (adaptor.url) {
-    updatedProcess.agentUrl = adaptor.url;
-    updatedProcess.prefixUrl = adaptor.url + '/' + process.name;
-  }
-  updatedProcess.createMap = createMap.bind(null, adaptor, updatedProcess);
-  updatedProcess.getSegment = getSegment.bind(null, adaptor, updatedProcess);
-  updatedProcess.findSegments = findSegments.bind(null, adaptor, updatedProcess);
-  updatedProcess.getMapIds = getMapIds.bind(null, adaptor, updatedProcess);
-
-  // Deprecated.
-  updatedProcess.getBranches = getBranches.bind(null, adaptor, updatedProcess);
-  updatedProcess.getLink = getLink.bind(null, adaptor, updatedProcess);
-  updatedProcess.getMap = getMap.bind(null, adaptor, updatedProcess);
-
-  return updatedProcess;
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function getProcesses(adaptor) {
-  return adaptor.getProcesses().then(function (res) {
-    return res.body.map(processify.bind(null, adaptor));
-  });
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-var request = httpplease.use(json$1);
-
-function send(method, url, args) {
-  return new Promise(function (resolve, reject) {
-    request({ method: method, url: url, body: args }, function (err, res) {
-      if (err) {
-        var error = err && err.body && err.body.meta && err.body.meta.errorMessage ? new Error(err.body.meta.errorMessage) : err;
-        error.status = err.status;
-        reject(error);
-      } else {
-        resolve(res);
-      }
-    });
-  });
-}
-
-function get$1$1(url) {
-  return send('GET', url);
-}
-
-function post(url, args) {
-  return send('POST', url, args);
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-/**
- * Makes a query string.
- * @param {object} obj - an object of keys
- * @returns {string} a query string
- */
-function makeQueryString(obj) {
-  // use brackets format for compatibility with GO:
-  // https://github.com/google/go-querystring
-  // see also conversation in:
-  // https://github.com/stratumn/indigo-js/pull/18
-  var query = stringify(obj, { arrayFormat: 'brackets' });
-  if (query.length) {
-    return '?' + query;
-  }
-  return '';
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-var httpAdaptor = function () {
-  function httpAdaptor(url) {
-    classCallCheck$1(this, httpAdaptor);
-
-    this.agentUrl = url;
-  }
-
-  createClass$1(httpAdaptor, [{
-    key: 'getInfo',
-    value: function getInfo() {
-      return get$1$1(this.url);
-    }
-  }, {
-    key: 'getProcesses',
-    value: function getProcesses() {
-      return get$1$1(this.url + '/processes');
-    }
-  }, {
-    key: 'createMap',
-    value: function createMap(processName) {
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-      }
-
-      return post(this.url + '/' + processName + '/segments', args);
-    }
-  }, {
-    key: 'getSegment',
-    value: function getSegment(processName, linkHash) {
-      return get$1$1(this.url + '/' + processName + '/segments/' + linkHash);
-    }
-  }, {
-    key: 'findSegments',
-    value: function findSegments(processName) {
-      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-      return get$1$1(this.url + '/' + processName + '/segments' + makeQueryString(opts));
-    }
-  }, {
-    key: 'getMapIds',
-    value: function getMapIds(processName) {
-      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-      return get$1$1(this.url + '/' + processName + '/maps' + makeQueryString(opts));
-    }
-  }, {
-    key: 'createSegment',
-    value: function createSegment(processName, linkHash, action) {
-      for (var _len2 = arguments.length, args = Array(_len2 > 3 ? _len2 - 3 : 0), _key2 = 3; _key2 < _len2; _key2++) {
-        args[_key2 - 3] = arguments[_key2];
-      }
-
-      return post(this.url + '/' + processName + '/segments/' + linkHash + '/' + action, args);
-    }
-  }, {
-    key: 'url',
-    get: function get$$1() {
-      return this.agentUrl;
-    }
-  }]);
-  return httpAdaptor;
-}();
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-// need to clone data as client will modify it!
-var decorateBody = function decorateBody(res) {
-  return { body: JSON.parse(JSON.stringify(res)) };
-};
-
-var objectAdaptor = function () {
-  function objectAdaptor(agent) {
-    classCallCheck$1(this, objectAdaptor);
-
-    this.agent = agent;
-  }
-
-  createClass$1(objectAdaptor, [{
-    key: "getInfo",
-    value: function getInfo() {
-      return this.agent.getInfo().then(decorateBody);
-    }
-  }, {
-    key: "getProcesses",
-    value: function getProcesses() {
-      return Promise.resolve(decorateBody(this.agent.getAllProcesses()));
-    }
-  }, {
-    key: "createMap",
-    value: function createMap(processName) {
-      try {
-        var _agent$getProcess;
-
-        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-          args[_key - 1] = arguments[_key];
-        }
-
-        return (_agent$getProcess = this.agent.getProcess(processName)).createMap.apply(_agent$getProcess, args).then(decorateBody);
-      } catch (err) {
-        return Promise.reject(err);
-      }
-    }
-  }, {
-    key: "getSegment",
-    value: function getSegment(processName, linkHash) {
-      try {
-        return this.agent.getProcess(processName).getSegment(linkHash).then(decorateBody);
-      } catch (err) {
-        return Promise.reject(err);
-      }
-    }
-  }, {
-    key: "findSegments",
-    value: function findSegments(processName) {
-      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-      try {
-        return this.agent.getProcess(processName).findSegments(opts).then(decorateBody);
-      } catch (err) {
-        return Promise.reject(err);
-      }
-    }
-  }, {
-    key: "getMapIds",
-    value: function getMapIds(processName) {
-      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-      try {
-        return this.agent.getProcess(processName).getMapIds(opts).then(decorateBody);
-      } catch (err) {
-        return Promise.reject(err);
-      }
-    }
-  }, {
-    key: "createSegment",
-    value: function createSegment(processName, linkHash, action) {
-      try {
-        var _agent$getProcess2;
-
-        for (var _len2 = arguments.length, args = Array(_len2 > 3 ? _len2 - 3 : 0), _key2 = 3; _key2 < _len2; _key2++) {
-          args[_key2 - 3] = arguments[_key2];
-        }
-
-        return (_agent$getProcess2 = this.agent.getProcess(processName)).createSegment.apply(_agent$getProcess2, [linkHash, action].concat(args)).then(decorateBody);
-      } catch (err) {
-        return Promise.reject(err);
-      }
-    }
-  }, {
-    key: "url",
-    get: function get$$1() {
-      return null;
-    }
-  }]);
-  return objectAdaptor;
-}();
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function getAdaptor(objectOrUrl) {
-  if (typeof objectOrUrl === 'string') {
-    return new httpAdaptor(objectOrUrl);
-  } else if ((typeof objectOrUrl === 'undefined' ? 'undefined' : _typeof$1(objectOrUrl)) === 'object') {
-    return new objectAdaptor(objectOrUrl);
-  }
-
-  throw new Error('The argument passed is neither a url or an object!');
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function getAgent(objectOrUrl) {
-  try {
-    var adaptor = getAdaptor(objectOrUrl);
-    return adaptor.getInfo().then(function (res) {
-      var agent = res.body;
-      agent.url = adaptor.url;
-      agent.getProcesses = getProcesses.bind(null, adaptor);
-      agent.processes = Object.keys(agent.processes).map(function (key) {
-        return agent.processes[key];
-      }).reduce(function (map, p) {
-        var updatedMap = map;
-        updatedMap[p.name] = processify(adaptor, p);
-        return updatedMap;
-      }, {});
-      return agent;
-    });
-  } catch (err) {
-    return Promise.reject(err);
-  }
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function fromSegment(obj) {
-  return getAgent(obj.meta.agentUrl || obj.meta.applicationLocation).then(function (agent) {
-    if (!agent.processes[obj.link.meta.process]) {
-      throw new Error('process \'' + obj.link.meta.process + '\' not found');
-    }
-    var adaptor = getAdaptor(agent.url);
-    var segment = segmentify(adaptor, agent.processes[obj.link.meta.process], obj);
-    return { process: agent.processes[obj.link.meta.process], segment: segment };
-  });
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function loadLink(adaptor, obj) {
-  deprecated('loadLink(obj)', 'fromSegment(obj)');
-
-  return fromSegment(adaptor, obj).then(function (_ref) {
-    var segment = _ref.segment;
-    return segment;
-  });
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function resolveLinks(segments) {
-  return Promise.all(segments.map(function (segment) {
-    if (!segment.link.state) {
-      return loadLink(segment).then(function (res) {
-        return merge$1(res, segment);
-      });
-    }
-    return Promise.resolve(segment);
-  }));
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function wrap(arrayOrObject) {
-  if (arrayOrObject instanceof Array) {
-    return arrayOrObject;
-  }
-  return [arrayOrObject];
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function parseIfJson(object) {
-  if ((typeof object === 'undefined' ? 'undefined' : _typeof(object)) !== 'object') {
-    object = JSON.parse(object);
-  }
-  return object;
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function flatten(arr) {
-  var _ref;
-
-  var flat = (_ref = []).concat.apply(_ref, toConsumableArray(arr));
-  return flat.some(Array.isArray) ? flatten(flat) : flat;
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-function tagsSet(chainscript) {
-  return new Set(flatten(chainscript.map(function (segment) {
-    return segment.link.meta.tags;
-  })));
-}
-
-/*
-  Copyright 2017 Stratumn SAS. All rights reserved.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-*/
-
-var defaultOptions = {
-  withArgs: false,
-  duration: 750,
-  verticalSpacing: 1.2,
-  polygonSize: { width: 78, height: 91 },
-  getBoxSize: function getBoxSize() {
-    var self = this;
-    return { width: self.polygonSize.width, height: 25 };
-  },
-  getArrowLength: function getArrowLength() {
-    return this.polygonSize.width;
-  },
-  getSegmentText: function getSegmentText(node) {
-    return compactHash(node.data.meta.linkHash);
-  },
-  getLinkText: function getLinkText(node) {
-    return node.target.data.link.meta.action + (this.withArgs ? '(' + node.target.data.link.meta.arguments.join(', ') + ')' : '');
-  },
-  onclick: function onclick() {},
-  onTag: function onTag() {}
-};
-
-var ChainTreeBuilder = function () {
-  function ChainTreeBuilder(element) {
-    classCallCheck(this, ChainTreeBuilder);
-
-    this.chainTree = new ChainTree(element);
-  }
-
-  createClass(ChainTreeBuilder, [{
-    key: 'build',
-    value: function build(map, options) {
-      var _this = this;
-
-      this.onTag = options.onTag;
-      if (map.id && map.agentUrl && map.process) {
-        return this._load(map).then(function (segments) {
-          return _this._display(segments, options);
-        });
-      } else if (map.chainscript && map.chainscript.length) {
-        try {
-          return resolveLinks(wrap(parseIfJson(map.chainscript))).then(function (segments) {
-            return _this._display(segments, options);
-          });
-        } catch (err) {
-          return Promise.reject(err);
-        }
-      }
-      return Promise.resolve();
-    }
-  }, {
-    key: '_display',
-    value: function _display(segments, options) {
-      this.chainTree.display(segments, Object.assign({}, defaultOptions, options));
-      this._notifyTags(segments);
-      return segments;
-    }
-  }, {
-    key: '_notifyTags',
-    value: function _notifyTags(chainscript) {
-      tagsSet(chainscript).forEach(this.onTag);
-    }
-  }, {
-    key: '_load',
-    value: function _load(map) {
-      return getAgent(map.agentUrl).then(function (agent) {
-        var process = agent.processes[map.process];
-        return process.findSegments({ mapIds: [map.id], limit: -1 });
-      }).catch(function (res) {
-        return console.log(res);
-      });
-    }
-  }]);
-  return ChainTreeBuilder;
-}();
-
-var index$8 = createCommonjsModule(function (module) {
 /*
 The original version of this code is taken from Douglas Crockford's json2.js:
 https://github.com/douglascrockford/JSON-js/blob/master/json2.js
@@ -7089,11 +7693,10 @@ https://github.com/douglascrockford/JSON-js/blob/master/json2.js
 I made some modifications to ensure a canonical output.
 */
 
-var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
-    escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
-    gap,
-    indent,
-    meta = {    // table of character substitutions
+var escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
+var gap;
+var indent;
+var meta = {    // table of character substitutions
         '\b': '\\b',
         '\t': '\\t',
         '\n': '\\n',
@@ -7101,8 +7704,8 @@ var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f
         '\r': '\\r',
         '"' : '\\"',
         '\\': '\\\\'
-    },
-    rep;
+    };
+var rep;
 
 
 function quote(string) {
@@ -7252,7 +7855,7 @@ function str(key, holder) {
 }
 
 // If the JSON object does not yet have a stringify method, give it one.
-var stringify = function (value, replacer, space) {
+var stringify$2 = function (value, replacer, space) {
 
 // The stringify method takes a value and an optional replacer, and an optional
 // space parameter, and returns a JSON text. The replacer can be a function
@@ -7294,10 +7897,7 @@ var stringify = function (value, replacer, space) {
     return str('', {'': value});
 };
 
-module.exports = stringify;
-});
-
-var stringify$3 = interopDefault(index$8);
+var canonicalJson = stringify$2;
 
 var sha256 = createCommonjsModule(function (module) {
 /**
@@ -7315,7 +7915,7 @@ var sha256 = createCommonjsModule(function (module) {
   if (NODE_JS) {
     root = commonjsGlobal;
   }
-  var COMMON_JS = !root.JS_SHA256_TEST && typeof module == 'object' && module.exports;
+  var COMMON_JS = !root.JS_SHA256_TEST && 'object' == 'object' && module.exports;
   var HEX_CHARS = '0123456789abcdef'.split('');
   var EXTRA = [-2147483648, 8388608, 32768, 128];
   var SHIFT = [24, 16, 8, 0];
@@ -7530,8 +8130,6 @@ var sha256 = createCommonjsModule(function (module) {
 }(commonjsGlobal));
 });
 
-var sha256$1 = interopDefault(sha256);
-
 /*
   Copyright 2017 Stratumn SAS. All rights reserved.
 
@@ -7553,507 +8151,8 @@ var sha256$1 = interopDefault(sha256);
  * @param {Object} obj the json object
  */
 function hashJson(obj) {
-  return sha256$1(stringify$3(obj));
+  return sha256(canonicalJson(obj));
 }
-
-var cleanurl$2 = createCommonjsModule(function (module) {
-'use strict';
-
-module.exports = {
-  processRequest: function(req) {
-    req.url = req.url.replace(/[^%]+/g, function(s) {
-      return encodeURI(s);
-    });
-  }
-};
-});
-
-var cleanurl$3 = interopDefault(cleanurl$2);
-var processRequest$4 = cleanurl$2.processRequest;
-
-var require$$7$1 = Object.freeze({
-	default: cleanurl$3,
-	processRequest: processRequest$4
-});
-
-var xhrBrowser$2 = createCommonjsModule(function (module) {
-module.exports = window.XMLHttpRequest;
-});
-
-var xhrBrowser$3 = interopDefault(xhrBrowser$2);
-
-
-var require$$6$1 = Object.freeze({
-	default: xhrBrowser$3
-});
-
-var delay$2 = createCommonjsModule(function (module) {
-'use strict';
-
-// Wrap a function in a `setTimeout` call. This is used to guarantee async
-// behavior, which can avoid unexpected errors.
-
-module.exports = function(fn) {
-  return function() {
-    var
-      args = Array.prototype.slice.call(arguments, 0),
-      newFunc = function() {
-        return fn.apply(null, args);
-      };
-    setTimeout(newFunc, 0);
-  };
-};
-});
-
-var delay$3 = interopDefault(delay$2);
-
-
-var require$$5$1 = Object.freeze({
-	default: delay$3
-});
-
-var request$3 = createCommonjsModule(function (module) {
-'use strict';
-
-function Request(optsOrUrl) {
-  var opts = typeof optsOrUrl === 'string' ? {url: optsOrUrl} : optsOrUrl || {};
-  this.method = opts.method ? opts.method.toUpperCase() : 'GET';
-  this.url = opts.url;
-  this.headers = opts.headers || {};
-  this.body = opts.body;
-  this.timeout = opts.timeout || 0;
-  this.errorOn404 = opts.errorOn404 != null ? opts.errorOn404 : true;
-  this.onload = opts.onload;
-  this.onerror = opts.onerror;
-}
-
-Request.prototype.abort = function() {
-  if (this.aborted) return;
-  this.aborted = true;
-  this.xhr.abort();
-  return this;
-};
-
-Request.prototype.header = function(name, value) {
-  var k;
-  for (k in this.headers) {
-    if (this.headers.hasOwnProperty(k)) {
-      if (name.toLowerCase() === k.toLowerCase()) {
-        if (arguments.length === 1) {
-          return this.headers[k];
-        }
-
-        delete this.headers[k];
-        break;
-      }
-    }
-  }
-  if (value != null) {
-    this.headers[name] = value;
-    return value;
-  }
-};
-
-
-module.exports = Request;
-});
-
-var request$4 = interopDefault(request$3);
-
-
-var require$$1$3 = Object.freeze({
-	default: request$4
-});
-
-var index$10 = createCommonjsModule(function (module) {
-module.exports = extend;
-
-function extend() {
-    var target = {};
-
-    for (var i = 0; i < arguments.length; i++) {
-        var source = arguments[i];
-
-        for (var key in source) {
-            if (source.hasOwnProperty(key)) {
-                target[key] = source[key];
-            }
-        }
-    }
-
-    return target
-}
-});
-
-var index$11 = interopDefault(index$10);
-
-
-var require$$0$7 = Object.freeze({
-	default: index$11
-});
-
-var extractResponseProps$2 = createCommonjsModule(function (module) {
-'use strict';
-
-var extend = interopDefault(require$$0$7);
-
-module.exports = function(req) {
-  var xhr = req.xhr;
-  var props = {request: req, xhr: xhr};
-
-  // Try to create the response from the request. If the request was aborted,
-  // accesssing properties of the XHR may throw an error, so we wrap in a
-  // try/catch.
-  try {
-    var lines, i, m, headers = {};
-    if (xhr.getAllResponseHeaders) {
-      lines = xhr.getAllResponseHeaders().split('\n');
-      for (i = 0; i < lines.length; i++) {
-        if ((m = lines[i].match(/\s*([^\s]+):\s+([^\s]+)/))) {
-          headers[m[1]] = m[2];
-        }
-      }
-    }
-
-    props = extend(props, {
-      status: xhr.status,
-      contentType: xhr.contentType || (xhr.getResponseHeader && xhr.getResponseHeader('Content-Type')),
-      headers: headers,
-      text: xhr.responseText,
-      body: xhr.response || xhr.responseText
-    });
-  } catch (err) {}
-
-  return props;
-};
-});
-
-var extractResponseProps$3 = interopDefault(extractResponseProps$2);
-
-
-var require$$0$6 = Object.freeze({
-	default: extractResponseProps$3
-});
-
-var response$2 = createCommonjsModule(function (module) {
-'use strict';
-
-var Request = interopDefault(require$$1$3);
-var extractResponseProps = interopDefault(require$$0$6);
-
-function Response(props) {
-  this.request = props.request;
-  this.xhr = props.xhr;
-  this.headers = props.headers || {};
-  this.status = props.status || 0;
-  this.text = props.text;
-  this.body = props.body;
-  this.contentType = props.contentType;
-  this.isHttpError = props.status >= 400;
-}
-
-Response.prototype.header = Request.prototype.header;
-
-Response.fromRequest = function(req) {
-  return new Response(extractResponseProps(req));
-};
-
-
-module.exports = Response;
-});
-
-var response$3 = interopDefault(response$2);
-
-
-var require$$2$2 = Object.freeze({
-	default: response$3
-});
-
-var error$2 = createCommonjsModule(function (module) {
-'use strict';
-
-var Response = interopDefault(require$$2$2);
-var extractResponseProps = interopDefault(require$$0$6);
-var extend = interopDefault(require$$0$7);
-
-function RequestError(message, props) {
-  var err = new Error(message);
-  err.name = 'RequestError';
-  this.name = err.name;
-  this.message = err.message;
-  if (err.stack) {
-    this.stack = err.stack;
-  }
-
-  this.toString = function() {
-    return this.message;
-  };
-
-  for (var k in props) {
-    if (props.hasOwnProperty(k)) {
-      this[k] = props[k];
-    }
-  }
-}
-
-RequestError.prototype = extend(Error.prototype);
-RequestError.prototype.constructor = RequestError;
-
-RequestError.create = function(message, req, props) {
-  var err = new RequestError(message, props);
-  Response.call(err, extractResponseProps(req));
-  return err;
-};
-
-module.exports = RequestError;
-});
-
-var error$3 = interopDefault(error$2);
-
-
-var require$$4$1 = Object.freeze({
-	default: error$3
-});
-
-var once$3 = createCommonjsModule(function (module) {
-'use strict';
-
-// A "once" utility.
-module.exports = function(fn) {
-  var result, called = false;
-  return function() {
-    if (!called) {
-      called = true;
-      result = fn.apply(this, arguments);
-    }
-    return result;
-  };
-};
-});
-
-var once$4 = interopDefault(once$3);
-
-
-var require$$0$8 = Object.freeze({
-	default: once$4
-});
-
-var index$9 = createCommonjsModule(function (module) {
-'use strict';
-
-var
-  cleanURL = interopDefault(require$$7$1),
-  XHR = interopDefault(require$$6$1),
-  delay = interopDefault(require$$5$1),
-  RequestError = interopDefault(require$$4$1),
-  Response = interopDefault(require$$2$2),
-  Request = interopDefault(require$$1$3),
-  extend = interopDefault(require$$0$7),
-  once = interopDefault(require$$0$8);
-
-var i,
-    createError = RequestError.create;
-
-function factory(defaults, plugins) {
-  defaults = defaults || {};
-  plugins = plugins || [];
-
-  function http(req, cb) {
-    var xhr, plugin, done, k, timeoutId, supportsLoadAndErrorEvents;
-
-    req = new Request(extend(defaults, req));
-
-    for (i = 0; i < plugins.length; i++) {
-      plugin = plugins[i];
-      if (plugin.processRequest) {
-        plugin.processRequest(req);
-      }
-    }
-
-    // Give the plugins a chance to create the XHR object
-    for (i = 0; i < plugins.length; i++) {
-      plugin = plugins[i];
-      if (plugin.createXHR) {
-        xhr = plugin.createXHR(req);
-        break; // First come, first serve
-      }
-    }
-    xhr = xhr || new XHR();
-
-    req.xhr = xhr;
-
-    // Use a single completion callback. This can be called with or without
-    // an error. If no error is passed, the request will be examined to see
-    // if it was successful.
-    done = once(delay(function(rawError) {
-      clearTimeout(timeoutId);
-      xhr.onload = xhr.onerror = xhr.onabort = xhr.onreadystatechange = xhr.ontimeout = xhr.onprogress = null;
-
-      var err = getError(req, rawError);
-
-      var res = err || Response.fromRequest(req);
-      for (i = 0; i < plugins.length; i++) {
-        plugin = plugins[i];
-        if (plugin.processResponse) {
-          plugin.processResponse(res);
-        }
-      }
-
-      // Invoke callbacks
-      if (err && req.onerror) req.onerror(err);
-      if (!err && req.onload) req.onload(res);
-      if (cb) cb(err, err ? undefined : res);
-
-    }));
-
-    supportsLoadAndErrorEvents = ('onload' in xhr) && ('onerror' in xhr);
-    xhr.onload = function() { done(); };
-    xhr.onerror = done;
-    xhr.onabort = function() { done(); };
-
-    // We'd rather use `onload`, `onerror`, and `onabort` since they're the
-    // only way to reliably detect successes and failures but, if they
-    // aren't available, we fall back to using `onreadystatechange`.
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState !== 4) return;
-
-      if (req.aborted) return done();
-
-      if (!supportsLoadAndErrorEvents) {
-        // Assume a status of 0 is an error. This could be a false
-        // positive, but there's no way to tell when using
-        // `onreadystatechange` ):
-        // See matthewwithanm/react-inlinesvg#10.
-
-        // Some browsers don't like you reading XHR properties when the
-        // XHR has been aborted. In case we've gotten here as a result
-        // of that (either our calling `about()` in the timeout handler
-        // or the user calling it directly even though they shouldn't),
-        // be careful about accessing it.
-        var status;
-        try {
-          status = xhr.status;
-        } catch (err) {}
-        var err = status === 0 ? new Error('Internal XHR Error') : null;
-        return done(err);
-      }
-    };
-
-    // IE sometimes fails if you don't specify every handler.
-    // See http://social.msdn.microsoft.com/Forums/ie/en-US/30ef3add-767c-4436-b8a9-f1ca19b4812e/ie9-rtm-xdomainrequest-issued-requests-may-abort-if-all-event-handlers-not-specified?forum=iewebdevelopment
-    xhr.ontimeout = function() { /* noop */ };
-    xhr.onprogress = function() { /* noop */ };
-
-    xhr.open(req.method, req.url);
-
-    if (req.timeout) {
-      // If we use the normal XHR timeout mechanism (`xhr.timeout` and
-      // `xhr.ontimeout`), `onreadystatechange` will be triggered before
-      // `ontimeout`. There's no way to recognize that it was triggered by
-      // a timeout, and we'd be unable to dispatch the right error.
-      timeoutId = setTimeout(function() {
-        req.timedOut = true;
-        done();
-        try {
-          xhr.abort();
-        } catch (err) {}
-      }, req.timeout);
-    }
-
-    for (k in req.headers) {
-      if (req.headers.hasOwnProperty(k)) {
-        xhr.setRequestHeader(k, req.headers[k]);
-      }
-    }
-
-    xhr.send(req.body);
-
-    return req;
-  }
-
-  var method,
-    methods = ['get', 'post', 'put', 'head', 'patch', 'delete'],
-    verb = function(method) {
-      return function(req, cb) {
-        req = new Request(req);
-        req.method = method;
-        return http(req, cb);
-      };
-    };
-  for (i = 0; i < methods.length; i++) {
-    method = methods[i];
-    http[method] = verb(method);
-  }
-
-  http.plugins = function() {
-    return plugins;
-  };
-
-  http.defaults = function(newValues) {
-    if (newValues) {
-      return factory(extend(defaults, newValues), plugins);
-    }
-    return defaults;
-  };
-
-  http.use = function() {
-    var newPlugins = Array.prototype.slice.call(arguments, 0);
-    return factory(defaults, plugins.concat(newPlugins));
-  };
-
-  http.bare = function() {
-    return factory();
-  };
-
-  http.Request = Request;
-  http.Response = Response;
-  http.RequestError = RequestError;
-
-  return http;
-}
-
-module.exports = factory({}, [cleanURL]);
-
-/**
- * Analyze the request to see if it represents an error. If so, return it! An
- * original error object can be passed as a hint.
- */
-function getError(req, err) {
-  if (req.aborted) return createError('Request aborted', req, {name: 'Abort'});
-
-  if (req.timedOut) return createError('Request timeout', req, {name: 'Timeout'});
-
-  var xhr = req.xhr;
-  var type = Math.floor(xhr.status / 100);
-
-  var kind;
-  switch (type) {
-    case 0:
-    case 2:
-      // These don't represent errors unless the function was passed an
-      // error object explicitly.
-      if (!err) return;
-      return createError(err.message, req);
-    case 4:
-      // Sometimes 4XX statuses aren't errors.
-      if (xhr.status === 404 && !req.errorOn404) return;
-      kind = 'Client';
-      break;
-    case 5:
-      kind = 'Server';
-      break;
-    default:
-      kind = 'HTTP';
-  }
-  var msg = kind + ' Error: ' +
-        'The server returned a status of ' + xhr.status +
-        ' for the request "' +
-        req.method.toUpperCase() + ' ' + req.url + '"';
-  return createError(msg, req);
-}
-});
-
-var httpplease$1 = interopDefault(index$9);
 
 var lookup = [];
 var revLookup = [];
@@ -8295,10 +8394,6 @@ Buffer.TYPED_ARRAY_SUPPORT = global$1.TYPED_ARRAY_SUPPORT !== undefined
   ? global$1.TYPED_ARRAY_SUPPORT
   : true;
 
-/*
- * Export kMaxLength after typed array support is determined.
- */
-var _kMaxLength = kMaxLength();
 function kMaxLength () {
   return Buffer.TYPED_ARRAY_SUPPORT
     ? 0x7fffffff
@@ -8390,7 +8485,14 @@ Buffer.from = function (value, encodingOrOffset, length) {
 if (Buffer.TYPED_ARRAY_SUPPORT) {
   Buffer.prototype.__proto__ = Uint8Array.prototype;
   Buffer.__proto__ = Uint8Array;
-  
+  if (typeof Symbol !== 'undefined' && Symbol.species &&
+      Buffer[Symbol.species] === Buffer) {
+    // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
+    // Object.defineProperty(Buffer, Symbol.species, {
+    //   value: null,
+    //   configurable: true
+    // })
+  }
 }
 
 function assertSize (size) {
@@ -8553,7 +8655,7 @@ function checked (length) {
 }
 
 
-Buffer.isBuffer = isBuffer$1;
+Buffer.isBuffer = isBuffer;
 function internalIsBuffer (b) {
   return !!(b != null && b._isBuffer)
 }
@@ -10019,7 +10121,7 @@ function isnan (val) {
 // the following is from is-buffer, also by Feross Aboukhadijeh and with same lisence
 // The _isBuffer check is for Safari 5-7 support, because it's missing
 // Object.prototype.constructor. Remove this eventually
-function isBuffer$1(obj) {
+function isBuffer(obj) {
   return obj != null && (!!obj._isBuffer || isFastBuffer(obj) || isSlowBuffer(obj))
 }
 
@@ -10050,7 +10152,7 @@ function isSlowBuffer (obj) {
 
 function computeMerkleParent(left, right) {
   if (right) {
-    return sha256$1(Buffer.concat([new Buffer(left, 'hex'), new Buffer(right, 'hex')]));
+    return sha256(Buffer.concat([Buffer.from(left, 'hex'), Buffer.from(right, 'hex')]));
   }
   return left;
 }
@@ -10073,24 +10175,38 @@ function computeMerkleParent(left, right) {
 
 var blockCypherCache = {};
 
+function getFossil(txId) {
+  if (blockCypherCache[txId]) {
+    return Promise.resolve(blockCypherCache[txId]);
+  }
+
+  var p = new Promise(function (resolve, reject) {
+    return lib$3.get('https://api.blockcypher.com/v1/btc/main/txs/' + txId, function (err, res) {
+      return err ? reject(err) : resolve(res);
+    });
+  });
+  blockCypherCache[txId] = p;
+  return p;
+}
+
 var SegmentValidator = function () {
   function SegmentValidator(segment) {
-    classCallCheck(this, SegmentValidator);
+    classCallCheck$1(this, SegmentValidator);
 
     this.segment = segment;
   }
 
-  createClass(SegmentValidator, [{
+  createClass$1(SegmentValidator, [{
     key: 'validate',
     value: function validate(errors) {
-      errors.linkHash.push(this._validateLinkHash());
-      errors.stateHash.push(this._validateStateHash());
-      errors.merklePath.push(this._validateMerklePath());
-      errors.fossil.push(this._validateFossil());
+      errors.linkHash.push(this.validateLinkHash());
+      errors.stateHash.push(this.validateStateHash());
+      errors.merklePath.push(this.validateMerklePath());
+      errors.fossil.push(this.validateFossil());
     }
   }, {
-    key: '_validateLinkHash',
-    value: function _validateLinkHash() {
+    key: 'validateLinkHash',
+    value: function validateLinkHash() {
       var computed = hashJson(this.segment.link);
       var actual = this.segment.meta.linkHash;
       if (computed !== actual) {
@@ -10099,8 +10215,8 @@ var SegmentValidator = function () {
       return null;
     }
   }, {
-    key: '_validateStateHash',
-    value: function _validateStateHash() {
+    key: 'validateStateHash',
+    value: function validateStateHash() {
       if (this.segment.link.state) {
         var computed = hashJson(this.segment.link.state);
         var actual = this.segment.link.meta.stateHash;
@@ -10111,9 +10227,10 @@ var SegmentValidator = function () {
       return null;
     }
   }, {
-    key: '_validateMerklePath',
-    value: function _validateMerklePath() {
+    key: 'validateMerklePath',
+    value: function validateMerklePath() {
       var evidence = this.segment.meta.evidence;
+
       if (evidence) {
         if (evidence.state === 'COMPLETE') {
           var previous = this.segment.meta.linkHash;
@@ -10147,12 +10264,12 @@ var SegmentValidator = function () {
       return null;
     }
   }, {
-    key: '_validateFossil',
-    value: function _validateFossil() {
+    key: 'validateFossil',
+    value: function validateFossil() {
       var _this = this;
 
       var txId = this.segment.meta.evidence.transactions['bitcoin:main'];
-      return this._getFossil(txId).then(function (res) {
+      return getFossil(txId).then(function (res) {
         var body = JSON.parse(res.xhr.response);
         if (!body.outputs.find(function (output) {
           return output.data_hex === _this.segment.meta.evidence.merkleRoot;
@@ -10161,21 +10278,6 @@ var SegmentValidator = function () {
         }
         return null;
       });
-    }
-  }, {
-    key: '_getFossil',
-    value: function _getFossil(txId) {
-      if (blockCypherCache[txId]) {
-        return Promise.resolve(blockCypherCache[txId]);
-      }
-
-      var p = new Promise(function (resolve, reject) {
-        return httpplease$1.get('https://api.blockcypher.com/v1/btc/main/txs/' + txId, function (err, res) {
-          return err ? reject(err) : resolve(res);
-        });
-      });
-      blockCypherCache[txId] = p;
-      return p;
     }
   }]);
   return SegmentValidator;
@@ -10199,7 +10301,7 @@ var SegmentValidator = function () {
 
 var ChainValidator = function () {
   function ChainValidator(chainscript) {
-    classCallCheck(this, ChainValidator);
+    classCallCheck$1(this, ChainValidator);
 
     this.chainscript = chainscript;
     this.errors = {
@@ -10210,7 +10312,7 @@ var ChainValidator = function () {
     };
   }
 
-  createClass(ChainValidator, [{
+  createClass$1(ChainValidator, [{
     key: 'validate',
     value: function validate() {
       var _this = this;
@@ -10250,9 +10352,36 @@ var margin$1 = { top: 10, right: 5, bottom: 20, left: 5 };
 var height$1 = 350 - margin$1.top - margin$1.bottom;
 var width = 400 - margin$1.left - margin$1.right;
 
+function parse$3(merklePath) {
+  var nodes = [];
+
+  merklePath.forEach(function (path, index) {
+    nodes.push({
+      id: path.left + '-' + index,
+      name: path.left,
+      parentId: path.parent + '-' + (index + 1)
+    });
+    if (path.right) {
+      nodes.push({
+        id: path.right + '-' + index,
+        name: path.right,
+        parentId: path.parent + '-' + (index + 1)
+      });
+    }
+  });
+
+  var root = merklePath[merklePath.length - 1].parent;
+  nodes.push({
+    id: root + '-' + merklePath.length,
+    name: root
+  });
+
+  return stratify()(nodes);
+}
+
 var MerklePathTree = function () {
   function MerklePathTree(element) {
-    classCallCheck(this, MerklePathTree);
+    classCallCheck$1(this, MerklePathTree);
 
     this.tree = tree().size([width, height$1]);
     this.svg = select(element).append('svg').attr('width', width + margin$1.right + margin$1.left).attr('height', height$1 + margin$1.top + margin$1.bottom);
@@ -10262,48 +10391,20 @@ var MerklePathTree = function () {
     this.root = null;
   }
 
-  createClass(MerklePathTree, [{
+  createClass$1(MerklePathTree, [{
     key: 'display',
     value: function display(merklePath) {
       if (merklePath && merklePath.length) {
-        this.root = this._parse(merklePath);
-        this._update(this.root.descendants(), this.root.links());
+        this.root = parse$3(merklePath);
+        this.update(this.root.descendants(), this.root.links());
       } else {
         this.root = null;
-        this._update([], []);
+        this.update([], []);
       }
     }
   }, {
-    key: '_parse',
-    value: function _parse(merklePath) {
-      var nodes = [];
-
-      merklePath.forEach(function (path, index) {
-        nodes.push({
-          id: path.left + '-' + index,
-          name: path.left,
-          parentId: path.parent + '-' + (index + 1)
-        });
-        if (path.right) {
-          nodes.push({
-            id: path.right + '-' + index,
-            name: path.right,
-            parentId: path.parent + '-' + (index + 1)
-          });
-        }
-      });
-
-      var root = merklePath[merklePath.length - 1].parent;
-      nodes.push({
-        id: root + '-' + merklePath.length,
-        name: root
-      });
-
-      return stratify()(nodes);
-    }
-  }, {
-    key: '_update',
-    value: function _update(nodes, links) {
+    key: 'update',
+    value: function update(nodes, links) {
       // Compute the new tree layout.
       if (this.root) {
         this.tree(this.root);

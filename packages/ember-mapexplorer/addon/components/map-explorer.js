@@ -44,20 +44,20 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this.set('builder', new mapexplorerCore.ChainTreeBuilder(this.$()[0]));
-
-    this.get('builder').build(
-      {
-        id: this.get('mapId'),
-        agentUrl: this.get('agentUrl'),
-        process: this.get('process'),
-        chainscript: this.get('chainscript')
-      },
-      {
+    this.set(
+      'builder',
+      new mapexplorerCore.ChainTreeBuilder(this.$()[0], {
         onclick: this.onClick.bind(this),
         onTag: () => {}
-      }
+      })
     );
+
+    this.get('builder').build({
+      id: this.get('mapId'),
+      agentUrl: this.get('agentUrl'),
+      process: this.get('process'),
+      chainscript: this.get('chainscript')
+    });
   },
 
   didUpdateAttrs() {
@@ -68,13 +68,7 @@ export default Ember.Component.extend({
 
     if (chainscript) {
       let builder = this.get('builder');
-      builder.chainTree.display(
-        chainscript,
-        Object.assign(mapexplorerCore.defaultOptions, {
-          onclick: this.onClick.bind(this),
-          onTag: () => {}
-        })
-      );
+      builder.chainTree.display(chainscript);
     }
   },
 
