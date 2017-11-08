@@ -15,7 +15,7 @@
 */
 
 import crypto from 'crypto';
-import stringify from 'canonical-json';
+import { stringify } from 'canonicaljson';
 
 /**
  * Canonically hashes a json object.
