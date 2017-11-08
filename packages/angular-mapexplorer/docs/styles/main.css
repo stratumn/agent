@@ -3,18 +3,13 @@
   height: 400px;
 }
 
-.link {
-  fill: none;
-  stroke: #ccc;
-  stroke-width: 1.5px;
-}
 .win polygon {
   stroke: red;
 }
 
 h2 {
   text-transform: uppercase;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-weight: 600;
   font-size: 18px;
   color: #111111;
@@ -22,64 +17,70 @@ h2 {
 }
 
 .tip {
-    font-family: Gibson-Regular, 'Montserrat', sans-serif;
-    font-size: 42px;
-    color: #E3E3E3;
+  font-family: Gibson-Regular, "Montserrat", sans-serif;
+  font-size: 42px;
+  color: #e3e3e3;
 }
 
 .tip span {
-    /* margin: auto; */
-    text-align: center;
+  /* margin: auto; */
+  text-align: center;
 }
 
 .form {
-    background: #F3F3F3;
-    padding: 0 200px 20px 200px;
+  background: #f3f3f3;
+  padding: 0 200px 20px 200px;
 }
 
 .form label {
-    font-family: Gibson-SemiBold, 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: 11px;
-    color: #ADADAD;
-    text-transform: uppercase;
-    margin-bottom: 8px;
+  font-family: Gibson-SemiBold, "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  color: #adadad;
+  text-transform: uppercase;
+  margin-bottom: 8px;
 }
 
 .form input {
-    margin-right: 10px;
-    background-color: white;
-    border: none;
-    padding-left: 5px;
-    height: 40px;
+  margin-right: 10px;
+  background-color: white;
+  border: none;
+  padding-left: 5px;
+  height: 40px;
 }
 
 .form .md-button.primary {
-    font-family: Gibson-Regular, 'Montserrat', sans-serif;
-    font-size: 15px;
-    color: #FFFFFF;
-    background: #EC714A;
-    border-radius: 4px;
-    margin-top: 15px;
-    margin-bottom: 0;
+  font-family: Gibson-Regular, "Montserrat", sans-serif;
+  font-size: 15px;
+  color: #ffffff;
+  background: #ec714a;
+  border-radius: 4px;
+  margin-top: 15px;
+  margin-bottom: 0;
 }
 
-a.md-button.md-default-theme.md-fab, a.md-button.md-fab, .md-button.md-default-theme.md-fab,
+a.md-button.md-default-theme.md-fab,
+a.md-button.md-fab,
+.md-button.md-default-theme.md-fab,
 .md-button.md-fab {
-    background: #7BC0D2;
+  background: #7bc0d2;
 }
 
-a.md-button.md-default-theme.md-primary.md-raised, a.md-button.md-primary.md-raised,
-a.md-button.md-default-theme.md-primary.md-fab, a.md-button.md-primary.md-fab,
-.md-button.md-default-theme.md-primary.md-raised, .md-button.md-primary.md-raised,
-.md-button.md-default-theme.md-primary.md-fab, .md-button.md-primary.md-fab {
-    background: #EC714A;
+a.md-button.md-default-theme.md-primary.md-raised,
+a.md-button.md-primary.md-raised,
+a.md-button.md-default-theme.md-primary.md-fab,
+a.md-button.md-primary.md-fab,
+.md-button.md-default-theme.md-primary.md-raised,
+.md-button.md-primary.md-raised,
+.md-button.md-default-theme.md-primary.md-fab,
+.md-button.md-primary.md-fab {
+  background: #ec714a;
 }
 
 st-map-explorer {
-    overflow: scroll;
+  overflow: scroll;
 }
 
 .scroll {
-    overflow: scroll;
+  overflow: scroll;
 }

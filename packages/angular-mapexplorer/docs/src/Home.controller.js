@@ -2,7 +2,7 @@ export default class HomeController {
   constructor($scope, $routeParams, AceConfigurationService) {
     this.$scope = $scope;
     this.mapId = $routeParams.mapId;
-    this.agentUrl = $routeParams.agentUrl;
+    this.agentUrl = $routeParams.agentUrl || 'http://localhost:3000';
     this.process = $routeParams.process;
     this.counter = 0;
 

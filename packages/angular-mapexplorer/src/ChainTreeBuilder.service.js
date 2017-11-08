@@ -22,8 +22,8 @@ export default class ChainTreeBuilderService {
     this.ChainTreeBuilder = ChainTreeBuilder;
   }
 
-  getBuilder(element) {
-    return new this.ChainTreeBuilder(element);
+  getBuilder(element, options) {
+    return new this.ChainTreeBuilder(element, options);
   }
 
   build(builder, map, options) {
