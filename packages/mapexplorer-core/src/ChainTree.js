@@ -28,7 +28,8 @@ const margin = { top: 20, right: 120, bottom: 20, left: 120 };
 const height = 800 - margin.top - margin.bottom;
 
 export default class ChainTree {
-  constructor(element) {
+  constructor(element, options) {
+    this.options = options;
     this.tree = tree();
 
     this.svg = select(element).append('svg');
@@ -36,33 +37,32 @@ export default class ChainTree {
     this.zoomed = () => this.innerG.attr('transform', event.transform);
   }
 
-  display(chainscript, options) {
-    this.options = options;
+  display(chainscript) {
     if (chainscript && chainscript.length) {
       const root = parseChainscript(chainscript);
-      this.update(root, options);
+      this.update(root);
     } else {
-      this.update(null, options);
+      this.update(null);
     }
   }
 
-  update(root, options) {
+  update(root) {
     const self = this;
     const nodes = root ? root.descendants() : [];
-
     this.links = (root ? root.links() : []).concat(findExtraLinks(root));
     const extraNodes = findExtraNodes(this.links, nodes).map((n, index) =>
       Object.assign(n, {
         x:
-          options.polygonSize.height / 2 +
-          index * (options.polygonSize.height * options.verticalSpacing),
-        y: options.getArrowLength(),
+          this.options.polygonSize.height / 2 +
+          index *
+            (this.options.polygonSize.height * this.options.verticalSpacing),
+        y: this.options.getArrowLength(),
         y0: 0
       })
     );
 
     // init tree
-    this.initTree(root, extraNodes, options);
+    this.initTree(root, extraNodes);
 
     // draw links
     this.displayCurrentMapLinks();
@@ -91,10 +91,10 @@ export default class ChainTree {
         } else {
           self.displayCurrentMapLinks();
         }
-        if (d.data.isRef) {
+        if (d.data.parentRef != null) {
           self.drawForeignChildRef(d);
         }
-        options.onclick(
+        self.options.onclick(
           d,
           () => {
             self.displayCurrentMapLinks();
@@ -128,7 +128,7 @@ export default class ChainTree {
         select(this).classed('selected', true);
         self.displayNodeLinks(d);
         self.drawAncestorsRef(d);
-        options.onclick(
+        self.options.onclick(
           d,
           () => {
             self.displayCurrentMapLinks();
@@ -150,22 +150,23 @@ export default class ChainTree {
     }
     // Draw foreign child references
     nodes
-      .filter(n => n.data.isRef === true)
+      .filter(n => n.data.parentRef != null)
       .map(n => this.drawForeignChildRef(n));
   }
 
-  initTree(root, extraNodes, options) {
+  initTree(root, extraNodes) {
     const nodes = root ? root.descendants() : [];
-    const polygon = options.polygonSize;
+    const polygon = this.options.polygonSize;
     const maxDepth = max(nodes, x => x.depth) || 0;
     const treeWidth =
-      maxDepth * (polygon.width + options.getArrowLength()) +
-      options.getArrowLength();
+      maxDepth * (polygon.width + this.options.getArrowLength()) +
+      this.options.getArrowLength();
     const extraNodesWidth = extraNodes.length
-      ? options.getArrowLength() * 3
+      ? this.options.getArrowLength() * 3
       : 0;
+    const ancestorsAndChildWidth = polygon.width * 4;
     const computedWidth = Math.max(
-      treeWidth + extraNodesWidth + options.getArrowLength() * 4,
+      treeWidth + extraNodesWidth + ancestorsAndChildWidth,
       500
     );
     const branchesCount = nodes.reduce(
@@ -176,17 +177,19 @@ export default class ChainTree {
     const computedHeight =
       Math.max(branchesCount, extraNodes.length) *
       polygon.height *
-      options.verticalSpacing;
+      this.options.verticalSpacing;
 
     this.tree.size([computedHeight, treeWidth]);
     this.svg
       .attr(
         'width',
-        options.zoomable ? 1200 : computedWidth + margin.right + margin.left
+        this.options.zoomable
+          ? 1200
+          : computedWidth + margin.right + margin.left
       )
       .attr(
         'height',
-        (options.zoomable ? height : computedHeight) +
+        (this.options.zoomable ? height : computedHeight) +
           margin.top +
           margin.bottom
       );
@@ -197,11 +200,11 @@ export default class ChainTree {
       root.y0 = extraNodesWidth;
       this.tree(root);
       root.each(node => {
-        node.y += root.y0 + options.getArrowLength();
+        node.y += root.y0 + this.options.getArrowLength();
       });
     }
 
-    if (options.zoomable) {
+    if (this.options.zoomable) {
       this.svg.call(zoom().on('zoom', this.zoomed));
     } else {
       this.svg.on('.zoom', null);
@@ -227,40 +230,35 @@ export default class ChainTree {
       .text('init');
   }
 
-  drawAncestorsRef(refNode) {
-    const self = this;
-    const onClick = () =>
-      loadRef(self.options.agentUrl, refNode, this.links).then(cs =>
-        self.display(cs, self.options)
-      );
+  drawForeignRef(refNode, onClick, link, rect, linkLabel) {
+    const xRadius = 15;
+    const yRadius = 15;
+    const boxOpacity = 0.7;
 
-    this.innerG.selectAll('path#ref-link').remove();
     this.innerG
       .append('path')
       .attr('class', 'link ref')
       .attr('id', 'ref-link')
-      .attr('d', makeLink({ x: refNode.x, y: refNode.y0 }, refNode, 20))
+      .attr('d', link)
       .on('click', onClick);
 
-    this.innerG.selectAll('rect.refLinkBox').remove();
     this.innerG
       .append('rect')
-      .attr('y', refNode.x + this.options.getArrowLength() / 2 + 5)
-      .attr('x', this.options.getArrowLength() / 2 - 5)
-      .attr('ry', 15)
-      .attr('rx', 15)
-      .attr('fill-opacity', 0.7)
-      .attr('width', this.options.getArrowLength() * 2 + 10)
-      .attr('height', this.options.getBoxSize().height)
+      .attr('y', rect.y)
+      .attr('x', rect.x)
+      .attr('ry', xRadius)
+      .attr('rx', yRadius)
+      .attr('fill-opacity', boxOpacity)
+      .attr('width', rect.width)
+      .attr('height', rect.height)
       .attr('class', 'refLinkBox')
       .on('click', onClick);
 
-    this.innerG.selectAll('#linkLabelRef').remove();
     this.innerG
       .append('text')
       .attr('id', 'linkLabelRef')
-      .attr('dx', this.options.getArrowLength() / 2)
-      .attr('dy', refNode.x + this.options.getArrowLength() - 17)
+      .attr('dx', linkLabel.dx)
+      .attr('dy', linkLabel.dy)
       .text(this.options.getRefLinkText(refNode))
       .on('click', onClick);
   }
@@ -278,34 +276,43 @@ export default class ChainTree {
         self.display(cs, self.options)
       );
     };
-    this.innerG
-      .append('path')
-      .attr('class', 'link ref')
-      .attr('id', 'ref-link')
-      .attr('d', foreignLink)
-      .on('click', onClick);
-
-    this.innerG
-      .append('rect')
-      .attr('y', refNode.x - this.options.getBoxSize().height / 2 - 2)
-      .attr('x', refNode.y + this.options.getArrowLength() * 2 + 10)
-      .attr('ry', 15)
-      .attr('rx', 15)
-      .attr('fill-opacity', 0.7)
-      .attr('width', this.options.getArrowLength() * 2 + 10)
-      .attr('height', this.options.getBoxSize().height)
-      .attr('class', 'refLinkBox')
-      .on('click', onClick);
-
-    this.innerG
-      .append('text')
-      .attr('id', 'linkLabelRef')
-      .attr('dx', refNode.y + this.options.getArrowLength() * 2 + 15)
-      .attr('dy', refNode.x + 2)
-      .text(this.options.getRefLinkText(refNode))
-      .on('click', onClick);
+    const rect = {
+      x: refNode.y + this.options.getArrowLength() * 2 + 10,
+      y: refNode.x - this.options.getBoxSize().height / 2 - 2,
+      width: this.options.getArrowLength() * 2 + 10,
+      height: this.options.getBoxSize().height
+    };
+    const linkLabel = {
+      dx: refNode.y + this.options.getArrowLength() * 2 + 15,
+      dy: refNode.x + 2
+    };
+    this.drawForeignRef(refNode, onClick, foreignLink, rect, linkLabel);
 
     return refNode;
+  }
+
+  drawAncestorsRef(refNode) {
+    const self = this;
+    const foreignLink = makeLink({ x: refNode.x, y: refNode.y0 }, refNode, 20);
+    const onClick = () =>
+      loadRef(self.options.agentUrl, refNode, this.links).then(cs =>
+        self.display(cs, self.options)
+      );
+    const rect = {
+      x: this.options.getArrowLength() / 2 - 5,
+      y: refNode.x + this.options.getArrowLength() / 2 + 5,
+      width: this.options.getArrowLength() * 2 + 10,
+      height: this.options.getBoxSize().height
+    };
+    const linkLabel = {
+      dx: this.options.getArrowLength() / 2,
+      dy: refNode.x + this.options.getArrowLength() - 17
+    };
+
+    this.innerG.selectAll('path#ref-link').remove();
+    this.innerG.selectAll('rect.refLinkBox').remove();
+    this.innerG.selectAll('#linkLabelRef').remove();
+    this.drawForeignRef(refNode, onClick, foreignLink, rect, linkLabel);
   }
 
   drawNodes(nodeEnter) {
@@ -342,7 +349,7 @@ export default class ChainTree {
 
     this.innerG
       .selectAll('g.node.base')
-      .filter(n => n.data.isRef === true)
+      .filter(n => (n.data.parentRef != null) === true)
       .attr('class', 'node base childRef');
 
     // Transition all the nodes to their new position.

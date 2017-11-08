@@ -25,8 +25,8 @@ describe('ChainTree', () => {
 
   describe('using an empty map', () => {
     beforeEach(() => {
-      tree = new ChainTree('body');
-      tree.display(null, defaultOptions);
+      tree = new ChainTree('body', defaultOptions);
+      tree.display(null);
 
       svg = select('body').select('svg');
     });
@@ -45,8 +45,8 @@ describe('ChainTree', () => {
 
   describe('using a regular map', () => {
     beforeEach(() => {
-      tree = new ChainTree('body');
-      tree.display(validMap, defaultOptions);
+      tree = new ChainTree('body', defaultOptions);
+      tree.display(validMap);
 
       svg = select('body').select('svg');
     });
@@ -99,8 +99,8 @@ describe('ChainTree', () => {
     let internalRefs;
 
     beforeEach(() => {
-      tree = new ChainTree('body');
-      tree.display(validMapWithRefs, defaultOptions);
+      tree = new ChainTree('body', defaultOptions);
+      tree.display(validMapWithRefs);
 
       refs = validMapWithRefs.reduce(
         (acc, val) => acc.concat(val.link.meta.refs || []),

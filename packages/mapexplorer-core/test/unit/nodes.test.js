@@ -65,7 +65,7 @@ describe('Nodes', () => {
         findExtraLinks(root);
       } catch (err) {
         err.message.should.be.exactly(
-          'findExtraLinks: wrong reference format (should have process, mapId, linkHash)'
+          `findExtraLinks: wrong reference format for linkHash '${extraRef.linkHash}' (should have process, mapId, linkHash)`
         );
         delete root.data.link.meta.refs;
         return;
@@ -137,8 +137,8 @@ describe('Nodes', () => {
           );
           newRoot.should.not.be.null();
           cs
-            .filter(s => s.link.meta.prevLinkHash === newRoot.meta.linkHash)
-            .length.should.be.exactly(3);
+            .filter(s => s.parentRef === newRoot.meta.linkHash)
+            .length.should.be.exactly(2);
         })
       );
     });
@@ -148,11 +148,10 @@ describe('Nodes', () => {
       const extraNodes = findExtraNodes(links, root.descendants());
       return insertSegments.then(() =>
         loadRef(agent, extraNodes[0], links).then(cs => {
-          const childRef = cs.filter(s => s.isRef === true);
+          const childRef = cs.filter(s => s.parentRef != null);
           childRef.length.should.be.exactly(2);
-          childRef.map(r => r.link.meta.action.should.be.exactly('reference'));
           childRef.map(r =>
-            r.link.meta.prevLinkHash.should.be.exactly(
+            r.parentRef.should.be.exactly(
               '6ae53b2cac86ef0a5b959e929c155237f6ee6e965bb7d7598cc25a00288de56c'
             )
           );
@@ -170,7 +169,9 @@ describe('Nodes', () => {
           throw new Error('Should have failed');
         })
         .catch(err =>
-          err.message.should.be.exactly('loadRef: process test not found')
+          err.message.should.be.exactly(
+            `process '${extraNodes[0].data.link.meta.process}' not found`
+          )
         );
     });
 
