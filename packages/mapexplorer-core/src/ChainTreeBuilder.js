@@ -50,7 +50,10 @@ export const defaultOptions = {
     return `go to map ${compactHash(node.data.link.meta.mapId)}`;
   },
   getLinkText(link) {
-    if (link.ref) {
+    if (
+      link.ref ||
+      link.target.data.parentRef === link.source.data.meta.linkHash
+    ) {
       return 'reference';
     }
     return (
@@ -65,23 +68,21 @@ export const defaultOptions = {
 };
 
 export default class ChainTreeBuilder {
-  constructor(element) {
-    this.chainTree = new ChainTree(element);
+  constructor(element, options) {
+    this.options = Object.assign(defaultOptions, options);
+    this.chainTree = new ChainTree(element, this.options);
   }
 
-  build(map, options) {
-    this.onTag = options.onTag;
-    const optionsWithAgent = Object.assign(options, {
+  build(map) {
+    this.options = Object.assign(this.options, {
       agentUrl: map.agentUrl
     });
     if (map.id && map.agentUrl && map.process) {
-      return load(map).then(segments =>
-        this.display(segments, optionsWithAgent)
-      );
+      return load(map).then(segments => this.display(segments));
     } else if (map.chainscript && map.chainscript.length) {
       try {
         return resolveLinks(wrap(parseIfJson(map.chainscript))).then(segments =>
-          this.display(segments, optionsWithAgent)
+          this.display(segments)
         );
       } catch (err) {
         return Promise.reject(err);
@@ -90,16 +91,13 @@ export default class ChainTreeBuilder {
     return Promise.resolve();
   }
 
-  display(segments, options) {
-    this.chainTree.display(
-      segments,
-      Object.assign({}, defaultOptions, options)
-    );
+  display(segments) {
+    this.chainTree.display(segments);
     this.notifyTags(segments);
     return segments;
   }
 
   notifyTags(chainscript) {
-    tagsSet(chainscript).forEach(this.onTag);
+    tagsSet(chainscript).forEach(this.options.onTag);
   }
 }

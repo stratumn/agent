@@ -47,3 +47,41 @@ text #ref-link-text:hover {
 .node.selected rect {
   fill: $selected-segment-secondary-color;
 }
+
+.node.childRef polygon {
+  fill: $foreign-segment-primary-color;
+}
+
+.node.childRef rect {
+  fill: $foreign-segment-secondary-color;
+}
+
+.node.ref polygon {
+  fill: $foreign-segment-primary-color;
+}
+
+.node.ref rect {
+  fill: $foreign-segment-secondary-color;
+}
+
+#ref-link {
+  stroke-width: 8;
+}
+
+#ref-link:hover {
+  stroke: black;
+  cursor: pointer;
+  stroke-width: 10;
+  marker-end: url("#blackTriangle");
+}
+
+text#linkLabelRef {
+  cursor: pointer;
+  font-family: $segment-text-font;
+  fill: white;
+}
+
+rect.refLinkBox {
+  cursor: pointer;
+  fill: $foreign-segment-secondary-color;
+}

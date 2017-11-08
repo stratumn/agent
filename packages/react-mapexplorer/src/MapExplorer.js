@@ -62,14 +62,8 @@ class MapExplorer extends Component {
   }
 
   componentDidMount() {
-    this.state.builder = new ChainTreeBuilder(this.element);
-    this.state.builder.build(
-      {
-        id: this.props.mapId,
-        agentUrl: this.props.agentUrl,
-        chainscript: this.props.chainscript,
-        process: this.props.process
-      },
+    this.state.builder = new ChainTreeBuilder(
+      this.element,
       Object.assign(
         {},
         {
@@ -79,6 +73,12 @@ class MapExplorer extends Component {
         this.props.options
       )
     );
+    this.state.builder.build({
+      id: this.props.mapId,
+      agentUrl: this.props.agentUrl,
+      chainscript: this.props.chainscript,
+      process: this.props.process
+    });
   }
 
   handleSegmentClick(d, onHide, element) {

@@ -1,14 +1,18 @@
 $segment-primary-color: #293047 !default;
 $segment-secondary-color: darken(#293047, 20%) !default;
 $segment-text-color: white !default;
-$segment-text-font: 'RationalTWText-SemiBold', 'Roboto Mono', monospace !default;
+$segment-text-font: "RationalTWText-SemiBold", "Roboto Mono", monospace !default;
 
-$selected-segment-primary-color: #2BE4A6 !default;
-$selected-segment-secondary-color: darken(#2BE4A6, 20%) !default;
+$selected-segment-primary-color: #2be4a6 !default;
+$selected-segment-secondary-color: darken(#2be4a6, 20%) !default;
 
-$link-text-font: 'Gibson-Regular', 'Montserrat', sans-serif !default;
+$link-text-font: "Gibson-Regular", "Montserrat", sans-serif !default;
 $link-text-color: #293047 !default;
-$link-color: #293047 !default;
+$link-color: #999 !default;
 
 $merkle-path-node-color: black !default;
 $merkle-path-link-color: black !default;
+
+$foreign-segment-primary-color: "#CD5C5C";
+$foreign-segment-secondary-color: "#8B0000";
+$link-text-color: "#6E6E6E";

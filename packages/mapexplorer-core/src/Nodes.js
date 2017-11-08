@@ -20,9 +20,9 @@ import { getAgent } from 'stratumn-agent-client';
 function findNodeRefs(node) {
   let refs = [];
   if (node && node.children) {
-    for (let i = 0; i < node.children.length; i += 1) {
-      refs = refs.concat(findNodeRefs(node.children[i]));
-    }
+    node.children.forEach(child => {
+      refs = refs.concat(findNodeRefs(child));
+    });
   }
   if (node && node.data.link.meta.refs) {
     return refs.concat(
@@ -39,13 +39,12 @@ function findExtraLinks(root) {
   const extraLinks = [];
   const nodes = root ? root.descendants() : [];
   const refs = findNodeRefs(root);
-  for (let i = 0; i < refs.length; i += 1) {
-    const source = nodes.find(e => e.id === refs[i].source.linkHash);
-    const target = nodes.find(e => e.id === refs[i].target.id);
+  refs.forEach(ref => {
+    const source = nodes.find(e => e.id === ref.source.linkHash);
+    const target = nodes.find(e => e.id === ref.target.id);
     if (
       !extraLinks.find(
-        l =>
-          l.source.id === refs[i].source.linkHash && l.target.id === target.id
+        l => l.source.id === ref.source.linkHash && l.target.id === target.id
       )
     ) {
       if (source && target) {
@@ -53,38 +52,39 @@ function findExtraLinks(root) {
       } else if (!source && target) {
         let newSourceNode = extraLinks
           .map(l => l.source)
-          .find(n => n.data.meta.linkHash === refs[i].source.linkHash);
+          .find(n => n.data.meta.linkHash === ref.source.linkHash);
         if (!newSourceNode) {
           if (
-            !refs[i].source.mapId ||
-            !refs[i].source.process ||
-            !refs[i].source.linkHash
+            !ref.source.mapId ||
+            !ref.source.process ||
+            !ref.source.linkHash
           ) {
             throw new Error(
-              `findExtraLinks: wrong reference format (should have process, mapId, linkHash)`
+              `findExtraLinks: wrong reference format for linkHash '${ref.source
+                .linkHash}' (should have process, mapId, linkHash)`
             );
           }
           newSourceNode = hierarchy(
             {
               link: {
                 meta: {
-                  mapId: refs[i].source.mapId,
-                  process: refs[i].source.process
+                  mapId: ref.source.mapId,
+                  process: ref.source.process
                 }
               },
-              meta: { linkHash: refs[i].source.linkHash }
+              meta: { linkHash: ref.source.linkHash }
             },
             () => null
           );
         }
         extraLinks.push({
-          source: Object.assign(newSourceNode, { id: refs[i].source.linkHash }),
+          source: Object.assign(newSourceNode, { id: ref.source.linkHash }),
           target,
           ref: true
         });
       }
     }
-  }
+  });
 
   return extraLinks;
 }
@@ -106,15 +106,7 @@ function findExtraNodes(links, nodes) {
 function loadRef(agentUrl, ref, links) {
   if (agentUrl) {
     return getAgent(agentUrl)
-      .then(agent => {
-        const process = agent.processes[ref.data.link.meta.process];
-        if (!process) {
-          throw new Error(
-            `loadRef: process ${ref.data.link.meta.process} not found`
-          );
-        }
-        return process;
-      })
+      .then(agent => agent.getProcess(ref.data.link.meta.process))
       .then(process =>
         process.findSegments({
           mapIds: [ref.data.link.meta.mapId],
@@ -135,15 +127,11 @@ function loadRef(agentUrl, ref, links) {
           )
           .map(l => {
             const child = l.target.data;
-            child.link.meta.prevLinkHash = ref.data.meta.linkHash;
             child.link.meta.refs = null;
-            child.link.meta.action = 'reference';
-            child.link.meta.arguments = null;
-            child.isRef = true;
+            child.parentRef = ref.data.meta.linkHash;
             return child;
           });
-        const fullSegments = segments.concat(foreignChildren);
-        return fullSegments;
+        return segments.concat(foreignChildren);
       });
   }
   throw new Error('loadRef: unknown agent url');
