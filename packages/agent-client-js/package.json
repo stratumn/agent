@@ -4,6 +4,7 @@
   "description": "Stratumn Indigo agent client library",
   "main": "lib/stratumn-agent-client.js",
   "module": "lib/stratumn-agent-client.mjs",
+  "browser": "lib/stratumn-agent-client.js",
   "scripts": {
     "test":
       "mocha --compilers js:babel-core/register --recursive --require babel-polyfill --require should 2> /dev/null",
