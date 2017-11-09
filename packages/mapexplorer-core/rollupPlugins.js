@@ -17,9 +17,7 @@ const plugins = [
     )
   ),
   builtins(),
-  nodeResolve({
-    browser: true
-  }),
+  nodeResolve(),
   commonjs({
     namedExports: {
       '../agent-client-js/node_modules/qs/lib/index.js': ['stringify'],

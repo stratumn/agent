@@ -18,7 +18,8 @@ export default {
           exclude: [
             'node_modules/**',
             '../mapexplorer-core/**',
-            '../agent-client-js/**'
+            '../agent-client-js/**',
+            'vendor/**'
           ]
         },
         babelrc()
@@ -26,16 +27,11 @@ export default {
     ),
     builtins(),
     nodeResolve({
-      preferBuiltins: true,
-      browser: true,
-      jsnext: true
+      preferBuiltins: true
     }),
     commonjs({
       namedExports: {
         '../agent-client-js/node_modules/qs/lib/index.js': ['stringify'],
-        'node_modules/stratumn-agent-client/lib/stratumn-agent-client.mjs': [
-          'stringify'
-        ],
         'node_modules/qs/lib/index.js': ['stringify']
       }
     }),
