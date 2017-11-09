@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 
-import { getAgent } from '../actions/getAgent';
+import { getAgent } from '../actions';
 import * as statusTypes from '../constants/status';
 
 export const AgentInfoPage = ({ name, url, status, fetchAgent }) => {

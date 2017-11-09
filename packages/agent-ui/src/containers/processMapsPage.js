@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 
-import getMapIds from '../actions/getMapIds';
+import { getMapIds } from '../actions';
 import * as statusTypes from '../constants/status';
 
 export class ProcessMapsPage extends Component {

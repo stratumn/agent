@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import getSegment from '../actions/getSegment';
+import { getSegment } from '../actions';
 import * as statusTypes from '../constants/status';
 
 export class SegmentPage extends Component {
