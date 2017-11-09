@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import * as statusTypes from '../status';
+import * as statusTypes from '../constants/status';
 
-import {
-  createMap as createMapAction,
-  closeCreateMapDialogAndClear
-} from '../actions/createMap';
+// import {
+//   createMap as createMapAction,
+//   closeCreateMapDialogAndClear
+// } from '../actions/createMap';
 
 export const CreateMapDialog = ({ show, error, closeDialog, createMap }) => {
   if (!show) {
@@ -107,6 +107,6 @@ export function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  closeDialog: closeCreateMapDialogAndClear,
-  createMap: createMapAction
+  closeDialog: () => {},
+  createMap: () => {}
 })(CreateMapDialog);

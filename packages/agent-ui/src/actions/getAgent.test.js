@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import { getAgent, removeAgent } from './getAgent';
-import * as actionTypes from '../actions/actionTypes';
+import * as actionTypes from '../constants/actionTypes';
 
 chai.use(sinonChai);
 

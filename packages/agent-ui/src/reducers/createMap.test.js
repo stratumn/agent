@@ -2,8 +2,8 @@ import { expect } from 'chai';
 
 import createMap from './createMap';
 
-import * as actionTypes from '../actions/actionTypes';
-import * as statusTypes from '../status';
+import * as actionTypes from '../constants/actionTypes';
+import * as statusTypes from '../constants/status';
 
 describe('createMap reducer', () => {
   it('sets agent and process names when opening dialog', () => {

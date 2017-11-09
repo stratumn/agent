@@ -1,5 +1,5 @@
-import * as actionTypes from '../actions/actionTypes';
-import * as statusTypes from '../status';
+import * as actionTypes from '../constants/actionTypes';
+import * as statusTypes from '../constants/status';
 
 export default function(state = {}, action) {
   switch (action.type) {

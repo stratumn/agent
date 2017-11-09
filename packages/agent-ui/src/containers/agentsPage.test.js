@@ -7,7 +7,7 @@ import sinonChai from 'sinon-chai';
 
 import { TestStateBuilder, TestAgentBuilder } from '../test/builders/state';
 
-import * as statusTypes from '../status';
+import * as statusTypes from '../constants/status';
 import { AgentsPage, mapStateToProps } from './agentsPage';
 
 chai.use(sinonChai);

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 
 import getMapIds from '../actions/getMapIds';
-import * as statusTypes from '../status';
+import * as statusTypes from '../constants/status';
 
 export class ProcessMapsPage extends Component {
   componentDidMount() {

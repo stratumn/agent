@@ -12,7 +12,7 @@ import {
   closeCreateMapDialogAndClear
 } from './createMap';
 
-import * as actionTypes from '../actions/actionTypes';
+import * as actionTypes from '../constants/actionTypes';
 
 chai.use(sinonChai);
 

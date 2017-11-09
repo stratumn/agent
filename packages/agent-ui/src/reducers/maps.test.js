@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
 import maps from './maps';
-import * as actionTypes from '../actions/actionTypes';
-import * as statusTypes from '../status';
+import * as actionTypes from '../constants/actionTypes';
+import * as statusTypes from '../constants/status';
 
 describe('maps reducer', () => {
   it('returns previous state for unknown action', () => {

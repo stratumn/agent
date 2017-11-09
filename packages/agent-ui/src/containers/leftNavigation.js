@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
-import * as statusTypes from '../status';
+import * as statusTypes from '../constants/status';
 
 const LeftLink = ({ to, item }) => (
   <div>

@@ -1,6 +1,6 @@
 import { getAgent } from 'stratumn-agent-client';
 import { getSegmentSuccess } from './getSegment';
-import * as actionTypes from './actionTypes';
+import * as actionTypes from '../constants/actionTypes';
 import history from '../store/history';
 
 const createMapRequest = () => ({

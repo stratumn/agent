@@ -1,5 +1,5 @@
 import { getAgent } from 'stratumn-agent-client';
-import * as actionTypes from './actionTypes';
+import * as actionTypes from '../constants/actionTypes';
 
 const getMapIdsRequest = (agent, process) => ({
   type: actionTypes.MAP_IDS_REQUEST,
