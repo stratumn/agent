@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
-import * as statusTypes from '../reducers/status';
+import * as statusTypes from '../status';
 
 const extractProcess = process => ({
   name: process.name,

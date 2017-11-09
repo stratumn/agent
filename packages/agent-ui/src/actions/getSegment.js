@@ -1,5 +1,5 @@
 import { getAgent } from 'stratumn-agent-client';
-import * as statusTypes from '../reducers/status';
+import * as statusTypes from '../status';
 import * as actionTypes from './actionTypes';
 
 const getSegmentRequest = (agent, process, linkHash) => ({

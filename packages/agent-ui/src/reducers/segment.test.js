@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import segment from './segment';
 
 import * as actionTypes from '../actions/actionTypes';
-import * as statusTypes from '../reducers/status';
+import * as statusTypes from '../status';
 
 describe('segment reducer', () => {
   const requestSegmentAction = {

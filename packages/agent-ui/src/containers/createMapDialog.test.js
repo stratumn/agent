@@ -5,7 +5,7 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import * as statusTypes from '../reducers/status';
+import * as statusTypes from '../status';
 
 import { CreateMapDialog, mapStateToProps } from './createMapDialog';
 

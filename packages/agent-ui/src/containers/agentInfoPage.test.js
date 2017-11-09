@@ -7,7 +7,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import { AgentInfoPage } from './agentInfoPage';
-import * as statusTypes from '../reducers/status';
+import * as statusTypes from '../status';
 
 chai.use(sinonChai);
 

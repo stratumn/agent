@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import createMap from './createMap';
 
 import * as actionTypes from '../actions/actionTypes';
-import * as statusTypes from '../reducers/status';
+import * as statusTypes from '../status';
 
 describe('createMap reducer', () => {
   it('sets agent and process names when opening dialog', () => {

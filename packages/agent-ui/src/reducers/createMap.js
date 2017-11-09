@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
 import * as actionTypes from '../actions/actionTypes';
-import * as statusTypes from './status';
+import * as statusTypes from '../status';
 
 const createMapDialogReducer = (state = { show: false }, action) => {
   switch (action.type) {

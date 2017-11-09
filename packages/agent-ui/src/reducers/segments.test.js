@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import segments from './segments';
 import * as actionTypes from '../actions/actionTypes';
-import * as statusTypes from '../reducers/status';
+import * as statusTypes from '../status';
 
 describe('segments reducer', () => {
   it('returns previous state for unknown action', () => {

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import * as statusTypes from '../reducers/status';
+import * as statusTypes from '../status';
 
 import {
   createMap as createMapAction,

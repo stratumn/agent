@@ -6,7 +6,7 @@ import sinonChai from 'sinon-chai';
 
 import getSegment from './getSegment';
 import * as actionTypes from '../actions/actionTypes';
-import * as statusTypes from '../reducers/status';
+import * as statusTypes from '../status';
 
 chai.use(sinonChai);
 
