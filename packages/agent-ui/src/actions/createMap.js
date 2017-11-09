@@ -1,5 +1,5 @@
 import { getAgent } from 'stratumn-agent-client';
-import { getSegmentSuccess } from './getSegment';
+import { getSegmentSuccess } from './';
 import * as actionTypes from '../constants/actionTypes';
 import history from '../store/history';
 
