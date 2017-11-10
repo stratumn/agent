@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { getSegment } from '../actions';
-import { statusTypes } from '../reducers';
+import * as statusTypes from '../constants/status';
 
 export class SegmentPage extends Component {
   componentDidMount() {

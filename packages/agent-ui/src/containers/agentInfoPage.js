@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 
 import { getAgent } from '../actions';
-import { statusTypes } from '../reducers';
+import * as statusTypes from '../constants/status';
 
 export const AgentInfoPage = ({ name, url, status, fetchAgent }) => {
   if (status === statusTypes.LOADING) {

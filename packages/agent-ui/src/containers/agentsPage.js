@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { getAgent, removeAgent } from '../actions';
-import { statusTypes } from '../reducers';
+import * as statusTypes from '../constants/status';
 
 const RenderLoadedAgents = ({ agents, deleteAgent }) =>
   agents &&

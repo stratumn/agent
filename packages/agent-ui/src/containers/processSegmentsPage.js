@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 
 import { getSegments } from '../actions';
-import { statusTypes } from '../reducers';
+import * as statusTypes from '../constants/status';
 
 export class ProcessSegmentsPage extends Component {
   componentDidMount() {

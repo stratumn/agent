@@ -12,7 +12,7 @@ import {
   selectAction
 } from './appendSegment';
 
-import * as actionTypes from '../actions/actionTypes';
+import * as actionTypes from '../constants/actionTypes';
 
 chai.use(sinonChai);
 

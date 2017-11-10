@@ -4,7 +4,7 @@ import { MapExplorer } from 'react-mapexplorer';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { statusTypes } from '../reducers';
+import * as statusTypes from '../constants/status';
 
 import {
   TestAgentBuilder,

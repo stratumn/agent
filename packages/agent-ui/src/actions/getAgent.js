@@ -1,5 +1,5 @@
 import { getAgent as getAgentClient } from 'stratumn-agent-client';
-import * as actionTypes from './actionTypes';
+import * as actionTypes from '../constants/actionTypes';
 
 const getAgentRequest = (name, url) => ({
   type: actionTypes.AGENT_INFO_REQUEST,

@@ -1,7 +1,5 @@
 import { combineReducers } from 'redux';
 
-import * as _statusTypes from './status';
-
 import agents from './agents';
 import appendSegment from './appendSegment';
 import createMap from './createMap';
@@ -17,7 +15,5 @@ const rootReducer = combineReducers({
   createMap,
   appendSegment
 });
-
-export const statusTypes = _statusTypes;
 
 export default rootReducer;
