@@ -11,7 +11,7 @@
     "test:ci":
       "nyc npm test && nyc report --reporter=text-lcov > coverage/coverage.lcov",
     "build":
-      "rollup -c rollup.es.config.js && rollup -c rollup.umd.config.js && rollup -c rollup.browser.config.js && rollup -c rollup.browser.min.config.js",
+      "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js && rollup -c rollup.browser.min.config.js",
     "clean": "rimraf lib coverage",
     "preversion": "npm run clean && npm run test",
     "version": "npm run build",

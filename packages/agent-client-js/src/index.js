@@ -14,5 +14,7 @@
   limitations under the License.
 */
 
-export { default as getAgent } from './getAgent';
-export { default as fromSegment } from './fromSegment';
+import getAgent from './getAgent';
+import fromSegment from './fromSegment';
+
+export { getAgent, fromSegment };
