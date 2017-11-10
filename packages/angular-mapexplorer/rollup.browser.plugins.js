@@ -18,7 +18,7 @@ module.exports = [
           'vendor/*',
           'node_modules/**',
           '../mapexplorer-core/node_modules/**',
-          '../agent-client-js/node_modules/**'
+          '../agent-client-js/**'
         ]
       },
       babelrc()
@@ -39,11 +39,12 @@ module.exports = [
     namedExports: {
       '../agent-client-js/node_modules/qs/lib/index.js': ['stringify'],
       'node_modules/qs/lib/index.js': ['stringify'],
-      'node_modules/stratumn-agent-client/lib/stratumn-agent-client.mjs': [
-        'stringify'
-      ],
       'node_modules/stratumn-agent-client/node_modules/qs/lib/index.js': [
         'stringify'
+      ],
+      '../agent-client-js/lib/stratumn-agent-client.js': [
+        'getAgent',
+        'fromSegment'
       ]
     }
   })

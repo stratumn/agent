@@ -14,10 +14,10 @@
     "test": "npm run test:unit && npm run test:integration",
     "test:ci": "npm run test:unit:ci && npm run test:integration:ci",
     "build":
-      "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js && rollup -c rollup.browser.min.config.js",
+      "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js",
     "prepublish": "npm run build",
     "postpublish":
-      "aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core.js --region 'eu-west-1' && aws s3 cp dist/mapexplorer-core.min.js s3://stratumn-libs/mapexplorer-core.min.js --region 'eu-west-1' && aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/mapexplorer-core.min.js s3://stratumn-libs/mapexplorer-core-${npm_package_version}.min.js --region 'eu-west-1'"
+      "aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core.js --region 'eu-west-1' && aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core-${npm_package_version}.js --region 'eu-west-1'"
   },
   "repository": {
     "type": "git",
@@ -50,7 +50,7 @@
     "mocha": "^2.4.5",
     "nyc": "^11.2.1",
     "rimraf": "^2.5.2",
-    "rollup": "^0.48.2",
+    "rollup": "^0.50.0",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.0.0",
     "rollup-plugin-istanbul": "^1.1.0",

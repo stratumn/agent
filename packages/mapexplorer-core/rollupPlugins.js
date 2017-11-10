@@ -11,7 +11,11 @@ const plugins = [
   babel(
     Object.assign(
       {
-        exclude: ['node_modules/**', '../**/node_modules/**']
+        exclude: [
+          'node_modules/**',
+          '../**/node_modules/**',
+          '../agent-client-js/**'
+        ]
       },
       babelrc()
     )
@@ -23,7 +27,11 @@ const plugins = [
   commonjs({
     namedExports: {
       '../agent-client-js/node_modules/qs/lib/index.js': ['stringify'],
-      'node_modules/qs/lib/index.js': ['stringify']
+      'node_modules/qs/lib/index.js': ['stringify'],
+      '../agent-client-js/lib/stratumn-agent-client.js': [
+        'getAgent',
+        'fromSegment'
+      ]
     }
   }),
   globals()
