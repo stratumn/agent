@@ -18,7 +18,7 @@ module.exports = [
           'vendor/*',
           'node_modules/**',
           '../mapexplorer-core/node_modules/**',
-          '../agent-client-js/node_modules/**'
+          '../agent-client-js/**'
         ]
       },
       babelrc()
@@ -26,6 +26,7 @@ module.exports = [
   ),
   builtins(),
   nodeResolve({
+    browser: true,
     externals: [
       'angular',
       'angular-animate',
@@ -40,6 +41,10 @@ module.exports = [
       'node_modules/qs/lib/index.js': ['stringify'],
       'node_modules/stratumn-agent-client/node_modules/qs/lib/index.js': [
         'stringify'
+      ],
+      '../agent-client-js/lib/stratumn-agent-client.js': [
+        'getAgent',
+        'fromSegment'
       ]
     }
   })
