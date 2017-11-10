@@ -4,10 +4,16 @@ const pkg = require('./package.json');
 
 const external = Object.keys(pkg.dependencies);
 
-config.output = {
-  format: 'umd',
-  file: pkg.main
-};
 config.external = external;
+config.output = [
+  {
+    file: pkg.module,
+    format: 'es'
+  },
+  {
+    file: pkg.main,
+    format: 'cjs'
+  }
+];
 
 export default config;

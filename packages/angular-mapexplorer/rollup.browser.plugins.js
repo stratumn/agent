@@ -41,10 +41,6 @@ module.exports = [
       'node_modules/qs/lib/index.js': ['stringify'],
       'node_modules/stratumn-agent-client/node_modules/qs/lib/index.js': [
         'stringify'
-      ],
-      '../agent-client-js/lib/stratumn-agent-client.js': [
-        'getAgent',
-        'fromSegment'
       ]
     }
   })
