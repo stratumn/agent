@@ -78,11 +78,11 @@ AppendSegmentDialog.propTypes = {
   closeDialog: PropTypes.func.isRequired
 };
 
-export function mapStateToProps(state) {
+export function mapStateToProps({ appendSegment }) {
   const show = !!(
-    state.appendSegment &&
-    state.appendSegment.dialog &&
-    state.appendSegment.dialog.show
+    appendSegment &&
+    appendSegment.dialog &&
+    appendSegment.dialog.show
   );
 
   if (!show) {
@@ -92,20 +92,20 @@ export function mapStateToProps(state) {
   }
 
   if (
-    state.appendSegment.request &&
-    state.appendSegment.request.error &&
-    state.appendSegment.request.status === statusTypes.FAILED
+    appendSegment.request &&
+    appendSegment.request.error &&
+    appendSegment.request.status === statusTypes.FAILED
   ) {
     return {
       show,
-      error: state.appendSegment.request.error.toString()
+      error: appendSegment.request.error.toString()
     };
   }
 
   return {
     show,
-    actions: state.appendSegment.dialog.actions,
-    selectedAction: state.appendSegment.dialog.selectedAction
+    actions: appendSegment.dialog.actions,
+    selectedAction: appendSegment.dialog.selectedAction
   };
 }
 
