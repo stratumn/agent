@@ -16,3 +16,4 @@ export { default as ProcessSegmentsPage } from './processSegmentsPage';
 export { default as MapPage } from './mapPage';
 export { default as SegmentPage } from './segmentPage';
 export { default as CreateMapDialog } from './createMapDialog';
+export { default as AppendSegmentDialog } from './appendSegmentDialog';

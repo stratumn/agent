@@ -12,21 +12,59 @@ import {
   selectAction
 } from './appendSegment';
 
+import {
+  TestStateBuilder,
+  TestProcessBuilder,
+  TestAgentBuilder
+} from '../test/builders/state';
+
 import * as actionTypes from '../constants/actionTypes';
 
 chai.use(sinonChai);
 
 describe('open action', () => {
-  it('contains agent and process names, parent linkHash and process actions', () => {
-    const processAction = { a1: { args: ['title'] } };
-    const action = openDialog('a', 'p', processAction, 'l');
-    expect(action).to.deep.equal({
+  let dispatchSpy;
+  let getStateStub;
+
+  beforeEach(() => {
+    dispatchSpy = sinon.spy();
+    getStateStub = sinon.stub();
+  });
+
+  it('finds process actions from agent and process name', () => {
+    const process = new TestProcessBuilder('p')
+      .withAction('init', ['title'])
+      .withAction('message', ['author', 'text'])
+      .build();
+    getStateStub.returns(
+      new TestStateBuilder()
+        .withAgent('a', new TestAgentBuilder().build())
+        .withAgent('aa', new TestAgentBuilder().withProcess(process).build())
+        .build()
+    );
+
+    openDialog('aa', 'p')(dispatchSpy, getStateStub);
+    expect(getStateStub.callCount).to.equal(1);
+    expect(dispatchSpy.callCount).to.equal(1);
+    expect(dispatchSpy.getCall(0).args[0]).to.deep.equal({
       type: actionTypes.APPEND_SEGMENT_DIALOG_OPEN,
-      agent: 'a',
-      parent: 'l',
+      agent: 'aa',
       process: 'p',
-      actions: processAction
+      actions: process.actions,
+      parent: ''
     });
+  });
+
+  it('does not dispatch anything for invalid agent/process', () => {
+    getStateStub.returns(
+      new TestStateBuilder()
+        .withAgent('a', new TestAgentBuilder().build())
+        .build()
+    );
+
+    openDialog('a', 'unknownProcess')(dispatchSpy, getStateStub);
+    expect(getStateStub.callCount).to.equal(1);
+    expect(dispatchSpy.callCount).to.equal(0);
   });
 });
 

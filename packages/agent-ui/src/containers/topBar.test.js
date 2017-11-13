@@ -12,7 +12,8 @@ import { AppendSegmentButton, CreateMapButton } from '../components';
 describe('<TopBar />', () => {
   const requiredProps = {
     match: { params: { agent: 'a', process: 'p' } },
-    mapDialog: () => {}
+    mapDialog: () => {},
+    segmentDialog: () => {}
   };
 
   const mockStore = configureStore();

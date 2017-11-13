@@ -18,18 +18,19 @@ const appendSegmentClear = () => ({
   type: actionTypes.APPEND_SEGMENT_CLEAR
 });
 
-export const openDialog = (
-  agentName,
-  processName,
-  processActions,
-  parentLinkHash
-) => ({
-  type: actionTypes.APPEND_SEGMENT_DIALOG_OPEN,
-  agent: agentName,
-  process: processName,
-  actions: processActions,
-  parent: parentLinkHash
-});
+export const openDialog = (agentName, processName) => (dispatch, getState) => {
+  const { agents } = getState();
+  if (agents[agentName] && agents[agentName].processes[processName]) {
+    const { actions } = agents[agentName].processes[processName];
+    dispatch({
+      type: actionTypes.APPEND_SEGMENT_DIALOG_OPEN,
+      agent: agentName,
+      process: processName,
+      actions: actions,
+      parent: ''
+    });
+  }
+};
 
 export const selectAction = actionName => ({
   type: actionTypes.APPEND_SEGMENT_DIALOG_SELECT_ACTION,

@@ -1,7 +1,13 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 
-import { TopBar, LeftNavigation, ContentPage, CreateMapDialog } from './';
+import {
+  TopBar,
+  LeftNavigation,
+  ContentPage,
+  CreateMapDialog,
+  AppendSegmentDialog
+} from './';
 
 export const App = () => (
   <div>
@@ -9,6 +15,7 @@ export const App = () => (
     <LeftNavigation />
     <ContentPage />
     <CreateMapDialog />
+    <AppendSegmentDialog />
   </div>
 );
 
