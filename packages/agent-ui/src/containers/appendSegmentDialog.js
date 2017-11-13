@@ -6,7 +6,13 @@ import * as statusTypes from '../constants/status';
 
 import { closeAppendSegmentDialogAndClear } from '../actions';
 
-export const AppendSegmentDialog = ({ show, error, closeDialog }) => {
+export const AppendSegmentDialog = ({
+  show,
+  actions,
+  selectedAction,
+  error,
+  closeDialog
+}) => {
   if (!show) {
     return null;
   }
@@ -49,6 +55,14 @@ export const AppendSegmentDialog = ({ show, error, closeDialog }) => {
             e.preventDefault();
           }}
         >
+          <select>
+            {Object.keys(actions).map(a => (
+              <option key={a} value={a}>
+                {a}
+              </option>
+            ))}
+          </select>
+          <br />
           <button type="submit">Append</button>
           {error && <div className="error">{error}</div>}
         </form>
@@ -58,10 +72,16 @@ export const AppendSegmentDialog = ({ show, error, closeDialog }) => {
 };
 
 AppendSegmentDialog.defaultProps = {
-  error: ''
+  error: '',
+  actions: {},
+  selectedAction: ''
 };
 AppendSegmentDialog.propTypes = {
   show: PropTypes.bool.isRequired,
+  /* eslint-disable react/forbid-prop-types */
+  actions: PropTypes.object,
+  /* eslint-enable react/forbid-prop-types */
+  selectedAction: PropTypes.string,
   error: PropTypes.string,
   closeDialog: PropTypes.func.isRequired
 };
@@ -73,8 +93,13 @@ export function mapStateToProps(state) {
     state.appendSegment.dialog.show
   );
 
+  if (!show) {
+    return {
+      show
+    };
+  }
+
   if (
-    show &&
     state.appendSegment.request &&
     state.appendSegment.request.error &&
     state.appendSegment.request.status === statusTypes.FAILED
@@ -86,7 +111,9 @@ export function mapStateToProps(state) {
   }
 
   return {
-    show
+    show,
+    actions: state.appendSegment.dialog.actions,
+    selectedAction: state.appendSegment.dialog.selectedAction
   };
 }
 
