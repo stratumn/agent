@@ -6,13 +6,7 @@ import * as statusTypes from '../constants/status';
 
 import { closeAppendSegmentDialogAndClear } from '../actions';
 
-export const AppendSegmentDialog = ({
-  show,
-  actions,
-  selectedAction,
-  error,
-  closeDialog
-}) => {
+export const AppendSegmentDialog = ({ show, actions, error, closeDialog }) => {
   if (!show) {
     return null;
   }
@@ -73,15 +67,13 @@ export const AppendSegmentDialog = ({
 
 AppendSegmentDialog.defaultProps = {
   error: '',
-  actions: {},
-  selectedAction: ''
+  actions: {}
 };
 AppendSegmentDialog.propTypes = {
   show: PropTypes.bool.isRequired,
   /* eslint-disable react/forbid-prop-types */
   actions: PropTypes.object,
   /* eslint-enable react/forbid-prop-types */
-  selectedAction: PropTypes.string,
   error: PropTypes.string,
   closeDialog: PropTypes.func.isRequired
 };
