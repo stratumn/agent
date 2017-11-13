@@ -5,7 +5,7 @@ import { withRouter, NavLink, Route } from 'react-router-dom';
 
 import { AppendSegmentButton, CreateMapButton } from '../components';
 
-import { openCreateMapDialog } from '../actions';
+import { openCreateMapDialog, openAppendSegmentDialog } from '../actions';
 
 const renderTopBarLinks = path => {
   const parts = path.split('/').filter(p => p);
@@ -23,7 +23,7 @@ const renderTopBarLinks = path => {
   });
 };
 
-export const TopBar = ({ path, mapDialog }) => {
+export const TopBar = ({ path, mapDialog, segmentDialog }) => {
   const style = {
     position: 'absolute',
     width: 'calc(100% - 240px)',
@@ -51,7 +51,7 @@ export const TopBar = ({ path, mapDialog }) => {
         path="/:agent/:process/maps/:id"
         render={props => (
           <AppendSegmentButton
-            openDialog={() => console.log('Append segment...')}
+            openDialog={segmentDialog}
             {...props.match.params}
           />
         )}
@@ -63,6 +63,7 @@ export const TopBar = ({ path, mapDialog }) => {
 TopBar.propTypes = {
   path: PropTypes.string.isRequired,
   mapDialog: PropTypes.func.isRequired,
+  segmentDialog: PropTypes.func.isRequired,
   /* eslint-disable react/forbid-prop-types */
   match: PropTypes.object.isRequired
   /* eslint-enable react/forbid-prop-types */
@@ -75,5 +76,8 @@ function mapStateToProps(state, ownProps) {
 }
 
 export default withRouter(
-  connect(mapStateToProps, { mapDialog: openCreateMapDialog })(TopBar)
+  connect(mapStateToProps, {
+    mapDialog: openCreateMapDialog,
+    segmentDialog: openAppendSegmentDialog
+  })(TopBar)
 );

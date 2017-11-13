@@ -17,6 +17,7 @@ describe('<CreateMapDialog />', () => {
     createMap: () => {},
     closeDialog: () => {}
   };
+
   it('learns to show dialog from state', () => {
     const props = mapStateToProps({ createMap: { dialog: { show: true } } });
     expect(props).to.deep.equal({ show: true });
