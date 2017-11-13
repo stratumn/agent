@@ -14,20 +14,24 @@
   limitations under the License.
 */
 
-import actionArgs from './actionArgs';
-import agentUrl from './agentUrl';
-import encryptedState from './encryptedState';
-import localTime from './localTime';
-import signedState from './signedState';
-import stateHash from './stateHash';
-import agentVersion from './agentVersion';
+import pluginTest from '.';
+import agentVersion from '../../src/plugins/agentVersion';
+import { version } from '../../package.json';
 
-module.exports = {
-  actionArgs,
-  agentUrl,
-  encryptedState,
-  localTime,
-  signedState,
-  stateHash,
-  agentVersion
-};
+function test(segment) {
+  segment.link.meta.agentVersion.should.equal(version);
+}
+
+pluginTest(agentVersion, {
+  '#createMap()'(segment) {
+    test(segment);
+  },
+
+  '#createSegment()'(segment) {
+    test(segment);
+  },
+
+  '#action()'(link) {
+    return (link.meta.agentVersion === null).should.be.true;
+  }
+});
