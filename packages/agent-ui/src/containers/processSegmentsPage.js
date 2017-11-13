@@ -3,20 +3,29 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 
+import { parse } from '../utils/queryString';
 import { getSegments } from '../actions';
 import * as statusTypes from '../constants/status';
 
 export class ProcessSegmentsPage extends Component {
   componentDidMount() {
-    const { agent, process, fetchSegments } = this.props;
-    fetchSegments(agent, process);
+    const { agent, process, fetchSegments, filters } = this.props;
+    fetchSegments(agent, process, parse(filters));
   }
 
   componentWillReceiveProps(nextProps) {
-    const { agent, process, fetchSegments } = nextProps;
-    const { agent: thisAgent, process: thisProcess } = this.props;
-    if (agent !== thisAgent || process !== thisProcess) {
-      fetchSegments(agent, process);
+    const { agent, process, fetchSegments, filters } = nextProps;
+    const {
+      agent: thisAgent,
+      process: thisProcess,
+      filters: thisFilters
+    } = this.props;
+    if (
+      agent !== thisAgent ||
+      process !== thisProcess ||
+      thisFilters !== filters
+    ) {
+      fetchSegments(agent, process, parse(filters));
     }
   }
 
@@ -54,13 +63,17 @@ ProcessSegmentsPage.propTypes = {
     status: PropTypes.string,
     error: PropTypes.string,
     details: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired
+  }).isRequired,
+  filters: PropTypes.string.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
-  const { match: { params: { agent, process } } } = ownProps;
+  const {
+    match: { params: { agent, process } },
+    location: { search: filters }
+  } = ownProps;
   const { segments } = state;
-  return { agent, process, segments };
+  return { agent, process, segments, filters };
 }
 
 export default withRouter(

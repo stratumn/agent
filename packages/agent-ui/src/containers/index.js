@@ -13,6 +13,7 @@ export { default as AgentsPage } from './agentsPage';
 export { default as ProcessInfoPage } from './processInfoPage';
 export { default as ProcessMapsPage } from './processMapsPage';
 export { default as ProcessSegmentsPage } from './processSegmentsPage';
+export { default as SegmentsFilter } from './segmentsFilter';
 export { default as MapPage } from './mapPage';
 export { default as SegmentPage } from './segmentPage';
 export { default as CreateMapDialog } from './createMapDialog';

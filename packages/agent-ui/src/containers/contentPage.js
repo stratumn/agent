@@ -8,6 +8,7 @@ import {
   ProcessInfoPage,
   ProcessMapsPage,
   ProcessSegmentsPage,
+  SegmentsFilter,
   SegmentPage
 } from './';
 
@@ -27,6 +28,7 @@ export const ContentPage = () => (
     <Route exact path="/:agent" component={AgentInfoPage} />
     <Route exact path="/:agent/:process" component={ProcessInfoPage} />
     <Route exact path="/:agent/:process/maps" component={ProcessMapsPage} />
+    <Route exact path="/:agent/:process/segments" component={SegmentsFilter} />
     <Route
       exact
       path="/:agent/:process/segments"
