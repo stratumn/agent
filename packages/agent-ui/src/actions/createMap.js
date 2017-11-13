@@ -47,7 +47,7 @@ export const closeCreateMapDialogAndClear = () => dispatch => {
   dispatch(closeCreateMapDialog());
 };
 
-export const createMap = title => (dispatch, getState) => {
+export const createMap = (...args) => (dispatch, getState) => {
   dispatch(createMapRequest());
   const { agents, createMap: { dialog: { agent, process } } } = getState();
   if (agents[agent]) {
@@ -55,7 +55,7 @@ export const createMap = title => (dispatch, getState) => {
     return getAgent(url)
       .then(a => {
         const proc = a.getProcess(process);
-        return proc.createMap(title);
+        return proc.createMap(...args);
       })
       .then(segment => {
         dispatch(createMapSuccess());
