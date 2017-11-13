@@ -52,7 +52,7 @@ describe('<SegmentPage />', () => {
     const segmentPage = shallow(
       <SegmentPage {...requiredProps} segment={segment} />
     );
-    expect(segmentPage.find('div').contains(JSON.stringify(segment, null, 2)))
+    expect(segmentPage.find('pre').contains(JSON.stringify(segment, null, 2)))
       .to.be.true;
   });
 
