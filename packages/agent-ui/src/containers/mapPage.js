@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { MapExplorer } from 'react-mapexplorer';
 
-export const MapPage = ({ agent, process, mapId }) => {
+import { selectMapSegment } from '../actions';
+
+export const MapPage = ({ agent, process, mapId, selectSegment }) => {
   if (!agent.url) {
     return (
       <div className="error">
@@ -15,7 +17,12 @@ export const MapPage = ({ agent, process, mapId }) => {
 
   return (
     <div>
-      <MapExplorer agentUrl={agent.url} process={process.name} mapId={mapId} />
+      <MapExplorer
+        agentUrl={agent.url}
+        process={process.name}
+        mapId={mapId}
+        onSelectSegment={segment => selectSegment(segment)}
+      />
     </div>
   );
 };
@@ -28,7 +35,8 @@ MapPage.propTypes = {
   process: PropTypes.shape({
     name: PropTypes.string.isRequired
   }).isRequired,
-  mapId: PropTypes.string.isRequired
+  mapId: PropTypes.string.isRequired,
+  selectSegment: PropTypes.func.isRequired
 };
 
 export function mapStateToProps(state, ownProps) {
@@ -54,4 +62,6 @@ export function mapStateToProps(state, ownProps) {
   };
 }
 
-export default withRouter(connect(mapStateToProps)(MapPage));
+export default withRouter(
+  connect(mapStateToProps, { selectSegment: selectMapSegment })(MapPage)
+);
