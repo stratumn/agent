@@ -17,3 +17,4 @@ export { default as SegmentsFilter } from './segmentsFilter';
 export { default as MapPage } from './mapPage';
 export { default as SegmentPage } from './segmentPage';
 export { default as CreateMapDialog } from './createMapDialog';
+export { default as AppendSegmentDialog } from './appendSegmentDialog';
