@@ -15,31 +15,38 @@ describe('<LeftNavigation />', () => {
       { name: 'a3', processes: [] }
     ];
 
-    const agentsPage = mount(
-      <MemoryRouter>
-        <LeftNavigation agents={agents} />
-      </MemoryRouter>
-    );
+    const testRoutes = (route, expectedLinks) => {
+      const agentsPage = mount(
+        <MemoryRouter initialEntries={[route]}>
+          <LeftNavigation agents={agents} />
+        </MemoryRouter>
+      );
 
-    const links = agentsPage.find('NavLink');
-    expect(links).to.have.length(12);
+      const links = agentsPage.find('NavLink');
+      expect(links).to.have.length(expectedLinks.length);
 
-    const linksTexts = links.map(l => l.text());
-    const expected = [
-      'a1',
-      'p1',
-      'maps',
-      'segments',
-      'p2',
-      'maps',
-      'segments',
-      'a2',
-      'p3',
-      'maps',
-      'segments',
-      'a3'
+      const linksTexts = links.map(l => l.text());
+      expect(linksTexts).to.deep.equal(expectedLinks);
+    };
+
+    const routes = [
+      { route: '/', links: ['a1', 'a2', 'a3'] },
+      { route: '/a1', links: ['a1', 'p1', 'p2', 'a2', 'a3'] },
+      {
+        route: '/a1/p1',
+        links: ['a1', 'p1', 'maps', 'segments', 'p2', 'a2', 'a3']
+      },
+      { route: '/a2', links: ['a1', 'a2', 'p3', 'a3'] },
+      { route: '/a2/p3', links: ['a1', 'a2', 'p3', 'maps', 'segments', 'a3'] },
+      {
+        route: '/a2/p3/maps',
+        links: ['a1', 'a2', 'p3', 'maps', 'segments', 'a3']
+      },
+      { route: '/a3', links: ['a1', 'a2', 'a3'] },
+      { route: '/a3/p4', links: ['a1', 'a2', 'a3'] }
     ];
-    expect(linksTexts).to.deep.equal(expected);
+
+    routes.forEach(({ route, links }) => testRoutes(route, links));
   });
 
   it('correctly maps state to props', () => {
