@@ -40,6 +40,7 @@ describe('open action', () => {
       new TestStateBuilder()
         .withAgent('a', new TestAgentBuilder().build())
         .withAgent('aa', new TestAgentBuilder().withProcess(process).build())
+        .withSelectedMapExplorerSegment('lh')
         .build()
     );
 
@@ -51,7 +52,7 @@ describe('open action', () => {
       agent: 'aa',
       process: 'p',
       actions: process.actions,
-      parent: ''
+      parent: 'lh'
     });
   });
 
@@ -59,6 +60,7 @@ describe('open action', () => {
     getStateStub.returns(
       new TestStateBuilder()
         .withAgent('a', new TestAgentBuilder().build())
+        .withSelectedMapExplorerSegment('lh')
         .build()
     );
 

@@ -7,6 +7,7 @@ export default class {
     this.agents = {};
     this.maps = {};
     this.segments = {};
+    this.mapExplorer = {};
   }
 
   withAgent(name, agent) {
@@ -14,11 +15,17 @@ export default class {
     return this;
   }
 
+  withSelectedMapExplorerSegment(linkHash) {
+    this.mapExplorer = { linkHash: linkHash };
+    return this;
+  }
+
   build() {
     return {
       agents: this.agents,
       maps: this.maps,
-      segments: this.segments
+      segments: this.segments,
+      mapExplorer: this.mapExplorer
     };
   }
 }
