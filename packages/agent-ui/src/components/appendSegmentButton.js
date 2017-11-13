@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const AppendSegmentButton = ({ agent, process, id: mapId, openDialog }) => (
+const AppendSegmentButton = ({ agent, process, openDialog }) => (
   <div style={{ display: 'inline-block', position: 'absolute', right: 0 }}>
     <button
       onClick={e => {
         e.preventDefault();
-        openDialog(agent, process, mapId);
+        openDialog(agent, process);
       }}
     >
       Append
@@ -17,7 +17,6 @@ const AppendSegmentButton = ({ agent, process, id: mapId, openDialog }) => (
 AppendSegmentButton.propTypes = {
   agent: PropTypes.string.isRequired,
   process: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
   openDialog: PropTypes.func.isRequired
 };
 
