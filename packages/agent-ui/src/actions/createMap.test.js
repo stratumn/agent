@@ -12,17 +12,50 @@ import {
   closeCreateMapDialogAndClear
 } from './createMap';
 
+import {
+  TestStateBuilder,
+  TestAgentBuilder,
+  TestProcessBuilder
+} from '../test/builders/state';
+
 import * as actionTypes from '../constants/actionTypes';
 
 chai.use(sinonChai);
 
 describe('openCreateMapDialog action', () => {
-  it('contains agent and process names', () => {
-    const action = openCreateMapDialog('a', 'p');
-    expect(action).to.deep.equal({
+  let dispatchSpy;
+  let getStateStub;
+
+  beforeEach(() => {
+    dispatchSpy = sinon.spy();
+    getStateStub = sinon.stub();
+  });
+
+  it('finds init arguments from agent and process names', () => {
+    const state = new TestStateBuilder()
+      .withAgent(
+        'a',
+        new TestAgentBuilder()
+          .withProcess(
+            new TestProcessBuilder('p')
+              .withAction('message', ['title', 'author'])
+              .withAction('init', ['title', 'version'])
+              .build()
+          )
+          .build()
+      )
+      .build();
+    getStateStub.returns(state);
+
+    openCreateMapDialog('a', 'p')(dispatchSpy, getStateStub);
+
+    expect(getStateStub.callCount).to.equal(1);
+    expect(dispatchSpy.callCount).to.equal(1);
+    expect(dispatchSpy.getCall(0).args[0]).to.deep.equal({
       type: actionTypes.CREATE_MAP_DIALOG_OPEN,
       agent: 'a',
-      process: 'p'
+      process: 'p',
+      args: ['title', 'version']
     });
   });
 });

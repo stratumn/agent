@@ -20,11 +20,23 @@ const createMapClear = () => ({
   type: actionTypes.CREATE_MAP_CLEAR
 });
 
-export const openCreateMapDialog = (agentName, processName) => ({
-  type: actionTypes.CREATE_MAP_DIALOG_OPEN,
-  agent: agentName,
-  process: processName
-});
+export const openCreateMapDialog = (agentName, processName) => (
+  dispatch,
+  getState
+) => {
+  const { agents } = getState();
+  if (agents[agentName] && agents[agentName].processes[processName]) {
+    const { actions } = agents[agentName].processes[processName];
+    if (actions.init) {
+      dispatch({
+        type: actionTypes.CREATE_MAP_DIALOG_OPEN,
+        agent: agentName,
+        process: processName,
+        args: actions.init.args
+      });
+    }
+  }
+};
 
 export const closeCreateMapDialog = () => ({
   type: actionTypes.CREATE_MAP_DIALOG_CLOSE
