@@ -23,7 +23,8 @@ describe('<MapPage />', () => {
     process: {
       name: 'proc42'
     },
-    mapId: '42'
+    mapId: '42',
+    selectSegment: () => {}
   };
 
   it('should render a MapExplorer component', () => {
