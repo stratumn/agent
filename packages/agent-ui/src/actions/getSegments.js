@@ -1,10 +1,11 @@
 import { getAgent } from 'stratumn-agent-client';
 import * as actionTypes from '../constants/actionTypes';
 
-const getSegmentsRequest = (agent, process) => ({
+const getSegmentsRequest = (agent, process, options) => ({
   type: actionTypes.SEGMENTS_REQUEST,
   agent,
-  process
+  process,
+  options
 });
 
 const getSegmentsFailure = error => ({
@@ -19,7 +20,7 @@ const getSegmentsSuccess = segments => ({
 
 export default function(agentName, processName, options) {
   return (dispatch, getState) => {
-    dispatch(getSegmentsRequest(agentName, processName));
+    dispatch(getSegmentsRequest(agentName, processName, options));
     const { agents } = getState();
     if (agents[agentName]) {
       const { url } = agents[agentName];
