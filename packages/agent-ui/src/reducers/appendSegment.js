@@ -44,7 +44,8 @@ const appendSegmentRequestReducer = (state = {}, action) => {
       };
     case actionTypes.APPEND_SEGMENT_SUCCESS:
       return {
-        status: statusTypes.LOADED
+        status: statusTypes.LOADED,
+        linkHash: action.segment.meta.linkHash
       };
     case actionTypes.APPEND_SEGMENT_CLEAR:
       return {};

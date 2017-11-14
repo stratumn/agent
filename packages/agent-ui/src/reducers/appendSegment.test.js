@@ -103,9 +103,15 @@ describe('appendSegment reducer', () => {
   it('update status on success', () => {
     const { request } = appendSegment(
       {},
-      { type: actionTypes.APPEND_SEGMENT_SUCCESS }
+      {
+        type: actionTypes.APPEND_SEGMENT_SUCCESS,
+        segment: { meta: { linkHash: 'lh' } }
+      }
     );
-    expect(request).to.deep.equal({ status: statusTypes.LOADED });
+    expect(request).to.deep.equal({
+      status: statusTypes.LOADED,
+      linkHash: 'lh'
+    });
   });
 
   it('update status and error on fail', () => {
@@ -148,7 +154,8 @@ describe('appendSegment reducer', () => {
     validateState(failedState, statusTypes.FAILED);
 
     const successState = appendSegment(requestState, {
-      type: actionTypes.APPEND_SEGMENT_SUCCESS
+      type: actionTypes.APPEND_SEGMENT_SUCCESS,
+      segment: { meta: { linkHash: 'lh' } }
     });
     validateState(successState, statusTypes.LOADED);
   });

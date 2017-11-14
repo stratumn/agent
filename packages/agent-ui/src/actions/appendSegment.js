@@ -10,8 +10,9 @@ const appendSegmentFailure = error => ({
   error
 });
 
-const appendSegmentSuccess = () => ({
-  type: actionTypes.APPEND_SEGMENT_SUCCESS
+const appendSegmentSuccess = segment => ({
+  type: actionTypes.APPEND_SEGMENT_SUCCESS,
+  segment
 });
 
 const appendSegmentClear = () => ({
@@ -60,8 +61,8 @@ export const appendSegment = (...args) => (dispatch, getState) => {
         return proc.getSegment(parent);
       })
       .then(parentSegment => parentSegment[selectedAction](...args))
-      .then((/* segment */) => {
-        dispatch(appendSegmentSuccess());
+      .then(segment => {
+        dispatch(appendSegmentSuccess(segment));
         dispatch(closeDialog());
       })
       .catch(err => {

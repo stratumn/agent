@@ -6,14 +6,17 @@ import configureStore from 'redux-mock-store';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
+import { TestStateBuilder } from '../test/builders/state';
+
 import { ContentPage } from './contentPage';
 import { AgentsPage } from './agentsPage';
 import { AgentInfoPage } from './agentInfoPage';
 import { MapPage } from './mapPage';
 
 describe('<ContentPage />', () => {
+  const testState = new TestStateBuilder().build();
   const mockStore = configureStore();
-  const store = mockStore({ agents: {} });
+  const store = mockStore(testState);
 
   it('renders the <AgentsPage /> if no route information', () => {
     const defaultPage = mount(
