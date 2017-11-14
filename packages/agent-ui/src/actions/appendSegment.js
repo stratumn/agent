@@ -46,7 +46,7 @@ export const closeDialogAndClear = () => dispatch => {
   dispatch(closeDialog());
 };
 
-export const appendSegment = args => (dispatch, getState) => {
+export const appendSegment = (...args) => (dispatch, getState) => {
   dispatch(appendSegmentRequest());
   const {
     agents,
@@ -57,8 +57,9 @@ export const appendSegment = args => (dispatch, getState) => {
     return getAgent(url)
       .then(a => {
         const proc = a.getProcess(process);
-        return proc.createSegment(parent, selectedAction, ...args);
+        return proc.getSegment(parent);
       })
+      .then(parentSegment => parentSegment[selectedAction](...args))
       .then((/* segment */) => {
         dispatch(appendSegmentSuccess());
         dispatch(closeDialog());

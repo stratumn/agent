@@ -23,6 +23,7 @@ describe('<AppendSegmentDialog />', () => {
     show: true,
     actions: testActions,
     selectedAction: 'a2',
+    appendSegment: () => {},
     closeDialog: () => {},
     selectAction: () => {}
   };
@@ -114,5 +115,26 @@ describe('<AppendSegmentDialog />', () => {
 
     expect(selectActionSpy.callCount).to.equal(1);
     expect(selectActionSpy.getCall(0).args).to.deep.equal(['a1']);
+  });
+
+  it('appends a new segment on button click', () => {
+    const appendSegmentSpy = sinon.spy();
+    const dialog = mount(
+      <AppendSegmentDialog
+        {...requiredProps}
+        selectedAction="a1"
+        appendSegment={appendSegmentSpy}
+      />
+    );
+
+    const actionInputs = dialog.find('input');
+    expect(actionInputs).to.have.length(2);
+    actionInputs.at(0).instance().value = 'very';
+    actionInputs.at(1).instance().value = 'wow';
+
+    dialog.find('form').simulate('submit');
+
+    expect(appendSegmentSpy.callCount).to.equal(1);
+    expect(appendSegmentSpy.getCall(0).args).to.deep.equal(['very', 'wow']);
   });
 });

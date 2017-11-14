@@ -5,8 +5,9 @@ import { connect } from 'react-redux';
 import * as statusTypes from '../constants/status';
 
 import {
-  selectAppendSegmentAction,
-  closeAppendSegmentDialogAndClear
+  appendSegment as appendSegmentAction,
+  closeAppendSegmentDialogAndClear,
+  selectAppendSegmentAction
 } from '../actions';
 
 const buildActionInputs = args => {
@@ -33,6 +34,7 @@ export const AppendSegmentDialog = ({
   actions,
   selectedAction,
   error,
+  appendSegment,
   closeDialog,
   selectAction
 }) => {
@@ -80,7 +82,7 @@ export const AppendSegmentDialog = ({
         <form
           onSubmit={e => {
             e.preventDefault();
-            console.log(valueNodes.map(a => a.value.trim()));
+            appendSegment(...valueNodes.map(a => a.value.trim()));
           }}
         >
           <select
@@ -116,6 +118,7 @@ AppendSegmentDialog.propTypes = {
   /* eslint-enable react/forbid-prop-types */
   selectedAction: PropTypes.string,
   error: PropTypes.string,
+  appendSegment: PropTypes.func.isRequired,
   closeDialog: PropTypes.func.isRequired,
   selectAction: PropTypes.func.isRequired
 };
@@ -133,6 +136,8 @@ export function mapStateToProps({ appendSegment }) {
     };
   }
 
+  const { actions, selectedAction } = appendSegment.dialog;
+
   if (
     appendSegment.request &&
     appendSegment.request.error &&
@@ -140,18 +145,21 @@ export function mapStateToProps({ appendSegment }) {
   ) {
     return {
       show,
+      actions,
+      selectedAction,
       error: appendSegment.request.error.toString()
     };
   }
 
   return {
     show,
-    actions: appendSegment.dialog.actions,
-    selectedAction: appendSegment.dialog.selectedAction
+    actions,
+    selectedAction
   };
 }
 
 export default connect(mapStateToProps, {
-  selectAction: selectAppendSegmentAction,
-  closeDialog: closeAppendSegmentDialogAndClear
+  appendSegment: appendSegmentAction,
+  closeDialog: closeAppendSegmentDialogAndClear,
+  selectAction: selectAppendSegmentAction
 })(AppendSegmentDialog);
