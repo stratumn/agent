@@ -12,9 +12,9 @@ import {
 
 const buildActionInputs = args => {
   const argsValues = [...Array(args.length)];
-  const actionInputs = [];
+  const actionInputs = [...Array(args.length)];
   for (let i = 0; i < args.length; i += 1) {
-    actionInputs.push(
+    actionInputs[i] = (
       <input
         key={args[i]}
         placeholder={args[i]}
