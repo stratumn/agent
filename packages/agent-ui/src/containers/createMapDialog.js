@@ -40,9 +40,9 @@ export const CreateMapDialog = ({
   };
 
   const initArgs = [...Array(args.length)];
-  const initArgsWidgets = [];
+  const initArgsWidgets = [...Array(args.length)];
   for (let i = 0; i < args.length; i += 1) {
-    initArgsWidgets.push(
+    initArgsWidgets[i] = (
       <input
         key={args[i]}
         placeholder={args[i]}
