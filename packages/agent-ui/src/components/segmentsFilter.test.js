@@ -1,60 +1,57 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import { mount } from 'enzyme';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import history from '../store/history';
-import { SegmentsFilter } from './segmentsFilter';
+// import history from '../store/history';
+import SegmentsFilter from './segmentsFilter';
 
 chai.use(sinonChai);
 
-describe('<SegmentFilter />', () => {
+describe('<SegmentsFilter />', () => {
+  const submitSpy = sinon.spy();
+  const requiredProps = {
+    filters: {},
+    submitHandler: submitSpy
+  };
   const renderComponent = props =>
-    mount(
-      <MemoryRouter>
-        <SegmentsFilter {...props} />
-      </MemoryRouter>
-    );
-
-  let historyStub;
+    mount(<SegmentsFilter {...requiredProps} {...props} />);
 
   beforeEach(() => {
-    historyStub = sinon.stub(history, 'push');
+    submitSpy.reset();
   });
+  // let historyStub;
 
-  afterEach(() => {
-    historyStub.restore();
-  });
+  // beforeEach(() => {
+  //   historyStub = sinon.stub(history, 'push');
+  // });
+
+  // afterEach(() => {
+  //   historyStub.restore();
+  // });
 
   it('renders the form correctly', () => {
-    const props = {
-      pathname: '',
-      search: ''
-    };
-    const segmentsFilter = renderComponent(props);
+    const segmentsFilter = renderComponent({});
     expect(segmentsFilter.find('form')).to.have.lengthOf(1);
     expect(segmentsFilter.find('input')).to.have.lengthOf(3);
   });
 
-  it('pushes pathname to history on clear', () => {
+  it('submit empty filters on clear', () => {
     const props = {
-      pathname: 'foobar',
-      search: '?abc=1'
+      filters: { abc: 1 }
     };
     const segmentsFilter = renderComponent(props);
     const clearButton = segmentsFilter.find('[type="clear"]');
     expect(clearButton).to.have.lengthOf(1);
     clearButton.simulate('click');
-    expect(historyStub.callCount).to.equal(1);
-    expect(historyStub.getCall(0).args[0]).to.equal('foobar');
+    expect(submitSpy.callCount).to.equal(1);
+    expect(submitSpy.getCall(0).args[0]).to.deep.equal({});
   });
 
-  it('parses the search field and disregards irrelevant props', () => {
+  it('disregards irrelevant filters', () => {
     const props = {
-      pathname: 'foobar',
-      search: '?abc=1&foo=bar'
+      filters: { abc: 1, foo: 'bar' }
     };
     const segmentsFilter = renderComponent(props);
 
@@ -65,15 +62,17 @@ describe('<SegmentFilter />', () => {
     selectors.forEach(selector => {
       const input = segmentsFilter.find(selector);
       expect(input).to.have.lengthOf(1);
-      expect(input.props().defaultValue).to.be.undefined;
+      expect(input.props().value).to.be.equal('');
     });
   });
 
-  it('parses the search field and display correctly as default values', () => {
+  it('display filters correctly as default values', () => {
     const props = {
-      pathname: 'foobar',
-      search:
-        '?mapIds[]=aaa&mapIds[]=bbb&prevLinkHash=xyz&tags[]=foo&tags[]=bar'
+      filters: {
+        mapIds: ['aaa', 'bbb'],
+        prevLinkHash: 'xyz',
+        tags: ['foo', 'bar']
+      }
     };
     const segmentsFilter = renderComponent(props);
 
@@ -85,41 +84,36 @@ describe('<SegmentFilter />', () => {
     selectors.forEach((selector, idx) => {
       const input = segmentsFilter.find(selector);
       expect(input).to.have.lengthOf(1);
-      expect(input.props().defaultValue).to.be.equal(expected[idx]);
+      expect(input.props().value).to.be.equal(expected[idx]);
     });
   });
 
   it('does not fail when search has wrong format', () => {
     const props = {
-      pathname: 'foobar',
-      search: '?mapIds=aaa' // this is invalid because not an array
+      filters: { mapIds: 'aaa' } // this is invalid because not an array
     };
     expect(renderComponent(props)).to.have.lengthOf(1);
   });
 
   it('pushes the pathname with querystring on submit', () => {
     const props = {
-      pathname: 'foobar',
-      search:
-        '?mapIds[]=aaa&mapIds[]=bbb&prevLinkHash=xyz&tags[]=foo&tags[]=bar'
+      filters: {
+        mapIds: ['aaa', 'bbb'],
+        prevLinkHash: 'xyz',
+        tags: ['foo', 'bar']
+      }
     };
     const segmentsFilter = renderComponent(props);
 
     const submitButton = segmentsFilter.find('[type="submit"]');
     expect(submitButton).to.have.lengthOf(1);
     submitButton.simulate('submit');
-    expect(historyStub.callCount).to.equal(1);
-    expect(historyStub.getCall(0).args[0]).to.equal(
-      'foobar?mapIds%5B%5D=aaa&mapIds%5B%5D=bbb&tags%5B%5D=foo&tags%5B%5D=bar&prevLinkHash=xyz'
-    );
+    expect(submitSpy.callCount).to.equal(1);
+    expect(submitSpy.getCall(0).args[0]).to.deep.equal(props.filters);
   });
 
   it('handles change of input correctly', () => {
-    const props = {
-      pathname: 'foobar',
-      search: ''
-    };
-    const segmentsFilter = renderComponent(props);
+    const segmentsFilter = renderComponent({});
 
     const selectors = ['Map IDs', 'Prev link hash', 'Tags'].map(
       s => `[placeholder="${s}"]`
@@ -133,8 +127,10 @@ describe('<SegmentFilter />', () => {
     );
 
     segmentsFilter.find('[type="submit"]').simulate('submit');
-    expect(historyStub.getCall(0).args[0]).to.equal(
-      'foobar?mapIds%5B%5D=aa&mapIds%5B%5D=bb&tags%5B%5D=foo&tags%5B%5D=bar&prevLinkHash=xyz'
-    );
+    expect(submitSpy.getCall(0).args[0]).to.deep.equal({
+      mapIds: ['aa', 'bb'],
+      prevLinkHash: 'xyz',
+      tags: ['foo', 'bar']
+    });
   });
 });

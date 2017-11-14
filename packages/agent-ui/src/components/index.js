@@ -5,3 +5,4 @@
  */
 export { default as AppendSegmentButton } from './appendSegmentButton';
 export { default as CreateMapButton } from './createMapButton';
+export { default as SegmentsFilter } from './segmentsFilter';
