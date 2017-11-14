@@ -191,6 +191,7 @@ Available options are:
 - `batchSize`: size of each batch when loading all segments (default 20)
 - `mapIds`: return segments with specified map ID
 - `prevLinkHash`: return segments with specified previous link hash
+- `linkHashes`: return segments match one of the linkHashes (array)
 - `tags`: return segments that contains all the tags (array)
 
 ```javascript
