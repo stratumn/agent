@@ -4,7 +4,6 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-// import history from '../store/history';
 import SegmentsFilter from './segmentsFilter';
 
 chai.use(sinonChai);
@@ -21,15 +20,6 @@ describe('<SegmentsFilter />', () => {
   beforeEach(() => {
     submitSpy.reset();
   });
-  // let historyStub;
-
-  // beforeEach(() => {
-  //   historyStub = sinon.stub(history, 'push');
-  // });
-
-  // afterEach(() => {
-  //   historyStub.restore();
-  // });
 
   it('renders the form correctly', () => {
     const segmentsFilter = renderComponent({});
