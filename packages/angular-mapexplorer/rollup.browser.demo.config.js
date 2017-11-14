@@ -15,19 +15,15 @@ export default {
     babel(
       Object.assign(
         {
-          exclude: [
-            'node_modules/**',
-            '../mapexplorer-core/**',
-            '../agent-client-js/**',
-            'vendor/**'
-          ]
+          exclude: ['node_modules/**', '../**', 'vendor/**']
         },
         babelrc()
       )
     ),
     builtins(),
     nodeResolve({
-      preferBuiltins: true
+      preferBuiltins: true,
+      module: false
     }),
     commonjs({
       namedExports: {

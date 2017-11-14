@@ -25,6 +25,7 @@
     "angular-route": "~1.5.11",
     "angular-sanitize": "~1.5.11",
     "mapexplorer-core": "^2.0.1",
+    "stratumn-cs-validator": "0.1.0",
     "md-color-picker": "^0.2.6"
   },
   "devDependencies": {

@@ -14,16 +14,7 @@
   limitations under the License.
 */
 
-import merge from 'deepmerge';
-import { fromSegment } from 'stratumn-agent-client';
+import MapValidator from './MapValidator';
+import SegmentValidator from './SegmentValidator';
 
-export default function resolveLinks(segments) {
-  return Promise.all(
-    segments.map(segment => {
-      if (!segment.link.state) {
-        return fromSegment(segment).then(res => merge(res, segment));
-      }
-      return Promise.resolve(segment);
-    })
-  );
-}
+export { MapValidator, SegmentValidator };

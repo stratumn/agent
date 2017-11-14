@@ -1,19 +1,18 @@
 <li class="category" ng-class="[{ error: error, success: success }, (loading || loadingErrors) ? 'loading' : '']">
-    <div layout="row">
-        <md-progress-circular ng-show="loading || loadingErrors" md-mode="indeterminate" md-diameter="25"></md-progress-circular>
-        <h3 flex="grow">{{title}}</h3>
-        <span flex="grow"></span>
-        <div class="errorCount" ng-show="error && !(loading || loadingErrors)" ng-click="toggleErrors()" flex="grow">
-            <ng-pluralize count="errorMessages.length"
-                          when="{'0': 'No errors',
+  <div layout="row">
+    <md-progress-circular ng-show="loading || loadingErrors" md-mode="indeterminate" md-diameter="25"></md-progress-circular>
+    <h3 flex="grow">{{title}}</h3>
+    <span flex="grow"></span>
+    <div class="errorCount" ng-show="error && !(loading || loadingErrors)" ng-click="toggleErrors()" flex="grow">
+      <ng-pluralize count="errorMessages.length" when="{'0': 'No errors',
                          'one': '1 error',
                          'other': '{} errors'}">
-            </ng-pluralize>
-        </div>
+      </ng-pluralize>
     </div>
-    <div ng-show="errorsShowed" class="errors">
-        <ul>
-            <li ng-repeat="err in errorMessages">{{ err }}</li>
-        </ul>
-    </div>
+  </div>
+  <div ng-show="errorsShowed" class="errors">
+    <ul>
+      <li ng-repeat="err in errorMessages">{{ err }}</li>
+    </ul>
+  </div>
 </li>

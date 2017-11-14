@@ -1,0 +1,11 @@
+.DS_Store
+*.log
+*.pdf
+node_modules
+lib
+coverage
+_book
+dist
+.nyc_output
+coverage.lcov
+coverage

@@ -14,8 +14,23 @@
   limitations under the License.
 */
 
-import getAgent from './getAgent';
-import fromSegment from './fromSegment';
-import resolveLinks from './resolveLinks';
+import { MapValidator } from '../../src/index';
 
-export { getAgent, fromSegment, resolveLinks };
+import validMap from '../fixtures/fullMap.json';
+import validSegment from '../fixtures/validSegment.json';
+
+describe('MapValidator', () => {
+  function validate(map) {
+    return new MapValidator(map).validate();
+  }
+
+  describe('With a valid map', () => {
+    it('validates the linkHash', () =>
+      Promise.all(Object.values(validate(validMap))));
+  });
+
+  describe('With only a segment', () => {
+    it('validates the linkHash', () =>
+      Promise.all(Object.values(validate(validSegment))));
+  });
+});

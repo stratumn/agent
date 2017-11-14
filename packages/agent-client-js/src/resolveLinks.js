@@ -14,8 +14,16 @@
   limitations under the License.
 */
 
-import getAgent from './getAgent';
+import merge from 'deepmerge';
 import fromSegment from './fromSegment';
-import resolveLinks from './resolveLinks';
 
-export { getAgent, fromSegment, resolveLinks };
+export default function resolveLinks(segments) {
+  return Promise.all(
+    segments.map(segment => {
+      if (!segment.link.state) {
+        return fromSegment(segment).then(res => merge(res, segment));
+      }
+      return Promise.resolve(segment);
+    })
+  );
+}

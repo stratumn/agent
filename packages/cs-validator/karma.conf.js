@@ -12,11 +12,13 @@ module.exports = function configure(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'test/integration/init.js',
       'test/integration/*.test.js',
       'node_modules/babel-polyfill/dist/polyfill.js'
     ],
 
     preprocessors: {
+      'test/integration/init.js': ['rollup'],
       'test/integration/*.test.js': ['rollup']
     },
 
@@ -72,7 +74,7 @@ module.exports = function configure(config) {
     // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
-    browsers: ['PhantomJS', 'Chrome'],
+    browsers: ['Chrome', 'PhantomJS'],
 
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 60000,

@@ -14,23 +14,9 @@
   limitations under the License.
 */
 
-import { ChainValidator } from '../../src/index';
-
-import validMap from '../fixtures/fullMap.json';
-import validSegment from '../fixtures/validSegment.json';
-
-describe('ChainValidator', () => {
-  function validate(map) {
-    return new ChainValidator(map).validate();
+export default function parseIfJson(object) {
+  if (typeof object !== 'object') {
+    return JSON.parse(object);
   }
-
-  describe('With a valid map', () => {
-    it('validates the linkHash', () =>
-      Promise.all(Object.values(validate(validMap))));
-  });
-
-  describe('With only a segment', () => {
-    it('validates the linkHash', () =>
-      Promise.all(Object.values(validate(validSegment))));
-  });
-});
+  return object;
+}

@@ -19,7 +19,9 @@ export default {
   ],
   external: ['react', 'react-dom', 'prop-types'],
   plugins: [
-    resolve(),
+    resolve({
+      module: false
+    }),
     commonjs({
       namedExports: {
         '../agent-client-js/node_modules/qs/lib/index.js': ['stringify'],
@@ -31,7 +33,8 @@ export default {
       exclude: [
         'node_modules/**',
         '../mapexplorer-core/**',
-        '../agent-client-js/**'
+        '../agent-client-js/**',
+        '../cs-validator/**'
       ]
     })
   ]

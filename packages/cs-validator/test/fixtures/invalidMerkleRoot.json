@@ -1,0 +1,111 @@
+{
+  "link": {
+    "state": {
+      "gameId": "Point",
+      "nick": "Seb",
+      "address": "17htLPy4SdLxec5y55Zk4JPvqKvtUJLmS1",
+      "messages": [],
+      "rolls": 0
+    },
+    "meta": {
+      "mapId": "5770eeadd6a22a8f2bd2bbf6",
+      "agentHash":
+        "e0b0976355e77077905db39c8dee0879b82e24f962853fa50c87799f8e33d19f",
+      "stateHash":
+        "c30d47feab3b31632bbeb665833d7d4d72b9ad76e1e5e46e13b4a662111ef605",
+      "prevLinkHash":
+        "32fc2804fb82472a44cafdd325745706318d9bed958fef14b535d91fb9527287",
+      "action": "register",
+      "arguments": ["Seb", "17htLPy4SdLxec5y55Zk4JPvqKvtUJLmS1"]
+    }
+  },
+  "meta": {
+    "linkHash":
+      "5b597c841a72f4608e130217a16c1a3a33d4a55957f49b4f0d02b563a92ffc4f",
+    "evidences": [
+      {
+        "state": "COMPLETE",
+        "backend": "bcbatch",
+        "provider": "dummy",
+        "proof": {
+          "timestamp": 1507729618,
+          "batch": {
+            "merkleRoot":
+              "35b8052870a97136a2382b7d7d5528feb3372be1b0ab3414eeb917c2245885d8",
+            "merklePath": [
+              {
+                "left":
+                  "876d239a250ac52aa6ec5d3493b3f881059fc1398efc9a22edf073cf3f5b64f6",
+                "right":
+                  "5b597c841a72f4608e130217a16c1a3a33d4a55957f49b4f0d02b563a92ffc4f",
+                "parent":
+                  "11e87fc7caca35dbcfe6124bdf1bfec9dcdc7aefff6db3369de3bf05d03f0265"
+              },
+              {
+                "left":
+                  "7872012e036d691f27473112cebe1316ea3da0c00a305b428a645f781ed93549",
+                "right":
+                  "11e87fc7caca35dbcfe6124bdf1bfec9dcdc7aefff6db3369de3bf05d03f0265",
+                "parent":
+                  "5b97214099f6a791940fb16acacde29b3d41301bc35484012171b69b73532d11"
+              },
+              {
+                "left":
+                  "5fc38c900554f137528f21a6371639e242fe1f633865d6c67b89b434862891ad",
+                "right":
+                  "5b97214099f6a791940fb16acacde29b3d41301bc35484012171b69b73532d11",
+                "parent":
+                  "34cd7b3fec935f1037b8c8308db09b70255caa7db56c7cfb9b7e34e19682c0ca"
+              },
+              {
+                "left":
+                  "32fc2804fb82472a44cafdd325745706318d9bed958fef14b535d91fb9527287",
+                "right":
+                  "34cd7b3fec935f1037b8c8308db09b70255caa7db56c7cfb9b7e34e19682c0ca",
+                "parent":
+                  "3333e49db57ec5ea1ec37c21ad9d5de4f10c550fe858f88f66feaa8e01e85bff"
+              },
+              {
+                "left":
+                  "3333e49db57ec5ea1ec37c21ad9d5de4f10c550fe858f88f66feaa8e01e85bff",
+                "parent":
+                  "3333e49db57ec5ea1ec37c21ad9d5de4f10c550fe858f88f66feaa8e01e85bff"
+              },
+              {
+                "left":
+                  "b337d23025b9c5a15b5645a9473c3b3ff904b9c1a25d7fb617c19944082ca6f8",
+                "right":
+                  "3333e49db57ec5ea1ec37c21ad9d5de4f10c550fe858f88f66feaa8e01e85bff",
+                "parent":
+                  "18d5ff8abb9c02107b1f54096563b46f37d0a3b9acb93fb82c6eee2a99fb4013"
+              },
+              {
+                "left":
+                  "a6893894a1f37d9e062e1fb26322a59dcac2c75d1096ac84fd95c1976d13bc64",
+                "right":
+                  "18d5ff8abb9c02107b1f54096563b46f37d0a3b9acb93fb82c6eee2a99fb4013",
+                "parent":
+                  "35b8052870a97136a2382b7d7d5528feb3372be1b0ab3414eeb917c2245885d9"
+              }
+            ]
+          },
+          "txid":
+            "2a443211e871f58a6ee5a93e62ce36cac2ddfc0f05a6bec1e7b11aa8d5e4cf38"
+        }
+      }
+    ],
+    "application": "snake-eyes",
+    "applicationLocation": "https://snake-eyes.stratumn.net",
+    "linkLocation":
+      "https://snake-eyes.stratumn.net/links/5b597c841a72f4608e130217a16c1a3a33d4a55957f49b4f0d02b563a92ffc4f",
+    "xStratumn": {
+      "totalTimeMs": 5.794858,
+      "loadApplicationCache": "hit",
+      "loadApplicationTimeMs": 0.025498,
+      "loadOwnerIdCache": "hit",
+      "loadOwnerIdTimeMs": 0.008628,
+      "loadInputLinkCache": "miss",
+      "loadInputLinkTimeMs": 5.6602559999999995
+    }
+  }
+}
