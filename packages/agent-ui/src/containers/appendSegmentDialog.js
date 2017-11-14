@@ -11,10 +11,9 @@ import {
 } from '../actions';
 
 const buildActionInputs = args => {
-  const argsValues = [];
+  const argsValues = [...Array(args.length)];
   const actionInputs = [];
   for (let i = 0; i < args.length; i += 1) {
-    argsValues.push(undefined);
     actionInputs.push(
       <input
         key={args[i]}
