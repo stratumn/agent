@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import getAgent from './getAgent';
-import fromSegment from './fromSegment';
-import resolveLinks from './resolveLinks';
-
-export { getAgent, fromSegment, resolveLinks };
+export default function wrap(arrayOrObject) {
+  if (arrayOrObject instanceof Array) {
+    return arrayOrObject;
+  }
+  return [arrayOrObject];
+}

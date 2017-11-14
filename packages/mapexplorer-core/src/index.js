@@ -14,12 +14,17 @@
   limitations under the License.
 */
 
-export { default as ChainTreeBuilder } from './ChainTreeBuilder';
-export { defaultOptions } from './ChainTreeBuilder';
-export { default as ChainTree } from './ChainTree';
-export { default as ChainValidator } from './ChainValidator';
-export { default as SegmentValidator } from './SegmentValidator';
-export { default as MerklePathTree } from './MerklePathTree';
-export { default as compactHash } from './compactHash';
-export { default as parseChainscript } from './parseChainscript';
-export { default as resolveLinks } from './resolveLinks';
+import ChainTreeBuilder, { defaultOptions } from './ChainTreeBuilder';
+import ChainTree from './ChainTree';
+import MerklePathTree from './MerklePathTree';
+import compactHash from './compactHash';
+import parseChainscript from './parseChainscript';
+
+export {
+  ChainTreeBuilder,
+  defaultOptions,
+  ChainTree,
+  MerklePathTree,
+  compactHash,
+  parseChainscript
+};

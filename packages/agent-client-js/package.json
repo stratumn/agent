@@ -55,6 +55,7 @@
   "dependencies": {
     "httpplease": "^0.16.4",
     "qs": "stratumn/qs#rename-formats-default",
+    "deepmerge": "2.0.1",
     "setimmediate": "^1.0.5"
   },
   "resolutions": {

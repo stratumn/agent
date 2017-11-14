@@ -11,14 +11,19 @@ const plugins = [
   babel(
     Object.assign(
       {
-        exclude: ['node_modules/**', '../agent-client-js/**']
+        exclude: [
+          'node_modules/**',
+          '../agent-client-js/**',
+          '../**/node_modules/**'
+        ]
       },
       babelrc()
     )
   ),
   builtins(),
   nodeResolve({
-    browser: true
+    browser: true,
+    module: false
   }),
   commonjs({
     namedExports: {

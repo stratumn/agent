@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ChainValidator } from 'mapexplorer-core';
+import { MapValidator } from 'stratumn-cs-validator';
 
 export default class MapValidatorService {
   constructor($q) {
@@ -22,7 +22,7 @@ export default class MapValidatorService {
   }
 
   validate(chainscript) {
-    return this.$q.when(new ChainValidator(chainscript).validate());
+    return this.$q.when(new MapValidator(chainscript).validate());
   }
 }
 

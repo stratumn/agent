@@ -17,7 +17,8 @@ module.exports = [
         exclude: [
           'vendor/*',
           'node_modules/**',
-          '../mapexplorer-core/node_modules/**',
+          '../mapexplorer-core/**',
+          '../cs-validator/**',
           '../agent-client-js/**'
         ]
       },
@@ -27,6 +28,7 @@ module.exports = [
   builtins(),
   nodeResolve({
     browser: true,
+    module: false,
     externals: [
       'angular',
       'angular-animate',
