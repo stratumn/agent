@@ -9,7 +9,13 @@ import {
   closeCreateMapDialogAndClear
 } from '../actions';
 
-export const CreateMapDialog = ({ show, error, closeDialog, createMap }) => {
+export const CreateMapDialog = ({
+  show,
+  args,
+  error,
+  closeDialog,
+  createMap
+}) => {
   if (!show) {
     return null;
   }
@@ -33,7 +39,19 @@ export const CreateMapDialog = ({ show, error, closeDialog, createMap }) => {
     padding: 30
   };
 
-  let mapTitle;
+  const initArgs = [...Array(args.length)];
+  const initArgsWidgets = [...Array(args.length)];
+  for (let i = 0; i < args.length; i += 1) {
+    initArgsWidgets[i] = (
+      <input
+        key={args[i]}
+        placeholder={args[i]}
+        ref={node => {
+          initArgs[i] = node;
+        }}
+      />
+    );
+  }
 
   return (
     <div className="backdrop" style={backdropStyle}>
@@ -52,18 +70,10 @@ export const CreateMapDialog = ({ show, error, closeDialog, createMap }) => {
         <form
           onSubmit={e => {
             e.preventDefault();
-            if (!mapTitle.value.trim()) {
-              return;
-            }
-            createMap(mapTitle.value.trim());
+            createMap(...initArgs.map(arg => arg.value.trim()));
           }}
         >
-          <input
-            placeholder="title"
-            ref={node => {
-              mapTitle = node;
-            }}
-          />
+          {initArgsWidgets}
           <button type="submit">Create</button>
           {error && <div className="error">{error}</div>}
         </form>
@@ -73,36 +83,36 @@ export const CreateMapDialog = ({ show, error, closeDialog, createMap }) => {
 };
 
 CreateMapDialog.defaultProps = {
+  args: [],
   error: ''
 };
 CreateMapDialog.propTypes = {
   show: PropTypes.bool.isRequired,
+  args: PropTypes.arrayOf(PropTypes.string.isRequired),
   error: PropTypes.string,
   createMap: PropTypes.func.isRequired,
   closeDialog: PropTypes.func.isRequired
 };
 
-export function mapStateToProps(state) {
-  const show = !!(
-    state.createMap &&
-    state.createMap.dialog &&
-    state.createMap.dialog.show
-  );
+export function mapStateToProps({ createMap }) {
+  const show = !!(createMap && createMap.dialog && createMap.dialog.show);
+
+  if (!show) return { show };
 
   if (
-    show &&
-    state.createMap.request &&
-    state.createMap.request.error &&
-    state.createMap.request.status === statusTypes.FAILED
+    createMap.request &&
+    createMap.request.error &&
+    createMap.request.status === statusTypes.FAILED
   ) {
     return {
       show,
-      error: state.createMap.request.error.toString()
+      error: createMap.request.error.toString()
     };
   }
 
   return {
-    show
+    show,
+    args: createMap.dialog.args
   };
 }
 

@@ -14,13 +14,16 @@ chai.use(sinonChai);
 describe('<CreateMapDialog />', () => {
   const requiredProps = {
     show: true,
+    args: ['title'],
     createMap: () => {},
     closeDialog: () => {}
   };
 
   it('learns to show dialog from state', () => {
-    const props = mapStateToProps({ createMap: { dialog: { show: true } } });
-    expect(props).to.deep.equal({ show: true });
+    const props = mapStateToProps({
+      createMap: { dialog: { show: true, args: ['title'] } }
+    });
+    expect(props).to.deep.equal({ show: true, args: ['title'] });
   });
 
   it('does not show dialog if state missing', () => {
@@ -63,28 +66,31 @@ describe('<CreateMapDialog />', () => {
     expect(closeDialogSpy.callCount).to.equal(1);
   });
 
-  it('provides a button to create a new map', () => {
+  it('creates map with init method arguments', () => {
     const createMapSpy = sinon.spy();
     const dialog = mount(
-      <CreateMapDialog {...requiredProps} createMap={createMapSpy} />
+      <CreateMapDialog
+        {...requiredProps}
+        args={['title', 'version']}
+        createMap={createMapSpy}
+      />
     );
 
-    const mapTitle = dialog.find('input').at(0);
-    mapTitle.instance().value = '    maps are awesome   ';
+    expect(dialog.find('input')).to.have.length(2);
+    const titleInput = dialog.find('input').at(0);
+    const versionInput = dialog.find('input').at(1);
+    expect(titleInput.props().placeholder).to.equal('title');
+    expect(versionInput.props().placeholder).to.equal('version');
+
+    titleInput.instance().value = '    maps are awesome    ';
+    versionInput.instance().value = '42';
 
     dialog.find('form').simulate('submit');
     expect(createMapSpy.callCount).to.equal(1);
-    expect(createMapSpy.getCall(0).args[0]).to.equal('maps are awesome');
-  });
-
-  it('does not create a new map if title is missing', () => {
-    const createMapSpy = sinon.spy();
-    const dialog = mount(
-      <CreateMapDialog {...requiredProps} createMap={createMapSpy} />
-    );
-
-    dialog.find('form').simulate('submit');
-    expect(createMapSpy.callCount).to.equal(0);
+    expect(createMapSpy.getCall(0).args).to.deep.equal([
+      'maps are awesome',
+      '42'
+    ]);
   });
 
   it('displays error message if creating map fails', () => {
