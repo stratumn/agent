@@ -77,29 +77,13 @@ describe('<CreateMapDialog />', () => {
     );
 
     expect(dialog.find('input')).to.have.length(2);
-    expect(
-      dialog
-        .find('input')
-        .at(0)
-        .props().placeholder
-    ).to.equal('title');
-    dialog
-      .find('input')
-      .at(0)
-      .instance().value =
-      '    maps are awesome    ';
+    const titleInput = dialog.find('input').at(0);
+    const versionInput = dialog.find('input').at(1);
+    expect(titleInput.props().placeholder).to.equal('title');
+    expect(versionInput.props().placeholder).to.equal('version');
 
-    expect(
-      dialog
-        .find('input')
-        .at(1)
-        .props().placeholder
-    ).to.equal('version');
-    dialog
-      .find('input')
-      .at(1)
-      .instance().value =
-      '42';
+    titleInput.instance().value = '    maps are awesome    ';
+    versionInput.instance().value = '42';
 
     dialog.find('form').simulate('submit');
     expect(createMapSpy.callCount).to.equal(1);
