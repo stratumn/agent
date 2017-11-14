@@ -19,7 +19,6 @@ import { transition } from 'd3-transition';
 import { easeLinear } from 'd3-ease';
 import { select, selectAll, event } from 'd3-selection';
 import { zoom } from 'd3-zoom';
-import { max } from 'd3-array';
 import { makeLink, finalLink, translate } from './treeUtils';
 import parseChainscript from './parseChainscript';
 import { findExtraLinks, findExtraNodes, loadRef } from './nodes';
@@ -157,7 +156,7 @@ export default class ChainTree {
   initTree(root, extraNodes) {
     const nodes = root ? root.descendants() : [];
     const polygon = this.options.polygonSize;
-    const maxDepth = max(nodes, x => x.depth) || 0;
+    const maxDepth = Math.max(nodes, x => x.depth) || 0;
     const treeWidth =
       maxDepth * (polygon.width + this.options.getArrowLength()) +
       this.options.getArrowLength();

@@ -19,6 +19,7 @@ export default {
             'node_modules/**',
             '../mapexplorer-core/**',
             '../agent-client-js/**',
+            '../cs-validator/**',
             'vendor/**'
           ]
         },
@@ -27,7 +28,8 @@ export default {
     ),
     builtins(),
     nodeResolve({
-      preferBuiltins: true
+      preferBuiltins: true,
+      module: false
     }),
     commonjs({
       namedExports: {

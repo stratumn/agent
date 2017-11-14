@@ -18,7 +18,8 @@ module.exports = [
           'vendor/*',
           'node_modules/**',
           '../mapexplorer-core/node_modules/**',
-          '../agent-client-js/**'
+          '../agent-client-js/**',
+          '../cs-validator/**'
         ]
       },
       babelrc()
@@ -27,6 +28,7 @@ module.exports = [
   builtins(),
   nodeResolve({
     browser: true,
+    module: false,
     externals: [
       'angular',
       'angular-animate',

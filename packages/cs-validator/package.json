@@ -1,9 +1,9 @@
 {
-  "name": "mapexplorer-core",
-  "version": "2.0.1",
+  "name": "stratumn-cs-validator",
+  "version": "0.1.0",
   "description": "Core library for building Map Explorer components",
-  "main": "lib/mapexplorer-core.js",
-  "module": "lib/mapexplorer-core.mjs",
+  "main": "lib/stratumn-cs-validator.js",
+  "module": "lib/stratumn-cs-validator.mjs",
   "scripts": {
     "test:unit":
       "mocha --compilers js:babel-register  --require should test/unit/*",
@@ -17,13 +17,13 @@
       "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js",
     "prepublish": "npm run build",
     "postpublish":
-      "aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core.js --region 'eu-west-1' && aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core-${npm_package_version}.js --region 'eu-west-1'"
+      "aws s3 cp dist/stratumn-cs-validator.js s3://stratumn-libs/stratumn-cs-validator.js --region 'eu-west-1' && aws s3 cp dist/stratumn-cs-validator.min.js s3://stratumn-libs/stratumn-cs-validator.min.js --region 'eu-west-1' && aws s3 cp dist/stratumn-cs-validator.js s3://stratumn-libs/stratumn-cs-validator-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/stratumn-cs-validator.min.js s3://stratumn-libs/stratumn-cs-validator-${npm_package_version}.min.js --region 'eu-west-1'"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/stratumn/indigo-js.git"
   },
-  "keywords": ["stratumn", "blockchain", "mapexplorer", "chainscript"],
+  "keywords": ["stratumn", "blockchain", "validator", "chainscript"],
   "author": "Stratumn Team",
   "license": "Apache-2.0",
   "bugs": {
@@ -50,7 +50,7 @@
     "mocha": "^2.4.5",
     "nyc": "^11.2.1",
     "rimraf": "^2.5.2",
-    "rollup": "^0.50.0",
+    "rollup": "^0.48.2",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.0.0",
     "rollup-plugin-istanbul": "^1.1.0",
@@ -60,17 +60,14 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-uglify": "^2.0.1",
     "should": "^8.2.2",
-    "zock": "^0.2.6",
-    "stratumn-agent": "^0.18.3"
+    "xhr-mock": "^1.7.0",
+    "zock": "^0.2.6"
   },
   "dependencies": {
-    "d3-array": "^1.0.0",
-    "d3-ease": "^1.0.0",
-    "d3-hierarchy": "^1.0.0",
-    "d3-selection": "^1.0.0",
-    "d3-transition": "^1.0.1",
-    "d3-zoom": "^1.0.2",
-    "stratumn-agent-client": "^3.0.2",
-    "stratumn-cs-validator": "0.1.0"
+    "canonical-json": "0.0.3",
+    "httpplease": "^0.16.4",
+    "deepmerge": "2.0.1",
+    "js-sha256": "^0.3.0",
+    "stratumn-agent-client": "^3.0.2"
   }
 }

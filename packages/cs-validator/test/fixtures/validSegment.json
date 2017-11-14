@@ -1,0 +1,151 @@
+{
+  "link": {
+    "state": {
+      "gameId": "Point",
+      "nick": "Seb",
+      "address": "17htLPy4SdLxec5y55Zk4JPvqKvtUJLmS1",
+      "messages": [],
+      "rolls": 0
+    },
+    "meta": {
+      "mapId": "5770eeadd6a22a8f2bd2bbf6",
+      "agentHash":
+        "e0b0976355e77077905db39c8dee0879b82e24f962853fa50c87799f8e33d19f",
+      "stateHash":
+        "c30d47feab3b31632bbeb665833d7d4d72b9ad76e1e5e46e13b4a662111ef604",
+      "prevLinkHash":
+        "32fc2804fb82472a44cafdd325745706318d9bed958fef14b535d91fb9527287",
+      "action": "register",
+      "arguments": ["Seb", "17htLPy4SdLxec5y55Zk4JPvqKvtUJLmS1"]
+    }
+  },
+  "meta": {
+    "linkHash":
+      "5b597c841a72f4608e130217a16c1a3a33d4a55957f49b4f0d02b563a92ffc4f",
+    "evidences": [
+      {
+        "state": "COMPLETE",
+        "backend": "TMPop",
+        "provider": "test-chain-qcaYsP",
+        "proof": {
+          "original": {
+            "blockHeight": 161,
+            "header": {
+              "chain_id": "test-chain-qcaYsP",
+              "height": 162,
+              "time": 1507729619,
+              "num_txs": 1,
+              "last_block_id": {
+                "hash": "DiGdxqs7Wa96A2bPZ3PH0MmR32M=",
+                "parts": {
+                  "total": 1,
+                  "hash": "CrfUvymrQC/hmByvVfwyaRLOs60="
+                }
+              },
+              "last_commit_hash": "xr9VIk8HUi9/3o8rvqkxtj67znY=",
+              "data_hash": "SJBoSB+1arNisScitiPq4SL4bCk=",
+              "app_hash": "vBoJ6l7cuGNeJzT1pHy6Vge39YU="
+            },
+            "merkleProof": {
+              "LeafHash": "UxHFnsH6OpsajdnKkLzDLCwmSfQ=",
+              "InnerNodes": [
+                {
+                  "Height": 1,
+                  "Size": 2,
+                  "Left": "",
+                  "Right": "H9Bpn7253lN2Wf5dB/YlrQj4MRA="
+                },
+                {
+                  "Height": 2,
+                  "Size": 4,
+                  "Left": "",
+                  "Right": "qG+8tH573onSmA+d/rSdmWngIBc="
+                }
+              ],
+              "RootHash": "vBoJ6l7cuGNeJzT1pHy6Vge39YU="
+            },
+            "signatures": null
+          },
+          "current": {
+            "blockHeight": 26589,
+            "header": {
+              "chain_id": "test-chain-qcaYsP",
+              "height": 26590,
+              "time": 1508144436,
+              "last_block_id": {
+                "hash": "oo6c8+qqplexzM2EAS1fEvleFbs=",
+                "parts": {
+                  "total": 1,
+                  "hash": "VABhREUIj6+3rO5ZoLLEwr1n2ME="
+                }
+              },
+              "last_commit_hash": "6DCHwSYpvYfYUWirEUNwtcEN0vY=",
+              "app_hash": "HAlV4NV4/YeHM9Swn/N7fxRLq7Q="
+            },
+            "merkleProof": {
+              "LeafHash": "UxHFnsH6OpsajdnKkLzDLCwmSfQ=",
+              "InnerNodes": [
+                {
+                  "Height": 1,
+                  "Size": 2,
+                  "Left": "VK87+SPiIYS2SMgFn0+YKNbcrqY=",
+                  "Right": ""
+                },
+                {
+                  "Height": 3,
+                  "Size": 5,
+                  "Left": "",
+                  "Right": "1OFJQPcT1g2U1kxfx/GHzAgJicI="
+                },
+                {
+                  "Height": 4,
+                  "Size": 12,
+                  "Left": "",
+                  "Right": "FGQMWDyJ4puWCSL0tV7sXiuNfD0="
+                }
+              ],
+              "RootHash": "HAlV4NV4/YeHM9Swn/N7fxRLq7Q="
+            },
+            "signatures": null
+          }
+        }
+      },
+      {
+        "state": "COMPLETE",
+        "backend": "dummy",
+        "provider": "dummy",
+        "proof": {
+          "timestamp": 1507729618
+        }
+      },
+      {
+        "state": "COMPLETE",
+        "backend": "bcbatch",
+        "provider": "dummytimestamper",
+        "proof": {
+          "batch": {
+            "timestamp": 1507729626,
+            "merkleRoot":
+              "35b8052870a97136a2382b7d7d5528feb3372be1b0ab3414eeb917c2245885d9",
+            "merklePath": []
+          },
+          "txid":
+            "2a443211e871f58a6ee5a93e62ce36cac2ddfc0f05a6bec1e7b11aa8d5e4cf38"
+        }
+      }
+    ],
+    "application": "snake-eyes",
+    "applicationLocation": "https://snake-eyes.stratumn.net",
+    "linkLocation":
+      "https://snake-eyes.stratumn.net/links/5b597c841a72f4608e130217a16c1a3a33d4a55957f49b4f0d02b563a92ffc4f",
+    "xStratumn": {
+      "totalTimeMs": 5.794858,
+      "loadApplicationCache": "hit",
+      "loadApplicationTimeMs": 0.025498,
+      "loadOwnerIdCache": "hit",
+      "loadOwnerIdTimeMs": 0.008628,
+      "loadInputLinkCache": "miss",
+      "loadInputLinkTimeMs": 5.6602559999999995
+    }
+  }
+}

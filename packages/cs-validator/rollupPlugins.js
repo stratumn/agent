@@ -14,8 +14,7 @@ const plugins = [
         exclude: [
           'node_modules/**',
           '../**/node_modules/**',
-          '../agent-client-js/**',
-          '../cs-validator/**'
+          '../agent-client-js/**'
         ]
       },
       babelrc()
@@ -29,20 +28,7 @@ const plugins = [
   commonjs({
     namedExports: {
       '../agent-client-js/node_modules/qs/lib/index.js': ['stringify'],
-      'node_modules/qs/lib/index.js': ['stringify'],
-      'node_modules/d3-hierarchy/build/d3-hierarchy.js': [
-        'tree',
-        'hierarchy',
-        'stratify'
-      ],
-      'node_modules/d3-selection/build/d3-selection.js': [
-        'select',
-        'event',
-        'selectAll'
-      ],
-      'node_modules/d3-zoom/build/d3-zoom.js': ['zoom'],
-      'node_modules/d3-transition/build/d3-transition.js': ['transition'],
-      'node_modules/d3-ease/build/d3-ease.js': ['easeLinear']
+      'node_modules/qs/lib/index.js': ['stringify']
     }
   }),
   globals()

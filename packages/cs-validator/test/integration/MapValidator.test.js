@@ -14,9 +14,23 @@
   limitations under the License.
 */
 
-export { default as ChainTreeBuilder } from './ChainTreeBuilder';
-export { defaultOptions } from './ChainTreeBuilder';
-export { default as ChainTree } from './ChainTree';
-export { default as MerklePathTree } from './MerklePathTree';
-export { default as compactHash } from './compactHash';
-export { default as parseChainscript } from './parseChainscript';
+import { MapValidator } from '../../src/index';
+
+import validMap from '../fixtures/fullMap.json';
+import validSegment from '../fixtures/validSegment.json';
+
+describe('MapValidator', () => {
+  function validate(map) {
+    return new MapValidator(map).validate();
+  }
+
+  describe('With a valid map', () => {
+    it('validates the linkHash', () =>
+      Promise.all(Object.values(validate(validMap))));
+  });
+
+  describe('With only a segment', () => {
+    it('validates the linkHash', () =>
+      Promise.all(Object.values(validate(validSegment))));
+  });
+});

@@ -19,7 +19,7 @@ import resolveLinks from './resolveLinks';
 import wrap from './wrap';
 import parseIfJson from './parseIfJson';
 
-export default class ChainValidator {
+export default class MapValidator {
   constructor(chainscript) {
     this.chainscript = chainscript;
     this.errors = {

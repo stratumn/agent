@@ -14,12 +14,10 @@
   limitations under the License.
 */
 
+import { resolveLinks, wrap, parseIfJson } from 'stratumn-cs-validator';
 import { getAgent } from 'stratumn-agent-client';
 import ChainTree from './ChainTree';
 import compactHash from './compactHash';
-import resolveLinks from './resolveLinks';
-import wrap from './wrap';
-import parseIfJson from './parseIfJson';
 import tagsSet from './tagsSet';
 
 function load(map) {
