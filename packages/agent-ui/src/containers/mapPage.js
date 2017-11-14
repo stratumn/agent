@@ -6,7 +6,13 @@ import { MapExplorer } from 'react-mapexplorer';
 
 import { selectMapSegment } from '../actions';
 
-export const MapPage = ({ agent, process, mapId, selectSegment }) => {
+export const MapPage = ({
+  agent,
+  process,
+  mapId,
+  lastLinkHash,
+  selectSegment
+}) => {
   if (!agent.url) {
     return (
       <div className="error">
@@ -18,6 +24,7 @@ export const MapPage = ({ agent, process, mapId, selectSegment }) => {
   return (
     <div>
       <MapExplorer
+        key={lastLinkHash}
         agentUrl={agent.url}
         process={process.name}
         mapId={mapId}
@@ -27,6 +34,9 @@ export const MapPage = ({ agent, process, mapId, selectSegment }) => {
   );
 };
 
+MapPage.defaultProps = {
+  lastLinkHash: 'none'
+};
 MapPage.propTypes = {
   agent: PropTypes.shape({
     name: PropTypes.string.isRequired,
@@ -36,10 +46,12 @@ MapPage.propTypes = {
     name: PropTypes.string.isRequired
   }).isRequired,
   mapId: PropTypes.string.isRequired,
+  lastLinkHash: PropTypes.string,
   selectSegment: PropTypes.func.isRequired
 };
 
 export function mapStateToProps(state, ownProps) {
+  const { appendSegment: { request: { linkHash } } } = state;
   const {
     match: { params: { agent: agentName, process: processName, id: mapId } }
   } = ownProps;
@@ -58,7 +70,8 @@ export function mapStateToProps(state, ownProps) {
   return {
     agent,
     process,
-    mapId
+    mapId,
+    lastLinkHash: linkHash
   };
 }
 

@@ -40,6 +40,7 @@ describe('open action', () => {
       new TestStateBuilder()
         .withAgent('a', new TestAgentBuilder().build())
         .withAgent('aa', new TestAgentBuilder().withProcess(process).build())
+        .withSelectedMapExplorerSegment('lh')
         .build()
     );
 
@@ -51,7 +52,7 @@ describe('open action', () => {
       agent: 'aa',
       process: 'p',
       actions: process.actions,
-      parent: ''
+      parent: 'lh'
     });
   });
 
@@ -59,6 +60,7 @@ describe('open action', () => {
     getStateStub.returns(
       new TestStateBuilder()
         .withAgent('a', new TestAgentBuilder().build())
+        .withSelectedMapExplorerSegment('lh')
         .build()
     );
 
@@ -103,18 +105,18 @@ describe('selectAction action', () => {
 
 describe('appendSegment action', () => {
   let stratumnClientStub;
-  let createSegmentStub;
+  let getSegmentStub;
   let dispatchSpy;
   let getStateStub;
 
   beforeEach(() => {
     dispatchSpy = sinon.spy();
 
-    createSegmentStub = sinon.stub();
+    getSegmentStub = sinon.stub();
     stratumnClientStub = sinon.stub(StratumnAgentClient, 'getAgent');
     stratumnClientStub.resolves({
       getProcess: () => ({
-        createSegment: createSegmentStub
+        getSegment: getSegmentStub
       })
     });
 
@@ -151,7 +153,7 @@ describe('appendSegment action', () => {
   };
 
   it('dispatches a failure action on failure', () => {
-    createSegmentStub.rejects('Unreachable');
+    getSegmentStub.rejects('Unreachable');
 
     return appendSegment(['bob', 'loves pancakes'])(
       dispatchSpy,
@@ -165,18 +167,20 @@ describe('appendSegment action', () => {
   });
 
   it('closes dialog on success', () => {
-    createSegmentStub.resolves({ meta: { linkHash: 'wowSuchHash' } });
+    const segmentSendActionSpy = sinon.spy();
+    getSegmentStub.resolves({ send: segmentSendActionSpy });
 
-    return appendSegment(['jim', 'hates pancakes'])(
+    return appendSegment('jim', 'hates pancakes')(
       dispatchSpy,
       getStateStub
     ).then(() => {
       expect(getStateStub.callCount).to.equal(1);
 
-      expect(createSegmentStub.callCount).to.equal(1);
-      expect(createSegmentStub.getCall(0).args).to.deep.equal([
-        'l',
-        'send',
+      expect(getSegmentStub.callCount).to.equal(1);
+      expect(getSegmentStub.getCall(0).args).to.deep.equal(['l']);
+
+      expect(segmentSendActionSpy.callCount).to.equal(1);
+      expect(segmentSendActionSpy.getCall(0).args).to.deep.equal([
         'jim',
         'hates pancakes'
       ]);

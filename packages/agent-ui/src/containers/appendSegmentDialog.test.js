@@ -23,7 +23,9 @@ describe('<AppendSegmentDialog />', () => {
     show: true,
     actions: testActions,
     selectedAction: 'a2',
-    closeDialog: () => {}
+    appendSegment: () => {},
+    closeDialog: () => {},
+    selectAction: () => {}
   };
 
   it('learns to show dialog from state', () => {
@@ -87,5 +89,52 @@ describe('<AppendSegmentDialog />', () => {
     expect(actions.children()).to.have.length(2);
     expect(actions.childAt(0).text()).to.equal('a1');
     expect(actions.childAt(1).text()).to.equal('a2');
+  });
+
+  it('provides inputs for selected action arguments', () => {
+    const dialog = shallow(<AppendSegmentDialog {...requiredProps} />);
+
+    const actions = dialog.find('select');
+    expect(actions.props().value).to.equal('a2');
+
+    const actionInputs = dialog.find('input');
+    expect(actionInputs).to.have.length(3);
+    expect(actionInputs.at(0).props().placeholder).to.equal('a2_1');
+    expect(actionInputs.at(1).props().placeholder).to.equal('a2_2');
+    expect(actionInputs.at(2).props().placeholder).to.equal('a2_3');
+  });
+
+  it('dispatches an action when selection changes', () => {
+    const selectActionSpy = sinon.spy();
+    const dialog = mount(
+      <AppendSegmentDialog {...requiredProps} selectAction={selectActionSpy} />
+    );
+
+    const actions = dialog.find('select');
+    actions.simulate('change', { target: { value: 'a1' } });
+
+    expect(selectActionSpy.callCount).to.equal(1);
+    expect(selectActionSpy.getCall(0).args).to.deep.equal(['a1']);
+  });
+
+  it('appends a new segment on button click', () => {
+    const appendSegmentSpy = sinon.spy();
+    const dialog = mount(
+      <AppendSegmentDialog
+        {...requiredProps}
+        selectedAction="a1"
+        appendSegment={appendSegmentSpy}
+      />
+    );
+
+    const actionInputs = dialog.find('input');
+    expect(actionInputs).to.have.length(2);
+    actionInputs.at(0).instance().value = 'very';
+    actionInputs.at(1).instance().value = 'wow';
+
+    dialog.find('form').simulate('submit');
+
+    expect(appendSegmentSpy.callCount).to.equal(1);
+    expect(appendSegmentSpy.getCall(0).args).to.deep.equal(['very', 'wow']);
   });
 });

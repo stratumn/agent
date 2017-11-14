@@ -4,9 +4,39 @@ import { connect } from 'react-redux';
 
 import * as statusTypes from '../constants/status';
 
-import { closeAppendSegmentDialogAndClear } from '../actions';
+import {
+  appendSegment as appendSegmentAction,
+  closeAppendSegmentDialogAndClear,
+  selectAppendSegmentAction
+} from '../actions';
 
-export const AppendSegmentDialog = ({ show, actions, error, closeDialog }) => {
+const buildActionInputs = args => {
+  const argsValues = [...Array(args.length)];
+  const actionInputs = [...Array(args.length)];
+  for (let i = 0; i < args.length; i += 1) {
+    actionInputs[i] = (
+      <input
+        key={args[i]}
+        placeholder={args[i]}
+        ref={node => {
+          argsValues[i] = node;
+        }}
+      />
+    );
+  }
+
+  return { valueNodes: argsValues, actionInputs };
+};
+
+export const AppendSegmentDialog = ({
+  show,
+  actions,
+  selectedAction,
+  error,
+  appendSegment,
+  closeDialog,
+  selectAction
+}) => {
   if (!show) {
     return null;
   }
@@ -30,6 +60,10 @@ export const AppendSegmentDialog = ({ show, actions, error, closeDialog }) => {
     padding: 30
   };
 
+  const { valueNodes, actionInputs } = buildActionInputs(
+    actions[selectedAction].args
+  );
+
   return (
     <div className="backdrop" style={backdropStyle}>
       <div className="modal" style={modalStyle}>
@@ -47,15 +81,21 @@ export const AppendSegmentDialog = ({ show, actions, error, closeDialog }) => {
         <form
           onSubmit={e => {
             e.preventDefault();
+            appendSegment(...valueNodes.map(a => a.value.trim()));
           }}
         >
-          <select>
+          <select
+            value={selectedAction}
+            onChange={e => selectAction(e.target.value)}
+          >
             {Object.keys(actions).map(a => (
               <option key={a} value={a}>
                 {a}
               </option>
             ))}
           </select>
+          <br />
+          {actionInputs}
           <br />
           <button type="submit">Append</button>
           {error && <div className="error">{error}</div>}
@@ -67,15 +107,19 @@ export const AppendSegmentDialog = ({ show, actions, error, closeDialog }) => {
 
 AppendSegmentDialog.defaultProps = {
   error: '',
-  actions: {}
+  actions: {},
+  selectedAction: ''
 };
 AppendSegmentDialog.propTypes = {
   show: PropTypes.bool.isRequired,
   /* eslint-disable react/forbid-prop-types */
   actions: PropTypes.object,
   /* eslint-enable react/forbid-prop-types */
+  selectedAction: PropTypes.string,
   error: PropTypes.string,
-  closeDialog: PropTypes.func.isRequired
+  appendSegment: PropTypes.func.isRequired,
+  closeDialog: PropTypes.func.isRequired,
+  selectAction: PropTypes.func.isRequired
 };
 
 export function mapStateToProps({ appendSegment }) {
@@ -91,6 +135,8 @@ export function mapStateToProps({ appendSegment }) {
     };
   }
 
+  const { actions, selectedAction } = appendSegment.dialog;
+
   if (
     appendSegment.request &&
     appendSegment.request.error &&
@@ -98,17 +144,21 @@ export function mapStateToProps({ appendSegment }) {
   ) {
     return {
       show,
+      actions,
+      selectedAction,
       error: appendSegment.request.error.toString()
     };
   }
 
   return {
     show,
-    actions: appendSegment.dialog.actions,
-    selectedAction: appendSegment.dialog.selectedAction
+    actions,
+    selectedAction
   };
 }
 
 export default connect(mapStateToProps, {
-  closeDialog: closeAppendSegmentDialogAndClear
+  appendSegment: appendSegmentAction,
+  closeDialog: closeAppendSegmentDialogAndClear,
+  selectAction: selectAppendSegmentAction
 })(AppendSegmentDialog);

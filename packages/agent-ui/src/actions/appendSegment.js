@@ -10,8 +10,9 @@ const appendSegmentFailure = error => ({
   error
 });
 
-const appendSegmentSuccess = () => ({
-  type: actionTypes.APPEND_SEGMENT_SUCCESS
+const appendSegmentSuccess = segment => ({
+  type: actionTypes.APPEND_SEGMENT_SUCCESS,
+  segment
 });
 
 const appendSegmentClear = () => ({
@@ -19,7 +20,7 @@ const appendSegmentClear = () => ({
 });
 
 export const openDialog = (agentName, processName) => (dispatch, getState) => {
-  const { agents } = getState();
+  const { agents, mapExplorer: { linkHash } } = getState();
   if (agents[agentName] && agents[agentName].processes[processName]) {
     const { actions } = agents[agentName].processes[processName];
     dispatch({
@@ -27,7 +28,7 @@ export const openDialog = (agentName, processName) => (dispatch, getState) => {
       agent: agentName,
       process: processName,
       actions: actions,
-      parent: ''
+      parent: linkHash
     });
   }
 };
@@ -46,7 +47,7 @@ export const closeDialogAndClear = () => dispatch => {
   dispatch(closeDialog());
 };
 
-export const appendSegment = args => (dispatch, getState) => {
+export const appendSegment = (...args) => (dispatch, getState) => {
   dispatch(appendSegmentRequest());
   const {
     agents,
@@ -57,10 +58,11 @@ export const appendSegment = args => (dispatch, getState) => {
     return getAgent(url)
       .then(a => {
         const proc = a.getProcess(process);
-        return proc.createSegment(parent, selectedAction, ...args);
+        return proc.getSegment(parent);
       })
-      .then((/* segment */) => {
-        dispatch(appendSegmentSuccess());
+      .then(parentSegment => parentSegment[selectedAction](...args))
+      .then(segment => {
+        dispatch(appendSegmentSuccess(segment));
         dispatch(closeDialog());
       })
       .catch(err => {

@@ -24,6 +24,7 @@ describe('<MapPage />', () => {
       name: 'proc42'
     },
     mapId: '42',
+    lastLinkHash: '42x',
     selectSegment: () => {}
   };
 
@@ -46,7 +47,10 @@ describe('<MapPage />', () => {
       .withUrl('http://localhost:4242')
       .withProcess(process)
       .build();
-    const state = new TestStateBuilder().withAgent('agent', agent);
+    const state = new TestStateBuilder()
+      .withAgent('agent', agent)
+      .withAppendedSegment('lh')
+      .build();
     const routeProps = {
       match: { params: { agent: 'agent', process: 'p1', id: '42' } }
     };
@@ -60,6 +64,7 @@ describe('<MapPage />', () => {
       process: {
         name: 'p1'
       },
+      lastLinkHash: 'lh',
       mapId: '42'
     });
   });
@@ -79,6 +84,7 @@ describe('<MapPage />', () => {
       process: {
         name: 'cannotFindMe'
       },
+      lastLinkHash: undefined,
       mapId: '42'
     });
   });
