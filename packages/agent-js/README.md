@@ -64,6 +64,12 @@ agent.addProcess("my_second_process", actions, storeHttpClient, fossilizerHttpCl
 });
 ```
 
+The documentation for the HTTP API is available in [doc/swaggerDoc.md](doc/swaggerDoc.md). It uses [OpenAPI ver. 2](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md) (fka Swagger). You can also use [doc/swagger.json](doc/swagger.json) with [Swagger UI](https://swagger.io/swagger-ui/) for instance:
+
+```
+docker run -p 8080:8080 -e SWAGGER_JSON=/opt/swagger.json -v $(pwd)/doc:/opt swaggerapi/swagger-ui
+```
+
 ## Advanced usage
 
 - `create` creates an agent instance.
@@ -99,3 +105,11 @@ All methods are optional. They can either be synchronous or return a Promise.
 - `localTime`: Saves the local timestamp in the link meta information.
 - `signedState`: Signs the state before the segment is saved. Filters out segments whose signature is invalid.
 - `stateHash`: Computes and adds the hash of the state in meta.
+
+## Development
+
+To regenerate the HTTP API documentation, run:
+
+```
+$ npm run swagger:generate
+```

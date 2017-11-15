@@ -14,6 +14,91 @@
   limitations under the License.
 */
 
+/**
+ * @swagger
+ * definitions:
+ *   Evidence:
+ *     type: object
+ *     properties:
+ *       state:
+ *         type: string
+ *         description: Current state of the evidence (Pending or Complete)
+ *       backend:
+ *         type: string
+ *         description: Type of the evidence (Bitcoin, Tendermint, ...)
+ *       provider:
+ *         type: string
+ *         description: Origin of the evidence (Chain, Identifier of the third-party...)
+ *       proof:
+ *         type: object
+ *         description: Actual, objectively verifiable, proof of existence of the Segment
+ *
+ *   Segment:
+ *     type: object
+ *     required:
+ *       - link
+ *       - meta
+ *     properties:
+ *       link:
+ *         type: object
+ *         required:
+ *           - state
+ *           - meta
+ *         properties:
+ *           state:
+ *             type: object
+ *             description: Functional variables
+ *           meta:
+ *             type: object
+ *             description: Metadata about the state
+ *       meta:
+ *         type: object
+ *         required:
+ *           - linkHash
+ *           - evidences
+ *         properties:
+ *           linkHash:
+ *             type: string
+ *             description: Identifier of this segment. Computed as the hash of its link.
+ *           evidences:
+ *             type: array
+ *             description: List of evidences that proves the existence of this segment
+ *             items:
+ *               $ref: '#/definitions/Evidence'
+ *
+ *
+ *   Process:
+ *     type: object
+ *     properties:
+ *       name:
+ *         type: string
+ *         description: Name of the Process
+ *       processInfo:
+ *         type: object
+ *         properties:
+ *           actions:
+ *             type: object
+ *             description: A map of all available actions in this process along with their arguments
+ *           pluginsInfo:
+ *             type: array
+ *             description: List of the plugins that have been activated for this process
+ *             items:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *       fossilizersInfo:
+ *         type: array
+ *         description: Information about the fossilizer that will be used for the segments created by this process
+ *         items:
+ *           type: object
+ *       storeInfo:
+ *         description: Information about the store that will be used for the segments created by this process
+ *         type: object
+ */
+
 import express from 'express';
 import { wrap } from 'async-middleware';
 import bodyParser from 'body-parser';
@@ -50,8 +135,39 @@ export default function httpServer(agent, opts = {}) {
     app.options('*', corsMiddleware);
   }
 
+  /**
+   * @swagger
+   * /:
+   *   get:
+   *     description: Displays information about this agent.
+   *     responses:
+   *       200:
+   *         description: Agent Info
+   *         schema:
+   *           type: object
+   *           properties:
+   *             processes:
+   *               type: object
+   *               additionalProperties:
+   *                 $ref: '#/definitions/Process'
+   *
+   */
   app.get('/', (req, res) => agent.getInfo().then(res.json.bind(res)));
 
+  /**
+   * @swagger
+   * /processes:
+   *    get:
+   *      description: Returns a list of the processes handled by this agent.
+   *      responses:
+   *        200:
+   *          description: Process list
+   *          schema:
+   *            type: array
+   *            items:
+   *              $ref: '#/definitions/Process'
+   *
+   */
   app.get('/processes', (req, res) => {
     const processes = agent.getAllProcesses(req.query);
     return res.json(processes);
@@ -61,7 +177,7 @@ export default function httpServer(agent, opts = {}) {
    * This API allows dynamic upload of new processes to a running agent.
    * This is obviously very dangerous as it accepts any javascript code,
    * which is why it's disabled by default.
-   * If you choose to enable it, a strict access control mechanism should be 
+   * If you choose to enable it, a strict access control mechanism should be
    * setup to restrict access to this API.
    */
   if (opts.enableProcessUpload) {
@@ -138,6 +254,54 @@ export default function httpServer(agent, opts = {}) {
         .map(({ id }) => activePlugins[id]);
     };
 
+    /**
+     * @swagger
+     * /{process}/upload:
+     *   post:
+     *     description: Dynamically uploads a new process to a running agent. This endpoint is only available when the agent is started with `enableProcessUpload` to true.
+     *     parameters:
+     *       - name: process
+     *         in: path
+     *         required: true
+     *         type: string
+     *       - in: body
+     *         name: process
+     *         required: true
+     *         schema:
+     *           type: object
+     *           properties:
+     *             store:
+     *               description: Store used to save Segment of this process
+     *               type: object
+     *               properties:
+     *                 url:
+     *                   type: string
+     *             fossilizers:
+     *               description: List of fossilizers that should be used
+     *               type: array
+     *               items:
+     *                 type: object
+     *                 properties:
+     *                   url:
+     *                     type: string
+     *             plugins:
+     *               description: List of plugins that should be used
+     *               type: array
+     *               items:
+     *                 type: object
+     *                 properties:
+     *                   id:
+     *                     type: string
+     *     responses:
+     *       200:
+     *         description: Process created
+     *         schema:
+     *           type: array
+     *           items:
+     *             $ref: '#/definitions/Process'
+     *       400:
+     *         description: Process already exists or actions are empty
+     */
     app.post('/:process/upload', (req, res) => {
       const processActions = validateProcessUpload(req);
       const store = getStore(req.body.store);
@@ -152,11 +316,56 @@ export default function httpServer(agent, opts = {}) {
     });
   }
 
+  /**
+   * @swagger
+   * /{process}/remove:
+   *   get:
+   *     description: Removes a process from an agent.
+   *     parameters:
+   *       - name: process
+   *         in: path
+   *         description: Name of the process to be removed
+   *         required: true
+   *         type: string
+   *     responses:
+   *       200:
+   *         description: Process removed
+   *         schema:
+   *           type: array
+   *           items:
+   *             $ref: '#/definitions/Process'
+   *       404:
+   *         description: Process not found
+   */
   app.get('/:process/remove', (req, res) => {
     const processes = agent.removeProcess(req.params.process);
     return res.json(processes);
   });
 
+  /**
+   * @swagger
+   * /{process}/segments:
+   *   post:
+   *     description: Creates a new map for a process.
+   *     parameters:
+   *       - name: process
+   *         in: path
+   *         description: Name of the process
+   *         required: true
+   *         type: string
+   *       - in: body
+   *         name: arguments
+   *         description: Parameters that should be passed on to the init action
+   *         schema:
+   *           type: object
+   *     responses:
+   *       200:
+   *         description: Map created
+   *         schema:
+   *           $ref: '#/definitions/Segment'
+   *       404:
+   *         description: Process not found
+   */
   app.post(
     '/:process/segments',
     loadProcess,
@@ -169,6 +378,42 @@ export default function httpServer(agent, opts = {}) {
     })
   );
 
+  /**
+   * @swagger
+   * /{process}/segments/{linkHash}/{action}:
+   *   post:
+   *     description: Creates a new segment in a process.
+   *     parameters:
+   *       - name: process
+   *         in: path
+   *         description: Name of the process
+   *         required: true
+   *         type: string
+   *       - name: linkHash
+   *         in: path
+   *         description: linkHash of the parent of the new Segment
+   *         type: string
+   *         required: true
+   *       - name: action
+   *         in: path
+   *         description: Name of the action that will be executed
+   *         type: string
+   *         required: true
+   *       - in: body
+   *         name: arguments
+   *         description: Parameters that should be passed on to the action
+   *         schema:
+   *           type: object
+   *     responses:
+   *       200:
+   *         description: Segment created
+   *         schema:
+   *           $ref: '#/definitions/Segment'
+   *       403:
+   *         description: Action fordidden by a filter
+   *       404:
+   *         description: Process not found or parent Segment not found
+   */
   app.post(
     '/:process/segments/:linkHash/:action',
     loadProcess,
@@ -185,6 +430,31 @@ export default function httpServer(agent, opts = {}) {
     })
   );
 
+  /**
+   * @swagger
+   * /{process}/segments/{linkHash}:
+   *   get:
+   *     description: Returns the segment with the given linkHash.
+   *     parameters:
+   *       - name: process
+   *         in: path
+   *         description: Name of the process
+   *         required: true
+   *         type: string
+   *       - name: linkHash
+   *         in: path
+   *         description: linkHash of the parent of the new Segment
+   *         type: string
+   *         required: true
+   *     responses:
+   *       200:
+   *         description: Segment
+   *         schema:
+   *           $ref: '#/definitions/Segment'
+   *       404:
+   *         description: Segment not found or Process not found
+   *
+   */
   app.get(
     '/:process/segments/:linkHash',
     loadProcess,
@@ -195,6 +465,57 @@ export default function httpServer(agent, opts = {}) {
     )
   );
 
+  /**
+   * @swagger
+   * /{process}/segments:
+   *   get:
+   *     description: Finds the segments that match the given filter.
+   *     parameters:
+   *       - name: process
+   *         in: path
+   *         description: Name of the process
+   *         required: true
+   *         type: string
+   *       - name: offset
+   *         in: query
+   *         description: Offset of first returned segment
+   *         type: integer
+   *       - name: limit
+   *         in: query
+   *         description: Limit number of returned segments
+   *         type: integer
+   *       - name: mapIds
+   *         in: query
+   *         description: Return segments with specified map ID
+   *         type: array
+   *         items:
+   *           type: string
+   *       - name: prevLinkHash
+   *         in: query
+   *         description: Return segments with specified previous link hash
+   *         type: string
+   *       - name: tags
+   *         in: query
+   *         description: Return segments that contain all the tags
+   *         type: array
+   *         items:
+   *           type: string
+   *       - name: linkHashes
+   *         in: query
+   *         description: Return segments that match one of the linkHashes
+   *         type: array
+   *         items:
+   *           type: string
+   *     responses:
+   *       200:
+   *         description: Segments
+   *         schema:
+   *           type: array
+   *           items:
+   *             $ref: '#/definitions/Segment'
+   *       404:
+   *         description: Process not found
+   */
   app.get(
     '/:process/segments',
     loadProcess,
@@ -203,6 +524,7 @@ export default function httpServer(agent, opts = {}) {
     )
   );
 
+  // Do not document in swagger as this should probably not be used directly by any user.
   app.post(
     '/:process/evidence/:linkHash',
     loadProcess,
@@ -213,8 +535,37 @@ export default function httpServer(agent, opts = {}) {
     )
   );
 
+  /**
+   * swagger
+   * /{process}/maps:
+   *   get:
+   *     description: Returns a list of all the Map Ids from the given process.
+   *     parameters:
+   *       - name: process
+   *         in: path
+   *         description: Name of the process
+   *         required: true
+   *         type: string
+   *       - name: offset
+   *         description: Offset of first returned segment
+   *         in: query
+   *         type: integer
+   *       - name: limit
+   *         description: Limit number of returned segments
+   *         in: query
+   *         type: integer
+   *     responses:
+   *       200:
+   *         description: List of Map IDs
+   *         schema:
+   *           type: array
+   *           items:
+   *             type: string
+   *       404:
+   *         description: Process not found
+   */
   app.get(
-    '/:process/maps',
+    '/{process}/maps',
     loadProcess,
     wrap((req, res) =>
       res.locals.process.getMapIds(req.query).then(res.json.bind(res))
