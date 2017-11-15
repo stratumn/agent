@@ -40,7 +40,8 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-persist": "^5.0.1",
     "redux-thunk": "^2.2.0",
-    "stratumn-agent-client": "^3.0.2"
+    "stratumn-agent-client": "^3.0.2",
+    "typeface-roboto": "^0.0.45"
   },
   "devDependencies": {
     "chai": "^4.1.2",
