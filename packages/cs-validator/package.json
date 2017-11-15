@@ -64,7 +64,7 @@
     "zock": "^0.2.6"
   },
   "dependencies": {
-    "canonical-json": "0.0.3",
+    "canonicaljson": "^1.0.0-alpha.1",
     "httpplease": "^0.16.4",
     "deepmerge": "2.0.1",
     "js-sha256": "^0.3.0",
