@@ -15,12 +15,6 @@
 */
 import { version } from '../../package.json';
 
-/**
- * Sets agentVersion in the link's meta data using the version
- * from package.json.
- * @param {object} link
- */
-
 export default {
   name: 'Agent Version',
 
