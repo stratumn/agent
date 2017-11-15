@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import stringify from 'canonical-json';
+import { stringify } from 'canonicaljson';
 import sha256 from 'js-sha256';
 
 /**
