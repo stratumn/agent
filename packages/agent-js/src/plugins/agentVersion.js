@@ -13,21 +13,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { version } from '../../package.json';
 
-import actionArgs from './actionArgs';
-import agentUrl from './agentUrl';
-import encryptedState from './encryptedState';
-import localTime from './localTime';
-import signedState from './signedState';
-import stateHash from './stateHash';
-import agentVersion from './agentVersion';
+export default {
+  name: 'Agent Version',
 
-module.exports = {
-  actionArgs,
-  agentUrl,
-  agentVersion,
-  encryptedState,
-  localTime,
-  signedState,
-  stateHash
+  description: 'Saves the agent version in the link meta information.',
+
+  didCreateLink(link) {
+    link.meta.agentVersion = version;
+  }
 };
