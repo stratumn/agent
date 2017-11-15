@@ -565,7 +565,7 @@ export default function httpServer(agent, opts = {}) {
    *         description: Process not found
    */
   app.get(
-    '/{process}/maps',
+    '/:process/maps',
     loadProcess,
     wrap((req, res) =>
       res.locals.process.getMapIds(req.query).then(res.json.bind(res))
