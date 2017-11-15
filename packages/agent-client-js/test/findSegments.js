@@ -48,6 +48,33 @@ describe('#findSegments', () => {
           segments.length.should.be.exactly(2);
         }));
 
+    it('finds segments with a matching linkHash', () => {
+      let lHash;
+      let segment1;
+      processCbWithMaps()
+        .then(segment => {
+          lHash = segment.meta.linkHash;
+          segment1 = segment;
+          return processCb().findSegments({
+            linkHashes: [lHash, 'badLinkHash']
+          });
+        })
+        .then(segments => {
+          segments.should.be.an.Array();
+          segments.length.should.be.exactly(1);
+        })
+        .then(() => segment1.addMessage('hello', 'bob'))
+        .then(segment =>
+          processCb().findSegments({
+            linkHashes: [lHash, segment.meta.linkHash]
+          })
+        )
+        .then(segments => {
+          segments.should.be.an.Array();
+          segments.length.should.be.exactly(2);
+        });
+    });
+
     it('applies the options mapId', () =>
       processCbWithMaps()
         .then(segment =>

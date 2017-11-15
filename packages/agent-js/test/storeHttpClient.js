@@ -121,6 +121,7 @@ describe('StoreHttpClient', () => {
           mapId: 'map',
           prevLinkHash: 'hash',
           tags: ['tag1', 'tag2'],
+          linkHashes: ['segment2', 'segment3'],
           offset: 20,
           limit: 10
         })
@@ -129,7 +130,9 @@ describe('StoreHttpClient', () => {
           body.length.should.be.exactly(1);
           body[0].link.state.query.should.be.exactly(
             'process=one&mapId=map&prevLinkHash=hash' +
-              '&tags%5B%5D=tag1&tags%5B%5D=tag2&offset=20&limit=10'
+              '&tags%5B%5D=tag1&tags%5B%5D=tag2' +
+              '&linkHashes%5B%5D=segment2&linkHashes%5B%5D=segment3' +
+              '&offset=20&limit=10'
           );
         }));
   });

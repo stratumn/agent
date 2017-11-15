@@ -106,6 +106,7 @@ export default function memoryStore() {
      * @param {number} [opts.limit] - maximum number of segments to return
      * @param {string[]} [opts.mapIds] - an array of map IDs the segments must have
      * @param {string} [opts.prevLinkHash] - a previous link hash the segments must have
+     * @param {string[]} [opts.linkHashes] - an array of linkHashes the segments must have
      * @param {string[]} [opts.tags] - an array of tags the segments must have
      * @returns {Promise} a promise that resolve with the segments
      */
@@ -126,6 +127,14 @@ export default function memoryStore() {
         if (
           opts.prevLinkHash &&
           segment.link.meta.prevLinkHash !== opts.prevLinkHash
+        ) {
+          return;
+        }
+
+        if (
+          opts.linkHashes &&
+          opts.linkHashes.length > 0 &&
+          !opts.linkHashes.includes(linkHash)
         ) {
           return;
         }

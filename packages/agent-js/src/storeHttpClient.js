@@ -154,6 +154,7 @@ export default function storeHttpClient(url) {
      * @param {number} [opts.limit] - maximum number of segments to return
      * @param {string[]} [opts.mapIds] - a map ID the segments must have
      * @param {string} [opts.prevLinkHash] - a previous link hash the segments must have
+     * @param {string[]} [opts.linkHashes] - an array of linkHashes the segments must have
      * @param {string[]} [opts.tags] - an array of tags the segments must have
      * @returns {Promise} a promise that resolve with the segments
      */
