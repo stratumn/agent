@@ -102,6 +102,11 @@ describe('MemoryStore', () => {
         .findSegments('first', { prevLinkHash: 'segment1' })
         .then(body => body.should.deepEqual([segment2])));
 
+    it('filters by linkHashes', () =>
+      store
+        .findSegments('first', { linkHashes: ['segment2'] })
+        .then(body => body.should.deepEqual([segment2])));
+
     it('filters by tags', () =>
       store
         .findSegments('first', { tags: ['one', 'two'] })
