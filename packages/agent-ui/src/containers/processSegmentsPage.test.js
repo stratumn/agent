@@ -7,6 +7,8 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import { ProcessSegmentsPage } from './processSegmentsPage';
+import { SegmentsFilter } from '../components/segmentsFilter';
+import { SegmentsList } from '../components/segmentsList';
 import * as statusTypes from '../constants/status';
 import history from '../store/history';
 
@@ -44,51 +46,23 @@ describe('<ProcessSegmentsPage />', () => {
     const props = {
       fetchSegments: sinon.spy()
     };
-    const processSegmentsPage = renderComponent(props);
+    renderComponent(props);
     expect(props.fetchSegments.callCount).to.equal(1);
-    const div = processSegmentsPage.find('div');
-    expect(div).to.have.lengthOf(2);
-    expect(div.contains('process segments')).to.be.true;
   });
 
-  it('renders on loading', () => {
+  it('renders a segments filter and a segments list', () => {
     const props = {
       fetchSegments: sinon.spy(),
-      segments: { status: statusTypes.LOADING }
+      segments: { status: statusTypes.LOADED }
     };
     const processSegmentsPage = renderComponent(props);
     expect(props.fetchSegments.callCount).to.equal(1);
-    const div = processSegmentsPage.find('div');
-    expect(div).to.have.lengthOf(2);
-    expect(div.contains('loading...')).to.be.true;
+
+    expect(processSegmentsPage.find(SegmentsFilter)).to.have.length(1);
+    expect(processSegmentsPage.find(SegmentsList)).to.have.length(1);
   });
 
-  it('renders on failed', () => {
-    const props = {
-      fetchSegments: sinon.spy(),
-      segments: { status: statusTypes.FAILED, error: 'unreachable' }
-    };
-    const processSegmentsPage = renderComponent(props);
-    expect(props.fetchSegments.callCount).to.equal(1);
-    const div = processSegmentsPage.find('div');
-    expect(div).to.have.lengthOf(2);
-    expect(div.contains('failed to load: unreachable')).to.be.true;
-  });
-
-  it('renders on success', () => {
-    const props = {
-      fetchSegments: sinon.spy(),
-      segments: { status: statusTypes.LOADED, details: ['foo', 'bar'] }
-    };
-    const processSegmentsPage = renderComponent(props);
-    expect(props.fetchSegments.callCount).to.equal(1);
-    const div = processSegmentsPage.find('div');
-    expect(div).to.have.lengthOf(4);
-    expect(div.contains('foo')).to.be.true;
-    expect(div.contains('bar')).to.be.true;
-  });
-
-  it('re renders when agent or process props changes', () => {
+  it('re-renders when agent or process props changes', () => {
     const props = {
       fetchSegments: sinon.spy(),
       agent: 'foo',
@@ -98,6 +72,7 @@ describe('<ProcessSegmentsPage />', () => {
     const processSegmentsPage = mount(
       <ProcessSegmentsPage {...requiredProps} {...props} />
     );
+
     processSegmentsPage.setProps({ ...props, agent: 'crazy' });
     expect(props.fetchSegments.callCount).to.equal(2);
     expect(props.fetchSegments.getCall(1).args[0]).to.equal('crazy');
@@ -108,7 +83,7 @@ describe('<ProcessSegmentsPage />', () => {
     expect(props.fetchSegments.getCall(2).args[1]).to.equal('crazy');
   });
 
-  it('does not re renders when other props changes', () => {
+  it('does not re-render when other props changes', () => {
     const props = {
       fetchSegments: sinon.spy(),
       agent: 'foo',
@@ -118,6 +93,7 @@ describe('<ProcessSegmentsPage />', () => {
     const processSegmentsPage = mount(
       <ProcessSegmentsPage {...requiredProps} {...props} />
     );
+
     processSegmentsPage.setProps({ ...props, something: 'else' });
     expect(props.fetchSegments.callCount).to.equal(1);
   });
@@ -132,7 +108,8 @@ describe('<ProcessSegmentsPage />', () => {
       }
     };
     const processSegmentsPage = renderComponent(props);
-    const segmentsFilter = processSegmentsPage.find('SegmentsFilter');
+
+    const segmentsFilter = processSegmentsPage.find(SegmentsFilter);
     expect(segmentsFilter).to.have.lengthOf(1);
     const submitButton = segmentsFilter.find('[type="submit"]');
     expect(submitButton).to.have.lengthOf(1);
@@ -153,7 +130,8 @@ describe('<ProcessSegmentsPage />', () => {
       }
     };
     const processSegmentsPage = renderComponent(props);
-    const segmentsFilter = processSegmentsPage.find('SegmentsFilter');
+
+    const segmentsFilter = processSegmentsPage.find(SegmentsFilter);
     expect(segmentsFilter).to.have.lengthOf(1);
     const clearButton = segmentsFilter.find('[type="clear"]');
     expect(clearButton).to.have.lengthOf(1);

@@ -12,7 +12,7 @@ const checkAndTrim = s => s && s.trim();
 
 const checkTrimAndSplit = s => s && s.trim().split(' ');
 
-class SegmentsFilter extends Component {
+export class SegmentsFilter extends Component {
   constructor(props) {
     super(props);
     const { filters } = props;
