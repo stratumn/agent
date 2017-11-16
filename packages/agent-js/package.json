@@ -13,7 +13,9 @@
     "preversion": "npm run clean && npm run test",
     "version": "npm run build:lib",
     "postversion": "git push && git push --tags && npm run clean",
-    "prepublish": "npm run clean && npm run build:lib"
+    "prepublish": "npm run clean && npm run build:lib",
+    "swagger:generate":
+      "swagger-jsdoc --definition doc/swaggerDef.js --output doc/swagger.json src/httpServer.js && docker run --rm -v $(pwd)/doc:/opt swagger2markup/swagger2markup convert --swaggerInput /opt/swagger.json --outputFile /opt/swaggerDoc --config /opt/swagger2markup.properties"
   },
   "repository": {
     "type": "git",
@@ -51,6 +53,7 @@
     "rimraf": "^2.5.3",
     "should": "^8.2.2",
     "superagent-mocker": "^0.4.0",
-    "supertest": "^1.2.0"
+    "supertest": "^1.2.0",
+    "swagger-jsdoc": "^1.9.7"
   }
 }

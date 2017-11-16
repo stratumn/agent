@@ -1,0 +1,449 @@
+{
+  "info": {
+    "title": "Agent",
+    "version": "0.18.3"
+  },
+  "consumes": "application/json",
+  "produces": "application/json",
+  "swagger": "2.0",
+  "paths": {
+    "/": {
+      "get": {
+        "description": "Displays information about this agent.",
+        "responses": {
+          "200": {
+            "description": "Agent Info",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "processes": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/definitions/Process"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/processes": {
+      "get": {
+        "description": "Returns a list of the processes handled by this agent.",
+        "responses": {
+          "200": {
+            "description": "Process list",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Process"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{process}/upload": {
+      "post": {
+        "description": "Dynamically uploads a new process to a running agent. This endpoint is only available when the agent is started with `enableProcessUpload` to true.",
+        "parameters": [
+          {
+            "name": "process",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "process",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "store": {
+                  "description": "Store used to save Segment of this process",
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "fossilizers": {
+                  "description": "List of fossilizers that should be used",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "url": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "plugins": {
+                  "description": "List of plugins that should be used",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Process created",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Process"
+              }
+            }
+          },
+          "400": {
+            "description": "Process already exists or actions are empty"
+          }
+        }
+      }
+    },
+    "/{process}/remove": {
+      "get": {
+        "description": "Removes a process from an agent.",
+        "parameters": [
+          {
+            "name": "process",
+            "in": "path",
+            "description": "Name of the process to be removed",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Process removed",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Process"
+              }
+            }
+          },
+          "404": {
+            "description": "Process not found"
+          }
+        }
+      }
+    },
+    "/{process}/segments": {
+      "post": {
+        "description": "Creates a new map for a process.",
+        "parameters": [
+          {
+            "name": "process",
+            "in": "path",
+            "description": "Name of the process",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "arguments",
+            "description": "Parameters that should be passed on to the init action",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Map created",
+            "schema": {
+              "$ref": "#/definitions/Segment"
+            }
+          },
+          "404": {
+            "description": "Process not found"
+          }
+        }
+      },
+      "get": {
+        "description": "Finds the segments that match the given filter.",
+        "parameters": [
+          {
+            "name": "process",
+            "in": "path",
+            "description": "Name of the process",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Offset of first returned segment",
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit number of returned segments",
+            "type": "integer"
+          },
+          {
+            "name": "mapIds",
+            "in": "query",
+            "description": "Return segments with specified map ID",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "prevLinkHash",
+            "in": "query",
+            "description": "Return segments with specified previous link hash",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "Return segments that contain all the tags",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "linkHashes",
+            "in": "query",
+            "description": "Return segments that match one of the linkHashes",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Segments",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Segment"
+              }
+            }
+          },
+          "404": {
+            "description": "Process not found"
+          }
+        }
+      }
+    },
+    "/{process}/segments/{linkHash}/{action}": {
+      "post": {
+        "description": "Creates a new segment in a process.",
+        "parameters": [
+          {
+            "name": "process",
+            "in": "path",
+            "description": "Name of the process",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "linkHash",
+            "in": "path",
+            "description": "linkHash of the parent of the new Segment",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "action",
+            "in": "path",
+            "description": "Name of the action that will be executed",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "arguments",
+            "description": "Parameters that should be passed on to the action",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Segment created",
+            "schema": {
+              "$ref": "#/definitions/Segment"
+            }
+          },
+          "403": {
+            "description": "Action fordidden by a filter"
+          },
+          "404": {
+            "description": "Process not found or parent Segment not found"
+          }
+        }
+      }
+    },
+    "/{process}/segments/{linkHash}": {
+      "get": {
+        "description": "Returns the segment with the given linkHash.",
+        "parameters": [
+          {
+            "name": "process",
+            "in": "path",
+            "description": "Name of the process",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "linkHash",
+            "in": "path",
+            "description": "linkHash of the parent of the new Segment",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Segment",
+            "schema": {
+              "$ref": "#/definitions/Segment"
+            }
+          },
+          "404": {
+            "description": "Segment not found or Process not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Evidence": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "description": "Current state of the evidence (Pending or Complete)"
+        },
+        "backend": {
+          "type": "string",
+          "description": "Type of the evidence (Bitcoin, Tendermint, ...)"
+        },
+        "provider": {
+          "type": "string",
+          "description": "Origin of the evidence (Chain, Identifier of the third-party...)"
+        },
+        "proof": {
+          "type": "object",
+          "description": "Actual, objectively verifiable, proof of existence of the Segment"
+        }
+      }
+    },
+    "Segment": {
+      "type": "object",
+      "required": [
+        "link",
+        "meta"
+      ],
+      "properties": {
+        "link": {
+          "type": "object",
+          "required": [
+            "state",
+            "meta"
+          ],
+          "properties": {
+            "state": {
+              "type": "object",
+              "description": "Functional variables"
+            },
+            "meta": {
+              "type": "object",
+              "description": "Metadata about the state"
+            }
+          }
+        },
+        "meta": {
+          "type": "object",
+          "required": [
+            "linkHash",
+            "evidences"
+          ],
+          "properties": {
+            "linkHash": {
+              "type": "string",
+              "description": "Identifier of this segment. Computed as the hash of its link."
+            },
+            "evidences": {
+              "type": "array",
+              "description": "List of evidences that proves the existence of this segment",
+              "items": {
+                "$ref": "#/definitions/Evidence"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Process": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the Process"
+        },
+        "processInfo": {
+          "type": "object",
+          "properties": {
+            "actions": {
+              "type": "object",
+              "description": "A map of all available actions in this process along with their arguments"
+            },
+            "pluginsInfo": {
+              "type": "array",
+              "description": "List of the plugins that have been activated for this process",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "fossilizersInfo": {
+          "type": "array",
+          "description": "Information about the fossilizer that will be used for the segments created by this process",
+          "items": {
+            "type": "object"
+          }
+        },
+        "storeInfo": {
+          "description": "Information about the store that will be used for the segments created by this process",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "responses": {},
+  "parameters": {},
+  "securityDefinitions": {},
+  "tags": []
+}
