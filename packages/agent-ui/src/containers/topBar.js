@@ -9,7 +9,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import layout from '../styles/layout';
 
-import { AppendSegmentButton, CreateMapButton } from '../components';
+import { TopBarButton } from '../components';
 import { openCreateMapDialog, openAppendSegmentDialog } from '../actions';
 
 const renderTopBarLinks = path => {
@@ -44,14 +44,19 @@ export const TopBar = ({ path, mapDialog, segmentDialog, classes }) => (
         exact
         path="/:agent/:process/maps"
         render={props => (
-          <CreateMapButton openDialog={mapDialog} {...props.match.params} />
+          <TopBarButton
+            text="Create"
+            openDialog={mapDialog}
+            {...props.match.params}
+          />
         )}
       />
       <Route
         exact
         path="/:agent/:process/maps/:id"
         render={props => (
-          <AppendSegmentButton
+          <TopBarButton
+            text="Append"
             openDialog={segmentDialog}
             {...props.match.params}
           />
