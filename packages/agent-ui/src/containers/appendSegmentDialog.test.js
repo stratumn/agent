@@ -78,30 +78,26 @@ describe('<AppendSegmentDialog />', () => {
     const dialog = mount(
       <AppendSegmentDialog {...requiredProps} closeDialog={closeDialogSpy} />
     );
-    const closeButton = dialog.find('button').at(0);
+    const closeButton = dialog.find('Button').at(0);
     closeButton.simulate('click');
     expect(closeDialogSpy.callCount).to.equal(1);
   });
 
   it('provides a dropdown to select action', () => {
-    const dialog = shallow(<AppendSegmentDialog {...requiredProps} />);
-    const actions = dialog.find('select');
-    expect(actions.children()).to.have.length(2);
-    expect(actions.childAt(0).text()).to.equal('a1');
-    expect(actions.childAt(1).text()).to.equal('a2');
+    const dialog = mount(<AppendSegmentDialog {...requiredProps} />);
+    const dropdown = dialog.find('Select');
+    expect(dropdown).to.have.length(1);
+    expect(dropdown.find('input').props().value).to.equal('a2');
   });
 
-  it('provides inputs for selected action arguments', () => {
-    const dialog = shallow(<AppendSegmentDialog {...requiredProps} />);
+  it('provides input fields for selected action arguments', () => {
+    const dialog = mount(<AppendSegmentDialog {...requiredProps} />);
 
-    const actions = dialog.find('select');
-    expect(actions.props().value).to.equal('a2');
-
-    const actionInputs = dialog.find('input');
-    expect(actionInputs).to.have.length(3);
-    expect(actionInputs.at(0).props().placeholder).to.equal('a2_1');
-    expect(actionInputs.at(1).props().placeholder).to.equal('a2_2');
-    expect(actionInputs.at(2).props().placeholder).to.equal('a2_3');
+    const actionFields = dialog.find('TextField');
+    expect(actionFields).to.have.length(3);
+    expect(actionFields.at(0).props().label).to.equal('a2_1');
+    expect(actionFields.at(1).props().label).to.equal('a2_2');
+    expect(actionFields.at(2).props().label).to.equal('a2_3');
   });
 
   it('dispatches an action when selection changes', () => {
@@ -110,8 +106,8 @@ describe('<AppendSegmentDialog />', () => {
       <AppendSegmentDialog {...requiredProps} selectAction={selectActionSpy} />
     );
 
-    const actions = dialog.find('select');
-    actions.simulate('change', { target: { value: 'a1' } });
+    const dropdown = dialog.find('Select');
+    dropdown.props().onChange({ target: { value: 'a1' } });
 
     expect(selectActionSpy.callCount).to.equal(1);
     expect(selectActionSpy.getCall(0).args).to.deep.equal(['a1']);
@@ -127,12 +123,22 @@ describe('<AppendSegmentDialog />', () => {
       />
     );
 
-    const actionInputs = dialog.find('input');
-    expect(actionInputs).to.have.length(2);
-    actionInputs.at(0).instance().value = 'very';
-    actionInputs.at(1).instance().value = 'wow';
+    const actionFields = dialog.find('TextField');
+    expect(actionFields).to.have.length(2);
 
-    dialog.find('form').simulate('submit');
+    actionFields
+      .at(0)
+      .find('input')
+      .simulate('change', { target: { value: 'very' } });
+    actionFields
+      .at(1)
+      .find('input')
+      .simulate('change', { target: { value: 'wow' } });
+
+    dialog
+      .find('Button')
+      .at(1)
+      .simulate('click');
 
     expect(appendSegmentSpy.callCount).to.equal(1);
     expect(appendSegmentSpy.getCall(0).args).to.deep.equal(['very', 'wow']);

@@ -46,7 +46,7 @@
     "chai": "^4.1.2",
     "css.escape": "^1.5.1",
     "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.1",
+    "enzyme-adapter-react-16": "^1.1.0",
     "eslint": "^4.8.0",
     "eslint-plugin-react": "^7.4.0",
     "react-scripts": "^1.0.17",
