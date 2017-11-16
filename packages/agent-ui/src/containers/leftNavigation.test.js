@@ -8,17 +8,20 @@ import { LeftNavigation, mapStateToProps } from './leftNavigation';
 import * as statusTypes from '../constants/status';
 
 describe('<LeftNavigation />', () => {
-  it('displays the list of agents, processes, maps and segments', () => {
-    const agents = [
+  const requiredProps = {
+    agents: [
       { name: 'a1', processes: ['p1', 'p2'] },
       { name: 'a2', processes: ['p3'] },
       { name: 'a3', processes: [] }
-    ];
+    ],
+    classes: { drawerPaper: '' }
+  };
 
+  it('displays the list of agents, processes, maps and segments', () => {
     const testRoutes = (route, expectedLinks) => {
       const agentsPage = mount(
         <MemoryRouter initialEntries={[route]}>
-          <LeftNavigation agents={agents} />
+          <LeftNavigation {...requiredProps} />
         </MemoryRouter>
       );
 

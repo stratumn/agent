@@ -3,7 +3,7 @@ import { MemoryRouter, NavLink } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import configureStore from 'redux-mock-store';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { TopBar } from './topBar';
@@ -13,7 +13,8 @@ describe('<TopBar />', () => {
   const requiredProps = {
     match: { params: { agent: 'a', process: 'p' } },
     mapDialog: () => {},
-    segmentDialog: () => {}
+    segmentDialog: () => {},
+    classes: { appBar: '' }
   };
 
   const mockStore = configureStore();
@@ -29,9 +30,11 @@ describe('<TopBar />', () => {
     );
 
   it('renders a title on index page', () => {
-    const topBarNoLinks = shallow(<TopBar path="/" {...requiredProps} />);
+    const topBarNoLinks = renderTopBarWithRoute('/');
     expect(
-      topBarNoLinks.find('div').contains('Welcome to the Indigo Framework UI')
+      topBarNoLinks
+        .find('Typography')
+        .contains('Welcome to the Indigo Framework UI')
     ).to.be.true;
   });
 
