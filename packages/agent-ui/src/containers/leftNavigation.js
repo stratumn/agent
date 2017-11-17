@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 
+import Avatar from 'material-ui/Avatar';
 import Collapse from 'material-ui/transitions/Collapse';
 import Drawer from 'material-ui/Drawer';
 import List, { ListItem, ListItemText, ListSubheader } from 'material-ui/List';
+import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import layout from '../styles/layout';
 
+import logo from '../images/logo.png';
 import * as statusTypes from '../constants/status';
 
 const AgentNavigationLink = ({ text, to, margin }) => (
@@ -28,11 +31,26 @@ AgentNavigationLink.propTypes = {
 
 const AgentNavigationLinks = ({ agents, agent, process }) => (
   <List>
-    <ListSubheader>INDIGO AGENT UI</ListSubheader>
+    <ListSubheader
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '1em'
+      }}
+    >
+      <Avatar alt="Icon" src={logo} />
+      <Typography type="subheading" style={{ marginLeft: '0.5em' }}>
+        INDIGO AGENT UI
+      </Typography>
+    </ListSubheader>
     {agents.map(a => (
       <div key={a.name} id={a.name}>
         <AgentNavigationLink text={a.name} to={`/${a.name}`} />
-        <Collapse in={!!(agent && a.name === agent)} transitionDuration="auto">
+        <Collapse
+          in={!!(agent && a.name === agent)}
+          transitionDuration="auto"
+          unmountOnExit
+        >
           <List disablePadding>
             {a.processes.map(p => (
               <div key={p}>
@@ -44,6 +62,7 @@ const AgentNavigationLinks = ({ agents, agent, process }) => (
                 <Collapse
                   in={!!(process && p === process)}
                   transitionDuration="auto"
+                  unmountOnExit
                 >
                   <AgentNavigationLink
                     text="maps"
@@ -80,8 +99,20 @@ AgentNavigationLinks.propTypes = {
 };
 
 const IndigoExternalLinks = () => (
-  <List>
-    <ListItem button component="a" href="https://indigoframework.com">
+  <List
+    style={{
+      display: 'flex',
+      flexDirection: 'column'
+    }}
+  >
+    <ListItem
+      style={{
+        marginTop: 'auto'
+      }}
+      button
+      component="a"
+      href="https://indigoframework.com"
+    >
       <ListItemText primary="Documentation" />
     </ListItem>
     <ListItem
