@@ -33,7 +33,6 @@ describe('open action', () => {
 
   it('finds process actions from agent and process name', () => {
     const process = new TestProcessBuilder('p')
-      .withAction('init', ['title'])
       .withAction('message', ['author', 'text'])
       .build();
     getStateStub.returns(
@@ -53,6 +52,25 @@ describe('open action', () => {
       process: 'p',
       actions: process.actions,
       parent: 'lh'
+    });
+  });
+
+  it('removes the init action if present', () => {
+    const process = new TestProcessBuilder('p')
+      .withAction('init', ['title'])
+      .withAction('message', ['author', 'text'])
+      .build();
+    getStateStub.returns(
+      new TestStateBuilder()
+        .withAgent('a', new TestAgentBuilder().withProcess(process).build())
+        .withSelectedMapExplorerSegment('lh')
+        .build()
+    );
+
+    openDialog('a', 'p')(dispatchSpy, getStateStub);
+    expect(dispatchSpy.callCount).to.equal(1);
+    expect(dispatchSpy.getCall(0).args[0].actions).to.deep.equal({
+      message: { args: ['author', 'text'] }
     });
   });
 
