@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { withRouter, NavLink } from 'react-router-dom';
 
 import Avatar from 'material-ui/Avatar';
+import Button from 'material-ui/Button';
 import Collapse from 'material-ui/transitions/Collapse';
 import Drawer from 'material-ui/Drawer';
 import List, { ListItem, ListItemText, ListSubheader } from 'material-ui/List';
-import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import layout from '../styles/layout';
 
@@ -39,9 +39,9 @@ const AgentNavigationLinks = ({ agents, agent, process }) => (
       }}
     >
       <Avatar alt="Icon" src={logo} />
-      <Typography type="subheading" style={{ marginLeft: '0.5em' }}>
+      <Button component={NavLink} to="/">
         INDIGO AGENT UI
-      </Typography>
+      </Button>
     </ListSubheader>
     {agents.map(a => (
       <div key={a.name} id={a.name}>
