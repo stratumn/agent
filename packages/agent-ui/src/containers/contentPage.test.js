@@ -18,40 +18,35 @@ describe('<ContentPage />', () => {
   const mockStore = configureStore();
   const store = mockStore(testState);
 
-  it('renders the <AgentsPage /> if no route information', () => {
-    const defaultPage = mount(
+  const requiredProps = {
+    classes: { content: '' }
+  };
+
+  const mountContentPage = initialEntries =>
+    mount(
       <Provider store={store}>
-        <MemoryRouter>
-          <ContentPage />
+        <MemoryRouter initialEntries={initialEntries}>
+          <ContentPage {...requiredProps} />
         </MemoryRouter>
       </Provider>
     );
+
+  it('renders the <AgentsPage /> if no route information', () => {
+    const defaultPage = mountContentPage();
 
     expect(defaultPage.find(AgentsPage)).to.have.length(1);
     expect(defaultPage.find(AgentInfoPage)).to.have.length(0);
   });
 
   it('renders the <AgentInfoPage /> if route contains agent name', () => {
-    const agentInfoPage = mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={['/agent']}>
-          <ContentPage />
-        </MemoryRouter>
-      </Provider>
-    );
+    const agentInfoPage = mountContentPage(['/agent']);
 
     expect(agentInfoPage.find(AgentsPage)).to.have.length(0);
     expect(agentInfoPage.find(AgentInfoPage)).to.have.length(1);
   });
 
   it('renders the <MapPage /> if route contains a map id', () => {
-    const mapPage = mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={['/agent/process/maps/mapId']}>
-          <ContentPage />
-        </MemoryRouter>
-      </Provider>
-    );
+    const mapPage = mountContentPage(['/agent/process/maps/mapId']);
 
     expect(mapPage.find(MapPage)).to.have.length(1);
   });

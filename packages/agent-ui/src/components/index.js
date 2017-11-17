@@ -3,6 +3,6 @@
  * They are not aware of Redux, Router, etc. and are not coupled to the app ("dumb components").
  * See http://redux.js.org/docs/basics/UsageWithReact.html
  */
-export { default as AppendSegmentButton } from './appendSegmentButton';
-export { default as CreateMapButton } from './createMapButton';
+export { default as ActionArgumentFields } from './actionArgumentFields';
 export { default as SegmentsFilter } from './segmentsFilter';
+export { default as TopBarButton } from './topBarButton';

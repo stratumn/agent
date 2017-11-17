@@ -13,23 +13,20 @@
     "url": "https://github.com/stratumn/indigo-js/issues"
   },
   "homepage": "https://github.com/stratumn/indigo-js",
-  "keywords": [
-    "stratumn",
-    "agent",
-    "blockchain"
-  ],
+  "keywords": ["stratumn", "agent", "blockchain"],
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "test:ci": "react-scripts build && CI=true react-scripts test --env=jsdom --coverage",
+    "test:ci":
+      "react-scripts build && CI=true react-scripts test --env=jsdom --coverage",
     "eject": "react-scripts eject"
   },
   "dependencies": {
     "history": "^4.7.2",
     "immutable": "^3.8.2",
-    "material-ui": "^1.0.0-beta.16",
-    "material-ui-icons": "^1.0.0-beta.15",
+    "material-ui": "^1.0.0-beta.21",
+    "material-ui-icons": "^1.0.0-beta.17",
     "prop-types": "^15.6.0",
     "qs": "^6.5.1",
     "react": "^16.0.0",
@@ -47,8 +44,9 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "css.escape": "^1.5.1",
     "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.1",
+    "enzyme-adapter-react-16": "^1.1.0",
     "eslint": "^4.8.0",
     "eslint-plugin-react": "^7.4.0",
     "react-scripts": "^1.0.17",

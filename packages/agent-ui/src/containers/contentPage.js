@@ -1,5 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withRouter, Route } from 'react-router-dom';
+
+import { withStyles } from 'material-ui/styles';
+import layout from '../styles/layout';
 
 import {
   AgentInfoPage,
@@ -11,18 +15,8 @@ import {
   SegmentPage
 } from './';
 
-export const ContentPage = () => (
-  <div
-    style={{
-      position: 'absolute',
-      width: 'calc(100% - 240px)',
-      height: 'calc(100% - 56px)',
-      marginLeft: '240px',
-      marginTop: '56px',
-      padding: '12px',
-      borderStyle: 'solid'
-    }}
-  >
+export const ContentPage = ({ classes }) => (
+  <div className={classes.content}>
     <Route exact path="/" component={AgentsPage} />
     <Route exact path="/:agent" component={AgentInfoPage} />
     <Route exact path="/:agent/:process" component={ProcessInfoPage} />
@@ -37,4 +31,10 @@ export const ContentPage = () => (
   </div>
 );
 
-export default withRouter(ContentPage);
+ContentPage.propTypes = {
+  classes: PropTypes.shape({
+    content: PropTypes.string.isRequired
+  }).isRequired
+};
+
+export default withStyles(layout)(withRouter(ContentPage));

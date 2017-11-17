@@ -3,17 +3,18 @@ import { MemoryRouter, NavLink } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import configureStore from 'redux-mock-store';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { TopBar } from './topBar';
-import { AppendSegmentButton, CreateMapButton } from '../components';
+import { TopBarButton } from '../components';
 
 describe('<TopBar />', () => {
   const requiredProps = {
     match: { params: { agent: 'a', process: 'p' } },
     mapDialog: () => {},
-    segmentDialog: () => {}
+    segmentDialog: () => {},
+    classes: { appBar: '' }
   };
 
   const mockStore = configureStore();
@@ -29,9 +30,11 @@ describe('<TopBar />', () => {
     );
 
   it('renders a title on index page', () => {
-    const topBarNoLinks = shallow(<TopBar path="/" {...requiredProps} />);
+    const topBarNoLinks = renderTopBarWithRoute('/');
     expect(
-      topBarNoLinks.find('div').contains('Welcome to the Indigo Framework UI')
+      topBarNoLinks
+        .find('Typography')
+        .contains('Welcome to the Indigo Framework UI')
     ).to.be.true;
   });
 
@@ -51,21 +54,27 @@ describe('<TopBar />', () => {
     expect(navLinks.at(2).text()).to.equal('maps');
   });
 
-  it('renders a create map button on maps page', () => {
-    const topBarWithCreateMap = renderTopBarWithRoute('/agent/process/maps');
-    expect(topBarWithCreateMap.find(CreateMapButton)).to.have.length(1);
-  });
-
   it('does not render buttons on irrelevant pages', () => {
     const topBarWithoutButtons = renderTopBarWithRoute('/agent');
-    expect(topBarWithoutButtons.find(CreateMapButton)).to.have.length(0);
-    expect(topBarWithoutButtons.find(AppendSegmentButton)).to.have.length(0);
+    expect(topBarWithoutButtons.find(TopBarButton)).to.have.length(0);
+  });
+
+  const verifyButton = (topBar, expectedText) => {
+    expect(topBar.find(TopBarButton)).to.have.length(1);
+
+    const button = topBar.find(TopBarButton).at(0);
+    expect(button.text()).to.equal(expectedText);
+  };
+
+  it('renders a create map button on maps page', () => {
+    const topBarWithCreateMap = renderTopBarWithRoute('/agent/process/maps');
+    verifyButton(topBarWithCreateMap, 'Create');
   });
 
   it('renders an append segment button on map page', () => {
     const topBarWithAppendSegment = renderTopBarWithRoute(
       '/agent/process/maps/thisIsAMapId'
     );
-    expect(topBarWithAppendSegment.find(AppendSegmentButton)).to.have.length(1);
+    verifyButton(topBarWithAppendSegment, 'Append');
   });
 });

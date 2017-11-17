@@ -3,70 +3,82 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, NavLink, Route } from 'react-router-dom';
 
-import { AppendSegmentButton, CreateMapButton } from '../components';
+import { withStyles } from 'material-ui/styles';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import layout from '../styles/layout';
 
+import { TopBarButton } from '../components';
 import { openCreateMapDialog, openAppendSegmentDialog } from '../actions';
 
 const renderTopBarLinks = path => {
+  if (!path || path === '/') {
+    return (
+      <Typography type="title" noWrap>
+        Welcome to the Indigo Framework UI
+      </Typography>
+    );
+  }
+
   const parts = path.split('/').filter(p => p);
   let currentLink = '';
   return parts.map(p => {
     currentLink += `/${p}`;
     return (
-      <span key={p}>
-        {' > '}
+      <Typography type="title" key={p}>
+        {'/'}
         <NavLink key={p} to={currentLink}>
           {p}
         </NavLink>
-      </span>
+      </Typography>
     );
   });
 };
 
-export const TopBar = ({ path, mapDialog, segmentDialog }) => {
-  const style = {
-    position: 'absolute',
-    width: 'calc(100% - 240px)',
-    height: '56px',
-    marginLeft: '240px',
-    borderStyle: 'solid'
-  };
-
-  if (!path || path === '/') {
-    return <div style={style}>Welcome to the Indigo Framework UI</div>;
-  }
-
-  return (
-    <div style={style}>
+export const TopBar = ({ path, mapDialog, segmentDialog, classes }) => (
+  <AppBar className={classes.appBar}>
+    <Toolbar>
       {renderTopBarLinks(path)}
       <Route
         exact
         path="/:agent/:process/maps"
         render={props => (
-          <CreateMapButton openDialog={mapDialog} {...props.match.params} />
+          <TopBarButton
+            text="Create"
+            openDialog={() =>
+              mapDialog(props.match.params.agent, props.match.params.process)}
+          />
         )}
       />
       <Route
         exact
         path="/:agent/:process/maps/:id"
         render={props => (
-          <AppendSegmentButton
-            openDialog={segmentDialog}
-            {...props.match.params}
+          <TopBarButton
+            text="Append"
+            openDialog={() =>
+              segmentDialog(
+                props.match.params.agent,
+                props.match.params.process
+              )}
           />
         )}
       />
-    </div>
-  );
-};
+    </Toolbar>
+  </AppBar>
+);
 
 TopBar.propTypes = {
   path: PropTypes.string.isRequired,
   mapDialog: PropTypes.func.isRequired,
   segmentDialog: PropTypes.func.isRequired,
   /* eslint-disable react/forbid-prop-types */
-  match: PropTypes.object.isRequired
+  match: PropTypes.object.isRequired,
   /* eslint-enable react/forbid-prop-types */
+  classes: PropTypes.shape({
+    appBar: PropTypes.string.isRequired
+  }).isRequired
 };
 
 function mapStateToProps(state, ownProps) {
@@ -75,9 +87,11 @@ function mapStateToProps(state, ownProps) {
   };
 }
 
-export default withRouter(
-  connect(mapStateToProps, {
-    mapDialog: openCreateMapDialog,
-    segmentDialog: openAppendSegmentDialog
-  })(TopBar)
+export default withStyles(layout)(
+  withRouter(
+    connect(mapStateToProps, {
+      mapDialog: openCreateMapDialog,
+      segmentDialog: openAppendSegmentDialog
+    })(TopBar)
+  )
 );

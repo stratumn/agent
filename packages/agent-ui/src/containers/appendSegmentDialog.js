@@ -2,6 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import Button from 'material-ui/Button';
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
+} from 'material-ui/Dialog';
+import { MenuItem } from 'material-ui/Menu';
+import Select from 'material-ui/Select';
+
+import { ActionArgumentFields } from '../components';
+
 import * as statusTypes from '../constants/status';
 
 import {
@@ -9,24 +21,6 @@ import {
   closeAppendSegmentDialogAndClear,
   selectAppendSegmentAction
 } from '../actions';
-
-const buildActionInputs = args => {
-  const argsValues = [...Array(args.length)];
-  const actionInputs = [...Array(args.length)];
-  for (let i = 0; i < args.length; i += 1) {
-    actionInputs[i] = (
-      <input
-        key={args[i]}
-        placeholder={args[i]}
-        ref={node => {
-          argsValues[i] = node;
-        }}
-      />
-    );
-  }
-
-  return { valueNodes: argsValues, actionInputs };
-};
 
 export const AppendSegmentDialog = ({
   show,
@@ -41,67 +35,51 @@ export const AppendSegmentDialog = ({
     return null;
   }
 
-  const backdropStyle = {
-    position: 'fixed',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    padding: 50
-  };
-
-  const modalStyle = {
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    maxWidth: 500,
-    minHeight: 300,
-    margin: '0 auto',
-    padding: 30
-  };
-
-  const { valueNodes, actionInputs } = buildActionInputs(
-    actions[selectedAction].args
+  const { args } = actions[selectedAction];
+  const appendSegmentArgs = [...Array(args.length)];
+  const appendSegmentArgsFields = (
+    <ActionArgumentFields
+      args={args}
+      valueChanged={(index, value) => {
+        appendSegmentArgs[index] = value;
+      }}
+    />
   );
 
   return (
-    <div className="backdrop" style={backdropStyle}>
-      <div className="modal" style={modalStyle}>
-        <div>
-          Append segment
-          <button
-            onClick={e => {
-              e.preventDefault();
-              closeDialog();
-            }}
-          >
-            X
-          </button>
-        </div>
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-            appendSegment(...valueNodes.map(a => a.value.trim()));
+    <Dialog open={show} onRequestClose={() => closeDialog()}>
+      <DialogTitle>Append segment</DialogTitle>
+      <DialogContent>
+        <Select
+          value={selectedAction}
+          onChange={e => selectAction(e.target.value)}
+          displayEmpty
+        >
+          {Object.keys(actions).map(a => (
+            <MenuItem key={a} value={a}>
+              {a}
+            </MenuItem>
+          ))}
+        </Select>
+        {error && (
+          <DialogContentText className="error">{error}</DialogContentText>
+        )}
+        {appendSegmentArgsFields}
+      </DialogContent>
+      <DialogActions>
+        <Button color="default" onClick={() => closeDialog()}>
+          Cancel
+        </Button>
+        <Button
+          color="primary"
+          onClick={() => {
+            appendSegment(...appendSegmentArgs.map(arg => arg && arg.trim()));
           }}
         >
-          <select
-            value={selectedAction}
-            onChange={e => selectAction(e.target.value)}
-          >
-            {Object.keys(actions).map(a => (
-              <option key={a} value={a}>
-                {a}
-              </option>
-            ))}
-          </select>
-          <br />
-          {actionInputs}
-          <br />
-          <button type="submit">Append</button>
-          {error && <div className="error">{error}</div>}
-        </form>
-      </div>
-    </div>
+          Append
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
