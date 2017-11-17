@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import Button from 'material-ui/Button';
+import Table, { TableBody, TableCell, TableRow } from 'material-ui/Table';
+import TextField from 'material-ui/TextField';
+
 const checkAndJoin = o => {
   if (Array.isArray(o)) {
     return o.join(' ');
@@ -59,33 +63,47 @@ export class SegmentsFilter extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input
-          placeholder="Map IDs"
-          value={this.state.mapIds || ''}
-          onChange={e => {
-            this.handleChange('mapIds', e.target.value);
-          }}
-        />
-        <input
-          placeholder="Prev link hash"
-          value={this.state.prevLinkHash || ''}
-          onChange={e => {
-            this.handleChange('prevLinkHash', e.target.value);
-          }}
-        />
-        <input
-          placeholder="Tags"
-          value={this.state.tags || ''}
-          onChange={e => {
-            this.handleChange('tags', e.target.value);
-          }}
-        />
-        <button type="submit">Filter</button>
-        <button type="clear" onClick={this.handleClear}>
-          Clear
-        </button>
-      </form>
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableCell>
+              <TextField
+                label="Map IDs"
+                value={this.state.mapIds || ''}
+                type="text"
+                onChange={e => this.handleChange('mapIds', e.target.value)}
+              />
+            </TableCell>
+            <TableCell>
+              <TextField
+                label="Prev link hash"
+                value={this.state.prevLinkHash || ''}
+                type="text"
+                onChange={e =>
+                  this.handleChange('prevLinkHash', e.target.value)}
+              />
+            </TableCell>
+            <TableCell>
+              <TextField
+                label="Tags"
+                value={this.state.tags || ''}
+                type="text"
+                onChange={e => this.handleChange('tags', e.target.value)}
+              />
+            </TableCell>
+            <TableCell>
+              <Button type="filter" onClick={this.handleSubmit}>
+                Filter
+              </Button>
+            </TableCell>
+            <TableCell>
+              <Button type="clear" onClick={this.handleClear}>
+                Clear
+              </Button>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     );
   }
 }

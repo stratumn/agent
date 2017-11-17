@@ -4,7 +4,7 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import SegmentsFilter from './segmentsFilter';
+import { SegmentsFilter } from './segmentsFilter';
 
 chai.use(sinonChai);
 
@@ -21,10 +21,10 @@ describe('<SegmentsFilter />', () => {
     submitSpy.reset();
   });
 
-  it('renders the form correctly', () => {
+  it('renders the filters correctly', () => {
     const segmentsFilter = renderComponent({});
-    expect(segmentsFilter.find('form')).to.have.lengthOf(1);
-    expect(segmentsFilter.find('input')).to.have.lengthOf(3);
+    expect(segmentsFilter.find('Table')).to.have.lengthOf(1);
+    expect(segmentsFilter.find('TextField')).to.have.lengthOf(3);
   });
 
   it('submit empty filters on clear', () => {
@@ -32,7 +32,7 @@ describe('<SegmentsFilter />', () => {
       filters: { abc: 1 }
     };
     const segmentsFilter = renderComponent(props);
-    const clearButton = segmentsFilter.find('[type="clear"]');
+    const clearButton = segmentsFilter.find('Button[type="clear"]');
     expect(clearButton).to.have.lengthOf(1);
     clearButton.simulate('click');
     expect(submitSpy.callCount).to.equal(1);
@@ -46,13 +46,13 @@ describe('<SegmentsFilter />', () => {
     const segmentsFilter = renderComponent(props);
 
     const selectors = ['Map IDs', 'Prev link hash', 'Tags'].map(
-      s => `[placeholder="${s}"]`
+      s => `[label="${s}"]`
     );
 
     selectors.forEach(selector => {
       const input = segmentsFilter.find(selector);
       expect(input).to.have.lengthOf(1);
-      expect(input.props().value).to.be.equal('');
+      expect(input.props().value).to.equal('');
     });
   });
 
@@ -67,7 +67,7 @@ describe('<SegmentsFilter />', () => {
     const segmentsFilter = renderComponent(props);
 
     const selectors = ['Map IDs', 'Prev link hash', 'Tags'].map(
-      s => `[placeholder="${s}"]`
+      s => `[label="${s}"]`
     );
     const expected = ['aaa bbb', 'xyz', 'foo bar'];
 
@@ -82,7 +82,10 @@ describe('<SegmentsFilter />', () => {
     const props = {
       filters: { mapIds: 'aaa' } // this is invalid because not an array
     };
-    expect(renderComponent(props)).to.have.lengthOf(1);
+    const segmentsFilter = renderComponent(props);
+
+    expect(segmentsFilter.find('Button')).to.have.length(2);
+    expect(segmentsFilter.find('TextField')).to.have.length(3);
   });
 
   it('pushes the pathname with querystring on submit', () => {
@@ -95,9 +98,9 @@ describe('<SegmentsFilter />', () => {
     };
     const segmentsFilter = renderComponent(props);
 
-    const submitButton = segmentsFilter.find('[type="submit"]');
+    const submitButton = segmentsFilter.find('Button[type="filter"]');
     expect(submitButton).to.have.lengthOf(1);
-    submitButton.simulate('submit');
+    submitButton.simulate('click');
     expect(submitSpy.callCount).to.equal(1);
     expect(submitSpy.getCall(0).args[0]).to.deep.equal(props.filters);
   });
@@ -106,17 +109,18 @@ describe('<SegmentsFilter />', () => {
     const segmentsFilter = renderComponent({});
 
     const selectors = ['Map IDs', 'Prev link hash', 'Tags'].map(
-      s => `[placeholder="${s}"]`
+      s => `[label="${s}"]`
     );
     const changes = ['  aa bb  ', '  xyz  ', '  foo bar  '];
 
     selectors.forEach((selector, idx) =>
       segmentsFilter
         .find(selector)
+        .find('input')
         .simulate('change', { target: { value: changes[idx] } })
     );
 
-    segmentsFilter.find('[type="submit"]').simulate('submit');
+    segmentsFilter.find('Button[type="filter"]').simulate('click');
     expect(submitSpy.getCall(0).args[0]).to.deep.equal({
       mapIds: ['aa', 'bb'],
       prevLinkHash: 'xyz',

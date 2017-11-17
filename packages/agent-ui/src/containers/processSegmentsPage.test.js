@@ -111,9 +111,9 @@ describe('<ProcessSegmentsPage />', () => {
 
     const segmentsFilter = processSegmentsPage.find(SegmentsFilter);
     expect(segmentsFilter).to.have.lengthOf(1);
-    const submitButton = segmentsFilter.find('[type="submit"]');
+    const submitButton = segmentsFilter.find('Button[type="filter"]');
     expect(submitButton).to.have.lengthOf(1);
-    submitButton.simulate('submit');
+    submitButton.simulate('click');
     expect(historyStub.callCount).to.equal(1);
     expect(historyStub.getCall(0).args[0]).to.equal(
       'foo/bar?mapIds%5B%5D=aaa&mapIds%5B%5D=bbb&tags%5B%5D=foo&tags%5B%5D=bar&prevLinkHash=xyz'
@@ -133,7 +133,7 @@ describe('<ProcessSegmentsPage />', () => {
 
     const segmentsFilter = processSegmentsPage.find(SegmentsFilter);
     expect(segmentsFilter).to.have.lengthOf(1);
-    const clearButton = segmentsFilter.find('[type="clear"]');
+    const clearButton = segmentsFilter.find('Button[type="clear"]');
     expect(clearButton).to.have.lengthOf(1);
     clearButton.simulate('click');
     expect(historyStub.callCount).to.equal(1);
