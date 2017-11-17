@@ -168,10 +168,9 @@ export default function httpServer(agent, opts = {}) {
    *              $ref: '#/definitions/Process'
    *
    */
-  app.get('/processes', (req, res) => {
-    const processes = agent.getAllProcesses(req.query);
-    return res.json(processes);
-  });
+  app.get('/processes', (req, res) =>
+    agent.getAllProcesses(req.query).then(res.json.bind(res))
+  );
 
   /**
    * This API allows dynamic upload of new processes to a running agent.
@@ -311,8 +310,7 @@ export default function httpServer(agent, opts = {}) {
       agent.addProcess(req.params.process, processActions, store, fossilizers, {
         plugins: plugins
       });
-
-      return res.json(agent.getAllProcesses());
+      return agent.getAllProcesses().then(res.json.bind(res));
     });
   }
 
@@ -337,10 +335,9 @@ export default function httpServer(agent, opts = {}) {
    *       404:
    *         description: Process not found
    */
-  app.get('/:process/remove', (req, res) => {
-    const processes = agent.removeProcess(req.params.process);
-    return res.json(processes);
-  });
+  app.get('/:process/remove', (req, res) =>
+    agent.removeProcess(req.params.process).then(res.json.bind(res))
+  );
 
   /**
    * @swagger
