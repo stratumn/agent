@@ -108,8 +108,7 @@ export default function create(options) {
     * @returns {Promise} - a promise resolving with the processes' info (indexed by process name)
     */
     getInfo() {
-      const processesInfo = Object.values(processes).map(p => p.getInfo());
-      return Promise.all(processesInfo)
+      return this.getAllProcesses()
         .then(res =>
           res.reduce((map, process) => {
             map[process.name] = process;
@@ -192,14 +191,16 @@ export default function create(options) {
         throw err;
       }
       delete processes[processName];
-      return Object.values(processes);
+      return this.getAllProcesses();
     },
+
     /**
     * Returns the processes.
     * @returns {Array} - an array containing all the processes
     */
     getAllProcesses() {
-      return Object.values(processes);
+      const processesInfo = Object.values(processes).map(p => p.getInfo());
+      return Promise.all(processesInfo);
     },
 
     /**

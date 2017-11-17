@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import superRequest from 'superagent';
+import mocker from 'superagent-mocker';
 import should from 'should';
 import supertest from 'supertest';
 import create from '../src/create';
@@ -22,6 +24,7 @@ import hashJson from '../src/hashJson';
 import plugins from '../src/plugins';
 import generateSecret from '../src/generateSecret';
 import actions from './utils/basicActions';
+import mockStoreHttpServer from './utils/mockStoreHttpServer';
 
 function makePostRequest(server, url, args) {
   return supertest(server)
@@ -60,11 +63,15 @@ describe('HttpServer()', () => {
   let mockFossilizer;
 
   beforeEach(() => {
-    agent = create(actions, memoryStore(), null, {
+    agent = create({
       agentUrl: 'http://localhost'
     });
     mockFossilizer = {
       fossilize() {
+        return Promise.resolve(true);
+      },
+
+      getInfo() {
         return Promise.resolve(true);
       }
     };
@@ -115,12 +122,13 @@ describe('HttpServer()', () => {
     let serverWithProcessUpload;
 
     beforeEach(() => {
+      mockStoreHttpServer(mocker(superRequest));
       serverWithProcessUpload = agent.httpServer({ enableProcessUpload: true });
     });
 
     const createRequest = (
       encodedActions = validEncodedActions,
-      store = { url: 'http://localhost:5000' },
+      store = { url: 'http://localhost' },
       fossilizers = [],
       pluginIds = []
     ) => ({
@@ -170,13 +178,13 @@ describe('HttpServer()', () => {
     it('supports store and fossilizers', () => {
       const request = createRequest(
         validEncodedActions,
-        { url: 'http://store:5000' },
+        { url: 'http://localhost' },
         [
           {
-            url: 'http://fossilizer:6000'
+            url: 'http://localhost'
           },
           {
-            url: 'http://fossilizer:6001'
+            url: 'http://localhost'
           }
         ]
       );
@@ -188,8 +196,8 @@ describe('HttpServer()', () => {
           res.status.should.be.exactly(200);
           const newProcess = res.body.find(p => p.name === 'withStore');
           newProcess.should.not.be.empty();
-          newProcess.storeClient.should.not.be.empty();
-          newProcess.fossilizerClients.length.should.be.exactly(2);
+          newProcess.storeInfo.should.not.be.empty();
+          newProcess.fossilizersInfo.length.should.be.exactly(2);
         },
         'withStore'
       );
@@ -203,7 +211,7 @@ describe('HttpServer()', () => {
 
       const request = createRequest(
         validEncodedActions,
-        { url: 'localhost:5000' },
+        { url: 'http://localhost' },
         [],
         ['2'] /* plugin ids start at 1 - id=2 is localTime here */
       );
@@ -214,8 +222,10 @@ describe('HttpServer()', () => {
         res => {
           res.status.should.be.exactly(200);
           const newProcess = res.body.find(p => p.name === 'withPlugins');
-          newProcess.plugins.length.should.be.exactly(1);
-          newProcess.plugins[0].name.should.be.exactly(plugins.localTime.name);
+          newProcess.processInfo.pluginsInfo.length.should.be.exactly(1);
+          newProcess.processInfo.pluginsInfo[0].name.should.be.exactly(
+            plugins.localTime.name
+          );
         },
         'withPlugins'
       );

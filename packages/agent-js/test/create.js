@@ -134,8 +134,9 @@ describe('Agent', () => {
     it('can span multiple processes', () => {
       agent.addProcess('first', actions, memoryStore(), null);
       agent.addProcess('second', actions, memoryStore(), null);
-      const processes = agent.getAllProcesses();
-      processes.length.should.be.exactly(2);
+      return agent
+        .getAllProcesses()
+        .then(processes => processes.length.should.be.exactly(2));
     });
 
     it('fails if process name already exists', () => {
@@ -267,9 +268,13 @@ describe('Agent', () => {
   describe('#removeProcess', () => {
     it('removes an existing process', () => {
       agent.addProcess('first', actions, memoryStore(), null);
-      const processes = agent.getAllProcesses();
-      processes.length.should.be.exactly(1);
-      agent.removeProcess('first').length.should.be.exactly(0);
+      return agent
+        .getAllProcesses()
+        .then(processes => {
+          processes.length.should.be.exactly(1);
+          return agent.removeProcess('first');
+        })
+        .then(p => p.length.should.be.exactly(0));
     });
 
     it('fails if trying to remove a non-existent process', () => {
@@ -287,9 +292,32 @@ describe('Agent', () => {
     it('returns every process created by the agent', () => {
       agent.addProcess('basic', actions, memoryStore(), null);
       agent.addProcess('basic2', actions, memoryStore(), null);
-      const processes = agent.getAllProcesses();
-      processes.length.should.be.exactly(2);
-      processes.forEach(p => p.name.should.be.oneOf(['basic', 'basic2']));
+      return agent.getAllProcesses().then(processes => {
+        processes.length.should.be.exactly(2);
+        processes.forEach(p => p.name.should.be.oneOf(['basic', 'basic2']));
+      });
+    });
+
+    it('should return only public fields of a process', () => {
+      agent.addProcess('basic', actions, memoryStore(), dummyFossilizer, {
+        plugins: [plugins.stateHash, plugins.agentUrl('http://localhost:3000')]
+      });
+      return agent.getAllProcesses().then(processes => {
+        const infos = processes[0];
+        infos.fossilizersInfo.should.be.an.Array();
+        infos.fossilizersInfo.length.should.be.exactly(1);
+        infos.fossilizersInfo[0].name.should.be.exactly('dummy');
+        infos.storeInfo.should.be.an.Object();
+        infos.storeInfo.adapter.name.should.be.exactly('memory');
+        infos.processInfo.pluginsInfo.should.be.an.Array();
+        infos.processInfo.pluginsInfo.length.should.be.exactly(2);
+        infos.processInfo.pluginsInfo[0].should.eql({
+          name: plugins.stateHash.name,
+          description: plugins.stateHash.description
+        });
+        should(infos.salt).be.undefined();
+        should(infos.processInfo.salt).be.undefined();
+      });
     });
   });
 

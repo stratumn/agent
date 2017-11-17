@@ -27,7 +27,7 @@ export default class objectAdaptor {
   }
 
   getProcesses() {
-    return Promise.resolve(decorateBody(this.agent.getAllProcesses()));
+    return this.agent.getAllProcesses().then(decorateBody);
   }
 
   createMap(processName, ...args) {
