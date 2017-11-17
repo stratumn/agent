@@ -11,8 +11,6 @@ chai.use(sinonChai);
 
 describe('<TopBarButton />', () => {
   const requiredProps = {
-    agent: 'agent',
-    process: 'process',
     text: 'much button',
     openDialog: () => {},
     classes: { topBarButton: '' }
@@ -24,7 +22,7 @@ describe('<TopBarButton />', () => {
     expect(button.find('Typography').text()).to.equal(requiredProps.text);
   });
 
-  it('opens dialog with agent and process when clicked', () => {
+  it('opens dialog when clicked', () => {
     const openDialogSpy = sinon.spy();
     const button = mount(
       <TopBarButton {...requiredProps} openDialog={openDialogSpy} />
@@ -32,6 +30,5 @@ describe('<TopBarButton />', () => {
 
     button.find('button').simulate('click');
     expect(openDialogSpy.callCount).to.equal(1);
-    expect(openDialogSpy.getCall(0).args).to.deep.equal(['agent', 'process']);
   });
 });

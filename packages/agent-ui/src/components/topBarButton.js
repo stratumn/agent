@@ -7,14 +7,14 @@ import { withStyles } from 'material-ui/styles';
 
 import buttonStyles from '../styles/buttons';
 
-export const TopBarButton = ({ agent, process, openDialog, text, classes }) => (
+export const TopBarButton = ({ openDialog, text, classes }) => (
   <Button
     raised
     color="contrast"
     className={classes.topBarButton}
     onClick={e => {
       e.preventDefault();
-      openDialog(agent, process);
+      openDialog();
     }}
   >
     <TypoGraphy type="title">{text}</TypoGraphy>
@@ -22,8 +22,6 @@ export const TopBarButton = ({ agent, process, openDialog, text, classes }) => (
 );
 
 TopBarButton.propTypes = {
-  agent: PropTypes.string.isRequired,
-  process: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
   openDialog: PropTypes.func.isRequired,
   classes: PropTypes.shape({

@@ -46,8 +46,8 @@ export const TopBar = ({ path, mapDialog, segmentDialog, classes }) => (
         render={props => (
           <TopBarButton
             text="Create"
-            openDialog={mapDialog}
-            {...props.match.params}
+            openDialog={() =>
+              mapDialog(props.match.params.agent, props.match.params.process)}
           />
         )}
       />
@@ -57,8 +57,11 @@ export const TopBar = ({ path, mapDialog, segmentDialog, classes }) => (
         render={props => (
           <TopBarButton
             text="Append"
-            openDialog={segmentDialog}
-            {...props.match.params}
+            openDialog={() =>
+              segmentDialog(
+                props.match.params.agent,
+                props.match.params.process
+              )}
           />
         )}
       />
