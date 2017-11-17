@@ -36,11 +36,16 @@ export const SegmentsList = ({
           </TableHead>
           <TableBody>
             {segments.map(id => (
-              <TableRow key={id}>
+              <TableRow key={id} hover>
                 <TableCell>
-                  <NavLink to={`/${agent}/${process}/segments/${id}`}>
-                    {id}
-                  </NavLink>
+                  <Typography type="title">
+                    <NavLink
+                      to={`/${agent}/${process}/segments/${id}`}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      {id}
+                    </NavLink>
+                  </Typography>
                 </TableCell>
               </TableRow>
             ))}
