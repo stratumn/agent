@@ -8,25 +8,46 @@ import Button from 'material-ui/Button';
 import Collapse from 'material-ui/transitions/Collapse';
 import Drawer from 'material-ui/Drawer';
 import List, { ListItem, ListItemText, ListSubheader } from 'material-ui/List';
+import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import layout from '../styles/layout';
 
 import logo from '../images/logo.png';
 import * as statusTypes from '../constants/status';
 
+/* Material UI has a small isue for styling ListItemText so we need that workaround:
+ * https://stackoverflow.com/questions/43975839/material-ui-next-styling-text-inside-listitemtext
+ */
+const WhiteListItemText = ({ text, margin }) => (
+  <ListItemText
+    disableTypography
+    primary={
+      <Typography type="subheading" style={{ color: 'white' }}>
+        {text}
+      </Typography>
+    }
+    style={{ marginLeft: margin }}
+  />
+);
+
+WhiteListItemText.defaultProps = {
+  margin: '0'
+};
+WhiteListItemText.propTypes = {
+  text: PropTypes.string.isRequired,
+  margin: PropTypes.string
+};
+
 const AgentNavigationLink = ({ text, to, margin }) => (
   <ListItem button component={NavLink} to={to}>
-    <ListItemText primary={text} style={{ marginLeft: margin }} />
+    <WhiteListItemText text={text} margin={margin} />
   </ListItem>
 );
 
-AgentNavigationLink.defaultProps = {
-  margin: '0'
-};
+AgentNavigationLink.defaultProps = WhiteListItemText.defaultProps;
 AgentNavigationLink.propTypes = {
-  text: PropTypes.string.isRequired,
-  to: PropTypes.string.isRequired,
-  margin: PropTypes.string
+  ...WhiteListItemText.propTypes,
+  to: PropTypes.string.isRequired
 };
 
 const AgentNavigationLinks = ({ agents, agent, process }) => (
@@ -39,18 +60,14 @@ const AgentNavigationLinks = ({ agents, agent, process }) => (
       }}
     >
       <Avatar alt="Icon" src={logo} />
-      <Button component={NavLink} to="/">
+      <Button component={NavLink} to="/" color="contrast">
         INDIGO AGENT UI
       </Button>
     </ListSubheader>
     {agents.map(a => (
       <div key={a.name} id={a.name}>
         <AgentNavigationLink text={a.name} to={`/${a.name}`} />
-        <Collapse
-          in={!!(agent && a.name === agent)}
-          transitionDuration="auto"
-          unmountOnExit
-        >
+        <Collapse in={!!(agent && a.name === agent)} transitionDuration="auto">
           <List disablePadding>
             {a.processes.map(p => (
               <div key={p}>
@@ -62,7 +79,6 @@ const AgentNavigationLinks = ({ agents, agent, process }) => (
                 <Collapse
                   in={!!(process && p === process)}
                   transitionDuration="auto"
-                  unmountOnExit
                 >
                   <AgentNavigationLink
                     text="maps"
@@ -113,17 +129,17 @@ const IndigoExternalLinks = () => (
       component="a"
       href="https://indigoframework.com"
     >
-      <ListItemText primary="Documentation" />
+      <WhiteListItemText text="Documentation" />
     </ListItem>
     <ListItem
       button
       component="a"
       href="https://github.com/stratumn/agent-ui/issues/new"
     >
-      <ListItemText primary="Report issue" />
+      <WhiteListItemText text="Report issue" />
     </ListItem>
     <ListItem button>
-      <ListItemText primary="©2017 Stratumn SAS" />
+      <WhiteListItemText text="©2017 Stratumn SAS" />
     </ListItem>
   </List>
 );

@@ -1,3 +1,5 @@
+import { indigo } from 'material-ui/colors';
+
 const drawerWidth = 240;
 
 export default theme => ({
@@ -17,7 +19,8 @@ export default theme => ({
   },
   drawerPaper: {
     height: '100%',
-    width: drawerWidth
+    width: drawerWidth,
+    backgroundColor: indigo[800]
   },
   content: {
     width: '100%',

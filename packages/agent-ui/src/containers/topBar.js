@@ -37,7 +37,7 @@ const renderTopBarLinks = path => {
 };
 
 export const TopBar = ({ path, mapDialog, segmentDialog, classes }) => (
-  <AppBar className={classes.appBar}>
+  <AppBar className={classes.appBar} color="default">
     <Toolbar>
       {renderTopBarLinks(path)}
       <Route
