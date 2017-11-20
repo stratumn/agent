@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import Divider from 'material-ui/Divider';
+import Typography from 'material-ui/Typography';
+
 const formatAction = (name, args) => {
   let action = `${name}(`;
   const argsCount = (args || []).length;
@@ -18,66 +21,94 @@ const formatAction = (name, args) => {
 
 const renderStore = store => (
   <div>
-    <p>{store.name}</p>
-    <br />
-    <p>{store.version}</p>
-    <br />
-    <p>{store.commit}</p>
-    <br />
-    <p>{store.description}</p>
-    <br />
+    <Typography type="subheading">Store adapter name: {store.name}</Typography>
+    <Typography type="subheading">
+      Store adapter version: {store.version}
+    </Typography>
+    <Typography type="subheading">
+      Store adapter commit: {store.commit}
+    </Typography>
+    <Typography type="subheading">
+      Store adapter description: {store.description}
+    </Typography>
   </div>
 );
 
 const renderFossilizer = fossilizer => (
   <div key={fossilizer.name}>
-    <p>{fossilizer.name}</p>
-    <br />
-    <p>{fossilizer.version}</p>
-    <br />
-    <p>{fossilizer.commit}</p>
-    <br />
-    <p>{fossilizer.description}</p>
-    <br />
-    <p>{fossilizer.blockchain}</p>
-    <br />
+    <Typography type="subheading">
+      Fossilizer name: {fossilizer.name}
+    </Typography>
+    <Typography type="subheading">
+      Fossilizer version: {fossilizer.version}
+    </Typography>
+    <Typography type="subheading">
+      Fossilizer commit: {fossilizer.commit}
+    </Typography>
+    <Typography type="subheading">
+      Fossilizer description: {fossilizer.description}
+    </Typography>
+    <Typography type="subheading">
+      Fossilizer blockchain: {fossilizer.blockchain}
+    </Typography>
   </div>
+);
+
+const PrettyDivider = () => (
+  <Divider style={{ marginTop: '0.5em', marginBottom: '0.5em' }} />
 );
 
 export const ProcessInfoPage = ({ agent, process }) => {
   if (!process) {
     return (
-      <div className="error">
+      <Typography type="subheading" className="error">
         This process does not exist. Try reloading the agent.
-      </div>
+      </Typography>
     );
   }
 
   return (
-    <div>
-      <div>
-        <h1>Agent name: {agent}</h1>
-      </div>
-      <div>
-        <h2>Process name: {process.name}</h2>
-      </div>
-      <div>
-        <h3>Actions</h3>
-        <ul>
-          {Object.keys(process.actions || []).map(a => (
-            <li key={a}>{formatAction(a, process.actions[a].args)}</li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h3>Store</h3>
-        {process.store && renderStore(process.store)}
-      </div>
-      <div>
-        <h3>Fossilizers</h3>
-        {process.fossilizers &&
-          process.fossilizers.map(f => renderFossilizer(f))}
-      </div>
+    <div style={{ padding: '1em' }}>
+      <Typography type="display1" paragraph>
+        {process.name}
+      </Typography>
+      <Typography type="headline">Agent</Typography>
+      <Typography type="subheading">{agent}</Typography>
+      <PrettyDivider />
+      <Typography type="headline">Actions</Typography>
+      <Typography type="caption">
+        These are the procedures that define how segments are added to your
+        maps.
+      </Typography>
+      <ul>
+        {Object.keys(process.actions || []).map(a => (
+          <li key={a}>
+            <Typography type="subheading">
+              {formatAction(a, process.actions[a].args)}
+            </Typography>
+          </li>
+        ))}
+      </ul>
+      <PrettyDivider />
+      <Typography type="headline">Store</Typography>
+      <Typography type="caption" paragraph>
+        A store is responsible for saving your data. There are different
+        adapters available depending on your needs.
+      </Typography>
+      {process.store && renderStore(process.store)}
+      {!process.store && (
+        <Typography>Your agent is not connected to a store.</Typography>
+      )}
+      <PrettyDivider />
+      <Typography type="headline">Fossilizers</Typography>
+      <Typography type="caption" paragraph>
+        A fossilizer adds the steps of your workflow to a timeline, such as a
+        Blockchain or a trusted timestamping authority.
+      </Typography>
+      {process.fossilizers && process.fossilizers.map(f => renderFossilizer(f))}
+      {(!process.fossilizers || process.fossilizers.length === 0) && (
+        <Typography>Your agent is not connected to a fossilizer.</Typography>
+      )}
     </div>
   );
 };
