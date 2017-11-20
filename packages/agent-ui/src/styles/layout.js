@@ -2,7 +2,7 @@ import { indigo } from 'material-ui/colors';
 
 const drawerWidth = 240;
 
-export default theme => ({
+export default (/* theme */) => ({
   root: {
     width: '100%',
     height: '100%'
@@ -23,8 +23,7 @@ export default theme => ({
   content: {
     width: '100%',
     height: 'calc(100% - 56px)',
-    padding: theme.spacing.unit,
-    marginTop: 64,
-    marginLeft: drawerWidth
+    marginTop: 54,
+    marginLeft: drawerWidth - 10
   }
 });
