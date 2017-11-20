@@ -12,7 +12,8 @@ describe('<SegmentsFilter />', () => {
   const submitSpy = sinon.spy();
   const requiredProps = {
     filters: {},
-    submitHandler: submitSpy
+    submitHandler: submitSpy,
+    classes: { tableFilter: '' }
   };
   const renderComponent = props =>
     mount(<SegmentsFilter {...requiredProps} {...props} />);
