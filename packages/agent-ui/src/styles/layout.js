@@ -9,9 +9,7 @@ export default theme => ({
   },
   appFrame: {
     position: 'absolute',
-    display: 'flex',
-    width: '100%',
-    height: '100%'
+    display: 'flex'
   },
   appBar: {
     width: `calc(100% - ${drawerWidth}px)`,
