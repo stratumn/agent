@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import Divider from 'material-ui/Divider';
 import Typography from 'material-ui/Typography';
+import { PrettyDivider } from '../components';
 
 const formatAction = (name, args) => {
   let action = `${name}(`;
@@ -52,10 +52,6 @@ const renderFossilizer = fossilizer => (
       Fossilizer blockchain: {fossilizer.blockchain}
     </Typography>
   </div>
-);
-
-const PrettyDivider = () => (
-  <Divider style={{ marginTop: '0.5em', marginBottom: '0.5em' }} />
 );
 
 export const ProcessInfoPage = ({ agent, process }) => {
