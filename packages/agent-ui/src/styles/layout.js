@@ -23,7 +23,7 @@ export default (/* theme */) => ({
   content: {
     width: '100%',
     height: 'calc(100% - 56px)',
-    marginTop: 54,
+    marginTop: 56,
     marginLeft: drawerWidth - 10
   }
 });
