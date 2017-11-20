@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
 import Table, { TableBody, TableCell, TableRow } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
+import { withStyles } from 'material-ui/styles';
+import tableStyle from '../styles/tables';
 
 const checkAndJoin = o => {
   if (Array.isArray(o)) {
@@ -62,8 +64,10 @@ export class SegmentsFilter extends Component {
   }
 
   render() {
+    const { classes } = this.props;
+
     return (
-      <Table>
+      <Table className={classes.tableFilter}>
         <TableBody>
           <TableRow>
             <TableCell>
@@ -111,8 +115,11 @@ export class SegmentsFilter extends Component {
 SegmentsFilter.propTypes = {
   submitHandler: PropTypes.func.isRequired,
   /* eslint-disable react/forbid-prop-types */
-  filters: PropTypes.object.isRequired
+  filters: PropTypes.object.isRequired,
   /* eslint-enable react/forbid-prop-types */
+  classes: PropTypes.shape({
+    tableFilter: PropTypes.string.isRequired
+  }).isRequired
 };
 
-export default SegmentsFilter;
+export default withStyles(tableStyle)(SegmentsFilter);

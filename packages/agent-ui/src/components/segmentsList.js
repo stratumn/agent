@@ -31,20 +31,22 @@ export const SegmentsList = ({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Process segments:</TableCell>
+              <TableCell>
+                <Typography type="subheading">Process segments:</Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {segments.map(id => (
               <TableRow key={id} hover>
                 <TableCell>
-                  <Typography type="title">
-                    <NavLink
-                      to={`/${agent}/${process}/segments/${id}`}
-                      style={{ textDecoration: 'none', color: 'inherit' }}
-                    >
-                      {id}
-                    </NavLink>
+                  <Typography
+                    type="subheading"
+                    component={NavLink}
+                    to={`/${agent}/${process}/segments/${id}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    {id}
                   </Typography>
                 </TableCell>
               </TableRow>
