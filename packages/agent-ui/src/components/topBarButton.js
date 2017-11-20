@@ -2,22 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Button from 'material-ui/Button';
-import TypoGraphy from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
+import Add from 'material-ui-icons/Add';
 
 import buttonStyles from '../styles/buttons';
 
 export const TopBarButton = ({ openDialog, text, classes }) => (
-  <Button
-    raised
-    color="contrast"
-    className={classes.topBarButton}
-    onClick={e => {
-      e.preventDefault();
-      openDialog();
-    }}
-  >
-    <TypoGraphy type="title">{text}</TypoGraphy>
+  <Button className={classes.topBarButton} onClick={() => openDialog()}>
+    <Add style={{ color: 'gray' }} />
+    {text}
   </Button>
 );
 

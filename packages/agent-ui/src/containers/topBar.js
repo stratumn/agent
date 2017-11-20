@@ -15,7 +15,7 @@ import { openCreateMapDialog, openAppendSegmentDialog } from '../actions';
 const renderTopBarLinks = path => {
   if (!path || path === '/') {
     return (
-      <Typography type="title" noWrap>
+      <Typography type="headline" noWrap>
         Welcome to the Indigo Framework UI
       </Typography>
     );
@@ -26,12 +26,19 @@ const renderTopBarLinks = path => {
   return parts.map(p => {
     currentLink += `/${p}`;
     return (
-      <Typography type="title" key={p}>
-        {'/'}
-        <NavLink key={p} to={currentLink}>
+      <div style={{ display: 'flex' }} key={p}>
+        <Typography type="headline" style={{ color: 'gray' }}>
+          &nbsp;&gt;&nbsp;
+        </Typography>
+        <Typography
+          type="headline"
+          component={NavLink}
+          to={currentLink}
+          style={{ textDecoration: 'none' }}
+        >
           {p}
-        </NavLink>
-      </Typography>
+        </Typography>
+      </div>
     );
   });
 };
