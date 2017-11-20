@@ -25,7 +25,9 @@ export const SegmentsList = ({
 }) => {
   switch (status) {
     case statusTypes.FAILED:
-      return <Typography type="title">{`failed to load: ${error}`}</Typography>;
+      return (
+        <Typography type="subheading">{`failed to load: ${error}`}</Typography>
+      );
     case statusTypes.LOADED:
       return (
         <Table>
