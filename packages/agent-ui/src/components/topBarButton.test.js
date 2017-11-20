@@ -18,8 +18,8 @@ describe('<TopBarButton />', () => {
 
   it('contains the input text', () => {
     const button = mount(<TopBarButton {...requiredProps} />);
-    expect(button.find('Typography')).to.have.length(1);
-    expect(button.find('Typography').text()).to.equal(requiredProps.text);
+    expect(button.find('Button')).to.have.length(1);
+    expect(button.find('Button').text()).to.equal(requiredProps.text);
   });
 
   it('opens dialog when clicked', () => {

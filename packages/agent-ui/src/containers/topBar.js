@@ -15,7 +15,7 @@ import { openCreateMapDialog, openAppendSegmentDialog } from '../actions';
 const renderTopBarLinks = path => {
   if (!path || path === '/') {
     return (
-      <Typography type="title" noWrap>
+      <Typography type="headline" noWrap>
         Welcome to the Indigo Framework UI
       </Typography>
     );
@@ -23,21 +23,31 @@ const renderTopBarLinks = path => {
 
   const parts = path.split('/').filter(p => p);
   let currentLink = '';
+
+  // Note: typography automatically removes trailing whitespaces and requires
+  // us to escape html tags, hence the use of &nbsp;&gt;&nbsp to render " > "
   return parts.map(p => {
     currentLink += `/${p}`;
     return (
-      <Typography type="title" key={p}>
-        {'/'}
-        <NavLink key={p} to={currentLink}>
+      <div style={{ display: 'flex' }} key={p}>
+        <Typography type="headline" style={{ color: 'gray' }}>
+          &nbsp;&gt;&nbsp;
+        </Typography>
+        <Typography
+          type="headline"
+          component={NavLink}
+          to={currentLink}
+          style={{ textDecoration: 'none' }}
+        >
           {p}
-        </NavLink>
-      </Typography>
+        </Typography>
+      </div>
     );
   });
 };
 
 export const TopBar = ({ path, mapDialog, segmentDialog, classes }) => (
-  <AppBar className={classes.appBar}>
+  <AppBar className={classes.appBar} color="default">
     <Toolbar>
       {renderTopBarLinks(path)}
       <Route
