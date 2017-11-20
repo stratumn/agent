@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+
+import { CircularProgress } from 'material-ui/Progress';
+import Typography from 'material-ui/Typography';
+import { withStyles } from 'material-ui/styles';
+
+import progressStyle from '../styles/progress';
 
 import { getMapIds } from '../actions';
 import * as statusTypes from '../constants/status';
+import { MapsList } from '../components';
 
 export class ProcessMapsPage extends Component {
   componentDidMount() {
@@ -21,25 +28,21 @@ export class ProcessMapsPage extends Component {
   }
 
   render() {
-    const { maps: { status, mapIds, error }, agent, process } = this.props;
+    const {
+      maps: { status, mapIds, error },
+      agent,
+      process,
+      classes
+    } = this.props;
     switch (status) {
-      case statusTypes.LOADING:
-        return <div>loading...</div>;
       case statusTypes.FAILED:
-        return <div>{`failed to load: ${error}`}</div>;
-      case statusTypes.LOADED:
         return (
-          <div>
-            process maps:
-            {mapIds.map(id => (
-              <div key={id}>
-                <NavLink to={`/${agent}/${process}/maps/${id}`}>{id}</NavLink>
-              </div>
-            ))}
-          </div>
+          <Typography type="subheading">{`failed to load: ${error}`}</Typography>
         );
+      case statusTypes.LOADED:
+        return <MapsList agent={agent} process={process} mapIds={mapIds} />;
       default:
-        return <div>process maps</div>;
+        return <CircularProgress className={classes.circular} />;
     }
   }
 }
@@ -52,6 +55,9 @@ ProcessMapsPage.propTypes = {
     status: PropTypes.string,
     error: PropTypes.string,
     mapIds: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired,
+  classes: PropTypes.shape({
+    circular: PropTypes.string
   }).isRequired
 };
 
@@ -61,6 +67,8 @@ function mapStateToProps(state, ownProps) {
   return { agent, process, maps };
 }
 
-export default withRouter(
-  connect(mapStateToProps, { fetchMapIds: getMapIds })(ProcessMapsPage)
+export default withStyles(progressStyle)(
+  withRouter(
+    connect(mapStateToProps, { fetchMapIds: getMapIds })(ProcessMapsPage)
+  )
 );
