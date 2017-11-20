@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import { parse, stringify } from '../utils/queryString';
 import { getSegments } from '../actions';
-import * as statusTypes from '../constants/status';
-import { SegmentsFilter } from '../components';
+import { SegmentsFilter, SegmentsList } from '../components';
 import history from '../store/history';
 
 export class ProcessSegmentsPage extends Component {
@@ -39,40 +38,24 @@ export class ProcessSegmentsPage extends Component {
       pathname,
       filters
     } = this.props;
-    let segmentsResult;
-    switch (status) {
-      case statusTypes.LOADING:
-        segmentsResult = <div>loading...</div>;
-        break;
-      case statusTypes.FAILED:
-        segmentsResult = <div>{`failed to load: ${error}`}</div>;
-        break;
-      case statusTypes.LOADED:
-        segmentsResult = (
-          <div>
-            process segments:
-            {details.map(id => (
-              <div key={id}>
-                <NavLink to={`/${agent}/${process}/segments/${id}`}>
-                  {id}
-                </NavLink>
-              </div>
-            ))}
-          </div>
-        );
-        break;
-      default:
-        segmentsResult = <div>process segments</div>;
-        break;
-    }
+
     const submitFilters = f => {
       const query = stringify(f);
       history.push(`${pathname}?${query}`);
     };
+
+    const segmentListProps = {
+      agent,
+      process,
+      status,
+      error,
+      segments: details
+    };
+
     return (
       <div>
         <SegmentsFilter filters={filters} submitHandler={submitFilters} />
-        {segmentsResult}
+        <SegmentsList {...segmentListProps} />
       </div>
     );
   }

@@ -5,4 +5,5 @@
  */
 export { default as ActionArgumentFields } from './actionArgumentFields';
 export { default as SegmentsFilter } from './segmentsFilter';
+export { default as SegmentsList } from './segmentsList';
 export { default as TopBarButton } from './topBarButton';
