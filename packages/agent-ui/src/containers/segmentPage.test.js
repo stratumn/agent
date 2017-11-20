@@ -12,7 +12,7 @@ import { SegmentPage, mapStateToProps } from './segmentPage';
 chai.use(sinonChai);
 
 describe('<SegmentPage />', () => {
-  const segment = { meta: { linkHash: 'this is so meta' } };
+  const segment = { link: { meta: {} }, meta: { linkHash: 'this is so meta' } };
   const routeWithLinkHash = { match: { params: { id: 'l' } } };
 
   it('extracts segment loading status', () => {
@@ -33,14 +33,15 @@ describe('<SegmentPage />', () => {
     agent: 'a',
     process: 'p',
     linkHash: 'l',
-    refresh: false
+    refresh: false,
+    classes: { circular: '' }
   };
 
   it('displays a loading screen', () => {
-    const segmentPage = shallow(
+    const segmentPage = mount(
       <SegmentPage {...requiredProps} status={statusTypes.LOADING} />
     );
-    expect(segmentPage.find('div').contains('loading...')).to.equal(true);
+    expect(segmentPage.find('CircularProgress')).to.have.length(1);
   });
 
   it('displays an error message when segment is not found', () => {
@@ -49,9 +50,10 @@ describe('<SegmentPage />', () => {
   });
 
   it('displays segment information', () => {
-    const segmentPage = shallow(
+    const segmentPage = mount(
       <SegmentPage {...requiredProps} segment={segment} />
     );
+
     expect(segmentPage.find('pre').contains(JSON.stringify(segment, null, 2)))
       .to.be.true;
   });
@@ -59,6 +61,7 @@ describe('<SegmentPage />', () => {
   it('refreshes the segment when receiving props', () => {
     const segmentSpy = sinon.spy();
     const props = {
+      ...requiredProps,
       getSegmentIfNeeded: segmentSpy,
       agent: 'a',
       process: 'p',

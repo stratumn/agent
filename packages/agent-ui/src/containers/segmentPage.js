@@ -3,6 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { CircularProgress } from 'material-ui/Progress';
+import Typography from 'material-ui/Typography';
+import { withStyles } from 'material-ui/styles';
+
+import progressStyle from '../styles/progress';
+
 import { getSegment } from '../actions';
 import * as statusTypes from '../constants/status';
 
@@ -18,20 +24,57 @@ export class SegmentPage extends Component {
   }
 
   render() {
-    const { status, error, segment } = this.props;
+    const { status, error, segment, classes } = this.props;
     if (status === statusTypes.LOADING) {
-      return <div>loading...</div>;
+      return <CircularProgress className={classes.circular} />;
     }
 
     if (error) {
-      return <div className="error">{error}</div>;
+      return (
+        <Typography type="subheading" className="error">
+          {error}
+        </Typography>
+      );
     }
 
     if (!segment) {
-      return <div className="error">Could not find segment</div>;
+      return (
+        <Typography type="subheading" className="error">
+          Could not find segment
+        </Typography>
+      );
     }
 
-    return <pre>{JSON.stringify(segment, null, 2)}</pre>;
+    return (
+      <div style={{ padding: '1em' }}>
+        <Typography type="headline">Link hash</Typography>
+        <Typography type="subheading" paragraph>
+          {segment.meta.linkHash}
+        </Typography>
+        <Typography type="headline">Map ID</Typography>
+        <Typography type="subheading" paragraph>
+          {segment.link.meta.mapId}
+        </Typography>
+        <Typography type="headline">Process</Typography>
+        <Typography type="subheading" paragraph>
+          {segment.link.meta.process}
+        </Typography>
+        <Typography type="headline">State hash</Typography>
+        <Typography type="subheading" paragraph>
+          {segment.link.meta.stateHash}
+        </Typography>
+        <Typography type="headline">Action</Typography>
+        <Typography type="subheading" paragraph>
+          {segment.link.meta.action}
+        </Typography>
+        <Typography type="headline">Raw JSON</Typography>
+        <Typography type="body2">
+          <pre>
+            <code>{JSON.stringify(segment, null, 2)}</code>
+          </pre>
+        </Typography>
+      </div>
+    );
   }
 }
 
@@ -52,7 +95,10 @@ SegmentPage.propTypes = {
     meta: PropTypes.shape({
       linkHash: PropTypes.string.isRequired
     })
-  })
+  }),
+  classes: PropTypes.shape({
+    circular: PropTypes.string.isRequired
+  }).isRequired
 };
 
 export function mapStateToProps(state, ownProps) {
@@ -75,6 +121,8 @@ export function mapStateToProps(state, ownProps) {
   return props;
 }
 
-export default withRouter(
-  connect(mapStateToProps, { getSegmentIfNeeded: getSegment })(SegmentPage)
+export default withStyles(progressStyle)(
+  withRouter(
+    connect(mapStateToProps, { getSegmentIfNeeded: getSegment })(SegmentPage)
+  )
 );
