@@ -23,6 +23,9 @@ const renderTopBarLinks = path => {
 
   const parts = path.split('/').filter(p => p);
   let currentLink = '';
+
+  // Note: typography automatically removes trailing whitespaces and requires
+  // us to escape html tags, hence the use of &nbsp;&gt;&nbsp to render " > "
   return parts.map(p => {
     currentLink += `/${p}`;
     return (
