@@ -4,6 +4,7 @@
  * See http://redux.js.org/docs/basics/UsageWithReact.html
  */
 export { default as ActionArgumentFields } from './actionArgumentFields';
+export { default as AgentsManager } from './agentsManager';
 export { default as MapsList } from './mapsList';
 export { default as PrettyDivider } from './prettyDivider';
 export { default as SegmentsFilter } from './segmentsFilter';

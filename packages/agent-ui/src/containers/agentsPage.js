@@ -3,62 +3,37 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import Typography from 'material-ui/Typography';
+
 import { getAgent, removeAgent } from '../actions';
+import { AgentsManager } from '../components';
 import * as statusTypes from '../constants/status';
 
-const RenderLoadedAgents = ({ agents, deleteAgent }) =>
-  agents &&
-  agents.map(({ name, url }) => (
-    <div key={name}>
-      {`${name}: ${url}`}{' '}
-      <button
-        onClick={e => {
-          e.preventDefault();
-          deleteAgent(name);
-        }}
-      >
-        X
-      </button>
-    </div>
-  ));
-
-export const AgentsPage = ({ agents, fetchAgent, deleteAgent }) => {
-  let agentName;
-  let agentUrl;
-
-  return (
-    <div>
-      <RenderLoadedAgents agents={agents} deleteAgent={deleteAgent} />
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          if (!agentName.value.trim() || !agentUrl.value.trim()) {
-            return;
-          }
-          fetchAgent(agentName.value, agentUrl.value);
-          agentName.value = '';
-          agentUrl.value = '';
-        }}
-      >
-        <input
-          placeholder="Agent name"
-          ref={node => {
-            agentName = node;
-          }}
-        />
-        <br />
-        <input
-          placeholder="Agent url"
-          ref={node => {
-            agentUrl = node;
-          }}
-        />
-        <br />
-        <button type="submit">Add Agent</button>
-      </form>
-    </div>
-  );
-};
+export const AgentsPage = ({ agents, fetchAgent, deleteAgent }) => (
+  <div style={{ padding: '1em' }}>
+    <Typography type="display1">Agents</Typography>
+    <Typography paragraph>
+      An agent executes the logic of your processes. A process is defined by a
+      set of actions that may be used in the workflow. An instance of a process
+      is called a map. It contains the different steps of the process, called
+      segments.
+    </Typography>
+    {(!agents || agents.length === 0) && (
+      <Typography>
+        It looks like you are not connected to any agent right now. Enter a name
+        and an url to connect to an agent. If you are running an agent locally,
+        it will usually be on http://localhost:3000
+      </Typography>
+    )}
+    {agents && (
+      <AgentsManager
+        agents={agents}
+        addAgent={fetchAgent}
+        deleteAgent={deleteAgent}
+      />
+    )}
+  </div>
+);
 
 AgentsPage.defaultProps = {
   agents: []
