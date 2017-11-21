@@ -18,7 +18,7 @@ import withRefs from './withRefs';
 
 export default function segmentify(adaptor, process, obj) {
   Object.keys(process.processInfo.actions)
-    .filter(action => ['init'].indexOf(action) < 0)
+    .filter(action => action !== 'init')
     .forEach(action => {
       obj[action] = (...args) =>
         adaptor
