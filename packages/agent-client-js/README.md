@@ -151,10 +151,10 @@ AgentClient
   .getAgent('http://localhost:3000')
   .then(function(agent) {
     const process = agent.processes.firstProcess;
-    process.createMap('A new map');
+    return process.createMap('A new map');
 
-    // you can also add references to that first segment
-    return process.withRefs('abc123').createMap('A new map');
+    // you could also have added references to the first segment:
+    // return process.withRefs('abc123').createMap('A new map, with references');
   })
   .then(function(segment) {
     console.log(segment);
@@ -273,7 +273,7 @@ AgentClient
     return segment.addMessage('Hello, World!');
   })
   .then(function(segment) {
-    // you can also add references for that segment
+    // you can also add references to a new segment
     return segment.withRefs('acee2427').addMessage('Hello, World, with References!');
   })
   .then(function(segment) {
