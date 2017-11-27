@@ -77,4 +77,28 @@ describe('<TopBar />', () => {
     );
     verifyButton(topBarWithAppendSegment, 'Append');
   });
+
+  it('renders short hash for segment id', () => {
+    const topBarWithLinks = renderTopBarWithRoute(
+      '/agent/process/segments/thisIsALongStringThatShouldBeShorter'
+    );
+
+    const navLinks = topBarWithLinks.find(NavLink);
+    expect(navLinks).to.have.length(4);
+
+    expect(navLinks.at(3).text()).to.equal('thisIsAL..er');
+  });
+
+  it('renders full hash for map id', () => {
+    const topBarWithLinks = renderTopBarWithRoute(
+      '/agent/process/maps/thisIsALongStringThatShouldBeShorter'
+    );
+
+    const navLinks = topBarWithLinks.find(NavLink);
+    expect(navLinks).to.have.length(4);
+
+    expect(navLinks.at(3).text()).to.equal(
+      'thisIsALongStringThatShouldBeShorter'
+    );
+  });
 });

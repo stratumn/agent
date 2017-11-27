@@ -11,6 +11,7 @@ import layout from '../styles/layout';
 
 import { TopBarButton } from '../components';
 import { openCreateMapDialog, openAppendSegmentDialog } from '../actions';
+import shortHash from '../utils/shortHash';
 
 const renderTopBarLinks = path => {
   if (!path || path === '/') {
@@ -22,6 +23,10 @@ const renderTopBarLinks = path => {
   }
 
   const parts = path.split('/').filter(p => p);
+  // shorten the segment linkHash in the topbar breadcrumbs display
+  if (parts.length === 4 && parts[2] === 'segments') {
+    parts[3] = shortHash(parts[3]);
+  }
   let currentLink = '';
 
   // Note: typography automatically removes trailing whitespaces and requires
