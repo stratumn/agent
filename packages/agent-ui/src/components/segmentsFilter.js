@@ -36,12 +36,15 @@ export class SegmentsFilter extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { filters } = nextProps;
-    const { mapIds, tags, prevLinkHash } = filters;
-    this.setState({
-      mapIds: checkAndJoin(mapIds),
-      tags: checkAndJoin(tags),
-      prevLinkHash
-    });
+    // Only overwrite our state if we are passed filters as a prop
+    if (Object.keys(filters).length !== 0) {
+      const { mapIds, tags, prevLinkHash } = filters;
+      this.setState({
+        mapIds: checkAndJoin(mapIds),
+        tags: checkAndJoin(tags),
+        prevLinkHash
+      });
+    }
   }
 
   handleChange(key, value) {
@@ -60,6 +63,11 @@ export class SegmentsFilter extends Component {
 
   handleClear(e) {
     e.preventDefault();
+    this.setState({
+      mapIds: undefined,
+      tags: undefined,
+      prevLinkHash: undefined
+    });
     this.props.submitHandler({});
   }
 
@@ -115,11 +123,15 @@ export class SegmentsFilter extends Component {
 SegmentsFilter.propTypes = {
   submitHandler: PropTypes.func.isRequired,
   /* eslint-disable react/forbid-prop-types */
-  filters: PropTypes.object.isRequired,
+  filters: PropTypes.object,
   /* eslint-enable react/forbid-prop-types */
   classes: PropTypes.shape({
     tableFilter: PropTypes.string.isRequired
   }).isRequired
+};
+
+SegmentsFilter.defaultProps = {
+  filters: {}
 };
 
 export default withStyles(tableStyle)(SegmentsFilter);

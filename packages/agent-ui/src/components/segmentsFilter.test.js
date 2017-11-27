@@ -18,6 +18,19 @@ describe('<SegmentsFilter />', () => {
   const renderComponent = props =>
     mount(<SegmentsFilter {...requiredProps} {...props} />);
 
+  const textFieldSelectors = ['Map IDs', 'Prev link hash', 'Tags'].map(
+    s => `[label="${s}"]`
+  );
+
+  // valArr should be expected values following ['Map IDs', 'Prev link hash', 'Tags']
+  const testTextFieldValues = (valArr, component) => {
+    textFieldSelectors.forEach((selector, idx) => {
+      const input = component.find(selector);
+      expect(input).to.have.lengthOf(1);
+      expect(input.props().value).to.be.equal(valArr[idx]);
+    });
+  };
+
   beforeEach(() => {
     submitSpy.reset();
   });
@@ -40,17 +53,31 @@ describe('<SegmentsFilter />', () => {
     expect(submitSpy.getCall(0).args[0]).to.deep.equal({});
   });
 
+  it('clears the text fields on clear', () => {
+    const props = {
+      filters: {
+        mapIds: ['a'],
+        prevLinkHash: 'b',
+        tags: ['c']
+      }
+    };
+    const segmentsFilter = renderComponent(props);
+    const expected1 = ['a', 'b', 'c'];
+    testTextFieldValues(expected1, segmentsFilter);
+    const clearButton = segmentsFilter.find('Button[type="clear"]');
+    expect(clearButton).to.have.lengthOf(1);
+    clearButton.simulate('click');
+    const expected2 = ['', '', ''];
+    testTextFieldValues(expected2, segmentsFilter);
+  });
+
   it('disregards irrelevant filters', () => {
     const props = {
       filters: { abc: 1, foo: 'bar' }
     };
     const segmentsFilter = renderComponent(props);
 
-    const selectors = ['Map IDs', 'Prev link hash', 'Tags'].map(
-      s => `[label="${s}"]`
-    );
-
-    selectors.forEach(selector => {
+    textFieldSelectors.forEach(selector => {
       const input = segmentsFilter.find(selector);
       expect(input).to.have.lengthOf(1);
       expect(input.props().value).to.equal('');
@@ -67,16 +94,9 @@ describe('<SegmentsFilter />', () => {
     };
     const segmentsFilter = renderComponent(props);
 
-    const selectors = ['Map IDs', 'Prev link hash', 'Tags'].map(
-      s => `[label="${s}"]`
-    );
     const expected = ['aaa bbb', 'xyz', 'foo bar'];
 
-    selectors.forEach((selector, idx) => {
-      const input = segmentsFilter.find(selector);
-      expect(input).to.have.lengthOf(1);
-      expect(input.props().value).to.be.equal(expected[idx]);
-    });
+    testTextFieldValues(expected, segmentsFilter);
   });
 
   it('does not fail when search has wrong format', () => {
@@ -109,12 +129,9 @@ describe('<SegmentsFilter />', () => {
   it('handles change of input correctly', () => {
     const segmentsFilter = renderComponent({});
 
-    const selectors = ['Map IDs', 'Prev link hash', 'Tags'].map(
-      s => `[label="${s}"]`
-    );
     const changes = ['  aa bb  ', '  xyz  ', '  foo bar  '];
 
-    selectors.forEach((selector, idx) =>
+    textFieldSelectors.forEach((selector, idx) =>
       segmentsFilter
         .find(selector)
         .find('input')
