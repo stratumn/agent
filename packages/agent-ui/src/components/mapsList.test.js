@@ -13,10 +13,10 @@ describe('<MapsList />', () => {
     mapIds: ['m1', 'm2']
   };
 
-  const mountMaps = () =>
+  const mountMaps = (props = {}) =>
     mount(
       <MemoryRouter>
-        <MapsList {...requiredProps} />
+        <MapsList {...requiredProps} {...props} />
       </MemoryRouter>
     );
 
@@ -49,5 +49,11 @@ describe('<MapsList />', () => {
 
     verifyLink(0, 'm1');
     verifyLink(1, 'm2');
+  });
+
+  it('does not display map ids when empty', () => {
+    const maps = mountMaps({ mapIds: [] });
+
+    expect(maps.find('Typography')).to.have.length(1);
   });
 });

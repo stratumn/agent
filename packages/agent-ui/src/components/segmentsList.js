@@ -29,7 +29,7 @@ export const SegmentsList = ({
         <Typography type="subheading">{`failed to load: ${error}`}</Typography>
       );
     case statusTypes.LOADED:
-      return (
+      return segments.length ? (
         <Table>
           <TableHead>
             <TableRow>
@@ -55,6 +55,10 @@ export const SegmentsList = ({
             ))}
           </TableBody>
         </Table>
+      ) : (
+        <Typography type="subheading" style={{ margin: 20 }}>
+          No process segment found!
+        </Typography>
       );
     default:
       return <CircularProgress className={classes.circular} />;

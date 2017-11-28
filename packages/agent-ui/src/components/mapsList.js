@@ -11,42 +11,47 @@ import Table, {
 } from 'material-ui/Table';
 import Typography from 'material-ui/Typography';
 
-const MapsList = ({ agent, process, mapIds }) => (
-  <Table>
-    <TableHead>
-      <TableRow>
-        <TableCell>
-          <Typography type="subheading">Process maps:</Typography>
-        </TableCell>
-        <TableCell />
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {mapIds.map(id => (
-        <TableRow key={id} hover>
+const MapsList = ({ agent, process, mapIds }) =>
+  mapIds.length ? (
+    <Table>
+      <TableHead>
+        <TableRow>
           <TableCell>
-            <Typography
-              type="subheading"
-              component={NavLink}
-              to={`/${agent}/${process}/maps/${id}`}
-              style={{ textDecoration: 'none' }}
-            >
-              {id}
-            </Typography>
+            <Typography type="subheading">Process maps:</Typography>
           </TableCell>
-          <TableCell numeric>
-            <Button
-              component={NavLink}
-              to={`/${agent}/${process}/segments?mapIds[]=${id}`}
-            >
-              View segments
-            </Button>
-          </TableCell>
+          <TableCell />
         </TableRow>
-      ))}
-    </TableBody>
-  </Table>
-);
+      </TableHead>
+      <TableBody>
+        {mapIds.map(id => (
+          <TableRow key={id} hover>
+            <TableCell>
+              <Typography
+                type="subheading"
+                component={NavLink}
+                to={`/${agent}/${process}/maps/${id}`}
+                style={{ textDecoration: 'none' }}
+              >
+                {id}
+              </Typography>
+            </TableCell>
+            <TableCell numeric>
+              <Button
+                component={NavLink}
+                to={`/${agent}/${process}/segments?mapIds[]=${id}`}
+              >
+                View segments
+              </Button>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  ) : (
+    <Typography type="subheading" style={{ margin: 20 }}>
+      No process map found!
+    </Typography>
+  );
 
 MapsList.defaultProps = {
   mapIds: []
