@@ -6,6 +6,7 @@ import Table, { TableBody, TableCell, TableRow } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 import { withStyles } from 'material-ui/styles';
 import tableStyle from '../styles/tables';
+import { validateHash } from '../utils/hashUtils';
 
 const checkAndJoin = o => {
   if (Array.isArray(o)) {
@@ -18,6 +19,9 @@ const checkAndTrim = s => s && s.trim();
 
 const checkTrimAndSplit = s => s && s.trim().split(' ');
 
+const validatePrevLinkHash = s =>
+  s === undefined || s === '' || validateHash(s);
+
 export class SegmentsFilter extends Component {
   constructor(props) {
     super(props);
@@ -26,10 +30,12 @@ export class SegmentsFilter extends Component {
     this.state = {
       mapIds: checkAndJoin(mapIds),
       tags: checkAndJoin(tags),
-      prevLinkHash
+      prevLinkHash,
+      valid: validatePrevLinkHash(prevLinkHash)
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handlePrevLinkHashChange = this.handlePrevLinkHashChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClear = this.handleClear.bind(this);
   }
@@ -40,12 +46,21 @@ export class SegmentsFilter extends Component {
     this.setState({
       mapIds: checkAndJoin(mapIds),
       tags: checkAndJoin(tags),
-      prevLinkHash
+      prevLinkHash,
+      valid: validatePrevLinkHash(prevLinkHash)
     });
   }
 
   handleChange(key, value) {
     this.setState({ ...this.state, [key]: value });
+  }
+
+  handlePrevLinkHashChange(value) {
+    this.setState({
+      ...this.state,
+      prevLinkHash: value,
+      valid: validatePrevLinkHash(value)
+    });
   }
 
   handleSubmit(e) {
@@ -61,6 +76,7 @@ export class SegmentsFilter extends Component {
   handleClear(e) {
     e.preventDefault();
     this.props.submitHandler({});
+    // this.setState({});
   }
 
   render() {
@@ -83,8 +99,8 @@ export class SegmentsFilter extends Component {
                 label="Prev link hash"
                 value={this.state.prevLinkHash || ''}
                 type="text"
-                onChange={e =>
-                  this.handleChange('prevLinkHash', e.target.value)}
+                error={!this.state.valid}
+                onChange={e => this.handlePrevLinkHashChange(e.target.value)}
               />
             </TableCell>
             <TableCell>
@@ -96,7 +112,11 @@ export class SegmentsFilter extends Component {
               />
             </TableCell>
             <TableCell>
-              <Button type="filter" onClick={this.handleSubmit}>
+              <Button
+                type="filter"
+                onClick={this.handleSubmit}
+                disabled={!this.state.valid}
+              >
                 Filter
               </Button>
             </TableCell>

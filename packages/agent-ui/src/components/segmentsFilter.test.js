@@ -5,10 +5,12 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import { SegmentsFilter } from './segmentsFilter';
+import * as hashUtils from '../utils/hashUtils';
 
 chai.use(sinonChai);
 
 describe('<SegmentsFilter />', () => {
+  let validateHashStub;
   const submitSpy = sinon.spy();
   const requiredProps = {
     filters: {},
@@ -20,6 +22,12 @@ describe('<SegmentsFilter />', () => {
 
   beforeEach(() => {
     submitSpy.reset();
+    validateHashStub = sinon.stub(hashUtils, 'validateHash');
+    validateHashStub.returns(true);
+  });
+
+  afterEach(() => {
+    validateHashStub.restore();
   });
 
   it('renders the filters correctly', () => {
@@ -127,5 +135,19 @@ describe('<SegmentsFilter />', () => {
       prevLinkHash: 'xyz',
       tags: ['foo', 'bar']
     });
+  });
+
+  it('disable filter button and show error when prevLinkHash not valid', () => {
+    validateHashStub.returns(false);
+    const props = {
+      filters: {
+        prevLinkHash: 'xyz'
+      }
+    };
+    const segmentsFilter = renderComponent(props);
+    const filterBtn = segmentsFilter.find('Button[type="filter"]');
+    expect(filterBtn.props().disabled).to.be.true;
+    const prevLinkHashFld = segmentsFilter.find('[label="Prev link hash"]');
+    expect(prevLinkHashFld.props().error).to.be.true;
   });
 });
