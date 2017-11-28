@@ -61,4 +61,17 @@ describe('<SegmentsList />', () => {
     verifyLink(0, 's1');
     verifyLink(1, 's2');
   });
+
+  it('does not display segments or filters when empty', () => {
+    const segments = mount(
+      <MemoryRouter>
+        <SegmentsList
+          {...requiredProps}
+          status={statusTypes.LOADED}
+          segments={[]}
+        />
+      </MemoryRouter>
+    );
+    expect(segments.find('Typography')).to.have.length(1);
+  });
 });
