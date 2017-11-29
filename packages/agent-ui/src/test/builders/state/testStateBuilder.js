@@ -40,6 +40,16 @@ export default class {
     return this;
   }
 
+  withSelectRefDialog() {
+    this.selectRefs.show = true;
+    return this;
+  }
+
+  withSelectedRef(ref) {
+    this.selectRefs.refs.push(ref);
+    return this;
+  }
+
   build() {
     return {
       agents: this.agents,
