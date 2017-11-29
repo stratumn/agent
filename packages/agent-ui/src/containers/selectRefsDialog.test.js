@@ -9,8 +9,6 @@ import configureStore from 'redux-mock-store';
 
 import { TestStateBuilder } from '../test/builders/state';
 
-import * as statusTypes from '../constants/status';
-
 import { SelectRefsDialog } from './selectRefsDialog';
 
 chai.use(sinonChai);
