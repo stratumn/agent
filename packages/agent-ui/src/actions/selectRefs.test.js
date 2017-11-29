@@ -46,7 +46,7 @@ describe('selectRefs actions', () => {
     }
   ].forEach(({ action, type }) => {
     const name = Object.keys(action)[0];
-    const func = Object.values(action)[0];
+    const func = action[name];
     describe(`${name}`, () => {
       it('returns the correct type', () => {
         expect(func()).to.deep.equal({ type });
