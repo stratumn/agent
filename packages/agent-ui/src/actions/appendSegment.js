@@ -1,5 +1,6 @@
 import { getAgent } from 'stratumn-agent-client';
 import * as actionTypes from '../constants/actionTypes';
+import { clearRefs } from './';
 
 const appendSegmentRequest = () => ({
   type: actionTypes.APPEND_SEGMENT_REQUEST
@@ -54,7 +55,8 @@ export const appendSegment = (...args) => (dispatch, getState) => {
   dispatch(appendSegmentRequest());
   const {
     agents,
-    appendSegment: { dialog: { agent, process, parent, selectedAction } }
+    appendSegment: { dialog: { agent, process, parent, selectedAction } },
+    selectRefs: { refs }
   } = getState();
   if (agents[agent]) {
     const { url } = agents[agent];
@@ -63,10 +65,13 @@ export const appendSegment = (...args) => (dispatch, getState) => {
         const proc = a.getProcess(process);
         return proc.getSegment(parent);
       })
-      .then(parentSegment => parentSegment[selectedAction](...args))
+      .then(parentSegment =>
+        parentSegment.withRefs(refs)[selectedAction](...args)
+      )
       .then(segment => {
         dispatch(appendSegmentSuccess(segment));
         dispatch(closeDialog());
+        dispatch(clearRefs());
       })
       .catch(err => {
         dispatch(appendSegmentFailure(err));

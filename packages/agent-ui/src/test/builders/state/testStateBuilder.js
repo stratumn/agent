@@ -16,6 +16,10 @@ export default class {
       },
       request: {}
     };
+    this.selectRefs = {
+      show: false,
+      refs: []
+    };
   }
 
   withAgent(name, agent) {
@@ -42,7 +46,8 @@ export default class {
       maps: this.maps,
       segments: this.segments,
       mapExplorer: this.mapExplorer,
-      appendSegment: this.appendSegment
+      appendSegment: this.appendSegment,
+      selectRefs: this.selectRefs
     };
   }
 }

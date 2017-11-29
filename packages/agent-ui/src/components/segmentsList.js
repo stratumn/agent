@@ -21,8 +21,32 @@ export const SegmentsList = ({
   status,
   error,
   segments,
-  classes
+  classes,
+  handleClick
 }) => {
+  const getTableRow = segment => {
+    const { meta: { linkHash } } = segment;
+    const tableRowProps = {
+      type: 'subheading',
+      style: { textDecoration: 'none', cursor: 'pointer' }
+    };
+
+    if (handleClick === null) {
+      tableRowProps.component = NavLink;
+      tableRowProps.to = `/${agent}/${process}/segments/${linkHash}`;
+    } else {
+      tableRowProps.onClick = () => handleClick(segment);
+    }
+
+    return (
+      <TableRow key={linkHash} hover>
+        <TableCell>
+          <Typography {...tableRowProps}>{linkHash}</Typography>
+        </TableCell>
+      </TableRow>
+    );
+  };
+
   switch (status) {
     case statusTypes.FAILED:
       return (
@@ -38,22 +62,7 @@ export const SegmentsList = ({
               </TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {segments.map(id => (
-              <TableRow key={id} hover>
-                <TableCell>
-                  <Typography
-                    type="subheading"
-                    component={NavLink}
-                    to={`/${agent}/${process}/segments/${id}`}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    {id}
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+          <TableBody>{segments.map(getTableRow)}</TableBody>
         </Table>
       ) : (
         <Typography type="subheading" style={{ margin: 20 }}>
@@ -68,14 +77,22 @@ export const SegmentsList = ({
 SegmentsList.defaultProps = {
   status: '',
   error: '',
-  segments: []
+  segments: [],
+  handleClick: null
 };
 SegmentsList.propTypes = {
   agent: PropTypes.string.isRequired,
   process: PropTypes.string.isRequired,
   status: PropTypes.string,
   error: PropTypes.string,
-  segments: PropTypes.arrayOf(PropTypes.string),
+  handleClick: PropTypes.func,
+  segments: PropTypes.arrayOf(
+    PropTypes.shape({
+      meta: PropTypes.shape({
+        linkHash: PropTypes.string.isRequired
+      })
+    })
+  ),
   classes: PropTypes.shape({
     circular: PropTypes.string
   }).isRequired

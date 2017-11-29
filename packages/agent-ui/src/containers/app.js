@@ -10,7 +10,8 @@ import {
   LeftNavigation,
   ContentPage,
   CreateMapDialog,
-  AppendSegmentDialog
+  AppendSegmentDialog,
+  SelectRefsDialog
 } from './';
 
 export const App = ({ classes }) => (
@@ -20,6 +21,7 @@ export const App = ({ classes }) => (
     <ContentPage />
     <CreateMapDialog />
     <AppendSegmentDialog />
+    <SelectRefsDialog />
   </div>
 );
 
