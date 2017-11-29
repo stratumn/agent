@@ -76,7 +76,6 @@ export class SegmentsFilter extends Component {
   handleClear(e) {
     e.preventDefault();
     this.props.submitHandler({});
-    // this.setState({});
   }
 
   render() {
