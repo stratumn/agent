@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import Dialog, {
   DialogActions,
@@ -110,10 +109,8 @@ function mapStateToProps(state, ownProps) {
   return { agent, process, segments, show };
 }
 
-export default withRouter(
-  connect(mapStateToProps, {
-    fetchSegments: getSegments,
-    closeDialog: closeSelectRefsDialog,
-    appendRef: addRef
-  })(SelectRefsDialog)
-);
+export default connect(mapStateToProps, {
+  fetchSegments: getSegments,
+  closeDialog: closeSelectRefsDialog,
+  appendRef: addRef
+})(SelectRefsDialog);
