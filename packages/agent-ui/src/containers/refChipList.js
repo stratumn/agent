@@ -11,9 +11,9 @@ import { withStyles } from 'material-ui/styles';
 
 import { removeRef, clearRefs, openSelectRefsDialog } from '../actions';
 
-import styles from '../styles/refChipList';
+import shortHash from '../utils/shortHash';
 
-const LINKHASH_SUBSTR_SIZE = 6;
+import styles from '../styles/refChipList';
 
 export const RefChipList = ({
   refs,
@@ -29,7 +29,7 @@ export const RefChipList = ({
         const { linkHash } = ref;
         return (
           <Chip
-            label={linkHash.substring(0, LINKHASH_SUBSTR_SIZE)}
+            label={shortHash(linkHash)}
             key={linkHash}
             className={classes.chip}
             onRequestDelete={() => deleteRef(ref)}
