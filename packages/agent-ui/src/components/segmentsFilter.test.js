@@ -184,4 +184,14 @@ describe('<SegmentsFilter />', () => {
 
     testTextFieldValues(inputValues, segmentsFilter);
   });
+
+  it('updates the state on receiving props if filters is not empty', () => {
+    const segmentsFilter = renderComponent();
+
+    expect(segmentsFilter.state('tags')).to.equal(undefined);
+    segmentsFilter.setProps({ filters: {} });
+    expect(segmentsFilter.state('tags')).to.equal(undefined);
+    segmentsFilter.setProps({ filters: { tags: ['a', 'b'] } });
+    expect(segmentsFilter.state('tags')).to.equal('a b');
+  });
 });
