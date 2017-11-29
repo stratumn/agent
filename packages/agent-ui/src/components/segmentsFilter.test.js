@@ -167,4 +167,21 @@ describe('<SegmentsFilter />', () => {
     const prevLinkHashFld = segmentsFilter.find('[label="Prev link hash"]');
     expect(prevLinkHashFld.props().error).to.be.true;
   });
+
+  it('does not clear filters after clicking on filter button', () => {
+    const segmentsFilter = renderComponent();
+
+    const inputValues = ['  aa bb  ', '  xyz  ', '  foo bar  '];
+
+    textFieldSelectors.forEach((selector, idx) =>
+      segmentsFilter
+        .find(selector)
+        .find('input')
+        .simulate('change', { target: { value: inputValues[idx] } })
+    );
+
+    segmentsFilter.find('Button[type="filter"]').simulate('click');
+
+    testTextFieldValues(inputValues, segmentsFilter);
+  });
 });

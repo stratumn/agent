@@ -11,7 +11,7 @@ import { withStyles } from 'material-ui/styles';
 
 import { removeRef, clearRefs, openSelectRefsDialog } from '../actions';
 
-import shortHash from '../utils/shortHash';
+import { shortHash } from '../utils/hashUtils';
 
 import styles from '../styles/refChipList';
 
