@@ -1,17 +1,17 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { mount, shallow } from 'enzyme';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import configureStore from 'redux-mock-store';
 
 import * as statusTypes from '../constants/status';
 
-import { TestProcessBuilder, TestStateBuilder } from '../test/builders/state';
+import { TestProcessBuilder } from '../test/builders/state';
+import stubComponent from '../test/stubComponent';
 
 import { AppendSegmentDialog, mapStateToProps } from './appendSegmentDialog';
+import { RefChipList } from './';
 
 chai.use(sinonChai);
 
@@ -21,10 +21,6 @@ describe('<AppendSegmentDialog />', () => {
     .withAction('a2', ['a2_1', 'a2_2', 'a2_3'])
     .build().actions;
 
-  const testState = new TestStateBuilder().build();
-  const mockStore = configureStore();
-  const store = mockStore(testState);
-
   const requiredProps = {
     show: true,
     actions: testActions,
@@ -33,6 +29,8 @@ describe('<AppendSegmentDialog />', () => {
     closeDialog: () => {},
     selectAction: () => {}
   };
+
+  stubComponent(RefChipList);
 
   it('learns to show dialog from state', () => {
     const props = mapStateToProps({
@@ -82,9 +80,7 @@ describe('<AppendSegmentDialog />', () => {
   it('provides a button to close dialog', () => {
     const closeDialogSpy = sinon.spy();
     const dialog = mount(
-      <Provider store={store}>
-        <AppendSegmentDialog {...requiredProps} closeDialog={closeDialogSpy} />
-      </Provider>
+      <AppendSegmentDialog {...requiredProps} closeDialog={closeDialogSpy} />
     );
     const closeButton = dialog.find('Button').at(0);
     closeButton.simulate('click');
@@ -92,22 +88,14 @@ describe('<AppendSegmentDialog />', () => {
   });
 
   it('provides a dropdown to select action', () => {
-    const dialog = mount(
-      <Provider store={store}>
-        <AppendSegmentDialog {...requiredProps} />
-      </Provider>
-    );
+    const dialog = mount(<AppendSegmentDialog {...requiredProps} />);
     const dropdown = dialog.find('Select');
     expect(dropdown).to.have.length(1);
     expect(dropdown.find('input').props().value).to.equal('a2');
   });
 
   it('provides input fields for selected action arguments', () => {
-    const dialog = mount(
-      <Provider store={store}>
-        <AppendSegmentDialog {...requiredProps} />
-      </Provider>
-    );
+    const dialog = mount(<AppendSegmentDialog {...requiredProps} />);
 
     const actionFields = dialog.find('TextField');
     expect(actionFields).to.have.length(3);
@@ -119,12 +107,7 @@ describe('<AppendSegmentDialog />', () => {
   it('dispatches an action when selection changes', () => {
     const selectActionSpy = sinon.spy();
     const dialog = mount(
-      <Provider store={store}>
-        <AppendSegmentDialog
-          {...requiredProps}
-          selectAction={selectActionSpy}
-        />
-      </Provider>
+      <AppendSegmentDialog {...requiredProps} selectAction={selectActionSpy} />
     );
 
     const dropdown = dialog.find('Select');
@@ -137,13 +120,11 @@ describe('<AppendSegmentDialog />', () => {
   it('appends a new segment on button click', () => {
     const appendSegmentSpy = sinon.spy();
     const dialog = mount(
-      <Provider store={store}>
-        <AppendSegmentDialog
-          {...requiredProps}
-          selectedAction="a1"
-          appendSegment={appendSegmentSpy}
-        />
-      </Provider>
+      <AppendSegmentDialog
+        {...requiredProps}
+        selectedAction="a1"
+        appendSegment={appendSegmentSpy}
+      />
     );
 
     const actionFields = dialog.find('TextField');
