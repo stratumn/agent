@@ -1,17 +1,16 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 
 import { mount, shallow } from 'enzyme';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import configureStore from 'redux-mock-store';
 
-import { TestStateBuilder } from '../test/builders/state';
+import stubComponent from '../test/stubComponent';
 
 import * as statusTypes from '../constants/status';
 
 import { CreateMapDialog, mapStateToProps } from './createMapDialog';
+import { RefChipList } from './';
 
 chai.use(sinonChai);
 
@@ -24,9 +23,7 @@ describe('<CreateMapDialog />', () => {
     closeDialog: () => {}
   };
 
-  const testState = new TestStateBuilder().build();
-  const mockStore = configureStore();
-  const store = mockStore(testState);
+  stubComponent(RefChipList);
 
   it('learns to show dialog from state', () => {
     const props = mapStateToProps({
@@ -68,9 +65,7 @@ describe('<CreateMapDialog />', () => {
   it('provides a button to close dialog', () => {
     const closeDialogSpy = sinon.spy();
     const dialog = mount(
-      <Provider store={store}>
-        <CreateMapDialog {...requiredProps} closeDialog={closeDialogSpy} />
-      </Provider>
+      <CreateMapDialog {...requiredProps} closeDialog={closeDialogSpy} />
     );
 
     const closeButton = dialog.find('Button').at(0);
@@ -81,13 +76,11 @@ describe('<CreateMapDialog />', () => {
   it('creates map with init method arguments', () => {
     const createMapSpy = sinon.spy();
     const dialog = mount(
-      <Provider store={store}>
-        <CreateMapDialog
-          {...requiredProps}
-          args={['title', 'version']}
-          createMap={createMapSpy}
-        />
-      </Provider>
+      <CreateMapDialog
+        {...requiredProps}
+        args={['title', 'version']}
+        createMap={createMapSpy}
+      />
     );
 
     expect(dialog.find('TextField')).to.have.length(2);
@@ -117,9 +110,7 @@ describe('<CreateMapDialog />', () => {
 
   it('displays error message if creating map fails', () => {
     const dialog = mount(
-      <Provider store={store}>
-        <CreateMapDialog {...requiredProps} error="Invalid title" />
-      </Provider>
+      <CreateMapDialog {...requiredProps} error="Invalid title" />
     );
 
     expect(dialog.find('DialogContentText')).to.have.length(1);
