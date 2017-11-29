@@ -145,4 +145,21 @@ describe('<SegmentsFilter />', () => {
       tags: ['foo', 'bar']
     });
   });
+
+  it('does not clear filters after clicking on filter button', () => {
+    const segmentsFilter = renderComponent();
+
+    const inputValues = ['  aa bb  ', '  xyz  ', '  foo bar  '];
+
+    textFieldSelectors.forEach((selector, idx) =>
+      segmentsFilter
+        .find(selector)
+        .find('input')
+        .simulate('change', { target: { value: inputValues[idx] } })
+    );
+
+    segmentsFilter.find('Button[type="filter"]').simulate('click');
+
+    testTextFieldValues(inputValues, segmentsFilter);
+  });
 });
