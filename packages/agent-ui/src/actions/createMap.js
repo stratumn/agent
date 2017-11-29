@@ -1,5 +1,5 @@
 import { getAgent } from 'stratumn-agent-client';
-import { getSegmentSuccess } from './';
+import { getSegmentSuccess, clearRefs } from './';
 import * as actionTypes from '../constants/actionTypes';
 import history from '../store/history';
 
@@ -49,16 +49,21 @@ export const closeCreateMapDialogAndClear = () => dispatch => {
 
 export const createMap = (...args) => (dispatch, getState) => {
   dispatch(createMapRequest());
-  const { agents, createMap: { dialog: { agent, process } } } = getState();
+  const {
+    agents,
+    selectRefs: { refs },
+    createMap: { dialog: { agent, process } }
+  } = getState();
   if (agents[agent]) {
     const { url } = agents[agent];
     return getAgent(url)
       .then(a => {
         const proc = a.getProcess(process);
-        return proc.createMap(...args);
+        return proc.withRefs(refs).createMap(...args);
       })
       .then(segment => {
         dispatch(createMapSuccess());
+        dispatch(clearRefs());
         dispatch(closeCreateMapDialog());
         dispatch(getSegmentSuccess(segment));
         history.push(`/${agent}/${process}/segments/${segment.meta.linkHash}`);
