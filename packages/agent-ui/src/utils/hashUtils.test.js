@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import shortHash from './shortHash';
+import { shortHash, validateHash } from './hashUtils';
 
 describe('shortHash()', () => {
   it('shorten the hash when too long', () => {
@@ -20,5 +20,19 @@ describe('shortHash()', () => {
     expect(shortHash(h12)).to.equal(h12);
     const h5 = '387b5';
     expect(shortHash(h5)).to.equal(h5);
+  });
+});
+
+describe('validateHash()', () => {
+  it('validates', () => {
+    expect(
+      validateHash(
+        '12c571bce42a3400a315ed4f86c008a5ae055b90386c0a892103f1d4cd022acc'
+      )
+    ).to.be.true;
+  });
+
+  it('does not validate', () => {
+    expect(validateHash('abc123')).to.be.false;
   });
 });

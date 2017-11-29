@@ -11,10 +11,22 @@ import { SegmentsFilter } from '../components/segmentsFilter';
 import { SegmentsList } from '../components/segmentsList';
 import * as statusTypes from '../constants/status';
 import history from '../store/history';
+import * as hashUtils from '../utils/hashUtils';
 
 chai.use(sinonChai);
 
 describe('<ProcessSegmentsPage />', () => {
+  let validateHashStub;
+
+  beforeEach(() => {
+    validateHashStub = sinon.stub(hashUtils, 'validateHash');
+    validateHashStub.returns(true);
+  });
+
+  afterEach(() => {
+    validateHashStub.restore();
+  });
+
   const requiredProps = {
     agent: '',
     process: '',

@@ -11,7 +11,7 @@ import layout from '../styles/layout';
 
 import { TopBarButton } from '../components';
 import { openCreateMapDialog, openAppendSegmentDialog } from '../actions';
-import shortHash from '../utils/shortHash';
+import { shortHash } from '../utils/hashUtils';
 
 const renderTopBarLinks = path => {
   if (!path || path === '/') {
