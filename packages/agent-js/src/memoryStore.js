@@ -16,6 +16,31 @@
 
 import EventEmitter from 'events';
 
+// Default value for the pagination limit
+const STORE_DEFAULT_LIMIT = 20;
+
+// Max value for the pagination limit
+const STORE_MAX_LIMIT = 200;
+
+const paginateResults = (results, opts) => {
+  let res = [...results];
+  if (opts.offset) {
+    res = res.slice(opts.offset);
+  }
+
+  if (opts.limit) {
+    if (opts.limit > STORE_MAX_LIMIT) {
+      const err = new Error(`maximum limit should be ${STORE_MAX_LIMIT}`);
+      err.status = 400;
+      return Promise.reject(err);
+    }
+    res = res.slice(0, opts.limit);
+  } else {
+    res = res.slice(0, STORE_DEFAULT_LIMIT);
+  }
+  return res;
+};
+
 /**
  * Creates a memory store, for testing only.
  * @returns {Client} a memory store
@@ -172,14 +197,7 @@ export default function memoryStore() {
         return l.meta.linkHash.localeCompare(r.meta.linkHash);
       });
 
-      if (opts.offset) {
-        a = a.slice(opts.offset);
-      }
-
-      if (opts.limit) {
-        a = a.slice(0, opts.limit);
-      }
-
+      a = paginateResults(a, opts);
       return Promise.resolve(a);
     },
 
@@ -201,16 +219,7 @@ export default function memoryStore() {
         m[segments[s.meta.linkHash].link.meta.mapId] = true;
       });
 
-      let a = Object.keys(m);
-
-      if (opts.offset) {
-        a = a.slice(opts.offset);
-      }
-
-      if (opts.limit) {
-        a = a.slice(0, opts.limit);
-      }
-
+      const a = paginateResults(Object.keys(m), opts);
       return Promise.resolve(a);
     }
   });
