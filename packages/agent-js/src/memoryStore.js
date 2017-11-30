@@ -30,7 +30,7 @@ const paginateResults = (results, opts) => {
 
   if (opts.limit) {
     if (opts.limit > STORE_MAX_LIMIT) {
-      const err = new Error('maximum limit should be 200');
+      const err = new Error(`maximum limit should be ${STORE_MAX_LIMIT}`);
       err.status = 400;
       return Promise.reject(err);
     }
