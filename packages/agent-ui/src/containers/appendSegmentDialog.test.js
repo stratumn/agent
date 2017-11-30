@@ -8,8 +8,10 @@ import sinonChai from 'sinon-chai';
 import * as statusTypes from '../constants/status';
 
 import { TestProcessBuilder } from '../test/builders/state';
+import stubComponent from '../test/stubComponent';
 
 import { AppendSegmentDialog, mapStateToProps } from './appendSegmentDialog';
+import { RefChipList } from './';
 
 chai.use(sinonChai);
 
@@ -27,6 +29,8 @@ describe('<AppendSegmentDialog />', () => {
     closeDialog: () => {},
     selectAction: () => {}
   };
+
+  stubComponent(RefChipList);
 
   it('learns to show dialog from state', () => {
     const props = mapStateToProps({

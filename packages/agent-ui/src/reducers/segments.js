@@ -16,7 +16,7 @@ export default function(state = {}, action) {
     case actionTypes.SEGMENTS_SUCCESS:
       return {
         status: statusTypes.LOADED,
-        details: action.segments.map(({ meta: { linkHash } }) => linkHash)
+        details: action.segments
       };
     default:
       return state;

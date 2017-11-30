@@ -18,6 +18,7 @@ import {
   createMap as createMapAction,
   closeCreateMapDialogAndClear
 } from '../actions';
+import { RefChipList } from './';
 
 export const CreateMapDialog = ({
   show,
@@ -48,6 +49,7 @@ export const CreateMapDialog = ({
           <DialogContentText className="error">{error}</DialogContentText>
         )}
         {createMapArgsFields}
+        <RefChipList />
       </DialogContent>
       <DialogActions>
         <Button color="default" onClick={() => closeDialog()}>

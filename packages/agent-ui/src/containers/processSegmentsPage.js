@@ -68,7 +68,13 @@ ProcessSegmentsPage.propTypes = {
   segments: PropTypes.shape({
     status: PropTypes.string,
     error: PropTypes.string,
-    details: PropTypes.arrayOf(PropTypes.string)
+    details: PropTypes.arrayOf(
+      PropTypes.shape({
+        meta: PropTypes.shape({
+          linkHash: PropTypes.string.isRequired
+        })
+      })
+    )
   }).isRequired,
   pathname: PropTypes.string.isRequired,
   search: PropTypes.string.isRequired,

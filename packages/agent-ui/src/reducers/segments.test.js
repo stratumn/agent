@@ -39,7 +39,6 @@ describe('segments reducer', () => {
 
   it('update state on success', () => {
     const segs = [{ meta: { linkHash: 'abc' } }, { meta: { linkHash: 'def' } }];
-    const linkHashes = segs.map(({ meta: { linkHash } }) => linkHash);
     const newState = segments(
       {},
       {
@@ -49,7 +48,7 @@ describe('segments reducer', () => {
     );
     const expected = {
       status: statusTypes.LOADED,
-      details: linkHashes
+      details: segs
     };
     expect(newState).to.deep.equal(expected);
   });

@@ -5,9 +5,12 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
+import stubComponent from '../test/stubComponent';
+
 import * as statusTypes from '../constants/status';
 
 import { CreateMapDialog, mapStateToProps } from './createMapDialog';
+import { RefChipList } from './';
 
 chai.use(sinonChai);
 
@@ -19,6 +22,8 @@ describe('<CreateMapDialog />', () => {
     createMap: () => {},
     closeDialog: () => {}
   };
+
+  stubComponent(RefChipList);
 
   it('learns to show dialog from state', () => {
     const props = mapStateToProps({

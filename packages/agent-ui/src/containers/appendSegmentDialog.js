@@ -13,6 +13,7 @@ import { MenuItem } from 'material-ui/Menu';
 import Select from 'material-ui/Select';
 
 import { ActionArgumentFields } from '../components';
+import { RefChipList } from './';
 
 import * as statusTypes from '../constants/status';
 
@@ -65,6 +66,7 @@ export const AppendSegmentDialog = ({
           <DialogContentText className="error">{error}</DialogContentText>
         )}
         {appendSegmentArgsFields}
+        <RefChipList />
       </DialogContent>
       <DialogActions>
         <Button color="default" onClick={() => closeDialog()}>

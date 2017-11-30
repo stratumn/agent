@@ -17,3 +17,5 @@ export { default as MapPage } from './mapPage';
 export { default as SegmentPage } from './segmentPage';
 export { default as CreateMapDialog } from './createMapDialog';
 export { default as AppendSegmentDialog } from './appendSegmentDialog';
+export { default as SelectRefsDialog } from './selectRefsDialog';
+export { default as RefChipList } from './refChipList';

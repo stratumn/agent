@@ -126,6 +126,7 @@ describe('appendSegment action', () => {
   let getSegmentStub;
   let dispatchSpy;
   let getStateStub;
+  let testRefs;
 
   beforeEach(() => {
     dispatchSpy = sinon.spy();
@@ -137,6 +138,11 @@ describe('appendSegment action', () => {
         getSegment: getSegmentStub
       })
     });
+
+    testRefs = [
+      { process: 'a', linkHash: 'b' },
+      { process: 'c', linkHash: 'd' }
+    ];
 
     getStateStub = sinon.stub();
     getStateStub.returns({
@@ -153,6 +159,9 @@ describe('appendSegment action', () => {
           },
           selectedAction: 'send'
         }
+      },
+      selectRefs: {
+        refs: testRefs
       }
     });
   });
@@ -186,7 +195,15 @@ describe('appendSegment action', () => {
 
   it('closes dialog on success', () => {
     const segmentSendActionSpy = sinon.spy();
-    getSegmentStub.resolves({ send: segmentSendActionSpy });
+    const withRefsSpy = sinon
+      .stub()
+      .onCall(0)
+      .returns({
+        send: segmentSendActionSpy
+      });
+    getSegmentStub.resolves({
+      withRefs: withRefsSpy
+    });
 
     return appendSegment('jim', 'hates pancakes')(
       dispatchSpy,
@@ -203,10 +220,14 @@ describe('appendSegment action', () => {
         'hates pancakes'
       ]);
 
+      expect(withRefsSpy.callCount).to.equal(1);
+      expect(withRefsSpy.getCall(0).args[0]).to.deep.equal(testRefs);
+
       verifyDispatchedActions([
         actionTypes.APPEND_SEGMENT_REQUEST,
         actionTypes.APPEND_SEGMENT_SUCCESS,
-        actionTypes.APPEND_SEGMENT_DIALOG_CLOSE
+        actionTypes.APPEND_SEGMENT_DIALOG_CLOSE,
+        actionTypes.SELECT_REFS_CLEAR
       ]);
     });
   });

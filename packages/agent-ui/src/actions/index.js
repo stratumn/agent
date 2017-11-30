@@ -18,3 +18,11 @@ export {
   closeDialogAndClear as closeAppendSegmentDialogAndClear,
   selectAction as selectAppendSegmentAction
 } from './appendSegment';
+
+export {
+  closeSelectRefsDialog,
+  openSelectRefsDialog,
+  removeRef,
+  addRef,
+  clearRefs
+} from './selectRefs';

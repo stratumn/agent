@@ -89,19 +89,32 @@ describe('createMap action', () => {
   let createMapStub;
   let dispatchSpy;
   let getStateStub;
+  let withRefsStub;
+  let testRefs;
 
   beforeEach(() => {
     dispatchSpy = sinon.spy();
 
     createMapStub = sinon.stub();
+    withRefsStub = sinon
+      .stub()
+      .onCall(0)
+      .returns({
+        createMap: createMapStub
+      });
     stratumnClientStub = sinon.stub(StratumnAgentClient, 'getAgent');
     stratumnClientStub.resolves({
       getProcess: () => ({
-        createMap: createMapStub
+        withRefs: withRefsStub
       })
     });
 
     historyStub = sinon.stub(history, 'push');
+
+    testRefs = [
+      { process: 'a', linkHash: 'b' },
+      { process: 'c', linkHash: 'd' }
+    ];
 
     getStateStub = sinon.stub();
     getStateStub.returns({
@@ -112,7 +125,8 @@ describe('createMap action', () => {
           agent: 'a',
           process: 'p'
         }
-      }
+      },
+      selectRefs: { refs: testRefs }
     });
   });
 
@@ -134,6 +148,9 @@ describe('createMap action', () => {
     createMapStub.rejects('Unreachable');
 
     return createMap('i will fail')(dispatchSpy, getStateStub).then(() => {
+      expect(withRefsStub.callCount).to.equal(1);
+      expect(withRefsStub.getCall(0).args[0]).to.deep.equal(testRefs);
+
       verifyDispatchedActions([
         actionTypes.CREATE_MAP_REQUEST,
         actionTypes.CREATE_MAP_FAILURE
@@ -150,6 +167,9 @@ describe('createMap action', () => {
     ).then(() => {
       expect(getStateStub.callCount).to.equal(1);
 
+      expect(withRefsStub.callCount).to.equal(1);
+      expect(withRefsStub.getCall(0).args[0]).to.deep.equal(testRefs);
+
       expect(createMapStub.getCall(0).args).to.deep.equal([
         'a new map',
         'that rocks'
@@ -159,6 +179,7 @@ describe('createMap action', () => {
       verifyDispatchedActions([
         actionTypes.CREATE_MAP_REQUEST,
         actionTypes.CREATE_MAP_SUCCESS,
+        actionTypes.SELECT_REFS_CLEAR,
         actionTypes.CREATE_MAP_DIALOG_CLOSE,
         actionTypes.SEGMENT_SUCCESS
       ]);

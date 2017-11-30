@@ -2,11 +2,15 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { mount } from 'enzyme';
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 
 import * as statusTypes from '../constants/status';
 
 import { SegmentsList } from './segmentsList';
+
+chai.use(sinonChai);
 
 describe('<SegmentsList />', () => {
   const requiredProps = {
@@ -37,29 +41,61 @@ describe('<SegmentsList />', () => {
   });
 
   it('displays a table with links to segments', () => {
-    const segments = mount(
+    const linkHashes = ['s1', 's2'];
+    const segments = linkHashes.map(l => ({ meta: { linkHash: l } }));
+
+    const segmentsList = mount(
       <MemoryRouter>
         <SegmentsList
           {...requiredProps}
           status={statusTypes.LOADED}
-          segments={['s1', 's2']}
+          segments={segments}
         />
       </MemoryRouter>
     );
 
     const verifyLink = (index, segmentId) => {
       expect(
-        segments
+        segmentsList
           .find('NavLink')
           .at(index)
           .props().to
       ).to.equal(`/a/p/segments/${segmentId}`);
     };
 
-    expect(segments.find('Table')).to.have.length(1);
-    expect(segments.find('NavLink')).to.have.length(2);
-    verifyLink(0, 's1');
-    verifyLink(1, 's2');
+    expect(segmentsList.find('Table')).to.have.length(1);
+    expect(segmentsList.find('NavLink')).to.have.length(2);
+    verifyLink(0, linkHashes[0]);
+    verifyLink(1, linkHashes[1]);
+  });
+
+  it('displays a table with segment actions', () => {
+    const linkHashes = ['s1', 's2'];
+    const segments = linkHashes.map(l => ({ meta: { linkHash: l } }));
+    const handleClick = sinon.spy();
+
+    const segmentsList = mount(
+      <MemoryRouter>
+        <SegmentsList
+          {...requiredProps}
+          status={statusTypes.LOADED}
+          segments={segments}
+          handleClick={handleClick}
+        />
+      </MemoryRouter>
+    );
+
+    expect(segmentsList.find('Table')).to.have.length(1);
+    expect(segmentsList.find('TableBody').find('Typography')).to.have.length(2);
+    segments.forEach((segment, index) => {
+      const segmentRow = segmentsList
+        .find('TableBody')
+        .find('Typography')
+        .at(index);
+      segmentRow.simulate('click');
+      expect(handleClick.callCount).to.equal(index + 1);
+      expect(handleClick.getCall(index).args[0]).to.deep.equal(segment);
+    });
   });
 
   it('does not display segments or filters when empty', () => {

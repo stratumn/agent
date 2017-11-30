@@ -16,6 +16,10 @@ export default class {
       },
       request: {}
     };
+    this.selectRefs = {
+      show: false,
+      refs: []
+    };
   }
 
   withAgent(name, agent) {
@@ -36,13 +40,24 @@ export default class {
     return this;
   }
 
+  withSelectRefDialog() {
+    this.selectRefs.show = true;
+    return this;
+  }
+
+  withSelectedRef(ref) {
+    this.selectRefs.refs.push(ref);
+    return this;
+  }
+
   build() {
     return {
       agents: this.agents,
       maps: this.maps,
       segments: this.segments,
       mapExplorer: this.mapExplorer,
-      appendSegment: this.appendSegment
+      appendSegment: this.appendSegment,
+      selectRefs: this.selectRefs
     };
   }
 }
