@@ -16,6 +16,12 @@
 
 import EventEmitter from 'events';
 
+// Default value for the pagination limit
+const STORE_DEFAULT_LIMIT = 20;
+
+// Max value for the pagination limit
+const STORE_MAX_LIMIT = 200;
+
 /**
  * Creates a memory store, for testing only.
  * @returns {Client} a memory store
@@ -177,7 +183,14 @@ export default function memoryStore() {
       }
 
       if (opts.limit) {
+        if (opts.limit > STORE_MAX_LIMIT) {
+          const err = new Error('maximum limit should be 200');
+          err.status = 400;
+          return Promise.reject(err);
+        }
         a = a.slice(0, opts.limit);
+      } else {
+        a = a.slice(0, STORE_DEFAULT_LIMIT);
       }
 
       return Promise.resolve(a);
@@ -208,7 +221,14 @@ export default function memoryStore() {
       }
 
       if (opts.limit) {
+        if (opts.limit > STORE_MAX_LIMIT) {
+          const err = new Error('maximum limit should be 200');
+          err.status = 400;
+          return Promise.reject(err);
+        }
         a = a.slice(0, opts.limit);
+      } else {
+        a = a.slice(0, STORE_DEFAULT_LIMIT);
       }
 
       return Promise.resolve(a);

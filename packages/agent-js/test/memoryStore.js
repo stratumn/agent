@@ -87,10 +87,51 @@ describe('MemoryStore', () => {
         .findSegments('first')
         .then(body => body.should.deepEqual([segment2, segment1])));
 
-    it('paginages', () =>
+    it('paginates', () =>
       store
         .findSegments('first', { offset: 1, limit: 1 })
         .then(body => body.should.deepEqual([segment1])));
+
+    it('paginates with default limit', () => {
+      // Save >20 segments
+
+      const generateSegment = h => ({
+        "link": {
+          "state": {
+            "value": "four"
+          },
+          "meta": {
+            "process": "third",
+            "mapId": "three",
+            "tags": ["three"],
+            "priority": 3
+          }
+        },
+        "meta": {
+          "linkHash": h
+        }
+      });
+
+      for (let i = 0; i < 21; i++) {
+        store.saveSegment(generateSegment(i));
+      }
+
+      // Check that response only has 20 segments
+      store
+        .findSegments('third')
+        .then(body => body.should.have.length(20));
+    })
+
+    it('rejects if max limit exceeded', () =>
+      store
+        .findSegments('first', { limit: 201 })
+        .then(() => {
+          throw new Error('should not resolve');
+        })
+        .catch(err => {
+          err.status.should.be.exactly(400);
+          err.message.should.be.exactly('maximum limit should be 200');
+        }));
 
     it('filters by map ID', () =>
       store
