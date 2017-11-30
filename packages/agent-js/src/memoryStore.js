@@ -39,7 +39,7 @@ const paginateResults = (results, opts) => {
     res = res.slice(0, STORE_DEFAULT_LIMIT);
   }
   return res;
-}
+};
 
 /**
  * Creates a memory store, for testing only.
