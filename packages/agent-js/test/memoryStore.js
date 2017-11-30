@@ -96,31 +96,31 @@ describe('MemoryStore', () => {
       // Save >20 segments
 
       const generateSegment = h => ({
-        "link": {
-          "state": {
-            "value": "four"
+        link: {
+          state: {
+            value: 'four'
           },
-          "meta": {
-            "process": "third",
-            "mapId": "three",
-            "tags": ["three"],
-            "priority": 3
+          meta: {
+            process: 'third',
+            mapId: 'three',
+            tags: ['three'],
+            priority: 3
           }
         },
-        "meta": {
-          "linkHash": h
+        meta: {
+          linkHash: h
         }
       });
 
-      for (let i = 0; i < 21; i++) {
+      for (let i = 0; i < 22; i += 1) {
         store.saveSegment(generateSegment(i));
       }
 
       // Check that response only has 20 segments
-      store
+      return store
         .findSegments('third')
         .then(body => body.should.have.length(20));
-    })
+    });
 
     it('rejects if max limit exceeded', () =>
       store
