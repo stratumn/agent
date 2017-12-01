@@ -28,7 +28,8 @@ const plugins = [
   commonjs({
     namedExports: {
       '../agent-client-js/node_modules/qs/lib/index.js': ['stringify'],
-      'node_modules/qs/lib/index.js': ['stringify']
+      'node_modules/qs/lib/index.js': ['stringify'],
+      'node_modules/canonicaljson/lib/canonicaljson.js': ['stringify']
     }
   }),
   globals()
