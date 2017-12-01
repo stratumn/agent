@@ -14,15 +14,14 @@
   limitations under the License.
 */
 
-import { Injectable } from '@angular/core';
-import { ChainValidator } from 'mapexplorer-core';
+import { Injectable } from "@angular/core";
+import { MapValidator } from "stratumn-cs-validator";
 
 @Injectable()
 export class MapValidatorService {
-
-  constructor() { }
+  constructor() {}
 
   validate(chainscript): Promise<string> {
-    return new ChainValidator(chainscript).validate();
+    return new MapValidator(chainscript).validate();
   }
 }

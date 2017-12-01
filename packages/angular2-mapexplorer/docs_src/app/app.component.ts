@@ -1,14 +1,13 @@
-import { Component } from '@angular/core';
-import { MdIcon, MdIconRegistry } from '@angular2-material/icon';
+import { Component } from "@angular/core";
+import { MatIcon, MatIconRegistry } from "@angular/material";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  viewProviders: [MdIconRegistry]
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"],
+  viewProviders: [MatIconRegistry],
 })
 export class AppComponent {
-
   private segmentShowed = {};
 
   public showSegmentCallback: Function;
@@ -17,7 +16,7 @@ export class AppComponent {
 
   json = null;
 
-  constructor() { 
+  constructor() {
     this.showSegmentCallback = this.onSegmentShow.bind(this);
     this.hideSegmentCallback = this.onSegmentHide.bind(this);
   }
@@ -28,9 +27,9 @@ export class AppComponent {
 
   onSegmentShow(name) {
     this.segmentShowed[name] = true;
-  };
+  }
 
   onSegmentHide(name) {
     this.segmentShowed[name] = false;
-  };
+  }
 }

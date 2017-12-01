@@ -16,7 +16,7 @@
 
 <li class="category" [ngClass]="{ error: error, success: success }" [class.loading]="loading || loadingErrors">
     <div layout="row">
-        <md-progress-circle *ngIf="loading || loadingErrors" md-mode="indeterminate" md-diameter="25"></md-progress-circle>
+        <mat-progress-spinner *ngIf="loading || loadingErrors" mat-mode="indeterminate" mat-diameter="25"></mat-progress-spinner>
         <h3 flex="grow">{{title}}</h3>
         <span flex="grow"></span>
         <div class="errorCount" *ngIf="error && !(loading || loadingErrors)" (click)="toggleErrors()" flex="grow">
@@ -32,7 +32,7 @@
     <div ng-show="errorsShowed" class="errors">
         <ul>
             <li *ngFor="let err of errorMessages">
-              {{ err }}
+                {{ err }}
             </li>
         </ul>
     </div>

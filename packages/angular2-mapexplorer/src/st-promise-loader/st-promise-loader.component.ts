@@ -14,15 +14,14 @@
   limitations under the License.
 */
 
-import { Component, OnInit, OnChanges, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, Input } from "@angular/core";
 
 @Component({
-  selector: 'st-promise-loader',
-  templateUrl: './st-promise-loader.component.html',
-  styleUrls: ['./st-promise-loader.component.css']
+  selector: "st-promise-loader",
+  templateUrl: "./st-promise-loader.component.html",
+  styleUrls: ["./st-promise-loader.component.css"],
 })
 export class StPromiseLoaderComponent implements OnInit, OnChanges {
-
   @Input() title: string;
 
   @Input() loading: boolean;
@@ -43,12 +42,11 @@ export class StPromiseLoaderComponent implements OnInit, OnChanges {
     this.errorsShowed = !this.errorsShowed;
   };
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  ngOnChanges() {    
+  ngOnChanges() {
     this.errorMessages = [];
     this.success = false;
     this.error = false;

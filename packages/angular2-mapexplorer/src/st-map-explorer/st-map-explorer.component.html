@@ -22,8 +22,8 @@
       <h2>{{segment.meta.linkHash}}</h2>
     </div>
     <span flex></span>
-    <button md-button class="md-icon-button" aria-label="Close" (click)="close()">
-      <md-icon md-font-library="material-icons">close</md-icon>
+    <button mat-button class="mat-icon-button" aria-label="Close" (click)="close()">
+      <mat-icon mat-font-library="material-icons">close</mat-icon>
     </button>
   </div>
   <div layout="row" class="body">
@@ -82,25 +82,8 @@
   </div>
 </div>
 <div *ngIf="loading" layout="row" layout-sm="column" layout-align="space-around">
-    <md-progress-circle md-mode="indeterminate" md-diameter="80"></md-progress-circle>
+    <mat-progress-spinner mat-mode="indeterminate" mat-diameter="80"></mat-progress-spinner>
 </div>
 
 <div class="scroll" #map>
-  <div *ngIf="!loading">
-    <!--
-    <div ng-show="tags && tags.length && options.showTagColorConfiguration" draggable id="tags-configuration">
-      <md-toolbar>
-        <div class="md-toolbar-tools">
-          <h4>Configure link tag color</h4>
-          <button md-button class="md-icon-button" aria-label="Close" ng-click="options.showTagColorConfiguration = false">
-            <md-icon md-font-library="material-icons">close</md-icon>
-          </button>
-        </div>
-      </md-toolbar>
-      <div class="content">
-        <st-tag-color-picker ng-repeat="tag in tags" tag="tag"></st-tag-color-picker>
-      </div>
-    </div>
-    -->
-  </div>  
 </div>

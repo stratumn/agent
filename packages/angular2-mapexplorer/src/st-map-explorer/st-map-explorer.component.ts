@@ -14,18 +14,25 @@
   limitations under the License.
 */
 
-import { Component, Input, OnInit, OnChanges, AfterViewInit, ViewChild } from '@angular/core';
-import { ChainTreeBuilderService } from '../chain-tree-builder.service';
-import { ChainTreeBuilder } from 'mapexplorer-core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnChanges,
+  AfterViewInit,
+  ViewChild,
+} from "@angular/core";
+import { ChainTreeBuilderService } from "../chain-tree-builder.service";
+import { ChainTreeBuilder } from "mapexplorer-core";
 
 @Component({
-  selector: 'st-map-explorer',
-  templateUrl: './st-map-explorer.component.html',
-  styleUrls: ['./st-map-explorer.component.css']
+  selector: "st-map-explorer",
+  templateUrl: "./st-map-explorer.component.html",
+  styleUrls: ["./st-map-explorer.component.css"],
 })
-export class StMapExplorerComponent implements OnInit, OnChanges, AfterViewInit {
-
-  @ViewChild('map') map;
+export class StMapExplorerComponent
+  implements OnInit, OnChanges, AfterViewInit {
+  @ViewChild("map") map;
 
   private error: string;
 
@@ -55,10 +62,9 @@ export class StMapExplorerComponent implements OnInit, OnChanges, AfterViewInit 
 
   @Input() onSegmentShow;
 
-  @Input() onSegmentHide;  
+  @Input() onSegmentHide;
 
   constructor(public chainTreeBuilderService: ChainTreeBuilderService) {
-
     let self = this;
 
     this.defaultOptions = {
@@ -69,19 +75,19 @@ export class StMapExplorerComponent implements OnInit, OnChanges, AfterViewInit 
         if (tag) {
           self.tags = Array.from(new Set(self.tags.concat(tag)));
         }
-      }
-    }; 
+      },
+    };
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngOnChanges() {
     // const options = { ...defaultOptions, ...scope.options };
     if (this.builder) {
       this.error = null;
       this.loading = true;
-      this.chainTreeBuilderService.build(this.builder, this, this.defaultOptions)
+      this.chainTreeBuilderService
+        .build(this.builder, this, this.defaultOptions)
         .then(() => (this.loading = false))
         .catch(error => {
           this.loading = false;
@@ -91,12 +97,14 @@ export class StMapExplorerComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   ngAfterViewInit() {
-    this.builder = this.chainTreeBuilderService.getBuilder(this.map.nativeElement);
+    this.builder = this.chainTreeBuilderService.getBuilder(
+      this.map.nativeElement,
+    );
   }
 
-  transactionUrl(segment){
-    return segment.meta.evidence.transactions['bitcoin:main'];
-  }  
+  transactionUrl(segment) {
+    return segment.meta.evidence.transactions["bitcoin:main"];
+  }
 
   show(segment, onHide) {
     this.segment = segment;
