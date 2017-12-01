@@ -29,8 +29,9 @@ export class SelectRefsDialog extends Component {
   }
 
   submitFilters(filters) {
-    const { agent, process, fetchSegments } = this.props;
-    fetchSegments(agent, process, filters);
+    const { agent, fetchSegments } = this.props;
+    // Fetch all available segments
+    fetchSegments(agent, null, filters);
   }
 
   addSegmentAsRef(segment) {

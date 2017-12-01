@@ -101,4 +101,29 @@ describe('getSegments action', () => {
       expect(lastActionDispatched.segments).to.eql(['1', '2']);
     });
   });
+
+  it('fetches all segments if no process name was given', () => {
+    const findSegmentsStub1 = sinon.stub().resolves(['1', '2']);
+    const findSegmentsStub2 = sinon.stub().resolves(['3', '4']);
+    stratumnClientStub.resolves({
+      getProcesses: () =>
+        Promise.resolve([
+          { findSegments: findSegmentsStub1 },
+          { findSegments: findSegmentsStub2 }
+        ])
+    });
+    getStateStub.returns({ agents: { foo: { url: '' } } });
+
+    return getSegments('foo', null, { opt: 1 })(
+      dispatchSpy,
+      getStateStub
+    ).then(() => {
+      expect(findSegmentsStub1.callCount).to.equal(1);
+      expect(findSegmentsStub2.callCount).to.equal(1);
+      expect(dispatchSpy.callCount).to.equal(2);
+      const lastActionDispatched = dispatchSpy.getCall(1).args[0];
+      expect(lastActionDispatched.type).to.equal(actionTypes.SEGMENTS_SUCCESS);
+      expect(lastActionDispatched.segments).to.eql(['1', '2', '3', '4']);
+    });
+  });
 });

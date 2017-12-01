@@ -48,7 +48,7 @@ describe('<SelectRefsDialog />', () => {
     expect(requiredProps.fetchSegments.callCount).to.equal(1);
     expect(requiredProps.fetchSegments.getCall(0).args).to.deep.equal([
       'agent',
-      'proc',
+      null,
       {}
     ]);
     dialog.setProps({ show: false });
@@ -64,7 +64,7 @@ describe('<SelectRefsDialog />', () => {
     expect(requiredProps.fetchSegments.callCount).to.equal(1);
     expect(requiredProps.fetchSegments.getCall(0).args).to.deep.equal([
       'agent',
-      'proc',
+      null,
       testFilters
     ]);
   });

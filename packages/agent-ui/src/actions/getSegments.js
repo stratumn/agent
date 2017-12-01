@@ -24,13 +24,29 @@ export default function(agentName, processName, options) {
     const { agents } = getState();
     if (agents[agentName]) {
       const { url } = agents[agentName];
-      return getAgent(url)
-        .then(a => {
-          const proc = a.getProcess(processName);
-          return proc.findSegments(options);
-        })
-        .then(segments => dispatch(getSegmentsSuccess(segments)))
-        .catch(err => dispatch(getSegmentsFailure(err)));
+      let promise = getAgent(url);
+
+      if (processName !== null) {
+        // Get the segments specific to this process
+        promise = promise
+          .then(a => {
+            const proc = a.getProcess(processName);
+            return proc.findSegments(options);
+          })
+          .then(segments => dispatch(getSegmentsSuccess(segments)));
+      } else {
+        // Get segments from all processes
+        promise = promise
+          .then(a => a.getProcesses())
+          .then(processes =>
+            Promise.all(processes.map(p => p.findSegments(options)))
+          )
+          .then(segments =>
+            dispatch(getSegmentsSuccess(segments.reduce((a, b) => a.concat(b))))
+          );
+      }
+
+      return promise.catch(err => dispatch(getSegmentsFailure(err)));
     }
     return dispatch(
       getSegmentsFailure(`Can't find url for agent ${agentName}`)
