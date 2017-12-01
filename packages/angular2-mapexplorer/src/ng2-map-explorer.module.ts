@@ -14,20 +14,22 @@
   limitations under the License.
 */
 
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { MdButtonModule } from '@angular2-material/button';
-import { MdIconModule } from '@angular2-material/icon';
-import { MdProgressCircleModule } from '@angular2-material/progress-circle';
-import { MdToolbarModule } from '@angular2-material/toolbar';
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import {
+  MatButtonModule,
+  MatIconModule,
+  MatToolbarModule,
+  MatProgressSpinnerModule,
+} from "@angular/material";
 
-import { StMapExplorerComponent } from './st-map-explorer/st-map-explorer.component';
-import { FunctionArgumentsPipe } from './function-arguments.pipe';
-import { ChainTreeBuilderService } from './chain-tree-builder.service';
-import { MapValidatorService } from './map-validator.service';
-import { StMapValidatorComponent } from './st-map-validator/st-map-validator.component';
-import { StPromiseLoaderComponent } from './st-promise-loader/st-promise-loader.component';
-import { StMerklePathTreeComponent } from './st-merkle-path-tree/st-merkle-path-tree.component';
+import { StMapExplorerComponent } from "./st-map-explorer/st-map-explorer.component";
+import { FunctionArgumentsPipe } from "./function-arguments.pipe";
+import { ChainTreeBuilderService } from "./chain-tree-builder.service";
+import { MapValidatorService } from "./map-validator.service";
+import { StMapValidatorComponent } from "./st-map-validator/st-map-validator.component";
+import { StPromiseLoaderComponent } from "./st-promise-loader/st-promise-loader.component";
+import { StMerklePathTreeComponent } from "./st-merkle-path-tree/st-merkle-path-tree.component";
 
 @NgModule({
   declarations: [
@@ -35,23 +37,20 @@ import { StMerklePathTreeComponent } from './st-merkle-path-tree/st-merkle-path-
     FunctionArgumentsPipe,
     StMapValidatorComponent,
     StPromiseLoaderComponent,
-    StMerklePathTreeComponent
+    StMerklePathTreeComponent,
   ],
   imports: [
     BrowserModule,
-    MdButtonModule,
-    MdIconModule,
-    MdProgressCircleModule,
-    MdToolbarModule
+    MatButtonModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatProgressSpinnerModule,
   ],
-  providers: [
-    ChainTreeBuilderService,
-    MapValidatorService
-  ],
+  providers: [ChainTreeBuilderService, MapValidatorService],
   exports: [
     StMapExplorerComponent,
     StMapValidatorComponent,
-    StMerklePathTreeComponent
-  ]
+    StMerklePathTreeComponent,
+  ],
 })
-export class Ng2MapExplorerModule { }
+export class Ng2MapExplorerModule {}

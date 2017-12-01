@@ -16,17 +16,20 @@
 
 /* tslint:disable:no-unused-variable */
 
-import { TestBed, async, inject } from '@angular/core/testing';
-import { ChainTreeBuilderService } from './chain-tree-builder.service';
+import { TestBed, async, inject } from "@angular/core/testing";
+import { ChainTreeBuilderService } from "./chain-tree-builder.service";
 
-describe('Service: ChainTreeBuilder', () => {
+describe("Service: ChainTreeBuilder", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ChainTreeBuilderService]
+      providers: [ChainTreeBuilderService],
     });
   });
 
-  it('should ...', inject([ChainTreeBuilderService], (service: ChainTreeBuilderService) => {
-    expect(service).toBeTruthy();
-  }));
+  it(
+    "should ...",
+    inject([ChainTreeBuilderService], (service: ChainTreeBuilderService) => {
+      expect(service).toBeTruthy();
+    }),
+  );
 });

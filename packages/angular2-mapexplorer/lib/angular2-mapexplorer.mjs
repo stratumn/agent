@@ -1,8 +1,6 @@
 import { Component, Injectable, Input, NgModule, Pipe, ViewChild } from '@angular/core';
-import { MdButtonModule } from '@angular2-material/button';
-import { MdIconModule } from '@angular2-material/icon';
-import { MdProgressCircleModule } from '@angular2-material/progress-circle';
-import { MdToolbarModule } from '@angular2-material/toolbar';
+import { BrowserModule } from '@angular/platform-browser';
+import { MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatToolbarModule } from '@angular/material';
 import { ChainTreeBuilder, ChainValidator, MerklePathTree } from 'mapexplorer-core';
 
 function __decorate(decorators, target, key, desc) {
@@ -12,6 +10,21 @@ function __decorate(decorators, target, key, desc) {
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 }
 
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
 var StMapExplorerComponent = (function () {
     function StMapExplorerComponent(chainTreeBuilderService) {
         this.chainTreeBuilderService = chainTreeBuilderService;
@@ -28,15 +41,15 @@ var StMapExplorerComponent = (function () {
             }
         };
     }
-    StMapExplorerComponent.prototype.ngOnInit = function () {
-    };
+    StMapExplorerComponent.prototype.ngOnInit = function () { };
     StMapExplorerComponent.prototype.ngOnChanges = function () {
         var _this = this;
         // const options = { ...defaultOptions, ...scope.options };
         if (this.builder) {
             this.error = null;
             this.loading = true;
-            this.chainTreeBuilderService.build(this.builder, this, this.defaultOptions)
+            this.chainTreeBuilderService
+                .build(this.builder, this, this.defaultOptions)
                 .then(function () { return (_this.loading = false); })
                 .catch(function (error) {
                 _this.loading = false;
@@ -48,7 +61,7 @@ var StMapExplorerComponent = (function () {
         this.builder = this.chainTreeBuilderService.getBuilder(this.map.nativeElement);
     };
     StMapExplorerComponent.prototype.transactionUrl = function (segment) {
-        return segment.meta.evidence.transactions['bitcoin:main'];
+        return segment.meta.evidence.transactions["bitcoin:main"];
     };
     StMapExplorerComponent.prototype.show = function (segment, onHide) {
         this.segment = segment;
@@ -74,7 +87,7 @@ var StMapExplorerComponent = (function () {
         return JSON.stringify(this.segment, undefined, 2);
     };
     __decorate([
-        ViewChild('map')
+        ViewChild("map")
     ], StMapExplorerComponent.prototype, "map");
     __decorate([
         Input()
@@ -99,33 +112,65 @@ var StMapExplorerComponent = (function () {
     ], StMapExplorerComponent.prototype, "onSegmentHide");
     StMapExplorerComponent = __decorate([
         Component({
-            selector: 'st-map-explorer',
-            templateUrl: './st-map-explorer.component.html',
-            styleUrls: ['./st-map-explorer.component.css']
+            selector: "st-map-explorer",
+            templateUrl: "./st-map-explorer.component.html",
+            styleUrls: ["./st-map-explorer.component.css"]
         })
     ], StMapExplorerComponent);
     return StMapExplorerComponent;
 }());
 
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
 var FunctionArgumentsPipe = (function () {
     function FunctionArgumentsPipe() {
     }
     FunctionArgumentsPipe.prototype.transform = function (value, args) {
-        return value.map(function (arg) {
+        return value
+            .map(function (arg) {
             if (arg instanceof Object) {
                 return JSON.stringify(arg, undefined, 2);
             }
             return arg;
-        }).join(', ');
+        })
+            .join(", ");
     };
     FunctionArgumentsPipe = __decorate([
         Pipe({
-            name: 'functionArguments'
+            name: "functionArguments"
         })
     ], FunctionArgumentsPipe);
     return FunctionArgumentsPipe;
 }());
 
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
 var ChainTreeBuilderService = (function () {
     function ChainTreeBuilderService() {
     }
@@ -145,6 +190,21 @@ var ChainTreeBuilderService = (function () {
     return ChainTreeBuilderService;
 }());
 
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
 var MapValidatorService = (function () {
     function MapValidatorService() {
     }
@@ -157,6 +217,21 @@ var MapValidatorService = (function () {
     return MapValidatorService;
 }());
 
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
 var StMapValidatorComponent = (function () {
     function StMapValidatorComponent(mapValidatorService) {
         this.mapValidatorService = mapValidatorService;
@@ -164,18 +239,19 @@ var StMapValidatorComponent = (function () {
         this.error = null;
         this.loading = false;
     }
-    StMapValidatorComponent.prototype.ngOnInit = function () {
-    };
+    StMapValidatorComponent.prototype.ngOnInit = function () { };
     StMapValidatorComponent.prototype.ngOnChanges = function () {
         var _this = this;
         this.error = null;
         if (this.chainscript) {
             this.loading = true;
-            this.mapValidatorService.validate(this.chainscript)
+            this.mapValidatorService
+                .validate(this.chainscript)
                 .then(function (errors) {
                 _this.errors = errors;
                 _this.loading = false;
-            }).catch(function (error) {
+            })
+                .catch(function (error) {
                 _this.error = error.message;
                 _this.loading = false;
             });
@@ -186,14 +262,29 @@ var StMapValidatorComponent = (function () {
     ], StMapValidatorComponent.prototype, "chainscript");
     StMapValidatorComponent = __decorate([
         Component({
-            selector: 'st-map-validator',
-            templateUrl: './st-map-validator.component.html',
-            styleUrls: ['./st-map-validator.component.css']
+            selector: "st-map-validator",
+            templateUrl: "./st-map-validator.component.html",
+            styleUrls: ["./st-map-validator.component.css"]
         })
     ], StMapValidatorComponent);
     return StMapValidatorComponent;
 }());
 
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
 var StPromiseLoaderComponent = (function () {
     function StPromiseLoaderComponent() {
         var _this = this;
@@ -206,8 +297,7 @@ var StPromiseLoaderComponent = (function () {
             _this.errorsShowed = !_this.errorsShowed;
         };
     }
-    StPromiseLoaderComponent.prototype.ngOnInit = function () {
-    };
+    StPromiseLoaderComponent.prototype.ngOnInit = function () { };
     StPromiseLoaderComponent.prototype.ngOnChanges = function () {
         var _this = this;
         this.errorMessages = [];
@@ -239,23 +329,38 @@ var StPromiseLoaderComponent = (function () {
     ], StPromiseLoaderComponent.prototype, "errors");
     StPromiseLoaderComponent = __decorate([
         Component({
-            selector: 'st-promise-loader',
-            templateUrl: './st-promise-loader.component.html',
-            styleUrls: ['./st-promise-loader.component.css']
+            selector: "st-promise-loader",
+            templateUrl: "./st-promise-loader.component.html",
+            styleUrls: ["./st-promise-loader.component.css"]
         })
     ], StPromiseLoaderComponent);
     return StPromiseLoaderComponent;
 }());
 
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
 var StMerklePathTreeComponent = (function () {
     function StMerklePathTreeComponent(element) {
         this.element = element;
         this.merklePathTree = null;
     }
-    StMerklePathTreeComponent.prototype.ngOnInit = function () {
-    };
+    StMerklePathTreeComponent.prototype.ngOnInit = function () { };
     StMerklePathTreeComponent.prototype.ngOnChanges = function () {
-        this.merklePathTree = this.merklePathTree || new MerklePathTree(this.element.nativeElement);
+        this.merklePathTree =
+            this.merklePathTree || new MerklePathTree(this.element.nativeElement);
         this.merklePathTree.display(this.merklePath);
     };
     __decorate([
@@ -263,41 +368,58 @@ var StMerklePathTreeComponent = (function () {
     ], StMerklePathTreeComponent.prototype, "merklePath");
     StMerklePathTreeComponent = __decorate([
         Component({
-            selector: 'st-merkle-path-tree',
+            selector: "st-merkle-path-tree",
             template: '<div class="merkle-path"></div>',
-            styleUrls: ['./st-merkle-path-tree.component.css']
+            styleUrls: ["./st-merkle-path-tree.component.css"]
         })
     ], StMerklePathTreeComponent);
     return StMerklePathTreeComponent;
 }());
 
-var MapExplorerModule = (function () {
-    function MapExplorerModule() {
+/*
+  Copyright 2017 Stratumn SAS. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+var Ng2MapExplorerModule = (function () {
+    function Ng2MapExplorerModule() {
     }
-    MapExplorerModule = __decorate([
+    Ng2MapExplorerModule = __decorate([
         NgModule({
             declarations: [
                 StMapExplorerComponent,
                 FunctionArgumentsPipe,
                 StMapValidatorComponent,
                 StPromiseLoaderComponent,
-                StMerklePathTreeComponent
+                StMerklePathTreeComponent,
             ],
             imports: [
-                MdButtonModule,
-                MdIconModule,
-                MdProgressCircleModule,
-                MdToolbarModule
+                BrowserModule,
+                MatButtonModule,
+                MatIconModule,
+                MatToolbarModule,
+                MatProgressSpinnerModule,
             ],
-            providers: [
-                ChainTreeBuilderService,
-                MapValidatorService
-            ],
-            bootstrap: []
+            providers: [ChainTreeBuilderService, MapValidatorService],
+            exports: [
+                StMapExplorerComponent,
+                StMapValidatorComponent,
+                StMerklePathTreeComponent,
+            ]
         })
-    ], MapExplorerModule);
-    return MapExplorerModule;
+    ], Ng2MapExplorerModule);
+    return Ng2MapExplorerModule;
 }());
 
-export { MapExplorerModule };
+export { Ng2MapExplorerModule };
 //# sourceMappingURL=angular2-mapexplorer.mjs.map

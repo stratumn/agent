@@ -14,16 +14,15 @@
   limitations under the License.
 */
 
-import { Component, OnInit, OnChanges, Input } from '@angular/core';
-import { MapValidatorService } from '../map-validator.service';
+import { Component, OnInit, OnChanges, Input } from "@angular/core";
+import { MapValidatorService } from "../map-validator.service";
 
 @Component({
-  selector: 'st-map-validator',
-  templateUrl: './st-map-validator.component.html',
-  styleUrls: ['./st-map-validator.component.css']
+  selector: "st-map-validator",
+  templateUrl: "./st-map-validator.component.html",
+  styleUrls: ["./st-map-validator.component.css"],
 })
 export class StMapValidatorComponent implements OnInit, OnChanges {
-
   @Input() chainscript: string;
 
   errors: any = {};
@@ -32,20 +31,21 @@ export class StMapValidatorComponent implements OnInit, OnChanges {
 
   loading: boolean = false;
 
-  constructor(public mapValidatorService: MapValidatorService) { }
+  constructor(public mapValidatorService: MapValidatorService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngOnChanges() {
     this.error = null;
     if (this.chainscript) {
       this.loading = true;
-      this.mapValidatorService.validate(this.chainscript)
+      this.mapValidatorService
+        .validate(this.chainscript)
         .then(errors => {
           this.errors = errors;
           this.loading = false;
-        }).catch(error => {
+        })
+        .catch(error => {
           this.error = error.message;
           this.loading = false;
         });

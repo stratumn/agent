@@ -16,17 +16,23 @@
 
 /* tslint:disable:no-unused-variable */
 
-import { TestBed, async, inject } from '@angular/core/testing';
-import { MapValidatorServiceService } from './map-validator-service.service';
+import { TestBed, async, inject } from "@angular/core/testing";
+import { MapValidatorServiceService } from "./map-validator-service.service";
 
-describe('Service: MapValidatorService', () => {
+describe("Service: MapValidatorService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MapValidatorServiceService]
+      providers: [MapValidatorServiceService],
     });
   });
 
-  it('should ...', inject([MapValidatorServiceService], (service: MapValidatorServiceService) => {
-    expect(service).toBeTruthy();
-  }));
+  it(
+    "should ...",
+    inject(
+      [MapValidatorServiceService],
+      (service: MapValidatorServiceService) => {
+        expect(service).toBeTruthy();
+      },
+    ),
+  );
 });
