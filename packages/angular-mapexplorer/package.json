@@ -1,7 +1,7 @@
 {
   "name": "angular-mapexplorer",
   "version": "1.2.0",
-  "description": "",
+  "description": "AngularJS 1.6 directive to display an Indigo Map Explorer.",
   "author": "Stratumn Team",
   "license": "Apache-2.0",
   "homepage": "",

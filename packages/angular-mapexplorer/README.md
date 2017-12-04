@@ -1,6 +1,6 @@
 # angular-mapexplorer
 
-AngularJS directive to display a chainscript map.
+AngularJS 1.6 directive to display an Indigo Map Explorer
 
 [![npm](https://img.shields.io/npm/v/angular-mapexplorer.svg)](https://www.npmjs.com/package/angular-mapexplorer)
 
