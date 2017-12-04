@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git@github.com:stratumn/react-mapexplorer.git"
+    "url": "https://github.com/stratumn/indigo-js.git"
   },
   "main": "dist/index.js",
   "module": "dist/index.es.js",
