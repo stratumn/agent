@@ -20,6 +20,7 @@ export default class {
       show: false,
       refs: []
     };
+    this.notifications = [];
   }
 
   withAgent(name, agent) {
@@ -32,11 +33,15 @@ export default class {
     return this;
   }
 
-  withAppendedSegment(linkHash) {
+  withAppendedSegment() {
     this.appendSegment.request = {
-      linkHash,
       status: statusTypes.LOADED
     };
+    return this;
+  }
+
+  withNotifications(notifs) {
+    this.notifications.push(...notifs);
     return this;
   }
 
@@ -57,7 +62,8 @@ export default class {
       segments: this.segments,
       mapExplorer: this.mapExplorer,
       appendSegment: this.appendSegment,
-      selectRefs: this.selectRefs
+      selectRefs: this.selectRefs,
+      notifications: this.notifications
     };
   }
 }
