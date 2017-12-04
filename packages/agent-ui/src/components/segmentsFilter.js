@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Button from 'material-ui/Button';
 import Table, { TableBody, TableCell, TableRow } from 'material-ui/Table';
+import Typography from 'material-ui/Typography';
 import { MenuItem } from 'material-ui/Menu';
 import Select from 'material-ui/Select';
 import TextField from 'material-ui/TextField';
@@ -101,6 +102,7 @@ export class SegmentsFilter extends Component {
     const { process } = this.state;
     return (
       <TableCell padding="dense">
+        <Typography type="body2">Process:</Typography>
         <Select value={process} onChange={this.selectProcess}>
           {processes.map(p => (
             <MenuItem key={p} value={p}>
