@@ -1,7 +1,7 @@
 import React from 'react';
 import { MapExplorer } from 'react-mapexplorer';
 
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
