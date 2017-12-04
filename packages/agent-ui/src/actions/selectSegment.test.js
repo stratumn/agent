@@ -12,10 +12,14 @@ describe('selectSegment action', () => {
   });
 
   it('forwards linkHash when segment is not null', () => {
-    const action = selectSegment({ link: {}, meta: { linkHash: 'lh' } });
+    const action = selectSegment({
+      link: { meta: { process: 'p' } },
+      meta: { linkHash: 'lh' }
+    });
     expect(action).to.deep.equal({
       type: actionTypes.MAP_EXPLORER_SELECT_SEGMENT,
-      linkHash: 'lh'
+      linkHash: 'lh',
+      processName: 'p'
     });
   });
 });

@@ -9,11 +9,13 @@ describe('mapExplorer reducer', () => {
       {},
       {
         type: actionTypes.MAP_EXPLORER_SELECT_SEGMENT,
-        linkHash: 'lh'
+        linkHash: 'lh',
+        processName: 'p'
       }
     );
     expect(mapExplorerState).to.deep.equal({
-      linkHash: 'lh'
+      linkHash: 'lh',
+      processName: 'p'
     });
   });
 

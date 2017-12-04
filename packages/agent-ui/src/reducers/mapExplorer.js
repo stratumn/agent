@@ -6,7 +6,8 @@ export default function(state = {}, action) {
       return {};
     case actionTypes.MAP_EXPLORER_SELECT_SEGMENT:
       return {
-        linkHash: action.linkHash
+        linkHash: action.linkHash,
+        processName: action.processName
       };
     default:
       return state;
