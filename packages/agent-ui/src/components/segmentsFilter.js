@@ -28,14 +28,14 @@ const validatePrevLinkHash = s =>
 export class SegmentsFilter extends Component {
   constructor(props) {
     super(props);
-    const { filters } = props;
+    const { filters, currentProcess } = props;
     const { mapIds, tags, prevLinkHash } = filters;
     this.state = {
       mapIds: checkAndJoin(mapIds),
       tags: checkAndJoin(tags),
       prevLinkHash,
       valid: validatePrevLinkHash(prevLinkHash),
-      process: props.currentProcess
+      process: currentProcess
     };
 
     this.handleChange = this.handleChange.bind(this);
