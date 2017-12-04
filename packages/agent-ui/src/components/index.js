@@ -10,3 +10,4 @@ export { default as PrettyDivider } from './prettyDivider';
 export { default as SegmentsFilter } from './segmentsFilter';
 export { default as SegmentsList } from './segmentsList';
 export { default as TopBarButton } from './topBarButton';
+export { default as Dropdown } from './dropdown';
