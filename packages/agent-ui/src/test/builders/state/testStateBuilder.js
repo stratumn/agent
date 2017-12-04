@@ -27,8 +27,8 @@ export default class {
     return this;
   }
 
-  withSelectedMapExplorerSegment(linkHash) {
-    this.mapExplorer = { linkHash: linkHash };
+  withSelectedMapExplorerSegment(linkHash, processName) {
+    this.mapExplorer = { linkHash, processName };
     return this;
   }
 

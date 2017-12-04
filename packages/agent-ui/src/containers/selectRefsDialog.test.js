@@ -26,6 +26,7 @@ describe('<SelectRefsDialog />', () => {
       closeDialog: sinon.spy(),
       fetchSegments: sinon.spy(),
       process: 'proc',
+      processes: ['proc', 'anotherProc'],
       agent: 'agent',
       show: true,
       segments: {}
@@ -49,7 +50,7 @@ describe('<SelectRefsDialog />', () => {
     expect(requiredProps.fetchSegments.getCall(0).args).to.deep.equal([
       'agent',
       'proc',
-      {}
+      { process: 'proc' }
     ]);
     dialog.setProps({ show: false });
     expect(requiredProps.fetchSegments.callCount).to.equal(1);
@@ -65,6 +66,21 @@ describe('<SelectRefsDialog />', () => {
     expect(requiredProps.fetchSegments.getCall(0).args).to.deep.equal([
       'agent',
       'proc',
+      testFilters
+    ]);
+  });
+
+  it('gets the segments from a different process', () => {
+    const testFilters = {
+      mapId: '1234',
+      process: 'anotherProcess'
+    };
+    const dialog = shallow(<SelectRefsDialog {...requiredProps} />);
+    dialog.instance().submitFilters(testFilters);
+    expect(requiredProps.fetchSegments.callCount).to.equal(1);
+    expect(requiredProps.fetchSegments.getCall(0).args).to.deep.equal([
+      'agent',
+      'anotherProcess',
       testFilters
     ]);
   });

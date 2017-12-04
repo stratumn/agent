@@ -58,7 +58,7 @@ describe('<SegmentsFilter />', () => {
     expect(clearButton).to.have.lengthOf(1);
     clearButton.simulate('click');
     expect(submitSpy.callCount).to.equal(1);
-    expect(submitSpy.getCall(0).args[0]).to.deep.equal({});
+    expect(submitSpy.getCall(0).args[0]).to.deep.equal({ process: undefined });
   });
 
   it('clears the text fields on clear', () => {
@@ -131,7 +131,10 @@ describe('<SegmentsFilter />', () => {
     expect(submitButton).to.have.lengthOf(1);
     submitButton.simulate('click');
     expect(submitSpy.callCount).to.equal(1);
-    expect(submitSpy.getCall(0).args[0]).to.deep.equal(props.filters);
+    expect(submitSpy.getCall(0).args[0]).to.deep.equal({
+      ...props.filters,
+      process: undefined
+    });
   });
 
   it('handles change of input correctly', () => {
@@ -150,7 +153,8 @@ describe('<SegmentsFilter />', () => {
     expect(submitSpy.getCall(0).args[0]).to.deep.equal({
       mapIds: ['aa', 'bb'],
       prevLinkHash: 'xyz',
-      tags: ['foo', 'bar']
+      tags: ['foo', 'bar'],
+      process: undefined
     });
   });
 

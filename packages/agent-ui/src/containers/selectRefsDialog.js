@@ -24,12 +24,15 @@ export class SelectRefsDialog extends Component {
   componentWillReceiveProps(nextProps) {
     // Get all the segments if we are opening the dialog
     if (this.props.show === false && nextProps.show === true) {
-      this.submitFilters({});
+      this.submitFilters({ process: nextProps.process });
     }
   }
 
   submitFilters(filters) {
-    const { agent, process, fetchSegments } = this.props;
+    const { agent, fetchSegments } = this.props;
+    // Fetch all available segments
+    const process =
+      filters.process != null ? filters.process : this.props.process;
     fetchSegments(agent, process, filters);
   }
 
@@ -47,6 +50,7 @@ export class SelectRefsDialog extends Component {
       segments: { status, details, error },
       agent,
       process,
+      processes,
       closeDialog,
       show
     } = this.props;
@@ -69,7 +73,12 @@ export class SelectRefsDialog extends Component {
         <DialogTitle>Select refs</DialogTitle>
         <DialogContent>
           <RefChipList withOpenButton={false} />
-          <SegmentsFilter submitHandler={this.submitFilters} />
+          <SegmentsFilter
+            submitHandler={this.submitFilters}
+            withProcesses
+            processes={processes}
+            currentProcess={process}
+          />
           <SegmentsList {...segmentListProps} />
         </DialogContent>
         <DialogActions>
@@ -85,6 +94,7 @@ export class SelectRefsDialog extends Component {
 SelectRefsDialog.propTypes = {
   agent: PropTypes.string.isRequired,
   process: PropTypes.string.isRequired,
+  processes: PropTypes.arrayOf(PropTypes.string).isRequired,
   fetchSegments: PropTypes.func.isRequired,
   closeDialog: PropTypes.func.isRequired,
   appendRef: PropTypes.func.isRequired,
@@ -106,7 +116,8 @@ function mapStateToProps(state, ownProps) {
   const { location: { pathname } } = ownProps;
   const { process, agent } = parseAgentAndProcess(pathname);
   const { segments, selectRefs: { show } } = state;
-  return { agent, process, segments, show };
+  const { agents: { [agent]: { processes } } } = state;
+  return { agent, process, segments, show, processes: Object.keys(processes) };
 }
 
 export default connect(mapStateToProps, {
