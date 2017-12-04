@@ -26,3 +26,10 @@ export {
   addRef,
   clearRefs
 } from './selectRefs';
+
+export {
+  addNotifications,
+  removeNotifications,
+  makeNewSegmentNotification,
+  makeNotification
+} from './notifications';

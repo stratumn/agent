@@ -104,13 +104,11 @@ describe('appendSegment reducer', () => {
     const { request } = appendSegment(
       {},
       {
-        type: actionTypes.APPEND_SEGMENT_SUCCESS,
-        segment: { meta: { linkHash: 'lh' } }
+        type: actionTypes.APPEND_SEGMENT_SUCCESS
       }
     );
     expect(request).to.deep.equal({
-      status: statusTypes.LOADED,
-      linkHash: 'lh'
+      status: statusTypes.LOADED
     });
   });
 
@@ -154,8 +152,7 @@ describe('appendSegment reducer', () => {
     validateState(failedState, statusTypes.FAILED);
 
     const successState = appendSegment(requestState, {
-      type: actionTypes.APPEND_SEGMENT_SUCCESS,
-      segment: { meta: { linkHash: 'lh' } }
+      type: actionTypes.APPEND_SEGMENT_SUCCESS
     });
     validateState(successState, statusTypes.LOADED);
   });
