@@ -29,7 +29,8 @@ export class ChainTreeBuilderService {
     return builder.build(
       {
         id: map.mapId,
-        application: map.application,
+        agentUrl: map.agentURL,
+        process: map.process,
         chainscript: map.chainscript,
       },
       options,
