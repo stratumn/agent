@@ -14,12 +14,14 @@
   limitations under the License.
 */
 
+import url from 'url';
+
 import { get, post } from './request';
 import makeQueryString from './makeQueryString';
 
 export default class httpAdaptor {
-  constructor(url) {
-    this.agentUrl = url;
+  constructor(agentUrl) {
+    this.agentUrl = agentUrl;
   }
 
   getInfo() {
@@ -27,30 +29,37 @@ export default class httpAdaptor {
   }
 
   getProcesses() {
-    return get(`${this.url}/processes`);
+    return get(url.resolve(this.url, '/processes'));
   }
 
   createMap(processName, refs, ...args) {
-    return post(`${this.url}/${processName}/segments`, [refs, ...args]);
-  }
-
-  getSegment(processName, linkHash) {
-    return get(`${this.url}/${processName}/segments/${linkHash}`);
-  }
-
-  findSegments(processName, opts = {}) {
-    return get(`${this.url}/${processName}/segments${makeQueryString(opts)}`);
-  }
-
-  getMapIds(processName, opts = {}) {
-    return get(`${this.url}/${processName}/maps${makeQueryString(opts)}`);
-  }
-
-  createSegment(processName, linkHash, action, refs, ...args) {
-    return post(`${this.url}/${processName}/segments/${linkHash}/${action}`, [
+    return post(url.resolve(this.url, `/${processName}/segments`), [
       refs,
       ...args
     ]);
+  }
+
+  getSegment(processName, linkHash) {
+    return get(url.resolve(this.url, `/${processName}/segments/${linkHash}`));
+  }
+
+  findSegments(processName, opts = {}) {
+    return get(
+      url.resolve(this.url, `/${processName}/segments${makeQueryString(opts)}`)
+    );
+  }
+
+  getMapIds(processName, opts = {}) {
+    return get(
+      url.resolve(this.url, `/${processName}/maps${makeQueryString(opts)}`)
+    );
+  }
+
+  createSegment(processName, linkHash, action, refs, ...args) {
+    return post(
+      url.resolve(this.url, `/${processName}/segments/${linkHash}/${action}`),
+      [refs, ...args]
+    );
   }
 
   get url() {
