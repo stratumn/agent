@@ -19,7 +19,7 @@ import {
   Input,
   OnInit,
   OnChanges,
-  AfterViewInit,
+  AfterContentInit,
   ViewChild,
 } from "@angular/core";
 import { ChainTreeBuilderService } from "../chain-tree-builder.service";
@@ -31,7 +31,7 @@ import { ChainTreeBuilder } from "mapexplorer-core";
   styleUrls: ["./st-map-explorer.component.css"],
 })
 export class StMapExplorerComponent
-  implements OnInit, OnChanges, AfterViewInit {
+  implements OnInit, OnChanges, AfterContentInit {
   @ViewChild("map") map;
 
   private error: string;
@@ -52,11 +52,13 @@ export class StMapExplorerComponent
 
   @Input() chainscript: string;
 
+  @Input() agentURL: string;
+
   @Input() refresh: any;
 
   @Input() name: string;
 
-  @Input() application: string;
+  @Input() process: string;
 
   @Input() mapId: string;
 
@@ -79,10 +81,19 @@ export class StMapExplorerComponent
     };
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.builder = this.chainTreeBuilderService.getBuilder(
+      this.map.nativeElement,
+    );
+  }
 
   ngOnChanges() {
-    // const options = { ...defaultOptions, ...scope.options };
+    console.log("BLAH");
+  }
+
+  //ng;
+
+  ngAfterContentInit() {
     if (this.builder) {
       this.error = null;
       this.loading = true;
@@ -94,12 +105,6 @@ export class StMapExplorerComponent
           this.error = error.message;
         });
     }
-  }
-
-  ngAfterViewInit() {
-    this.builder = this.chainTreeBuilderService.getBuilder(
-      this.map.nativeElement,
-    );
   }
 
   transactionUrl(segment) {

@@ -14,6 +14,18 @@ export class AppComponent {
 
   public hideSegmentCallback: Function;
 
+  private agentURL: string;
+
+  private agentURLInput: string;
+
+  private mapId: string;
+
+  private mapIdInput: string;
+
+  private process: string;
+
+  private processInput: string;
+
   json = null;
 
   constructor() {
@@ -31,5 +43,20 @@ export class AppComponent {
 
   onSegmentHide(name) {
     this.segmentShowed[name] = false;
+  }
+
+  generateMap() {
+    this.agentURL = this.agentURLInput;
+    this.mapId = this.mapIdInput;
+    this.process = this.processInput;
+  }
+
+  edit() {
+    this.agentURLInput = this.agentURL;
+    this.agentURL = null;
+    this.mapIdInput = this.mapId;
+    this.mapId = null;
+    this.processInput = this.process;
+    this.process = null;
   }
 }
