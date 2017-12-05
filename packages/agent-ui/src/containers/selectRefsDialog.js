@@ -115,9 +115,9 @@ SelectRefsDialog.propTypes = {
 function mapStateToProps(state, ownProps) {
   const { location: { pathname } } = ownProps;
   const { process, agent } = parseAgentAndProcess(pathname);
-  const { segments, selectRefs: { show } } = state;
-  const { agents: { [agent]: { processes } } } = state;
-  return { agent, process, segments, show, processes: Object.keys(processes) };
+  const { segments, selectRefs: { show }, agents } = state;
+  const processes = agents[agent] ? Object.keys(agents[agent].processes) : [];
+  return { agent, process, segments, show, processes };
 }
 
 export default connect(mapStateToProps, {
