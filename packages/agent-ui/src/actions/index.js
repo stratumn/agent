@@ -27,9 +27,4 @@ export {
   clearRefs
 } from './selectRefs';
 
-export {
-  addNotifications,
-  removeNotifications,
-  makeNewSegmentNotification,
-  makeNotification
-} from './notifications';
+export { addNotifications, removeNotifications } from './notifications';

@@ -1,6 +1,7 @@
 import { getAgent } from 'stratumn-agent-client';
 import * as actionTypes from '../constants/actionTypes';
-import { clearRefs, addNotifications, makeNewSegmentNotification } from './';
+import { clearRefs, addNotifications } from './';
+import { makeNewSegmentNotification } from '../utils/notificationHelpers';
 
 const appendSegmentRequest = () => ({
   type: actionTypes.APPEND_SEGMENT_REQUEST

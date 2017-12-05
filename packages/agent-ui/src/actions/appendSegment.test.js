@@ -12,7 +12,7 @@ import {
   selectAction
 } from './appendSegment';
 
-import * as notifications from './notifications';
+import * as notifications from '../utils/notificationHelpers';
 
 import {
   TestStateBuilder,
