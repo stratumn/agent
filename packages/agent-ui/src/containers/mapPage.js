@@ -15,9 +15,7 @@ export class MapPage extends Component {
 
   componentDidUpdate() {
     const { notifications, removeSegmentNotifications } = this.props;
-    if (notifications.length > 0) {
-      removeSegmentNotifications(notifications.map(({ key }) => key));
-    }
+    removeSegmentNotifications(notifications.map(({ key }) => key));
   }
 
   render() {
