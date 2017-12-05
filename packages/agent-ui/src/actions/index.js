@@ -26,3 +26,5 @@ export {
   addRef,
   clearRefs
 } from './selectRefs';
+
+export { addNotifications, removeNotifications } from './notifications';

@@ -1,6 +1,7 @@
 import { getAgent } from 'stratumn-agent-client';
 import * as actionTypes from '../constants/actionTypes';
-import { clearRefs } from './';
+import { clearRefs, addNotifications } from './';
+import { makeNewSegmentNotification } from '../utils/notificationHelpers';
 
 const appendSegmentRequest = () => ({
   type: actionTypes.APPEND_SEGMENT_REQUEST
@@ -72,6 +73,11 @@ export const appendSegment = (...args) => (dispatch, getState) => {
         dispatch(appendSegmentSuccess(segment));
         dispatch(closeDialog());
         dispatch(clearRefs());
+        dispatch(
+          addNotifications([
+            makeNewSegmentNotification(agent, process, segment)
+          ])
+        );
       })
       .catch(err => {
         dispatch(appendSegmentFailure(err));

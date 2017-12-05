@@ -3,6 +3,7 @@ import { MapExplorer } from 'react-mapexplorer';
 
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
+import sinon from 'sinon';
 
 import * as statusTypes from '../constants/status';
 
@@ -24,8 +25,9 @@ describe('<MapPage />', () => {
       name: 'proc42'
     },
     mapId: '42',
-    lastLinkHash: '42x',
-    selectSegment: () => {}
+    notifications: [],
+    selectSegment: () => {},
+    removeSegmentNotifications: () => {}
   };
 
   it('should render a MapExplorer component', () => {
@@ -49,7 +51,11 @@ describe('<MapPage />', () => {
       .build();
     const state = new TestStateBuilder()
       .withAgent('agent', agent)
-      .withAppendedSegment('lh')
+      .withAppendedSegment()
+      .withNotifications([
+        { key: 'foo', mapId: '42' },
+        { key: 'bar', mapId: '53' }
+      ])
       .build();
     const routeProps = {
       match: { params: { agent: 'agent', process: 'p1', id: '42' } }
@@ -64,8 +70,8 @@ describe('<MapPage />', () => {
       process: {
         name: 'p1'
       },
-      lastLinkHash: 'lh',
-      mapId: '42'
+      mapId: '42',
+      notifications: [{ key: 'foo', mapId: '42' }]
     });
   });
 
@@ -84,8 +90,24 @@ describe('<MapPage />', () => {
       process: {
         name: 'cannotFindMe'
       },
-      lastLinkHash: undefined,
+      notifications: [],
       mapId: '42'
     });
+  });
+
+  it('should remove notification after render', () => {
+    const removeNotifySpy = sinon.spy();
+    const thisProps = {
+      ...validProps,
+      removeSegmentNotifications: removeNotifySpy,
+      mapId: 'bar'
+    };
+    const mapPage = shallow(<MapPage {...thisProps} />);
+    mapPage.setProps({
+      ...thisProps,
+      notifications: [{ key: 'foo', mapId: 'bar' }]
+    });
+    expect(removeNotifySpy.callCount).to.equal(1);
+    expect(removeNotifySpy.getCall(0).args[0]).to.deep.equal(['foo']);
   });
 });

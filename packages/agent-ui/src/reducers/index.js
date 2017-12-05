@@ -8,6 +8,7 @@ import mapExplorer from './mapExplorer';
 import segment from './segment';
 import segments from './segments';
 import selectRefs from './selectRefs';
+import notifications from './notifications';
 
 const rootReducer = combineReducers({
   agents,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
   segments,
   createMap,
   appendSegment,
-  selectRefs
+  selectRefs,
+  notifications
 });
 
 export default rootReducer;

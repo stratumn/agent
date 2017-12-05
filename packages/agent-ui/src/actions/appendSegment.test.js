@@ -12,6 +12,8 @@ import {
   selectAction
 } from './appendSegment';
 
+import * as notifications from '../utils/notificationHelpers';
+
 import {
   TestStateBuilder,
   TestProcessBuilder,
@@ -127,6 +129,7 @@ describe('appendSegment action', () => {
   let dispatchSpy;
   let getStateStub;
   let testRefs;
+  let makeNewSegmentNotificationStub;
 
   beforeEach(() => {
     dispatchSpy = sinon.spy();
@@ -164,10 +167,16 @@ describe('appendSegment action', () => {
         refs: testRefs
       }
     });
+
+    makeNewSegmentNotificationStub = sinon.stub(
+      notifications,
+      'makeNewSegmentNotification'
+    );
   });
 
   afterEach(() => {
     stratumnClientStub.restore();
+    makeNewSegmentNotificationStub.restore();
   });
 
   const verifyDispatchedActions = expectedActionTypes => {
@@ -227,7 +236,8 @@ describe('appendSegment action', () => {
         actionTypes.APPEND_SEGMENT_REQUEST,
         actionTypes.APPEND_SEGMENT_SUCCESS,
         actionTypes.APPEND_SEGMENT_DIALOG_CLOSE,
-        actionTypes.SELECT_REFS_CLEAR
+        actionTypes.SELECT_REFS_CLEAR,
+        actionTypes.ADD_NOTIFICATIONS
       ]);
     });
   });

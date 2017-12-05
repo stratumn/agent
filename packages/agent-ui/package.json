@@ -12,13 +12,16 @@
   "bugs": {
     "url": "https://github.com/stratumn/indigo-js/issues"
   },
-  "keywords": ["stratumn", "agent", "blockchain"],
+  "keywords": [
+    "stratumn",
+    "agent",
+    "blockchain"
+  ],
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "test:ci":
-      "react-scripts build && CI=true react-scripts test --env=jsdom --coverage",
+    "test:ci": "react-scripts build && CI=true react-scripts test --env=jsdom --coverage",
     "eject": "react-scripts eject"
   },
   "dependencies": {
@@ -39,9 +42,11 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-persist": "^5.0.1",
     "redux-thunk": "^2.2.0",
-    "stratumn-agent-client": "^3.0.2"
+    "stratumn-agent-client": "^3.0.2",
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
+    "babel-polyfill": "^6.26.0",
     "chai": "^4.1.2",
     "css.escape": "^1.5.1",
     "enzyme": "^3.1.0",
