@@ -45,7 +45,6 @@ export default class Process {
       actions: getActionsInfo(actions),
       pluginsInfo: getPluginsInfo(this.plugins)
     };
-    this.pendingEvidences = {};
   }
 
   /**
@@ -87,14 +86,8 @@ export default class Process {
   fossilizeSegment(segment) {
     if (this.fossilizerClients) {
       const { linkHash } = segment.meta;
-      const secret = generateSecret(linkHash, this.salt || '');
-      let callbackUrl = `${this.evidenceCallbackUrl || this.agentUrl}/${this
-        .name}/evidence/${linkHash}`;
-      callbackUrl += makeQueryString({ secret });
-
-      this.pendingEvidences[linkHash] = this.fossilizerClients.length;
       this.fossilizerClients.map(fossilizer =>
-        fossilizer.fossilize(linkHash, callbackUrl).then(() => segment)
+        fossilizer.fossilize(linkHash, this.name).then(() => segment)
       );
       return segment;
     }
@@ -238,49 +231,17 @@ export default class Process {
   }
 
   /**
-   * Inserts evidence.
+   * Saves an evidence.
    * @param {string} linkHash - the link hash
    * @param {object} evidence - evidence to insert
-   * @param {string} secret - a secret
-   * @returns {Promise} - a promise that resolve with the segment
+   * @returns {Promise} - a promise that resolve with the evidence
    */
-  insertEvidence(linkHash, evidence, secret) {
-    const expected = generateSecret(linkHash, this.salt);
-
-    if (secret !== expected) {
-      const err = new Error('unauthorized');
-      err.status = 401;
-      return Promise.reject(err);
-    }
-
-    if (!this.pendingEvidences[linkHash]) {
-      const err = new Error('trying to add an unexpected evidence');
-      err.status = 400;
-      return Promise.reject(err);
-    }
-    this.pendingEvidences[linkHash] -= 1;
+  saveEvidence(linkHash, evidence) {
     return this.storeClient
-      .getSegment(this.name, linkHash)
-      .then(segment => {
-        segment.meta.evidences.push(evidence);
-        return this.storeClient.saveSegment(segment);
-      })
-      .then(segment => {
-        // If all evidences have been added, call didFossilize event if present.
-        if (this.pendingEvidences[linkHash] > 0) {
-          return segment;
-        }
-
-        if (
-          typeof this.actions.events === 'object' &&
-          typeof this.actions.events.didFossilize === 'function'
-        ) {
-          processify(this.actions, segment.link).events.didFossilize(segment);
-        }
-        delete this.pendingEvidences[linkHash];
-        return segment;
-      });
+      .saveEvidence(evidence, linkHash)
+      .then(() => evidence);
   }
+
   /**
    * Gets a segment.
    * @param {string} linkHash - the link hash

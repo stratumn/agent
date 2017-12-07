@@ -34,7 +34,10 @@ const dummyFossilizer = {
 
   getInfo() {
     return Promise.resolve({ name: 'dummy' });
-  }
+  },
+
+  connect() {},
+  on() {}
 };
 
 describe('Agent', () => {

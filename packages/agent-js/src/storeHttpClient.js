@@ -184,6 +184,25 @@ export default function storeHttpClient(url) {
             .catch(reject)
         );
       });
+    },
+
+    /**
+     * Save an evidence
+     * @param {object} evidence - evidence to be saved
+     * @param {string} linkHash - linkHash related to the evidence
+     * @returns {Promise} a promise that resolve with the success of the query
+     */
+    saveEvidence(evidence, linkHash) {
+      return new Promise((resolve, reject) => {
+        request
+          .post(`${url}/evidence/${linkHash}`)
+          .send(evidence)
+          .end((err, res) =>
+            handleResponse(err, res)
+              .then(resolve)
+              .catch(reject)
+          );
+      });
     }
   });
 

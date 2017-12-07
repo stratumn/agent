@@ -47,6 +47,7 @@ const paginateResults = (results, opts) => {
  */
 export default function memoryStore() {
   const segments = {};
+  const evidences = {};
 
   const emitter = Object.assign(new EventEmitter(), {
     /**
@@ -221,6 +222,17 @@ export default function memoryStore() {
 
       const a = paginateResults(Object.keys(m), opts);
       return Promise.resolve(a);
+    },
+
+    /**
+   * Saves an evidence.
+   * @param {string} linkHash - the link hash
+   * @param {object} evidence - evidence to insert
+   * @returns {Promise} - a promise that resolve with the evidence
+   */
+    saveEvidence(linkHash, evidence) {
+      evidences[linkHash] = evidence;
+      return Promise.resolve(evidence);
     }
   });
 
