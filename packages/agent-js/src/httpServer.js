@@ -521,17 +521,6 @@ export default function httpServer(agent, opts = {}) {
     )
   );
 
-  // Do not document in swagger as this should probably not be used directly by any user.
-  app.post(
-    '/:process/evidence/:linkHash',
-    loadProcess,
-    wrap((req, res) =>
-      res.locals.process
-        .insertEvidence(req.params.linkHash, req.body, req.query.secret)
-        .then(res.json.bind(res))
-    )
-  );
-
   /**
    * swagger
    * /{process}/maps:

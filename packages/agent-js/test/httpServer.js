@@ -22,7 +22,6 @@ import create from '../src/create';
 import memoryStore from '../src/memoryStore';
 import hashJson from '../src/hashJson';
 import plugins from '../src/plugins';
-import generateSecret from '../src/generateSecret';
 import actions from './utils/basicActions';
 import mockStoreHttpServer from './utils/mockStoreHttpServer';
 import refs from './utils/refs';
@@ -74,7 +73,10 @@ describe('HttpServer()', () => {
 
       getInfo() {
         return Promise.resolve(true);
-      }
+      },
+
+      connect() {},
+      on() {}
     };
     process = agent.addProcess('basic', actions, memoryStore(), mockFossilizer);
     server = agent.httpServer();
@@ -320,8 +322,7 @@ describe('HttpServer()', () => {
         segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
         segment.link.meta.mapId.should.be.a.String();
         segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
-        segment.meta.evidences.should.deepEqual([]);
-        return should(process.pendingEvidences[segment.linkHash]).be.null;
+        return should(segment.meta.evidences.should.deepEqual([]));
       });
     });
 
@@ -343,8 +344,7 @@ describe('HttpServer()', () => {
         segment.link.meta.refs.should.be.an.Array();
         segment.link.meta.refs.length.should.be.exactly(3);
         segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
-        segment.meta.evidences.should.deepEqual([]);
-        return should(process.pendingEvidences[segment.linkHash]).be.null;
+        return should(segment.meta.evidences.should.deepEqual([]));
       });
     });
 
@@ -441,13 +441,13 @@ describe('HttpServer()', () => {
           process.createSegment(segment.meta.linkHash, 'action', [], 4)
         )
         .then(() => process.findSegments({ limit: 20 }))
-        .then(segments =>
+        .then(segments => {
           testDeepEquals(
             supertest(server).get(`/${process.name}/segments?limit=20`),
             200,
             segments
-          )
-        ));
+          );
+        }));
 
     it('filters by mapIds', () => {
       let mapId;
@@ -488,29 +488,6 @@ describe('HttpServer()', () => {
             mapIds
           )
         ));
-  });
-
-  describe('POST "/evidence/:linkHash"', () => {
-    it('renders the updated segment', () =>
-      process.createMap([], 1, 2, 3).then(segment1 => {
-        const secret = generateSecret(segment1.meta.linkHash, '');
-        process.pendingEvidences[segment1.meta.linkHash] = 2;
-        return process
-          .insertEvidence(segment1.meta.linkHash, { test: true }, secret)
-          .then(segment2 => {
-            segment2.meta.evidences.push(segment2.meta.evidences[0]);
-            return testDeepEquals(
-              makePostRequest(
-                server,
-                `/${process.name}/evidence/${segment1.meta
-                  .linkHash}?secret=${secret}`,
-                { test: true }
-              ),
-              200,
-              segment2
-            );
-          });
-      }));
   });
 
   describe('GET /404', () => {

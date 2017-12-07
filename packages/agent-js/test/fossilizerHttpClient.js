@@ -23,6 +23,7 @@ import fossilizerHttpClient, {
 } from '../src/fossilizerHttpClient';
 import mockFossilizerHttpServer from './utils/mockFossilizerHttpServer';
 import memoryStore from '../src/memoryStore';
+import { FOSSILIZER_DID_FOSSILIZE_LINK } from '../src/eventTypes';
 
 const actions = {
   init(a, b, c) {
@@ -42,7 +43,7 @@ const process = agent.addProcess(
   }
 );
 
-mockFossilizerHttpServer(mocker(request), process);
+mockFossilizerHttpServer(mocker(request));
 
 describe('FossilizerHttpClient', () => {
   describe('#getAvailableFossilizers()', () => {
@@ -83,11 +84,31 @@ describe('FossilizerHttpClient', () => {
     it('resolves with the response', () =>
       fossilizerClient
         .fossilize('Hello, World!', 'http://localhost:3333')
-        .then(body =>
-          body.should.deepEqual({
-            data: 'Hello, World!',
-            callbackUrl: 'http://localhost:3333'
-          })
-        ));
+        .then(body => body.should.equal('ok')));
+  });
+
+  describe('#handleMessage', () => {
+    it('should save evidence when link fossilized', () => {
+      const msg = {
+        type: FOSSILIZER_DID_FOSSILIZE_LINK,
+        data: {
+          Evidence: 'yolo',
+          Data: 'Z6x7OW+8Kl0tjQ==', // base64 encoded "67ac7b396fbc2a5d2d8d"
+          Meta: 'dGhlUHJvY2Vzcw==' // base64 encoded "theProcess"
+        }
+      };
+      const processes = { theProcess: process };
+
+      const mockCalls = [];
+
+      process.saveEvidence = (linkHash, evidence) =>
+        mockCalls.push({ linkHash, evidence });
+
+      fossilizerClient.handleMessage(msg, processes);
+
+      mockCalls.length.should.be.exactly(1);
+      mockCalls[0].linkHash.should.equal('67ac7b396fbc2a5d2d8d');
+      mockCalls[0].evidence.should.equal('yolo');
+    });
   });
 });

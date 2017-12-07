@@ -29,12 +29,13 @@ import { getAvailableStores } from './storeHttpClient';
  */
 export default function create(options) {
   const processes = Object();
-  const storeClients = [];
+  const connectedStoreClients = [];
+  const connectedFossilizerClients = [];
   const activePlugins = {};
   let activePluginsCount = 0;
 
   function connectStoreClient(storeClient, reconnectTimeout = 5000) {
-    storeClients.push(storeClient);
+    connectedStoreClients.push(storeClient);
     // Set up events.
     storeClient.on('open', () => console.log('store: web socket open'));
     storeClient.on('close', () => console.log('store: web socket closed'));
@@ -58,6 +59,26 @@ export default function create(options) {
 
     // Connect to store web socket.
     storeClient.connect(reconnectTimeout);
+  }
+
+  function connectFossilizerClient(fossilizerClient, reconnectTimeout = 5000) {
+    connectedFossilizerClients.push(fossilizerClient);
+    // Set up events.
+    fossilizerClient.on('open', () =>
+      console.log('fossilizer: web socket open')
+    );
+    fossilizerClient.on('close', () =>
+      console.log('fossilizer: web socket closed')
+    );
+    fossilizerClient.on('error', err =>
+      console.error(`fossilizer: ${err.stack}`)
+    );
+    fossilizerClient.on('event', msg =>
+      fossilizerClient.handleMessage(msg, processes)
+    );
+
+    // Connect to store web socket.
+    fossilizerClient.connect(reconnectTimeout);
   }
 
   function addProcess(
@@ -84,6 +105,7 @@ export default function create(options) {
     }
 
     const updatedOpts = Object.assign(opts, options);
+
     const p = new Process(
       processName,
       actions,
@@ -92,9 +114,19 @@ export default function create(options) {
       updatedOpts
     );
     processes[processName] = p;
-    if (storeClients.indexOf(storeClient) < 0) {
+    if (connectedStoreClients.indexOf(storeClient) < 0) {
       connectStoreClient(storeClient, opts.reconnectTimeout);
     }
+
+    // Connect unconnected fossilizer clients
+    if (p.fossilizerClients) {
+      p.fossilizerClients.forEach(
+        fc =>
+          connectedFossilizerClients.indexOf(fc) < 0 &&
+          connectFossilizerClient(fc)
+      );
+    }
+
     return p;
   }
 
