@@ -19,8 +19,6 @@ import processify from './processify';
 import getActionsInfo from './getActionsInfo';
 import getPluginsInfo from './getPluginsInfo';
 import hashJson from './hashJson';
-import makeQueryString from './makeQueryString';
-import generateSecret from './generateSecret';
 import filterAsync from './filterAsync';
 
 export default class Process {
@@ -72,6 +70,18 @@ export default class Process {
   }
 
   /**
+  * Applies filters from plugins to a link
+  * @param {object} - A segment to be filtered
+  * @returns {Promise} - A promise that resolves to true if the segment has passed all filters.
+  */
+  filterLink(link) {
+    return this.extractFilters().reduce(
+      (cur, filter) => cur.then(ok => Promise.resolve(ok && filter({ link }))),
+      Promise.resolve(true)
+    );
+  }
+
+  /**
    *
    * @param {object[]} segments - An array of segments to be filtered
    * @returns {Promise} - A promise that resolves with the list of segments that passed all filters.
@@ -83,22 +93,20 @@ export default class Process {
     );
   }
 
-  fossilizeSegment(segment) {
+  fossilizeLink(link) {
     if (this.fossilizerClients) {
-      const { linkHash } = segment.meta;
-      this.fossilizerClients.map(fossilizer =>
-        fossilizer.fossilize(linkHash, this.name).then(() => segment)
+      const linkHash = hashJson(link);
+      this.fossilizerClients.forEach(fossilizer =>
+        fossilizer.fossilize(linkHash, this.name).then(() => link)
       );
-      return segment;
     }
-
-    return segment;
+    return link;
   }
 
-  saveAndFossilize(segment) {
+  saveAndFossilize(link) {
     return this.storeClient
-      .saveSegment(segment)
-      .then(this.fossilizeSegment.bind(this));
+      .createLink(link)
+      .then(this.fossilizeLink.bind(this));
   }
 
   applyPlugins(method, ...args) {
@@ -162,14 +170,15 @@ export default class Process {
         link.meta.process = this.name;
         return this.applyPlugins('didCreateLink', link, 'init', args);
       })
+      .then(() => this.saveAndFossilize(link))
       .then(() => {
         const linkHash = hashJson(link);
         const meta = Object.assign({ linkHash }, { evidences: [] });
 
-        segment = { link, meta };
+        segment = { link: link, meta };
         return this.applyPlugins('didCreateSegment', segment, 'init', args);
       })
-      .then(() => this.saveAndFossilize(segment));
+      .then(() => Promise.resolve(segment));
   }
 
   /**
@@ -220,6 +229,7 @@ export default class Process {
         createdLink.meta.process = this.name;
         return this.applyPlugins('didCreateLink', link, action, args);
       })
+      .then(() => this.saveAndFossilize(createdLink))
       .then(() => {
         const linkHash = hashJson(createdLink);
         const meta = Object.assign({ linkHash }, { evidences: [] });
@@ -227,7 +237,7 @@ export default class Process {
         segment = { link: createdLink, meta };
         return this.applyPlugins('didCreateSegment', segment, action, args);
       })
-      .then(() => this.saveAndFossilize(segment));
+      .then(() => Promise.resolve(segment));
   }
 
   /**

@@ -14,11 +14,9 @@
   limitations under the License.
 */
 
-import should from 'should';
 import create from '../src/create';
 import memoryStore from '../src/memoryStore';
 import hashJson from '../src/hashJson';
-import generateSecret from '../src/generateSecret';
 import { memoryStoreInfo } from './fixtures';
 import actions from './utils/basicActions';
 import refs from './utils/refs';
@@ -119,12 +117,12 @@ describe('Process', () => {
         segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
       }));
 
-    it('should call the #didSave() event', () => {
+    it('should call the #SavedLinks() event', () => {
       let callCount = 0;
       actions.events = {
-        didSave(s) {
+        SavedLinks(l) {
           callCount += 1;
-          s.link.state.should.deepEqual({
+          l.state.should.deepEqual({
             a: 1,
             b: 2,
             c: 3
@@ -222,13 +220,13 @@ describe('Process', () => {
           })
       ));
 
-    it('should call the #didSave() event', () =>
+    it('should call the #SavedLinks() event', () =>
       process.createMap([], 1, 2, 3).then(segment1 => {
         let callCount = 0;
         actions.events = {
-          didSave(s) {
+          SavedLinks(l) {
             callCount += 1;
-            s.link.state.should.deepEqual({
+            l.state.should.deepEqual({
               a: 1,
               b: 2,
               c: 3,
@@ -236,6 +234,7 @@ describe('Process', () => {
             });
           }
         };
+
         return process
           .createSegment(segment1.meta.linkHash, 'action', [], 4)
           .then(() => {

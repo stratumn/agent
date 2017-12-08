@@ -28,7 +28,8 @@ import handleResponse from './handleResponse';
  *   - 'close': the web socket connection was closed
  *   - 'error': a web socket error occured
  *   - 'message': any message from web socket
- *   - 'didSave': a segment was saved
+ *   - 'SavedLinks': links were saved
+ *   - 'SavedEvidences': evidences were saved
  *
  * @param {string} url - the base URL of the store
  * @returns {Client} a store HTTP client
@@ -92,16 +93,15 @@ export default function storeHttpClient(url) {
     },
 
     /**
-     * Creates or updates a segment.
-     * @param {string} process - name of the process from which we want the segments
-     * @param {object} segment - the segment
+     * Creates a lilnk.
+     * @param {object} link - the link
      * @returns {Promise} a promise that resolve with the segment
      */
-    saveSegment(segment) {
+    createLink(link) {
       return new Promise((resolve, reject) => {
         request
-          .post(`${url}/segments`)
-          .send(segment)
+          .post(`${url}/links`)
+          .send(link)
           .end((err, res) =>
             handleResponse(err, res)
               .then(resolve)

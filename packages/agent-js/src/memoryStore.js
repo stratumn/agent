@@ -15,6 +15,8 @@
 */
 
 import EventEmitter from 'events';
+import hashJson from './hashJson';
+import { STORE_SAVED_LINKS } from './eventTypes';
 
 // Default value for the pagination limit
 const STORE_DEFAULT_LIMIT = 20;
@@ -70,21 +72,21 @@ export default function memoryStore() {
     },
 
     /**
-     * Creates or updates a segment.
-     * @param {object} segment - the segment
-     * @returns {Promise} a promise that resolve with the segment
+     * Creates link.
+     * @param {object} link - the link
+     * @returns {Promise} a promise that resolve with the link
      */
-    saveSegment(segment) {
-      segments[segment.meta.linkHash] = JSON.parse(JSON.stringify(segment));
+    createLink(link) {
+      const linkHash = hashJson(link);
+      const meta = { linkHash, evidences: [] };
+      const segment = { link, meta };
+
+      segments[linkHash] = JSON.parse(JSON.stringify(segment));
       emitter.emit('message', {
-        type: 'didSave',
-        data: JSON.parse(JSON.stringify(segment))
+        type: STORE_SAVED_LINKS,
+        data: [link]
       });
-      emitter.emit.bind(
-        emitter,
-        'didSave',
-        JSON.parse(JSON.stringify(segment))
-      );
+      emitter.emit.bind(emitter, STORE_SAVED_LINKS, [link]);
       return Promise.resolve(segment);
     },
 
