@@ -22,17 +22,26 @@ export default function mockStoreHttpServer(mock) {
     body: { name: 'mock' }
   }));
 
-  mock.post('http://localhost/segments', req => {
-    if (!req.body.meta.process) {
+  mock.post('http://localhost/links', req => {
+    const link = req.body;
+    if (!link.meta.process) {
       return {
         status: 403,
         statusCode: 403,
-        message: "'process' is required in segment.meta.process"
+        message: "'process' is required in link.meta.process"
       };
     }
+
+    const process = {
+      link,
+      meta: {
+        linkHash: 'linkHash'
+      }
+    };
+
     return {
       status: 200,
-      body: req.body
+      body: process
     };
   });
 

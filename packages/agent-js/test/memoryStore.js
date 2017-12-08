@@ -16,6 +16,7 @@
 
 import memoryStore from '../src/memoryStore';
 import { memoryStoreInfo, segment1, segment2, segment3 } from './fixtures';
+import hashJson from '../src/hashJson';
 
 describe('MemoryStore', () => {
   let store;
@@ -29,18 +30,18 @@ describe('MemoryStore', () => {
       store.getInfo().then(body => body.should.deepEqual(memoryStoreInfo)));
   });
 
-  describe('#saveSegment()', () => {
+  describe('#createLink()', () => {
     it('resolves with the segment', () =>
       store
-        .saveSegment(segment1)
+        .createLink(segment1.link)
         .then(body => body.should.deepEqual(segment1)));
   });
 
   describe('#getSegment()', () => {
     it('resolves with the segment', () =>
       store
-        .saveSegment(segment1)
-        .then(() => store.getSegment('first', 'segment1'))
+        .createLink(segment1.link)
+        .then(() => store.getSegment('first', segment1.meta.linkHash))
         .then(body => body.should.deepEqual(segment1)));
 
     it('rejects if there is an error', () =>
@@ -58,8 +59,8 @@ describe('MemoryStore', () => {
   describe('#deleteSegment()', () => {
     it('resolves with the deleted segment', () =>
       store
-        .saveSegment(segment1)
-        .then(() => store.deleteSegment('segment1'))
+        .createLink(segment1.link)
+        .then(() => store.deleteSegment(segment1.meta.linkHash))
         .then(body => body.should.deepEqual(segment1)));
 
     it('rejects if there is an error', () =>
@@ -77,9 +78,9 @@ describe('MemoryStore', () => {
   describe('#findSegments()', () => {
     beforeEach(() =>
       store
-        .saveSegment(segment1)
-        .then(() => store.saveSegment(segment2))
-        .then(() => store.saveSegment(segment3))
+        .createLink(segment1.link)
+        .then(() => store.createLink(segment2.link))
+        .then(() => store.createLink(segment3.link))
     );
 
     it('resolves with the segments', () =>
@@ -95,25 +96,27 @@ describe('MemoryStore', () => {
     it('paginates with default limit', () => {
       // Save >20 segments
 
-      const generateSegment = h => ({
-        link: {
-          state: {
-            value: 'four'
-          },
+      const generateSegment = h => {
+        const link = {
+          state: { value: h },
           meta: {
             process: 'third',
             mapId: 'three',
             tags: ['three'],
             priority: 3
           }
-        },
-        meta: {
-          linkHash: h
-        }
-      });
+        };
+
+        return {
+          link,
+          meta: {
+            linkHash: hashJson(link)
+          }
+        };
+      };
 
       for (let i = 0; i < 22; i += 1) {
-        store.saveSegment(generateSegment(i));
+        store.createLink(generateSegment(i).link);
       }
 
       // Check that response only has 20 segments
@@ -145,7 +148,7 @@ describe('MemoryStore', () => {
 
     it('filters by linkHashes', () =>
       store
-        .findSegments('first', { linkHashes: ['segment2'] })
+        .findSegments('first', { linkHashes: [segment2.meta.linkHash] })
         .then(body => body.should.deepEqual([segment2])));
 
     it('filters by tags', () =>
@@ -157,9 +160,9 @@ describe('MemoryStore', () => {
   describe('#getMapIds()', () => {
     beforeEach(() =>
       store
-        .saveSegment(segment1)
-        .then(() => store.saveSegment(segment2))
-        .then(() => store.saveSegment(segment3))
+        .createLink(segment1.link)
+        .then(() => store.createLink(segment2.link))
+        .then(() => store.createLink(segment3.link))
     );
 
     it('resolves with the map IDs', () =>

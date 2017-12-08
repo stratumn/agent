@@ -18,8 +18,6 @@ import WebSocket from 'ws';
 import request from 'superagent';
 import EventEmitter from 'events';
 import handleResponse from './handleResponse';
-import { FOSSILIZER_DID_FOSSILIZE_LINK } from './eventTypes';
-import { base64ToHex, base64ToUnicode } from './utils';
 
 /**
  * Creates a fossilizer HTTP client.
@@ -103,38 +101,6 @@ export default function fossilizerHttpClient(url) {
               .catch(reject)
           );
       });
-    },
-
-    /**
-     * Handle a message received from the websocket connection
-     * @param {object} msg - the actual message
-     * @param {array} processes - list of the available processes
-     */
-    handleMessage(msg, processes) {
-      switch (msg.type) {
-        case FOSSILIZER_DID_FOSSILIZE_LINK: {
-          // Save the evidence in the store
-          if (!msg.data.Data) {
-            console.error(
-              'fossilizer: unexpected event from websocket - missing Data '
-            );
-          }
-          if (!msg.data.Meta) {
-            console.error(
-              'fossilizer: unexpected event from websocket - missing Meta'
-            );
-          }
-          const linkHash = base64ToHex(msg.data.Data);
-          const processName = base64ToUnicode(msg.data.Meta);
-          const process = processes[processName];
-          if (process) process.saveEvidence(linkHash, msg.data.Evidence);
-          break;
-        }
-        default: {
-          // event not handled
-          break;
-        }
-      }
     }
   });
 

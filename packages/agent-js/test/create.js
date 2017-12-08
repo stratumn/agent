@@ -16,7 +16,7 @@
 
 import should from 'should';
 
-import create from '../src/create';
+import create, { handleFossilizerEvent } from '../src/create';
 import memoryStore from '../src/memoryStore';
 import plugins from '../src/plugins';
 import Process from '../src/process';
@@ -26,6 +26,7 @@ import fossilizerHttpClient, {
   clearAvailableFossilizers
 } from '../src/fossilizerHttpClient';
 import storeHttpClient, { clearAvailableStores } from '../src/storeHttpClient';
+import { FOSSILIZER_DID_FOSSILIZE_LINK } from '../src/eventTypes';
 
 const dummyFossilizer = {
   fossilize() {
@@ -177,7 +178,7 @@ describe('Agent', () => {
       let callCount = 0;
       let foundSegments;
       actions.events = {
-        didSave() {
+        SavedLinks() {
           callCount += 1;
         }
       };
@@ -204,7 +205,7 @@ describe('Agent', () => {
     it('calls the storeClient callbacks even if multiple processes are using the same store', () => {
       let callCount = 0;
       actions.events = {
-        didSave() {
+        SavedLinks() {
           callCount += 1;
         }
       };
@@ -422,6 +423,34 @@ describe('Agent', () => {
     it('returns an instance of httpServer', () => {
       agent.addProcess('basic', actions, memoryStore(), null);
       return agent.httpServer();
+    });
+  });
+
+  describe('#handleFossilizerEvent', () => {
+    it('should save evidence when link fossilized', () => {
+      const store = memoryStore();
+      const process = agent.addProcess('basic', actions, store, null);
+
+      const msg = {
+        type: FOSSILIZER_DID_FOSSILIZE_LINK,
+        data: {
+          Evidence: 'yolo',
+          Data: 'Z6x7OW+8Kl0tjQ==', // base64 encoded "67ac7b396fbc2a5d2d8d"
+          Meta: 'YmFzaWM=' // base64 encoded "basic"
+        }
+      };
+      const processes = { basic: process };
+
+      const mockCalls = [];
+
+      process.saveEvidence = (linkHash, evidence) =>
+        mockCalls.push({ linkHash, evidence });
+
+      handleFossilizerEvent(msg, processes);
+
+      mockCalls.length.should.be.exactly(1);
+      mockCalls[0].linkHash.should.equal('67ac7b396fbc2a5d2d8d');
+      mockCalls[0].evidence.should.equal('yolo');
     });
   });
 });
