@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import { makeNewSegmentNotification } from './notificationHelpers';
 import { addNotifications } from '../actions';
 
