@@ -19,3 +19,4 @@ export { default as CreateMapDialog } from './createMapDialog';
 export { default as AppendSegmentDialog } from './appendSegmentDialog';
 export { default as SelectRefsDialog } from './selectRefsDialog';
 export { default as RefChipList } from './refChipList';
+export { default as WebSocketsManager } from './webSocketsManager';

@@ -11,7 +11,8 @@ import {
   ContentPage,
   CreateMapDialog,
   AppendSegmentDialog,
-  SelectRefsDialog
+  SelectRefsDialog,
+  WebSocketsManager
 } from './';
 
 export const App = ({ classes, location }) => (
@@ -22,6 +23,7 @@ export const App = ({ classes, location }) => (
     <CreateMapDialog />
     <AppendSegmentDialog />
     <SelectRefsDialog location={location} />
+    <WebSocketsManager />
   </div>
 );
 

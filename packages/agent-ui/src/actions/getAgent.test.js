@@ -6,20 +6,24 @@ import sinonChai from 'sinon-chai';
 
 import { getAgent, removeAgent } from './getAgent';
 import * as actionTypes from '../constants/actionTypes';
+import * as webSocket from '../utils/webSocketHelpers';
 
 chai.use(sinonChai);
 
 describe('getAgent action', () => {
   let stratumnClientStub;
+  let openWsStub;
   let dispatchSpy;
 
   beforeEach(() => {
     stratumnClientStub = sinon.stub(StratumnAgentClient, 'getAgent');
+    openWsStub = sinon.stub(webSocket, 'openWebSocket');
     dispatchSpy = sinon.spy();
   });
 
   afterEach(() => {
     stratumnClientStub.restore();
+    openWsStub.restore();
   });
 
   it('calls stratumn client to get agent', () => {

@@ -73,11 +73,7 @@ export const appendSegment = (...args) => (dispatch, getState) => {
         dispatch(appendSegmentSuccess(segment));
         dispatch(closeDialog());
         dispatch(clearRefs());
-        dispatch(
-          addNotifications([
-            makeNewSegmentNotification(agent, process, segment)
-          ])
-        );
+        dispatch(addNotifications([makeNewSegmentNotification(segment)]));
       })
       .catch(err => {
         dispatch(appendSegmentFailure(err));
