@@ -28,7 +28,7 @@ import { base64ToHex, base64ToUnicode } from './utils';
  * @param {function} [opts.callbackUrl] - builds a URL that will be called with the evidence
  * @returns {Client} a fossilizer HTTP client
  */
-export default function fossilizerHttpClient(url, opts = {}) {
+export default function fossilizerHttpClient(url) {
   // If we already have an existing fossilizer for that url, re-use it
   if (fossilizerHttpClient.availableFossilizers[url]) {
     return fossilizerHttpClient.availableFossilizers[url];
