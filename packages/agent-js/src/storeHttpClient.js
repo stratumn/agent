@@ -195,7 +195,7 @@ export default function storeHttpClient(url) {
     saveEvidence(evidence, linkHash) {
       return new Promise((resolve, reject) => {
         request
-          .post(`${url}/evidence/${linkHash}`)
+          .post(`${url}/evidences/${linkHash}`)
           .send(evidence)
           .end((err, res) =>
             handleResponse(err, res)
