@@ -124,13 +124,9 @@ describe('Agent', () => {
   describe('#addProcess', () => {
     it('resolves with the newly created process', () => {
       const process = agent.addProcess('basic', actions, memoryStore(), null, {
-        plugins: [plugins.stateHash, plugins.localTime],
-        salt: '30d3460fabed01abc3196b0d41b8fc98b672de6501ae2886bd1d9fb70a53f86a'
+        plugins: [plugins.stateHash, plugins.localTime]
       });
       process.name.should.be.exactly('basic');
-      process.salt.should.be.exactly(
-        '30d3460fabed01abc3196b0d41b8fc98b672de6501ae2886bd1d9fb70a53f86a'
-      );
       process.plugins.should.deepEqual([plugins.stateHash, plugins.localTime]);
       process.actions.should.deepEqual(actions);
     });
@@ -319,8 +315,6 @@ describe('Agent', () => {
           name: plugins.stateHash.name,
           description: plugins.stateHash.description
         });
-        should(infos.salt).be.undefined();
-        should(infos.processInfo.salt).be.undefined();
       });
     });
   });

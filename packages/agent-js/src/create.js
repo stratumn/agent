@@ -209,7 +209,6 @@ export default function create(options) {
      * @param {StoreClient} storeClient - the store client
      * @param {FossilizerClient[]} [fossilizerClients] - an array of fossilizer clients
      * @param {object} [opts] - options
-     * @param {string} [opts.salt] - a unique salt
      * @param {number} [opts.reconnectTimeout=5000] - web socket reconnect timeout in milliseconds
      * @param {Plugins[]} [opts.plugins] - a list of agent plugins
      * @returns {Process} - the newly created Process
@@ -310,7 +309,6 @@ export default function create(options) {
     * Initialize and return an http server for the agent.
     * @param {object} [opts] - options
     * @param {object} [opts.cors] - CORS options
-    * @param {object} [opts.salt] - salt used for callback URLs
     * @returns {express.Server} - an express server
     */
     httpServer(opts = {}) {

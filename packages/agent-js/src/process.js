@@ -35,7 +35,6 @@ export default class Process {
     } else {
       this.fossilizerClients = null;
     }
-    this.salt = opts.salt || '';
     this.plugins = opts.plugins || [];
     this.evidenceCallbackUrl = opts.evidenceCallbackUrl || '';
     this.agentUrl = opts.agentUrl || '';

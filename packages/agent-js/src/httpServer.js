@@ -113,7 +113,6 @@ import fossilizerHttpClient from './fossilizerHttpClient';
  * @param {Agent} agent - the agent instance returned by Agent.create()
  * @param {object} [opts] - options
  * @param {object} [opts.cors] - CORS options
- * @param {object} [opts.salt] - salt used for callback URLs
  * @param {object} [opts.enableProcessUpload] - allow clients to upload new processes to a running agent
  * @returns {express.Server} - an express server
  */

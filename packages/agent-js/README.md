@@ -35,7 +35,6 @@ var agent = Agent.create({
 // Adds a process from a name, its actions, the store client, and the fossilizer client.
 // As many processes as one needs can be added. A different storeHttpClient and fossilizerHttpClient may be used.
 agent.addProcess("my_first_process", actions, storeHttpClient, fossilizerHttpClient, {
-  salt: process.env.STRATUMN_SALT || Math.random(), // change to a unique salt
   plugins: [plugins.localTime]                     // pick any plugins from src/plugins or develop your own - order matters
 });
 
@@ -59,7 +58,6 @@ server.listen(3000, () => {
 
 // You can also add processes on-the-fly after the server has started listening
 agent.addProcess("my_second_process", actions, storeHttpClient, fossilizerHttpClient, {
-  salt: process.env.STRATUMN_SALT || Math.random(),
   plugins: [plugins.localTime]
 });
 ```
