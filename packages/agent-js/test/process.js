@@ -54,8 +54,7 @@ describe('Process', () => {
 
   beforeEach(() => {
     process = create().addProcess('basic', actions, memoryStore(), null, {
-      plugins,
-      salt: ''
+      plugins
     });
   });
 
