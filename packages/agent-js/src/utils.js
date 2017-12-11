@@ -24,7 +24,8 @@ const base64ToHex = str => Buffer.from(str, 'base64').toString('hex');
 const deepGet = (obj, path, defaultValue = null) => {
   if (!path.length) return obj;
   const spath = path.split('.');
-  if (spath[0] in obj) return deepGet(obj[spath[0]], spath.slice(1).join('.'));
+  if (spath[0] in obj)
+    return deepGet(obj[spath[0]], spath.slice(1).join('.'), defaultValue);
   return defaultValue;
 };
 
