@@ -93,7 +93,7 @@ export default function storeHttpClient(url) {
     },
 
     /**
-     * Creates a lilnk.
+     * Creates a link.
      * @param {object} link - the link
      * @returns {Promise} a promise that resolve with the segment
      */
@@ -126,24 +126,6 @@ export default function storeHttpClient(url) {
           )
           .end((err, res) => resolve(handleResponse(err, res)))
       );
-    },
-
-    /**
-     * Deletes a segment.
-     * @param {string} process - name of the process from which we want the segments
-     * @param {string} linkHash - the link hash
-     * @returns {Promise} a promise that resolve with the segment
-     */
-    deleteSegment(process, linkHash) {
-      return new Promise((resolve, reject) => {
-        request
-          .del(`${url}/segments${makeQueryString({ process, linkHash })}`)
-          .end((err, res) =>
-            handleResponse(err, res)
-              .then(resolve)
-              .catch(reject)
-          );
-      });
     },
 
     /**

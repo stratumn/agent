@@ -100,17 +100,6 @@ describe('StoreHttpClient', () => {
         }));
   });
 
-  describe('#deleteSegment()', () => {
-    it('resolves with the deleted segment', () =>
-      storeHttpClient('http://localhost')
-        .deleteSegment('test', 'linkHash')
-        .then(body =>
-          body.should.deepEqual({
-            meta: { linkHash: 'linkHash', process: 'test' }
-          })
-        ));
-  });
-
   describe('#findSegments()', () => {
     it('resolves with the segments', () =>
       storeHttpClient('http://localhost')

@@ -74,7 +74,7 @@ export default function memoryStore() {
     /**
      * Creates link.
      * @param {object} link - the link
-     * @returns {Promise} a promise that resolve with the link
+     * @returns {Promise} a promise that resolves with the link
      */
     createLink(link) {
       const linkHash = hashJson(link);
@@ -105,25 +105,6 @@ export default function memoryStore() {
       }
 
       return Promise.resolve(JSON.parse(JSON.stringify(segment)));
-    },
-
-    /**
-     * Deletes a segment.
-     * @param {string} linkHash - the link hash
-     * @returns {Promise} a promise that resolve with the segment
-     */
-    deleteSegment(linkHash) {
-      const segment = segments[linkHash];
-
-      if (!segment) {
-        const err = new Error('not found');
-        err.status = 404;
-        return Promise.reject(err);
-      }
-
-      delete segments[linkHash];
-
-      return Promise.resolve(segment);
     },
 
     /**
