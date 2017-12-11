@@ -84,7 +84,6 @@ export function handleFossilizerEvent(msg, processes) {
  * Creates an agent.
  * @param {object} options - options
  * @param {string} [options.agentUrl] - agent root url
- * @param {string} [options.evidenceCallbackUrl] - evidence callback root url
  * @returns {Agent} - an agent
  */
 export default function create(options) {
