@@ -1,9 +1,9 @@
-import 'babel-polyfill';
 import { expect } from 'chai';
 import {
   makeNotification,
   makeNewSegmentNotification
 } from './notificationHelpers';
+import * as notificationTypes from '../constants/notificationTypes';
 
 describe('notification helpers', () => {
   it('makeNotification() generates a new notification object with uuid', () => {
@@ -14,21 +14,21 @@ describe('notification helpers', () => {
   });
 
   it('makeNewSegmentNotification() adds agent info', () => {
-    const agent = 'foo';
+    const agentUrl = 'foo';
     const process = 'bar';
     const mapId = 'foo/bar';
     const linkHash = 'xyz';
-    const obj = {
-      agent,
-      process,
-      segment: {
-        link: { meta: { mapId } },
-        meta: { linkHash }
-      }
+    const segment = {
+      link: { meta: { mapId, process } },
+      meta: { linkHash, agentUrl }
     };
-    const { key, ...fromObj } = makeNewSegmentNotification(
-      ...Object.values(obj)
-    );
-    expect(fromObj).to.deep.equal({ agent, process, mapId, linkHash });
+    const { key, ...fromObj } = makeNewSegmentNotification(segment);
+    expect(fromObj).to.deep.equal({
+      agentUrl,
+      process,
+      mapId,
+      linkHash,
+      type: notificationTypes.NEW_SEGMENT
+    });
   });
 });

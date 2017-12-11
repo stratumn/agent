@@ -1,5 +1,6 @@
 import { getAgent as getAgentClient } from 'stratumn-agent-client';
 import * as actionTypes from '../constants/actionTypes';
+import { openWebSocket, closeWebSocket } from '../utils/webSocketHelpers';
 
 const getAgentRequest = (name, url) => ({
   type: actionTypes.AGENT_INFO_REQUEST,
@@ -19,14 +20,18 @@ const getAgentSuccess = (name, agent) => ({
   agent
 });
 
-export const removeAgent = name => ({
-  type: actionTypes.AGENT_INFO_DELETE,
-  name
-});
+export const removeAgent = name => {
+  closeWebSocket(name);
+  return {
+    type: actionTypes.AGENT_INFO_DELETE,
+    name
+  };
+};
 
 export const getAgent = (name, url) => dispatch => {
   dispatch(getAgentRequest(name, url));
   return getAgentClient(url)
     .then(agent => dispatch(getAgentSuccess(name, agent)))
+    .then(() => openWebSocket(name, url, dispatch))
     .catch(err => dispatch(getAgentFailure(name, err)));
 };
