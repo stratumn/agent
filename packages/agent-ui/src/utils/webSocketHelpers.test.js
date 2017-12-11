@@ -57,7 +57,7 @@ describe('webSocket actions', () => {
         openWebSocket('myWS', 'http://foo/bar');
         const [ws] = mockServer.clients();
         ws.onclose = closeSpy;
-      })
+      }, 10)
         .then(() => openWebSocket('myWS', 'http://foo/bar'))
         .then(() => {
           expect(closeSpy.callCount).to.equal(1);

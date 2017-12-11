@@ -46,6 +46,7 @@ describe('#fromSegment', () => {
     it('loads a segment that can execute actions', () =>
       processCb()
         .createMap('Hi')
+        .then(segment => processCb().getSegment(segment.meta.linkHash))
         .then(segment =>
           fromSegment({ link: segment.link, meta: segment.meta })
         )
