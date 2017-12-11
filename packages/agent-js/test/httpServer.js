@@ -63,9 +63,7 @@ describe('HttpServer()', () => {
   let mockFossilizer;
 
   beforeEach(() => {
-    agent = create({
-      agentUrl: 'http://localhost'
-    });
+    agent = create();
     mockFossilizer = {
       fossilize() {
         return Promise.resolve(true);

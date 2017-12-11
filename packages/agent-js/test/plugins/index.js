@@ -45,9 +45,7 @@ export default function(plugin, assertions1) {
     let process;
 
     beforeEach(() => {
-      agent = create(actions, memoryStore(), null, {
-        agentUrl: 'http://localhost'
-      });
+      agent = create();
       process = agent.addProcess('basic', actions, memoryStore(), null, {
         plugins: [plugin]
       });

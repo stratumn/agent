@@ -28,9 +28,7 @@ var storeHttpClient = Agent.storeHttpClient(process.env.STRATUMN_STORE_URL || 'h
 var fossilizerHttpClient = Agent.fossilizerHttpClient(process.env.STRATUMN_FOSSILIZER_URL || 'http://fossilizer:6000');
 
 // Creates an agent
-var agent = Agent.create({
-    agentUrl: 'http://localhost:3000',               // the agent needs to know its root URL,·
-});
+var agent = Agent.create();
 
 // Adds a process from a name, its actions, the store client, and the fossilizer client.
 // As many processes as one needs can be added. A different storeHttpClient and fossilizerHttpClient may be used.
@@ -95,7 +93,6 @@ All methods are optional. They can either be synchronous or return a Promise.
 ### Available plugins:
 
 - `actionArgs`: Saves the action and its arguments in link meta information.
-- `agentUrl`: Saves in segment meta the URL that can be used to retrieve a segment.
 - `encryptedState`: Encrypts the state before the segment is saved. Filters out segment that cannot be decrypted.
 - `localTime`: Saves the local timestamp in the link meta information.
 - `signedState`: Signs the state before the segment is saved. Filters out segments whose signature is invalid.

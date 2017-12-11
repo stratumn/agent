@@ -45,7 +45,7 @@ describe('Agent', () => {
   let agent;
 
   beforeEach(() => {
-    agent = create({ agentUrl: 'http://localhost' });
+    agent = create();
     clearAvailableFossilizers();
     clearAvailableStores();
   });
@@ -88,7 +88,7 @@ describe('Agent', () => {
 
     it('returns the list of indexed active plugins', () => {
       agent.addProcess('plugins1', actions, memoryStore(), null, {
-        plugins: [plugins.stateHash, plugins.agentUrl('http://localhost:3000')]
+        plugins: [plugins.stateHash]
       });
       agent.addProcess('plugins2', actions, memoryStore(), null, {
         plugins: [plugins.localTime]
@@ -96,9 +96,9 @@ describe('Agent', () => {
 
       return agent.getInfo().then(infos => {
         infos.plugins.should.be.an.Array();
-        infos.plugins.length.should.be.exactly(3);
-        infos.plugins[2].should.eql({
-          id: '3',
+        infos.plugins.length.should.be.exactly(2);
+        infos.plugins[1].should.eql({
+          id: '2',
           name: plugins.localTime.name,
           description: plugins.localTime.description
         });
@@ -108,15 +108,15 @@ describe('Agent', () => {
     it('does not store duplicate plugin instances', () => {
       // Since plugins.stateHash doesn't take arguments, both processes will share the same first plugin
       agent.addProcess('plugins1', actions, memoryStore(), null, {
-        plugins: [plugins.stateHash, plugins.agentUrl('http://localhost:3000')]
+        plugins: [plugins.stateHash]
       });
       agent.addProcess('plugins2', actions, memoryStore(), null, {
-        plugins: [plugins.stateHash, plugins.agentUrl('http://localhost:3001')]
+        plugins: [plugins.stateHash]
       });
 
       return agent.getInfo().then(infos => {
         infos.plugins.should.be.an.Array();
-        infos.plugins.length.should.be.exactly(3);
+        infos.plugins.length.should.be.exactly(1);
       });
     });
   });
@@ -300,7 +300,7 @@ describe('Agent', () => {
 
     it('should return only public fields of a process', () => {
       agent.addProcess('basic', actions, memoryStore(), dummyFossilizer, {
-        plugins: [plugins.stateHash, plugins.agentUrl('http://localhost:3000')]
+        plugins: [plugins.stateHash]
       });
       return agent.getAllProcesses().then(processes => {
         const infos = processes[0];
@@ -310,7 +310,7 @@ describe('Agent', () => {
         infos.storeInfo.should.be.an.Object();
         infos.storeInfo.adapter.name.should.be.exactly('memory');
         infos.processInfo.pluginsInfo.should.be.an.Array();
-        infos.processInfo.pluginsInfo.length.should.be.exactly(2);
+        infos.processInfo.pluginsInfo.length.should.be.exactly(1);
         infos.processInfo.pluginsInfo[0].should.eql({
           name: plugins.stateHash.name,
           description: plugins.stateHash.description

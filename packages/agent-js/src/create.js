@@ -82,12 +82,9 @@ export function handleFossilizerEvent(msg, processes) {
 
 /**
  * Creates an agent.
- * @param {object} options - options
- * @param {string} [options.agentUrl] - agent root url
- * @param {string} [options.evidenceCallbackUrl] - evidence callback root url
  * @returns {Agent} - an agent
  */
-export default function create(options) {
+export default function create() {
   const processes = Object();
   const connectedStoreClients = [];
   const connectedFossilizerClients = [];
@@ -147,14 +144,12 @@ export default function create(options) {
       });
     }
 
-    const updatedOpts = Object.assign(opts, options);
-
     const p = new Process(
       processName,
       actions,
       storeClient,
       fossilizerClients,
-      updatedOpts
+      opts
     );
     processes[processName] = p;
     if (connectedStoreClients.indexOf(storeClient) < 0) {
