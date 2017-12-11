@@ -25,7 +25,7 @@ import { deepGet, base64ToHex, base64ToUnicode } from './utils';
 /**
    * Handle a message received from the store websocket connection
    * @param {object} msg - the actual message
-   * * @param {list} processes - the available processes
+   * @param {list} processes - the available processes
    */
 function handleStoreEvent(msg, processes) {
   switch (msg.type) {

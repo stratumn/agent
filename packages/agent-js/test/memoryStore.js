@@ -56,25 +56,6 @@ describe('MemoryStore', () => {
         }));
   });
 
-  describe('#deleteSegment()', () => {
-    it('resolves with the deleted segment', () =>
-      store
-        .createLink(segment1.link)
-        .then(() => store.deleteSegment(segment1.meta.linkHash))
-        .then(body => body.should.deepEqual(segment1)));
-
-    it('rejects if there is an error', () =>
-      store
-        .deleteSegment('notFound')
-        .then(() => {
-          throw new Error('should not resolve');
-        })
-        .catch(err => {
-          err.status.should.be.exactly(404);
-          err.message.should.be.exactly('not found');
-        }));
-  });
-
   describe('#findSegments()', () => {
     beforeEach(() =>
       store
