@@ -92,14 +92,20 @@ export default class Process {
     );
   }
 
-  fossilizeLink(link) {
+  /**
+   * Fossilize the link of the given segment
+   * @param {object} segment - The segment containing the link to be fossilized
+   * @returns {object} - the segment
+   */
+  fossilizeLink(segment) {
     if (this.fossilizerClients) {
+      const { link } = segment;
       const linkHash = hashJson(link);
       this.fossilizerClients.forEach(fossilizer =>
         fossilizer.fossilize(linkHash, this.name).then(() => link)
       );
     }
-    return link;
+    return segment;
   }
 
   saveAndFossilize(link) {
@@ -152,7 +158,6 @@ export default class Process {
   createMap(refs, ...args) {
     const initialLink = { meta: { mapId: uuid.v4() } };
     let link;
-    let segment;
     return processify(
       this.actions,
       initialLink,
@@ -169,15 +174,7 @@ export default class Process {
         link.meta.process = this.name;
         return this.applyPlugins('didCreateLink', link, 'init', args);
       })
-      .then(() => this.saveAndFossilize(link))
-      .then(() => {
-        const linkHash = hashJson(link);
-        const meta = Object.assign({ linkHash }, { evidences: [] });
-
-        segment = { link: link, meta };
-        return this.applyPlugins('didCreateSegment', segment, 'init', args);
-      })
-      .then(() => Promise.resolve(segment));
+      .then(() => this.saveAndFossilize(link));
   }
 
   /**
@@ -201,7 +198,6 @@ export default class Process {
 
     let initialLink;
     let createdLink;
-    let segment;
 
     return this.storeClient
       .getSegment(this.name, prevLinkHash)
@@ -228,15 +224,7 @@ export default class Process {
         createdLink.meta.process = this.name;
         return this.applyPlugins('didCreateLink', link, action, args);
       })
-      .then(() => this.saveAndFossilize(createdLink))
-      .then(() => {
-        const linkHash = hashJson(createdLink);
-        const meta = Object.assign({ linkHash }, { evidences: [] });
-
-        segment = { link: createdLink, meta };
-        return this.applyPlugins('didCreateSegment', segment, action, args);
-      })
-      .then(() => Promise.resolve(segment));
+      .then(() => this.saveAndFossilize(createdLink));
   }
 
   /**

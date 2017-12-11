@@ -86,9 +86,6 @@ is called right before a transition function from the agent's actions. It takes 
 - `didCreateLink(link)`
 is called whenever a link has been created by a transition function. It takes the new link as an argument. It should be updated in-place.
 
-- `didCreateSegment(segment)`
-is called whenever a new segment has been computed from a new link. It take the new segment as an argument. It should be updated in-place. At this point the `linkHash` has already been computed so the `link` part should *not* be updated. Should it be the case sanity checks on the segment would fail.
-
 - `filterSegment(segment)`
 is called when segments are retrieved by the agent from the underlying storage. It should return `true` if the plugins accepts the segment, `false` otherwise.
 Filters are applied sequentially in the reverse order they are defined.

@@ -74,7 +74,7 @@ export default function memoryStore() {
     /**
      * Creates link.
      * @param {object} link - the link
-     * @returns {Promise} a promise that resolves with the link
+     * @returns {Promise} a promise that resolves with the segment
      */
     createLink(link) {
       const linkHash = hashJson(link);
