@@ -114,7 +114,7 @@ describe('Nodes', () => {
       insertSegments = Promise.all(
         validMapWithRefs
           .concat(referenceMap)
-          .map(s => commonStore.saveSegment(s))
+          .map(s => commonStore.createLink(s.link))
       );
 
       agent.addProcess('a', { 0: 0 }, commonStore, null);

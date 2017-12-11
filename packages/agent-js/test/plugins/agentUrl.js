@@ -11,7 +11,6 @@
   limitations under the License.
 */
 
-import pluginTest from '.';
 import agentUrl from '../../src/plugins/agentUrl';
 
 describe('agentUrl', () => {
