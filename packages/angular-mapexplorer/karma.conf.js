@@ -59,7 +59,7 @@ module.exports = function configure(config) {
     },
 
     // web server port
-    port: 9876,
+    port: 9877,
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,

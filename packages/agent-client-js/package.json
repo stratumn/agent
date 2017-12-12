@@ -9,14 +9,14 @@
     "test":
       "mocha --compilers js:babel-core/register --recursive --require babel-polyfill --require should 2> /dev/null",
     "test:ci":
-      "nyc npm test && nyc report --reporter=text-lcov > coverage/coverage.lcov",
+      "nyc yarn test && nyc report --reporter=text-lcov > coverage/coverage.lcov",
     "build":
       "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js && rollup -c rollup.browser.min.config.js",
     "clean": "rimraf lib coverage",
-    "preversion": "npm run clean && npm run test",
-    "version": "npm run build",
-    "postversion": "git push && git push --tags && npm run clean",
-    "prepublish": "npm run clean && npm run build",
+    "preversion": "yarn clean && yarn test",
+    "version": "yarn build",
+    "postversion": "git push && git push --tags && yarn clean",
+    "prepublish": "yarn clean && yarn build",
     "postpublish":
       "aws s3 cp dist/stratumn-agent-client.js s3://stratumn-libs/stratumn-agent-client.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.min.js s3://stratumn-libs/stratumn-agent-client.min.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.js s3://stratumn-libs/stratumn-agent-client-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.min.js s3://stratumn-libs/stratumn-agent-client-${npm_package_version}.min.js --region 'eu-west-1'"
   },

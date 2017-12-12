@@ -14,7 +14,7 @@
     "bootstrap": "lerna bootstrap",
     "clean": "lerna clean",
     "lint": "eslint packages/*/src packages/*/test",
-    "test": "lerna run test:ci",
+    "test": "lerna run --parallel test:ci",
     "update-license-headers": "./update-license-headers.sh"
   }
 }

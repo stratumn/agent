@@ -8,14 +8,14 @@
     "test:unit":
       "mocha --compilers js:babel-register  --require should test/unit/*",
     "test:unit:ci":
-      "nyc npm run test:unit && nyc report --reporter=text-lcov > coverage.lcov",
+      "nyc yarn test:unit && nyc report --reporter=text-lcov > coverage.lcov",
     "test:integration": "karma start karma.conf.js",
-    "test:integration:ci": "npm run test:integration -- --single-run",
-    "test": "npm run test:unit && npm run test:integration",
-    "test:ci": "npm run test:unit:ci && npm run test:integration:ci",
+    "test:integration:ci": "yarn test:integration --single-run",
+    "test": "yarn test:unit && yarn test:integration",
+    "test:ci": "yarn test:unit:ci && yarn test:integration:ci",
     "build":
       "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js",
-    "prepublish": "npm run build",
+    "prepublish": "yarn build",
     "postpublish":
       "aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core.js --region 'eu-west-1' && aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core-${npm_package_version}.js --region 'eu-west-1'"
   },

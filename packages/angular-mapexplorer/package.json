@@ -10,12 +10,12 @@
   "scripts": {
     "lint": "eslint src",
     "test": "karma start karma.conf.js",
-    "test:ci": "npm run test -- --single-run",
+    "test:ci": "yarn test --single-run",
     "build:npm": "rollup -c rollup.npm.config.js",
     "build:browser": "rollup -c rollup.browser.config.js",
     "build:demo": "rollup -c rollup.browser.demo.config.js",
-    "build": "npm run build:npm && npm run build:browser",
-    "prepublish": "npm run build"
+    "build": "yarn build:npm && yarn build:browser",
+    "prepublish": "yarn build"
   },
   "dependencies": {
     "angular": "~1.5.11",

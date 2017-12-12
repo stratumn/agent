@@ -12,10 +12,9 @@
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
   "scripts": {
-    "test:ci": "npm run test",
     "build": "rollup -c",
     "start": "rollup -c -w",
-    "prepublish": "npm run build"
+    "prepublish": "yarn build"
   },
   "dependencies": {
     "mapexplorer-core": "^2.0.0",
