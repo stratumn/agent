@@ -16,15 +16,17 @@ describe('webSocket actions', () => {
   let dispatchSpy;
   let closeSpy;
 
-  // execute cb then delay a timeout (default to 5ms)
-  const delay = (cb, timeout = 5) => {
-    cb();
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve();
-      }, timeout);
+  // delay the websocket response when the connection is open
+  // due to timeout hack in mock library:
+  // https://github.com/thoov/mock-socket/blob/9fc37773a7b95f944aaffc5aac449b57dc4f037b/src/helpers/delay.js#L1
+  const openWebSocketPromise = (name, url, onClose = null) =>
+    new Promise(resolve => {
+      openWebSocket(name, url);
+      mockServer.clients().forEach(ws => {
+        if (onClose) ws.onclose = onClose;
+        ws.onopen = resolve;
+      });
     });
-  };
 
   beforeEach(() => {
     mockServer = new Server('ws://foo/bar');
@@ -49,15 +51,7 @@ describe('webSocket actions', () => {
     });
 
     it('closes previously opened ws', () =>
-      // we use a delay hack here since the mock-socket library
-      // also uses a delay hack.. we can't capture the close call
-      // in the same tick because of that. timeout must be >= 4.
-      // https://github.com/thoov/mock-socket/blob/9fc37773a7b95f944aaffc5aac449b57dc4f037b/src/helpers/delay.js#L1
-      delay(() => {
-        openWebSocket('myWS', 'http://foo/bar');
-        const [ws] = mockServer.clients();
-        ws.onclose = closeSpy;
-      }, 10)
+      openWebSocketPromise('myWS', 'http://foo/bar', closeSpy)
         .then(() => openWebSocket('myWS', 'http://foo/bar'))
         .then(() => {
           expect(closeSpy.callCount).to.equal(1);
@@ -93,12 +87,7 @@ describe('webSocket actions', () => {
 
   describe('closeWebSocket()', () => {
     it('correctly closes a websocket', () =>
-      // same hack
-      delay(() => {
-        openWebSocket('myWS', 'http://foo/bar');
-        const [ws] = mockServer.clients();
-        ws.onclose = closeSpy;
-      })
+      openWebSocketPromise('myWS', 'http://foo/bar', closeSpy)
         .then(() => closeWebSocket('myWS'))
         .then(() => {
           expect(closeSpy.callCount).to.equal(1);
@@ -110,21 +99,15 @@ describe('webSocket actions', () => {
   });
 
   describe('closeAllWebSockets', () => {
-    it('closes all websockets', () => {
-      // same hack
-      delay(() => openWebSocket('myWS1', 'http://foo/bar'))
-        .then(() => openWebSocket('myWS1', 'http://foo/bar'))
-        .then(() => {
-          const clients = mockServer.clients();
-          expect(clients).to.have.lengthOf(2);
-          clients.forEach(ws => {
-            ws.onclose = closeSpy;
-          });
-        })
-        .then(() => {
-          closeAllWebSockets();
-          expect(closeSpy.callCount).to.equal(2);
-        });
-    });
+    it('closes all websockets', () =>
+      Promise.all([
+        openWebSocketPromise('myWS1', 'http://foo/bar', closeSpy),
+        openWebSocketPromise('myWS2', 'http://foo/bar', closeSpy)
+      ]).then(() => {
+        const clients = mockServer.clients();
+        expect(clients).to.have.lengthOf(2);
+        closeAllWebSockets();
+        expect(closeSpy.callCount).to.equal(2);
+      }));
   });
 });
