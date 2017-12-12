@@ -7,13 +7,13 @@
     "test":
       "mocha --compilers js:babel-core/register --recursive --require should",
     "test:ci":
-      "nyc npm test && nyc report --reporter=text-lcov > coverage/coverage.lcov",
+      "nyc yarn test && nyc report --reporter=text-lcov > coverage/coverage.lcov",
     "build:lib": "babel src --out-dir lib",
     "clean": "rimraf lib coverage",
-    "preversion": "npm run clean && npm run test",
-    "version": "npm run build:lib",
-    "postversion": "git push && git push --tags && npm run clean",
-    "prepublish": "npm run clean && npm run build:lib",
+    "preversion": "yarn clean && yarn test",
+    "version": "yarn build:lib",
+    "postversion": "git push && git push --tags && yarn clean",
+    "prepublish": "yarn clean && yarn build:lib",
     "swagger:generate":
       "swagger-jsdoc --definition doc/swaggerDef.js --output doc/swagger.json src/httpServer.js && docker run --rm -v $(pwd)/doc:/opt swagger2markup/swagger2markup convert --swaggerInput /opt/swagger.json --outputFile /opt/swaggerDoc --config /opt/swagger2markup.properties"
   },
