@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
+import WebSocket from 'ws';
 import request from 'superagent';
+import EventEmitter from 'events';
 import handleResponse from './handleResponse';
 
 /**
@@ -24,13 +26,38 @@ import handleResponse from './handleResponse';
  * @param {function} [opts.callbackUrl] - builds a URL that will be called with the evidence
  * @returns {Client} a fossilizer HTTP client
  */
-export default function fossilizerHttpClient(url, opts = {}) {
+export default function fossilizerHttpClient(url) {
   // If we already have an existing fossilizer for that url, re-use it
   if (fossilizerHttpClient.availableFossilizers[url]) {
     return fossilizerHttpClient.availableFossilizers[url];
   }
 
-  const fossilizerClient = {
+  // Web socket URL.
+  const wsUrl = `${url.replace(/^http/, 'ws')}/websocket`;
+
+  // Web socket instance.
+  let ws = null;
+
+  // Use event emitter instance as base object.
+  const emitter = new EventEmitter();
+
+  function connect(reconnectTimeout) {
+    ws = new WebSocket(wsUrl);
+    ws.on('open', emitter.emit.bind(emitter, 'open'));
+    ws.on('close', (...args) => {
+      ws.removeAllListeners();
+      emitter.emit('close', ...args);
+      setTimeout(connect.bind(null, reconnectTimeout), reconnectTimeout);
+    });
+    ws.on('error', emitter.emit.bind(emitter, 'error'));
+    ws.on('message', str => {
+      // Emit both event for message and event for message type.
+      const event = JSON.parse(str);
+      emitter.emit('event', event);
+    });
+  }
+
+  const fossilizerClient = Object.assign(emitter, {
     /**
      * Gets information about the fossilizer.
      * @returns {Promise} a promise that resolve with the information
@@ -46,26 +73,28 @@ export default function fossilizerHttpClient(url, opts = {}) {
     },
 
     /**
+     * Connects to the web socket and starts emitting events.
+     * @param {number} reconnectTimeout - time to wait to reconnect in milliseconds
+     */
+    connect(reconnectTimeout) {
+      if (ws) {
+        return;
+      }
+      connect(reconnectTimeout);
+    },
+
+    /**
      * Fossilizes data.
      * @param {Buffer} data - the data to fossilize
      * @param {string} callback URL - a URL that will be called with the evidence
      * @returns {Promise} a promise that resolves with the response body
      */
-    fossilize(data, callbackUrl) {
-      if (!callbackUrl && opts.callbackUrl) {
-        /* eslint-disable */
-        callbackUrl =
-          typeof opts.callbackUrl === 'function'
-            ? opts.callbackUrl(data)
-            : opts.callbackUrl;
-        /* eslint-enable */
-      }
-
+    fossilize(data, process) {
       return new Promise((resolve, reject) => {
         request
           .post(`${url}/fossils`)
           .type('form')
-          .send({ data, callbackUrl })
+          .send({ data, process })
           .end((err, res) =>
             handleResponse(err, res)
               .then(resolve)
@@ -73,7 +102,7 @@ export default function fossilizerHttpClient(url, opts = {}) {
           );
       });
     }
-  };
+  });
 
   fossilizerHttpClient.availableFossilizers[url] = fossilizerClient;
 

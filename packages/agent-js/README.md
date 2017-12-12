@@ -35,7 +35,6 @@ var agent = Agent.create({
 // Adds a process from a name, its actions, the store client, and the fossilizer client.
 // As many processes as one needs can be added. A different storeHttpClient and fossilizerHttpClient may be used.
 agent.addProcess("my_first_process", actions, storeHttpClient, fossilizerHttpClient, {
-  salt: process.env.STRATUMN_SALT || Math.random(), // change to a unique salt
   plugins: [plugins.localTime]                     // pick any plugins from src/plugins or develop your own - order matters
 });
 
@@ -59,7 +58,6 @@ server.listen(3000, () => {
 
 // You can also add processes on-the-fly after the server has started listening
 agent.addProcess("my_second_process", actions, storeHttpClient, fossilizerHttpClient, {
-  salt: process.env.STRATUMN_SALT || Math.random(),
   plugins: [plugins.localTime]
 });
 ```
@@ -87,9 +85,6 @@ is called right before a transition function from the agent's actions. It takes 
 
 - `didCreateLink(link)`
 is called whenever a link has been created by a transition function. It takes the new link as an argument. It should be updated in-place.
-
-- `didCreateSegment(segment)`
-is called whenever a new segment has been computed from a new link. It take the new segment as an argument. It should be updated in-place. At this point the `linkHash` has already been computed so the `link` part should *not* be updated. Should it be the case sanity checks on the segment would fail.
 
 - `filterSegment(segment)`
 is called when segments are retrieved by the agent from the underlying storage. It should return `true` if the plugins accepts the segment, `false` otherwise.

@@ -113,7 +113,6 @@ import fossilizerHttpClient from './fossilizerHttpClient';
  * @param {Agent} agent - the agent instance returned by Agent.create()
  * @param {object} [opts] - options
  * @param {object} [opts.cors] - CORS options
- * @param {object} [opts.salt] - salt used for callback URLs
  * @param {object} [opts.enableProcessUpload] - allow clients to upload new processes to a running agent
  * @returns {express.Server} - an express server
  */
@@ -518,17 +517,6 @@ export default function httpServer(agent, opts = {}) {
     loadProcess,
     wrap((req, res) =>
       res.locals.process.findSegments(req.query).then(res.json.bind(res))
-    )
-  );
-
-  // Do not document in swagger as this should probably not be used directly by any user.
-  app.post(
-    '/:process/evidence/:linkHash',
-    loadProcess,
-    wrap((req, res) =>
-      res.locals.process
-        .insertEvidence(req.params.linkHash, req.body, req.query.secret)
-        .then(res.json.bind(res))
     )
   );
 

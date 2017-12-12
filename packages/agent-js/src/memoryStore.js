@@ -15,6 +15,8 @@
 */
 
 import EventEmitter from 'events';
+import hashJson from './hashJson';
+import { STORE_SAVED_LINKS } from './eventTypes';
 
 // Default value for the pagination limit
 const STORE_DEFAULT_LIMIT = 20;
@@ -47,6 +49,7 @@ const paginateResults = (results, opts) => {
  */
 export default function memoryStore() {
   const segments = {};
+  const evidences = {};
 
   const emitter = Object.assign(new EventEmitter(), {
     /**
@@ -69,21 +72,21 @@ export default function memoryStore() {
     },
 
     /**
-     * Creates or updates a segment.
-     * @param {object} segment - the segment
-     * @returns {Promise} a promise that resolve with the segment
+     * Creates link.
+     * @param {object} link - the link
+     * @returns {Promise} a promise that resolves with the segment
      */
-    saveSegment(segment) {
-      segments[segment.meta.linkHash] = JSON.parse(JSON.stringify(segment));
+    createLink(link) {
+      const linkHash = hashJson(link);
+      const meta = { linkHash, evidences: [] };
+      const segment = { link, meta };
+
+      segments[linkHash] = JSON.parse(JSON.stringify(segment));
       emitter.emit('message', {
-        type: 'didSave',
-        data: JSON.parse(JSON.stringify(segment))
+        type: STORE_SAVED_LINKS,
+        data: [link]
       });
-      emitter.emit.bind(
-        emitter,
-        'didSave',
-        JSON.parse(JSON.stringify(segment))
-      );
+      emitter.emit.bind(emitter, STORE_SAVED_LINKS, [link]);
       return Promise.resolve(segment);
     },
 
@@ -102,25 +105,6 @@ export default function memoryStore() {
       }
 
       return Promise.resolve(JSON.parse(JSON.stringify(segment)));
-    },
-
-    /**
-     * Deletes a segment.
-     * @param {string} linkHash - the link hash
-     * @returns {Promise} a promise that resolve with the segment
-     */
-    deleteSegment(linkHash) {
-      const segment = segments[linkHash];
-
-      if (!segment) {
-        const err = new Error('not found');
-        err.status = 404;
-        return Promise.reject(err);
-      }
-
-      delete segments[linkHash];
-
-      return Promise.resolve(segment);
     },
 
     /**
@@ -221,6 +205,17 @@ export default function memoryStore() {
 
       const a = paginateResults(Object.keys(m), opts);
       return Promise.resolve(a);
+    },
+
+    /**
+   * Saves an evidence.
+   * @param {string} linkHash - the link hash
+   * @param {object} evidence - evidence to insert
+   * @returns {Promise} - a promise that resolve with the evidence
+   */
+    saveEvidence(linkHash, evidence) {
+      evidences[linkHash] = evidence;
+      return Promise.resolve(evidence);
     }
   });
 

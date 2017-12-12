@@ -19,8 +19,6 @@ import processify from './processify';
 import getActionsInfo from './getActionsInfo';
 import getPluginsInfo from './getPluginsInfo';
 import hashJson from './hashJson';
-import makeQueryString from './makeQueryString';
-import generateSecret from './generateSecret';
 import filterAsync from './filterAsync';
 
 export default class Process {
@@ -37,15 +35,12 @@ export default class Process {
     } else {
       this.fossilizerClients = null;
     }
-    this.salt = opts.salt || '';
     this.plugins = opts.plugins || [];
-    this.evidenceCallbackUrl = opts.evidenceCallbackUrl || '';
     this.agentUrl = opts.agentUrl || '';
     this.processInfo = {
       actions: getActionsInfo(actions),
       pluginsInfo: getPluginsInfo(this.plugins)
     };
-    this.pendingEvidences = {};
   }
 
   /**
@@ -73,6 +68,18 @@ export default class Process {
   }
 
   /**
+  * Applies filters from plugins to a link
+  * @param {object} - A segment to be filtered
+  * @returns {Promise} - A promise that resolves to true if the segment has passed all filters.
+  */
+  filterLink(link) {
+    return this.extractFilters().reduce(
+      (cur, filter) => cur.then(ok => Promise.resolve(ok && filter({ link }))),
+      Promise.resolve(true)
+    );
+  }
+
+  /**
    *
    * @param {object[]} segments - An array of segments to be filtered
    * @returns {Promise} - A promise that resolves with the list of segments that passed all filters.
@@ -84,28 +91,26 @@ export default class Process {
     );
   }
 
-  fossilizeSegment(segment) {
+  /**
+   * Fossilize the link of the given segment
+   * @param {object} segment - The segment containing the link to be fossilized
+   * @returns {object} - the segment
+   */
+  fossilizeLink(segment) {
     if (this.fossilizerClients) {
-      const { linkHash } = segment.meta;
-      const secret = generateSecret(linkHash, this.salt || '');
-      let callbackUrl = `${this.evidenceCallbackUrl || this.agentUrl}/${this
-        .name}/evidence/${linkHash}`;
-      callbackUrl += makeQueryString({ secret });
-
-      this.pendingEvidences[linkHash] = this.fossilizerClients.length;
-      this.fossilizerClients.map(fossilizer =>
-        fossilizer.fossilize(linkHash, callbackUrl).then(() => segment)
+      const { link } = segment;
+      const linkHash = hashJson(link);
+      this.fossilizerClients.forEach(fossilizer =>
+        fossilizer.fossilize(linkHash, this.name).then(() => link)
       );
-      return segment;
     }
-
     return segment;
   }
 
-  saveAndFossilize(segment) {
+  saveAndFossilize(link) {
     return this.storeClient
-      .saveSegment(segment)
-      .then(this.fossilizeSegment.bind(this));
+      .createLink(link)
+      .then(this.fossilizeLink.bind(this));
   }
 
   applyPlugins(method, ...args) {
@@ -152,7 +157,6 @@ export default class Process {
   createMap(refs, ...args) {
     const initialLink = { meta: { mapId: uuid.v4() } };
     let link;
-    let segment;
     return processify(
       this.actions,
       initialLink,
@@ -169,14 +173,7 @@ export default class Process {
         link.meta.process = this.name;
         return this.applyPlugins('didCreateLink', link, 'init', args);
       })
-      .then(() => {
-        const linkHash = hashJson(link);
-        const meta = Object.assign({ linkHash }, { evidences: [] });
-
-        segment = { link, meta };
-        return this.applyPlugins('didCreateSegment', segment, 'init', args);
-      })
-      .then(() => this.saveAndFossilize(segment));
+      .then(() => this.saveAndFossilize(link));
   }
 
   /**
@@ -200,7 +197,6 @@ export default class Process {
 
     let initialLink;
     let createdLink;
-    let segment;
 
     return this.storeClient
       .getSegment(this.name, prevLinkHash)
@@ -227,60 +223,21 @@ export default class Process {
         createdLink.meta.process = this.name;
         return this.applyPlugins('didCreateLink', link, action, args);
       })
-      .then(() => {
-        const linkHash = hashJson(createdLink);
-        const meta = Object.assign({ linkHash }, { evidences: [] });
-
-        segment = { link: createdLink, meta };
-        return this.applyPlugins('didCreateSegment', segment, action, args);
-      })
-      .then(() => this.saveAndFossilize(segment));
+      .then(() => this.saveAndFossilize(createdLink));
   }
 
   /**
-   * Inserts evidence.
+   * Saves an evidence.
    * @param {string} linkHash - the link hash
    * @param {object} evidence - evidence to insert
-   * @param {string} secret - a secret
-   * @returns {Promise} - a promise that resolve with the segment
+   * @returns {Promise} - a promise that resolve with the evidence
    */
-  insertEvidence(linkHash, evidence, secret) {
-    const expected = generateSecret(linkHash, this.salt);
-
-    if (secret !== expected) {
-      const err = new Error('unauthorized');
-      err.status = 401;
-      return Promise.reject(err);
-    }
-
-    if (!this.pendingEvidences[linkHash]) {
-      const err = new Error('trying to add an unexpected evidence');
-      err.status = 400;
-      return Promise.reject(err);
-    }
-    this.pendingEvidences[linkHash] -= 1;
+  saveEvidence(linkHash, evidence) {
     return this.storeClient
-      .getSegment(this.name, linkHash)
-      .then(segment => {
-        segment.meta.evidences.push(evidence);
-        return this.storeClient.saveSegment(segment);
-      })
-      .then(segment => {
-        // If all evidences have been added, call didFossilize event if present.
-        if (this.pendingEvidences[linkHash] > 0) {
-          return segment;
-        }
-
-        if (
-          typeof this.actions.events === 'object' &&
-          typeof this.actions.events.didFossilize === 'function'
-        ) {
-          processify(this.actions, segment.link).events.didFossilize(segment);
-        }
-        delete this.pendingEvidences[linkHash];
-        return segment;
-      });
+      .saveEvidence(evidence, linkHash)
+      .then(() => evidence);
   }
+
   /**
    * Gets a segment.
    * @param {string} linkHash - the link hash

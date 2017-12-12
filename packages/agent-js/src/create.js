@@ -19,45 +19,108 @@ import Process from './process';
 
 import { getAvailableFossilizers } from './fossilizerHttpClient';
 import { getAvailableStores } from './storeHttpClient';
+import { FOSSILIZER_DID_FOSSILIZE_LINK, STORE_SAVED_LINKS } from './eventTypes';
+import { deepGet, base64ToHex, base64ToUnicode } from './utils';
+
+/**
+ * Handle a message received from the store websocket connection
+ * @param {object} msg - the actual message
+ * @param {list} processes - the available processes
+ */
+function handleStoreEvent(msg, processes) {
+  switch (msg.type) {
+    case STORE_SAVED_LINKS: {
+      const links = msg.data;
+      links.forEach(link => {
+        const process = processes[link.meta.process];
+        const action = deepGet(process, `actions.events.${msg.type}`);
+        if (typeof action !== 'function') return;
+        process.filterLink(link).then(ok => {
+          if (ok) {
+            action(link);
+          }
+        });
+      });
+      break;
+    }
+    default:
+      // event not handled
+      break;
+  }
+}
+
+/**
+ * Handle a message received from the fossilizer websocket connection
+ * @param {object} msg - the actual message
+ * @param {list} processes - the available processes
+ */
+export function handleFossilizerEvent(msg, processes) {
+  switch (msg.type) {
+    case FOSSILIZER_DID_FOSSILIZE_LINK: {
+      // Save the evidence in the store
+      if (!msg.data.Data) {
+        console.error(
+          'fossilizer: unexpected event from websocket - missing Data '
+        );
+      }
+      if (!msg.data.Meta) {
+        console.error(
+          'fossilizer: unexpected event from websocket - missing Meta'
+        );
+      }
+      const linkHash = base64ToHex(msg.data.Data);
+      const processName = base64ToUnicode(msg.data.Meta);
+      const process = processes[processName];
+      if (process) process.saveEvidence(linkHash, msg.data.Evidence);
+      break;
+    }
+    default:
+      // event not handled
+      break;
+  }
+}
 
 /**
  * Creates an agent.
  * @param {object} options - options
  * @param {string} [options.agentUrl] - agent root url
- * @param {string} [options.evidenceCallbackUrl] - evidence callback root url
  * @returns {Agent} - an agent
  */
 export default function create(options) {
   const processes = Object();
-  const storeClients = [];
+  const connectedStoreClients = [];
+  const connectedFossilizerClients = [];
   const activePlugins = {};
   let activePluginsCount = 0;
 
   function connectStoreClient(storeClient, reconnectTimeout = 5000) {
-    storeClients.push(storeClient);
+    connectedStoreClients.push(storeClient);
     // Set up events.
     storeClient.on('open', () => console.log('store: web socket open'));
     storeClient.on('close', () => console.log('store: web socket closed'));
     storeClient.on('error', err => console.error(`store: ${err.stack}`));
-    storeClient.on('message', msg => {
-      const eventName = msg.type;
-      const process = processes[msg.data.link.meta.process];
-      if (
-        typeof process === 'object' &&
-        typeof process.actions.events === 'object' &&
-        typeof process.actions.events[eventName] === 'function'
-      ) {
-        const segment = msg.data;
-        process.filterSegment(segment).then(ok => {
-          if (ok) {
-            process.actions.events[eventName](segment);
-          }
-        });
-      }
-    });
+    storeClient.on('message', msg => handleStoreEvent(msg, processes));
 
     // Connect to store web socket.
     storeClient.connect(reconnectTimeout);
+  }
+
+  function connectFossilizerClient(fossilizerClient, reconnectTimeout = 5000) {
+    connectedFossilizerClients.push(fossilizerClient);
+    // Set up events.
+    fossilizerClient.on('open', () =>
+      console.log('fossilizer: web socket open')
+    );
+    fossilizerClient.on('close', () =>
+      console.log('fossilizer: web socket closed')
+    );
+    fossilizerClient.on('error', err =>
+      console.error(`fossilizer: ${err.stack}`)
+    );
+    fossilizerClient.on('event', msg => handleFossilizerEvent(msg, processes));
+
+    // Connect to store web socket.
+    fossilizerClient.connect(reconnectTimeout);
   }
 
   function addProcess(
@@ -84,6 +147,7 @@ export default function create(options) {
     }
 
     const updatedOpts = Object.assign(opts, options);
+
     const p = new Process(
       processName,
       actions,
@@ -92,9 +156,19 @@ export default function create(options) {
       updatedOpts
     );
     processes[processName] = p;
-    if (storeClients.indexOf(storeClient) < 0) {
+    if (connectedStoreClients.indexOf(storeClient) < 0) {
       connectStoreClient(storeClient, opts.reconnectTimeout);
     }
+
+    // Connect unconnected fossilizer clients
+    if (p.fossilizerClients) {
+      p.fossilizerClients.forEach(
+        fc =>
+          connectedFossilizerClients.indexOf(fc) < 0 &&
+          connectFossilizerClient(fc)
+      );
+    }
+
     return p;
   }
 
@@ -134,7 +208,6 @@ export default function create(options) {
      * @param {StoreClient} storeClient - the store client
      * @param {FossilizerClient[]} [fossilizerClients] - an array of fossilizer clients
      * @param {object} [opts] - options
-     * @param {string} [opts.salt] - a unique salt
      * @param {number} [opts.reconnectTimeout=5000] - web socket reconnect timeout in milliseconds
      * @param {Plugins[]} [opts.plugins] - a list of agent plugins
      * @returns {Process} - the newly created Process
@@ -235,7 +308,6 @@ export default function create(options) {
     * Initialize and return an http server for the agent.
     * @param {object} [opts] - options
     * @param {object} [opts.cors] - CORS options
-    * @param {object} [opts.salt] - salt used for callback URLs
     * @returns {express.Server} - an express server
     */
     httpServer(opts = {}) {

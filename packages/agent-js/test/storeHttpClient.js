@@ -56,17 +56,22 @@ describe('StoreHttpClient', () => {
         .then(body => body.should.deepEqual({ name: 'mock' })));
   });
 
-  describe('#saveSegment()', () => {
+  describe('#createLink()', () => {
     it('resolves with the segment', () =>
       storeHttpClient('http://localhost')
-        .saveSegment({
-          link: { state: { test: true } },
+        .createLink({
+          state: { test: true },
           meta: { process: 'test' }
         })
         .then(body =>
           body.should.deepEqual({
-            link: { state: { test: true } },
-            meta: { process: 'test' }
+            link: {
+              state: { test: true },
+              meta: { process: 'test' }
+            },
+            meta: {
+              linkHash: 'linkHash'
+            }
           })
         ));
   });
@@ -93,17 +98,6 @@ describe('StoreHttpClient', () => {
           err.statusCode.should.be.exactly(404);
           err.message.should.be.exactly('not found');
         }));
-  });
-
-  describe('#deleteSegment()', () => {
-    it('resolves with the deleted segment', () =>
-      storeHttpClient('http://localhost')
-        .deleteSegment('test', 'linkHash')
-        .then(body =>
-          body.should.deepEqual({
-            meta: { linkHash: 'linkHash', process: 'test' }
-          })
-        ));
   });
 
   describe('#findSegments()', () => {

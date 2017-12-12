@@ -56,7 +56,7 @@ describe('#segmentify', () => {
             .then(segment2 => segment2.getPrev())
             .then(segment3 => {
               segment3.link.should.deepEqual(segment1.link);
-              segment3.meta.should.deepEqual(segment1.meta);
+              segment3.meta.linkHash.should.be.equal(segment1.meta.linkHash);
               return segment3.getPrev();
             })
             .then(segment4 => {

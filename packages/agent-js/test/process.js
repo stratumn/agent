@@ -14,11 +14,9 @@
   limitations under the License.
 */
 
-import should from 'should';
 import create from '../src/create';
 import memoryStore from '../src/memoryStore';
 import hashJson from '../src/hashJson';
-import generateSecret from '../src/generateSecret';
 import { memoryStoreInfo } from './fixtures';
 import actions from './utils/basicActions';
 import refs from './utils/refs';
@@ -56,8 +54,7 @@ describe('Process', () => {
 
   beforeEach(() => {
     process = create().addProcess('basic', actions, memoryStore(), null, {
-      plugins,
-      salt: ''
+      plugins
     });
   });
 
@@ -119,12 +116,12 @@ describe('Process', () => {
         segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
       }));
 
-    it('should call the #didSave() event', () => {
+    it('should call the #SavedLinks() event', () => {
       let callCount = 0;
       actions.events = {
-        didSave(s) {
+        SavedLinks(l) {
           callCount += 1;
-          s.link.state.should.deepEqual({
+          l.state.should.deepEqual({
             a: 1,
             b: 2,
             c: 3
@@ -222,13 +219,13 @@ describe('Process', () => {
           })
       ));
 
-    it('should call the #didSave() event', () =>
+    it('should call the #SavedLinks() event', () =>
       process.createMap([], 1, 2, 3).then(segment1 => {
         let callCount = 0;
         actions.events = {
-          didSave(s) {
+          SavedLinks(l) {
             callCount += 1;
-            s.link.state.should.deepEqual({
+            l.state.should.deepEqual({
               a: 1,
               b: 2,
               c: 3,
@@ -236,6 +233,7 @@ describe('Process', () => {
             });
           }
         };
+
         return process
           .createSegment(segment1.meta.linkHash, 'action', [], 4)
           .then(() => {
@@ -272,139 +270,13 @@ describe('Process', () => {
         .then(segment3 => segment3.meta.evidences.should.deepEqual([])));
   });
 
-  describe('#insertEvidence()', () => {
-    it('resolves with the updated segment', () => {
-      process.fossilizerClients = [
-        {
-          fossilize() {
-            return Promise.resolve(true);
-          }
-        }
-      ];
-      return process.createMap([], 1, 2, 3).then(segment1 => {
-        const secret = generateSecret(segment1.meta.linkHash, '');
-        process.pendingEvidences[segment1.meta.linkHash] = 1;
-        return process
-          .insertEvidence(
-            segment1.meta.linkHash,
-            {
-              test: true
-            },
-            secret
-          )
-          .then(segment2 => {
-            segment2.link.state.should.deepEqual({
-              a: 1,
-              b: 2,
-              c: 3
-            });
-            segment2.link.meta.mapId.should.be.a.String();
-            segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
-            segment2.meta.evidences.should.deepEqual([
-              {
-                test: true
-              }
-            ]);
-            return should(
-              process.pendingEvidences[segment1.meta.linkHash]
-            ).equal(undefined);
-          });
-      });
-    });
-
-    it('fails if the secret is incorrect', () =>
-      process
-        .createMap([], 1, 2, 3)
-        .then(segment1 =>
-          process.insertEvidence(
-            segment1.meta.linkHash,
-            {
-              test: true
-            },
-            'wrong secret'
-          )
-        )
-        .then(() => {
-          throw new Error('should have failed');
+  describe('#saveEvidence()', () => {
+    it('resolves', () =>
+      process.createMap([], 1, 2, 3).then(segment1 =>
+        process.saveEvidence(segment1.meta.linkHash, {
+          test: true
         })
-        .catch(err => {
-          err.message.should.be.exactly('unauthorized');
-          err.status.should.be.exactly(401);
-        }));
-
-    it('fails if evidence is unexpected', () =>
-      process
-        .createMap([], 1, 2, 3)
-        .then(segment1 => {
-          const secret = generateSecret(segment1.meta.linkHash, '');
-          return process.insertEvidence(
-            segment1.meta.linkHash,
-            {
-              test: true
-            },
-            secret
-          );
-        })
-        .then(() => {
-          throw new Error('should have failed');
-        })
-        .catch(err => {
-          err.message.should.be.exactly('trying to add an unexpected evidence');
-          err.status.should.be.exactly(400);
-        }));
-
-    it('should call the #didFossilize() event', () => {
-      process.fossilizerClients = [
-        {
-          fossilize() {
-            return Promise.resolve(true);
-          }
-        }
-      ];
-      return process.createMap([], 1, 2, 3).then(segment => {
-        let callCount = 0;
-        actions.events = {
-          didFossilize(s) {
-            callCount += 1;
-            s.meta.evidences.should.deepEqual([
-              {
-                test: true
-              },
-              {
-                test2: true
-              }
-            ]);
-            this.state.should.deepEqual({
-              a: 1,
-              b: 2,
-              c: 3
-            });
-          }
-        };
-        const secret = generateSecret(segment.meta.linkHash, '');
-        process.pendingEvidences[segment.meta.linkHash] = 2;
-        return process
-          .insertEvidence(
-            segment.meta.linkHash,
-            {
-              test: true
-            },
-            secret
-          )
-          .then(() => callCount.should.be.exactly(0))
-          .then(() =>
-            process
-              .insertEvidence(
-                segment.meta.linkHash,
-                {
-                  test2: true
-                },
-                secret
-              )
-              .then(() => callCount.should.be.exactly(1))
-          );
-      });
-    });
+      ));
   });
 
   describe('#findSegments()', () => {
