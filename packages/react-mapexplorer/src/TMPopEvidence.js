@@ -19,8 +19,6 @@ import PropTypes from 'prop-types';
 import MerklePathComponent from './MerklePathComponent';
 
 const TMPopEvidence = ({ evidence }) => {
-  const date = new Date(evidence.proof.header.time * 1000).toUTCString();
-
   let merkleTree;
   if (evidence.proof.merklePath.length > 0) {
     merkleTree = (
@@ -43,10 +41,10 @@ const TMPopEvidence = ({ evidence }) => {
           <p>{evidence.proof.blockHeight}</p>
 
           <h4>Time</h4>
-          <p>{date}</p>
+          <p>{new Date(evidence.proof.header.time * 1000).toUTCString()}</p>
 
           <h4>App Hash</h4>
-          <p>{evidence.proof.header.app_hash}</p>
+          <p>{evidence.proof.nextHeader.app_hash}</p>
 
           <h4>Validations Hash</h4>
           <p>{evidence.proof.validationsHash}</p>
