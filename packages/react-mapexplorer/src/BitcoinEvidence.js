@@ -52,14 +52,16 @@ const BitcoinEvidence = ({ evidence }) => {
   return (
     <div>
       <h2>Bitcoin evidence</h2>
-      <div className="info">
-        <h4>State</h4>
-        <p>{evidence.state}</p>
-        <h4>Chain</h4>
-        <p>{evidence.provider}</p>
-        {evidenceInfo}
+      <div className="evidence">
+        <div className="info">
+          <h4>State</h4>
+          <p>{evidence.state}</p>
+          <h4>Chain</h4>
+          <p>{evidence.provider}</p>
+          {evidenceInfo}
+        </div>
+        {evidenceTree}
       </div>
-      {evidenceTree}
     </div>
   );
 };
