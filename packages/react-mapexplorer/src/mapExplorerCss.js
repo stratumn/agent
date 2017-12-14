@@ -172,6 +172,10 @@ export function getRules() {
     'rect.refLinkBox': {
       cursor: 'pointer',
       fill: foreignSegmentSecondaryColor
+    },
+
+    '.evidence': {
+      display: 'flex'
     }
   };
 }
