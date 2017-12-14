@@ -1,16 +1,18 @@
-<div class="info">
-  <div ng-show="evidence.state === 'COMPLETE'">
-    <h4>Bitcoin Transaction</h4>
-    <p>
-      {{evidence.proof.txid}}
-      <a target="_blank" ng-href="https://blockchain.info/tx/{evidence.proof.txid}">View transaction on Blockchain.info</a>
-    </p>
+<div class="evidence">
+  <div class="info">
+    <div>
+      <h4>Bitcoin Transaction</h4>
+      <p>
+        {{evidence.proof.txid}}
+        <a target="_blank" ng-href="https://blockchain.info/tx/{evidence.proof.txid}">View transaction on Blockchain.info</a>
+      </p>
 
-    <h4>Merkle root</h4>
-    <p>{{evidence.proof.batch.merkleRoot}}</p>
+      <h4>Merkle root</h4>
+      <p>{{evidence.proof.batch.merkleRoot}}</p>
+    </div>
   </div>
-</div>
-<div class="merkle-path" ng-show="evidence.state === 'COMPLETE'">
-  <h4>Merkle Path</h4>
-  <st-merkle-path-tree merkle-path="evidence.proof.batch.merklePath"></st-merkle-path-tree>
+  <div class="merkle-path">
+    <h4>Merkle Path</h4>
+    <st-merkle-path-tree merkle-path="evidence.proof.batch.merklePath"></st-merkle-path-tree>
+  </div>
 </div>

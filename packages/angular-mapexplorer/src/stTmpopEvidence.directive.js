@@ -5,9 +5,9 @@ export default function stTmpopEvidence() {
     },
     templateUrl: '../views/tmpopevidence.html',
     link: scope => {
-      scope.evidence.merklePathString = JSON.stringify(
-        scope.evidence.proof.original.merkleProof.InnerNodes
-      );
+      scope.evidence.date = new Date(
+        scope.evidence.proof.header.time * 1000
+      ).toUTCString();
     }
   };
 }
