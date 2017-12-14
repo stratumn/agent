@@ -16,44 +16,57 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import MerklePathComponent from './MerklePathComponent';
 
-const jsonStyle = {
-  whiteSpace: 'pre-wrap'
+const TMPopEvidence = ({ evidence }) => {
+  const date = new Date(evidence.proof.header.time * 1000).toUTCString();
+
+  let merkleTree;
+  if (evidence.proof.merklePath.length > 0) {
+    merkleTree = (
+      <div className="merkle-path">
+        <h4>MerklePath</h4>
+        <MerklePathComponent merklePath={evidence.proof.merklePath} />
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h2>TMPop evidence</h2>
+      <div className="evidence">
+        <div className="info">
+          <h4>Chain ID</h4>
+          <p>{evidence.provider}</p>
+
+          <h4>Block #</h4>
+          <p>{evidence.proof.blockHeight}</p>
+
+          <h4>Time</h4>
+          <p>{date}</p>
+
+          <h4>App Hash</h4>
+          <p>{evidence.proof.header.app_hash}</p>
+
+          <h4>Validations Hash</h4>
+          <p>{evidence.proof.validationsHash}</p>
+
+          <h4>Merkle Root</h4>
+          <p>{evidence.proof.merkleRoot}</p>
+        </div>
+        {merkleTree}
+      </div>
+    </div>
+  );
 };
-
-const TMPopEvidence = ({ evidence }) => (
-  <div>
-    <h2>TMPop evidence</h2>
-
-    <h4>State</h4>
-    <p>{evidence.state}</p>
-    <h4>Chain ID</h4>
-    <p>{evidence.provider}</p>
-
-    <h4>Block #</h4>
-    <p>{evidence.proof.original.blockHeight}</p>
-
-    <h4>App Hash</h4>
-    <p>{evidence.proof.original.header.app_hash}</p>
-
-    <h4>Leaf Hash</h4>
-    <p>{evidence.proof.original.merkleProof.LeafHash}</p>
-
-    <h4>MerklePath</h4>
-    <pre style={jsonStyle}>
-      {JSON.stringify(evidence.proof.original.merkleProof.InnerNodes)}
-    </pre>
-  </div>
-);
 
 TMPopEvidence.propTypes = {
   evidence: PropTypes.shape({
-    state: PropTypes.string,
     provider: PropTypes.string,
     backend: PropTypes.string,
     proof: PropTypes.shape({
-      original: PropTypes.object,
-      current: PropTypes.object
+      blockHeight: PropTypes.number,
+      validationsHash: PropTypes.string
     })
   }).isRequired
 };
