@@ -1,21 +1,25 @@
 <h2>TMPop evidence</h2>
 <div class="info">
-  <h4>State</h4>
-  <p>{{evidence.state}}</p>
   <h4>Chain ID</h4>
   <p>{{evidence.provider}}</p>
 
   <h4>Block #</h4>
-  <p>{{evidence.proof.original.blockHeight}}</p>
+  <p>{{evidence.proof.blockHeight}}</p>
 
-  {{#if evidenceComplete}}
-    <h4>App Hash</h4>
-    <p>{{evidence.proof.original.header.app_hash}}</p>
+  <h4>Time</h4>
+  <p>{{timestamp evidence.proof.header.time}}</p>
 
-    <h4>Leaf Hash</h4>
-    <p>{{evidence.proof.original.merkleProof.LeafHash}}</p>
+  <h4>App Hash</h4>
+  <p>{{evidence.proof.nextHeader.app_hash}}</p>
 
-    <h4>MerklePath</h4>
-    <pre>{{json evidence.proof.original.merkleProof.InnerNodes}}</pre>
-  {{/if}}
+  <h4>Validations Hash</h4>
+  <p>{{evidence.proof.validationsHash}}</p>
+
+  <h4>Merkle Root</h4>
+  <p>{{evidence.proof.merkleRoot}}</p>
+</div>
+<div class="merkle-path">
+  {{#if merklePathPresent}}
+  <h4>MerklePath</h4>
+  {{merkle-path-tree merkle-path=evidence.proof.merklePath}} {{/if}}
 </div>

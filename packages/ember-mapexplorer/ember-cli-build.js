@@ -5,7 +5,7 @@ module.exports = function(defaults) {
   var app = new EmberAddon(defaults, {
     // Add options here
     'ember-cli-babel': {
-      includePolyfill: (EmberAddon.env() === 'test')
+      includePolyfill: EmberAddon.env() === 'test'
     }
   });
 

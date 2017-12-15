@@ -5,6 +5,9 @@ export default Ember.Component.extend({
   layout,
 
   didInsertElement() {
-    this.set('evidenceComplete', this.get('evidence').state === 'COMPLETE');
+    this.set(
+      'merklePathPresent',
+      this.get('evidence').proof.merklePath.length > 0
+    );
   }
 });
