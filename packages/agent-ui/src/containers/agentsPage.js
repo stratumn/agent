@@ -51,10 +51,15 @@ AgentsPage.propTypes = {
 
 export function mapStateToProps(state) {
   const agents = Object.keys(state.agents || [])
-    .filter(a => state.agents[a].status === statusTypes.LOADED)
+    .filter(
+      a =>
+        state.agents[a].status === statusTypes.LOADED ||
+        state.agents[a].status === statusTypes.FAILED
+    )
     .map(a => ({
       name: a,
-      url: state.agents[a].url
+      url: state.agents[a].url,
+      status: state.agents[a].status
     }));
 
   return {

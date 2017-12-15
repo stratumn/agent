@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import Add from 'material-ui-icons/Add';
 import Button from 'material-ui/Button';
@@ -11,6 +12,10 @@ import Table, {
   TableRow
 } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
+import { withStyles } from 'material-ui/styles';
+import tableStyle from '../styles/tables';
+
+import * as statusTypes from '../constants/status';
 
 class AgentsManager extends Component {
   constructor(props) {
@@ -42,7 +47,7 @@ class AgentsManager extends Component {
   }
 
   render() {
-    const { agents, deleteAgent } = this.props;
+    const { classes, agents, deleteAgent } = this.props;
 
     return (
       <Table>
@@ -55,8 +60,13 @@ class AgentsManager extends Component {
         </TableHead>
         <TableBody>
           {agents &&
-            agents.map(({ name, url }) => (
-              <TableRow key={name}>
+            agents.map(({ name, url, status }) => (
+              <TableRow
+                key={name}
+                className={classNames({
+                  [classes.tableRowError]: status === statusTypes.FAILED
+                })}
+              >
                 <TableCell>{name}</TableCell>
                 <TableCell>{url}</TableCell>
                 <TableCell>
@@ -108,7 +118,10 @@ AgentsManager.propTypes = {
       name: PropTypes.string.isRequired,
       url: PropTypes.string.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  classes: PropTypes.shape({
+    tableRowError: PropTypes.string.isRequired
+  }).isRequired
 };
 
-export default AgentsManager;
+export default withStyles(tableStyle)(AgentsManager);
