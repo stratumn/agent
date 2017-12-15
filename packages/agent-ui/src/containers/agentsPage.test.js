@@ -1,16 +1,21 @@
 import React from 'react';
 
 import { mount } from 'enzyme';
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 
 import { TestStateBuilder, TestAgentBuilder } from '../test/builders/state';
 
 import * as statusTypes from '../constants/status';
 import { AgentsPage, mapStateToProps } from './agentsPage';
 
+chai.use(sinonChai);
+
 describe('<AgentsPage />', () => {
+  const fetchSpy = sinon.spy();
   const requiredProps = {
-    fetchAgent: () => {},
+    fetchAgent: fetchSpy,
     deleteAgent: () => {}
   };
 
@@ -27,6 +32,18 @@ describe('<AgentsPage />', () => {
     expect(agentsManager.props().deleteAgent).to.equal(
       requiredProps.deleteAgent
     );
+  });
+
+  it('fetches all the staled agents', () => {
+    const agents = [
+      { name: 'foo', url: 'foo/url', status: statusTypes.LOADED },
+      { name: 'bar', url: 'bar/url', status: statusTypes.STALE },
+      { name: 'stale', url: 'stale/url', status: statusTypes.STALE }
+    ];
+    mount(<AgentsPage {...requiredProps} agents={agents} />);
+    expect(fetchSpy.callCount).to.equal(2);
+    expect(fetchSpy.getCall(0).args).to.deep.equal(['bar', 'bar/url']);
+    expect(fetchSpy.getCall(1).args).to.deep.equal(['stale', 'stale/url']);
   });
 
   it('extracts loaded agents from state', () => {
@@ -46,20 +63,26 @@ describe('<AgentsPage />', () => {
       .withUrl('not/a/url')
       .build();
 
+    const staleAgent = new TestAgentBuilder()
+      .withStatus(statusTypes.STALE)
+      .build();
+
     const state = new TestStateBuilder()
       .withAgent('a1', loadedAgent1)
       .withAgent('a0', notLoadedAgent)
       .withAgent('a2', loadedAgent2)
       .withAgent('a3', failedAgent)
+      .withAgent('stale', staleAgent)
       .build();
 
     const { agents } = mapStateToProps(state);
 
-    expect(agents).to.have.length(3);
+    expect(agents).to.have.length(4);
     expect(agents).to.deep.equal([
       { name: 'a1', url: 'http://localhost:42', status: statusTypes.LOADED },
       { name: 'a2', url: 'http://localhost:43', status: statusTypes.LOADED },
-      { name: 'a3', url: 'not/a/url', status: statusTypes.FAILED }
+      { name: 'a3', url: 'not/a/url', status: statusTypes.FAILED },
+      { name: 'stale', url: '', status: statusTypes.STALE }
     ]);
   });
 });
