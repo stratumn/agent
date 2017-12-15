@@ -1,4 +1,4 @@
-/*
+<!--
   Copyright 2017 Stratumn SAS. All rights reserved.
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,24 +12,27 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-*/
+-->
 
-/* tslint:disable:no-unused-variable */
+<div class="evidence">
+  <div class="info">
+    <h4>Block #</h4>
+    <p>{{evidence.proof.blockHeight}}</p>
 
-import { TestBed, async, inject } from "@angular/core/testing";
-import { ChainTreeBuilderService } from "./chain-tree-builder.service";
+    <h4>Time</h4>
+    <p>{{date()}}</p>
 
-describe("Service: ChainTreeBuilder", () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [ChainTreeBuilderService],
-    });
-  });
+    <h4>App Hash</h4>
+    <p>{{evidence.proof.nextHeader.app_hash}}</p>
 
-  it(
-    "should ...",
-    inject([ChainTreeBuilderService], (service: ChainTreeBuilderService) => {
-      expect(service).toBeTruthy();
-    }),
-  );
-});
+    <h4>Validations Hash</h4>
+    <p>{{evidence.proof.validationsHash}}</p>
+
+    <h4>Merkle Root</h4>
+    <p>{{evidence.proof.merkleRoot}}</p>
+  </div>
+  <div class="merkle-path" *ngIf="evidence.proof.merklePath.length > 0">
+    <h4>Merkle Path</h4>
+    <st-merkle-path-tree [merklePath]="evidence.proof.merklePath"></st-merkle-path-tree>
+  </div>
+</div>

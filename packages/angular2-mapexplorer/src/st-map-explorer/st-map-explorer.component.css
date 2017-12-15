@@ -90,3 +90,7 @@
   color: #ec714a;
   display: block;
 }
+
+.body {
+  display: flex;
+}
