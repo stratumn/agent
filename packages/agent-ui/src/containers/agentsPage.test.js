@@ -41,19 +41,25 @@ describe('<AgentsPage />', () => {
     const notLoadedAgent = new TestAgentBuilder()
       .withStatus(statusTypes.LOADING)
       .build();
+    const failedAgent = new TestAgentBuilder()
+      .withStatus(statusTypes.FAILED)
+      .withUrl('not/a/url')
+      .build();
 
     const state = new TestStateBuilder()
       .withAgent('a1', loadedAgent1)
       .withAgent('a0', notLoadedAgent)
       .withAgent('a2', loadedAgent2)
+      .withAgent('a3', failedAgent)
       .build();
 
     const { agents } = mapStateToProps(state);
 
-    expect(agents).to.have.length(2);
-    expect(agents[0].name).to.equal('a1');
-    expect(agents[0].url).to.equal('http://localhost:42');
-    expect(agents[1].name).to.equal('a2');
-    expect(agents[1].url).to.equal('http://localhost:43');
+    expect(agents).to.have.length(3);
+    expect(agents).to.deep.equal([
+      { name: 'a1', url: 'http://localhost:42', status: statusTypes.LOADED },
+      { name: 'a2', url: 'http://localhost:43', status: statusTypes.LOADED },
+      { name: 'a3', url: 'not/a/url', status: statusTypes.FAILED }
+    ]);
   });
 });

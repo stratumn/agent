@@ -4,6 +4,7 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
+import * as statusTypes from '../constants/status';
 import AgentsManager from './agentsManager';
 
 chai.use(sinonChai);
@@ -40,12 +41,16 @@ describe('<AgentsManager />', () => {
     ]);
   });
 
-  it('displays loaded agents', () => {
-    const agents = [{ name: 'a1', url: 'u1' }, { name: 'a2', url: 'u2' }];
+  it('displays loaded and failed agents', () => {
+    const agents = [
+      { name: 'a1', url: 'u1' },
+      { name: 'a2', url: 'u2' },
+      { name: 'a3', url: 'u3', status: statusTypes.FAILED }
+    ];
     const agentsPage = mountAgentsManager({ agents });
 
     const agentsRows = agentsPage.find('TableBody').find('TableRow');
-    expect(agentsRows).to.have.length(3);
+    expect(agentsRows).to.have.length(4);
     expect(
       agentsRows
         .at(1)
@@ -60,6 +65,8 @@ describe('<AgentsManager />', () => {
         .at(1)
         .text()
     ).to.equal('u2');
+    expect(agentsRows.at(1).props().className).to.not.contain('tableRowError');
+    expect(agentsRows.at(2).props().className).to.contain('tableRowError');
   });
 
   it('provides a button to remove an agent', () => {
