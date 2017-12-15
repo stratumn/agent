@@ -5,7 +5,6 @@ import * as actionTypes from '../constants/actionTypes';
 import * as statusTypes from '../constants/status';
 
 import { TestProcessBuilder, TestAgentBuilder } from '../test/builders/api';
-import { stat } from 'fs';
 
 describe('agents reducer', () => {
   it('returns previous state for unknown action', () => {
