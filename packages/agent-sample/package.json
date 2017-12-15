@@ -1,0 +1,31 @@
+{
+  "name": "agent-sample",
+  "version": "0.2.0",
+  "description": "A sample Javascript agent.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon -L -i test -i segments -i node_modules",
+    "test": "mocha --compilers js:babel-core/register --recursive --require should"
+  },
+  "author": "Stratumn Team",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stratumn/indigo-js.git"
+  },
+  "keywords": ["stratumn", "agent", "sample", "blockchain"],
+  "dependencies": {
+    "express": "^4.14.0",
+    "stratumn-agent": "^0.18.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015-node4": "latest",
+    "babel-preset-es2017": "^6.9.0",
+    "babel-core": "^6.11.4",
+    "mocha": "^2.5.3",
+    "nodemon": "^1.9.2",
+    "should": "^10.0.0"
+  }
+}
