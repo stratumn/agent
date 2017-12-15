@@ -1,24 +1,17 @@
 <h2>Bitcoin evidence</h2>
 <div class="info">
-  <h4>State</h4>
-  <p>{{evidence.state}}</p>
   <h4>Chain</h4>
   <p>{{evidence.provider}}</p>
-  {{#if evidenceComplete}}
-    <h4>Bitcoin Transaction</h4>
-    <p>
-      {{get evidence.transactions 'bitcoin:main'}}
-      <a target="_blank" href="https://blockchain.info/tx/{{evidence.proof.txid}}">View
-                  transaction on Blockchain.info</a>
-    </p>
+  <h4>Bitcoin Transaction</h4>
+  <p>
+    {{get evidence.transactions 'bitcoin:main'}}
+    <a target="_blank" href="https://blockchain.info/tx/{{evidence.proof.txid}}">View transaction on Blockchain.info</a>
+  </p>
 
-    <h4>Merkle root</h4>
-    <p>{{evidence.proof.batch.merkleRoot}}</p>
-  {{/if}}
+  <h4>Merkle root</h4>
+  <p>{{evidence.proof.batch.merkleRoot}}</p>
 </div>
-{{#if evidenceComplete}}
-  <div class="merkle-path">
-    <h4>Merkle Path</h4>
-    {{merkle-path-tree merkle-path=evidence.proof.batch.merklePath}}
-  </div>
-{{/if}}
+<div class="merkle-path">
+  <h4>Merkle Path</h4>
+  {{merkle-path-tree merkle-path=evidence.proof.batch.merklePath}}
+</div>

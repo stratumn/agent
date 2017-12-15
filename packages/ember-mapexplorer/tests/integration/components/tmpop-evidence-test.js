@@ -12,10 +12,49 @@ moduleForComponent(
 test('it renders', function(assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
+  this.set('evidence', {
+    backend: 'TMPop',
+    provider: 'test-chain-5AKxd9',
+    proof: {
+      blockHeight: 89091,
+      merkleRoot:
+        '85e44eee398c3f123cbfabc1c3262392a5f8822da8719552312f6bd7ccd3d79f',
+      merklePath: [
+        {
+          left:
+            '0185cc20bc088fb86eab72f6f921ee568d2be13d0ee273520ebfb916e47cd989',
+          right:
+            '77bf231be035c74eef22e75b34bed58afcc69a361787c77d55b2ce77b9c886c9',
+          parent:
+            '85e44eee398c3f123cbfabc1c3262392a5f8822da8719552312f6bd7ccd3d79f'
+        }
+      ],
+      validationsHash: null,
+      header: {
+        chain_id: 'test-chain-5AKxd9',
+        height: 89091,
+        time: 1513260611,
+        last_commit_hash: 'toAVRGGIdaIf2bjqyYwzRlcYv/E=',
+        data_hash: 'OBj8lq6mSXgE9S7KRtTkAppQbuM=',
+        app_hash: '67pv8OR2/ISQtEoYc+3hN0z1UddUePspJkwD4mgUweM='
+      },
+      signatures: null,
+      nextHeader: {
+        chain_id: 'test-chain-5AKxd9',
+        height: 89092,
+        time: 1513260621,
+        last_block_id: {
+          hash: 'LA9SfFiog1IFNFEJ89A6lCtOr6Y=',
+          parts: { total: 1, hash: 'WzgF9gWDSS6ip3EE/AKkpeDf1CA=' }
+        },
+        last_commit_hash: 'GvkA0lEZ/ygQuBbo5v/qGqFy9bo=',
+        app_hash: '0U7AaZEW6gBI4Wk4Jg8vLTtgxkJFtXZRkTwWhnjiUVo='
+      },
+      nextSignatures: null
+    }
+  });
 
-  this.render(
-    hbs`{{tmpop-evidence evidence='{state: "COMPLETE",backend: "TMPop",provider: "test-chain-qcaYsP",proof: {original: {blockHeight: 2178,header: {chain_id: "test-chain-qcaYsP",height: 2179,time: 1507798943,num_txs: 2,last_block_id: {hash: "SWdYPdeJZuwwBpuL23mt8HIcg5c=",parts: {total: 1,hash: "K06rX5g22SZ2sZRvrFaBp2+hTfU="}},last_commit_hash: "BEoMWnnAUu8geLQ88CIsOBW0Rqk=",data_hash: "IJ0uN9arhrQ9vMUmhaEf+HMEn/A=",app_hash: "bzQlcecD/AN9Ms6cDTz2gc8q8Kk="},merkleProof: {LeafHash: "VMuBXQByCP+2s5p8E0eGmp6h3cY=",InnerNodes: [{Height: 1,Size: 2,Left: "H9Bpn7253lN2Wf5dB/YlrQj4MRA=",Right: ""},{Height: 2,Size: 3,Left: "UxHFnsH6OpsajdnKkLzDLCwmSfQ=",Right: ""},{Height: 3,Size: 5,Left: "",Right: "qG+8tH573onSmA+d/rSdmWngIBc="}],RootHash: "bzQlcecD/AN9Ms6cDTz2gc8q8Kk="},signatures: null},current: {blockHeight: 21378,header: {chain_id: "test-chain-qcaYsP",height: 21379,time: 1507821486,last_block_id: {hash: "jcqWPyHn+A3g+dBOs9vEAKJjzOY=",parts: {total: 1,hash: "LASWmyBuKPNhaRsJjvGfyTq8Flg="}},last_commit_hash: "MIkFnUsNvZwC2fNkysue4e03Xeo=",app_hash: "HAlV4NV4/YeHM9Swn/N7fxRLq7Q="},merkleProof: {LeafHash: "VMuBXQByCP+2s5p8E0eGmp6h3cY=",InnerNodes: [{Height: 1,Size: 2,Left: "",Right: "9DLb4RCAqesiWFOkrfSF+n1CNmI="},{Height: 2,Size: 4,Left: "",Right: "ScorNvLYfjXLJ9qSWa2EETgYPkc="},{Height: 3,Size: 7,Left: "",Right: "lqKZYy/Zd2CG3ZssQDg3MuRqde8="},{Height: 4,Size: 12,Left: "ngkUn2+zSQ5MP3L64qjHa5vrGdw=",Right: ""}],RootHash: "HAlV4NV4/YeHM9Swn/N7fxRLq7Q="},signatures: null}}}'}}`
-  );
+  this.render(hbs`{{tmpop-evidence evidence=evidence}}`);
 
-  assert.equal(0, 0);
+  assert.equal(this.$().find('p')[0].innerHTML, 'test-chain-5AKxd9');
 });

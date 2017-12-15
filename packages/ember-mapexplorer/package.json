@@ -2,7 +2,9 @@
   "name": "ember-mapexplorer",
   "version": "2.0.0",
   "description": "Ember addon that displays a Map Explorer",
-  "keywords": ["ember-addon"],
+  "keywords": [
+    "ember-addon"
+  ],
   "license": "Apache-2.0",
   "author": "Stratumn team",
   "directories": {
@@ -19,7 +21,7 @@
   "dependencies": {
     "broccoli-funnel": "^2.0.1",
     "broccoli-merge-trees": "^2.0.0",
-    "ember-cli-babel": "^6.3.0",
+    "ember-cli-babel": "^6.11.0",
     "ember-cli-htmlbars": "^2.0.1",
     "ember-paper": "^1.0.0-beta.1",
     "mapexplorer-core": "^1.2.0"
@@ -40,14 +42,15 @@
     "ember-disable-prototype-extensions": "^1.1.2",
     "ember-export-application-global": "^2.0.0",
     "ember-load-initializers": "^1.0.0",
+    "ember-qunit": "^3.2.1",
     "ember-resolver": "^4.0.0",
     "ember-source": "~2.14.1",
-    "jsonfile": "^3.0.1",
-    "loader.js": "^4.2.3",
-    "process-nextick-args": "^1.0.7",
     "eslint-config-prettier": "^2.6.0",
     "eslint-plugin-prettier": "^2.3.1",
-    "prettier": "^1.7.4"
+    "jsonfile": "^3.0.1",
+    "loader.js": "^4.2.3",
+    "prettier": "^1.7.4",
+    "process-nextick-args": "^1.0.7"
   },
   "engines": {
     "node": "^4.5 || 6.* || >= 7.*"
