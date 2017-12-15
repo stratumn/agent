@@ -1,9 +1,5 @@
 # This dockerfile must run in the context of the project root directory.
-<<<<<<< HEAD
 # It uses lerna to build an image that contains latest versions of the local
-=======
-# It uses lerna to build an images that contains latest versions of the local
->>>>>>> agent-ui: docker local image.
 # packages.
 # From the root directory, run:
 # docker build -t stratumn/agent-ui:local -f ./packages/agent-ui/Dockerfile.local .
