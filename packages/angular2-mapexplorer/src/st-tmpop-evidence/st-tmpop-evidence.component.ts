@@ -14,14 +14,19 @@
   limitations under the License.
 */
 
-/* tslint:disable:no-unused-variable */
+import { Component, Input, ElementRef } from "@angular/core";
 
-import { TestBed, async } from "@angular/core/testing";
-import { StMapExplorerComponent } from "./st-map-explorer.component";
+@Component({
+  selector: "st-tmpop-evidence",
+  templateUrl: "./st-tmpop-evidence.component.html",
+  styleUrls: ["./st-tmpop-evidence.component.css"],
+})
+export class StTmpopEvidenceComponent {
+  @Input() evidence;
 
-describe("Component: StMapExplorer", () => {
-  it("should create an instance", () => {
-    let component = new StMapExplorerComponent();
-    expect(component).toBeTruthy();
-  });
-});
+  constructor(public element: ElementRef) {}
+
+  date() {
+    return new Date(this.evidence.proof.header.time * 1000).toUTCString();
+  }
+}

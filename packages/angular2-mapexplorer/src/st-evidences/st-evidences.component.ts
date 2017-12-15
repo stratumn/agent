@@ -14,14 +14,18 @@
   limitations under the License.
 */
 
-/* tslint:disable:no-unused-variable */
+import { Component, ViewChild, Input, ElementRef } from "@angular/core";
+import { MerklePathTree } from "mapexplorer-core";
 
-import { TestBed, async } from "@angular/core/testing";
-import { StMerklePathTreeComponent } from "./st-merkle-path-tree.component";
+@Component({
+  selector: "st-evidences",
+  templateUrl: "./st-evidences.component.html",
+  styleUrls: ["./st-evidences.component.css"],
+})
+export class StEvidencesComponent {
+  @Input() evidences;
 
-describe("Component: StMerkletPathTree", () => {
-  it("should create an instance", () => {
-    let component = new StMerklePathTreeComponent();
-    expect(component).toBeTruthy();
-  });
-});
+  merklePathTree: MerklePathTree = null;
+
+  constructor(public element: ElementRef) {}
+}

@@ -14,14 +14,23 @@
   limitations under the License.
 */
 
-/* tslint:disable:no-unused-variable */
+import { Component, Input, ElementRef } from "@angular/core";
 
-import { TestBed, async } from "@angular/core/testing";
-import { StMapValidatorComponent } from "./st-map-validator.component";
+@Component({
+  selector: "st-bitcoin-evidence",
+  templateUrl: "./st-bitcoin-evidence.component.html",
+  styleUrls: ["./st-bitcoin-evidence.component.css"],
+})
+export class StBitcoinEvidenceComponent {
+  @Input() evidence;
 
-describe("Component: StMapValidator", () => {
-  it("should create an instance", () => {
-    let component = new StMapValidatorComponent();
-    expect(component).toBeTruthy();
-  });
-});
+  constructor(public element: ElementRef) {}
+
+  transactionUrl() {
+    return `https://blockchain.info/tx/${this.evidence.proof.txid}`;
+  }
+
+  date() {
+    return new Date(this.evidence.proof.timestamp * 1000).toUTCString();
+  }
+}

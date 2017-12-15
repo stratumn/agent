@@ -1,4 +1,4 @@
-/*
+<!--
   Copyright 2017 Stratumn SAS. All rights reserved.
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,23 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-*/
+-->
 
-/* tslint:disable:no-unused-variable */
+<div class="evidence">
+  <div class="info">
+    <div>
+      <h4>Bitcoin Transaction</h4>
+      <p>
+        {{evidence.proof.txid}}
+        <a target="_blank" [href]="transactionUrl()">View transaction on Blockchain.info</a>
+      </p>
 
-import { TestBed, async } from "@angular/core/testing";
-import { FunctionArgumentsPipe } from "./function-arguments.pipe";
-
-describe("Pipe: FunctionArguments", () => {
-  it("create an instance", () => {
-    let pipe = new FunctionArgumentsPipe();
-    expect(pipe).toBeTruthy();
-  });
-});
+      <h4>Merkle root</h4>
+      <p>{{evidence.proof.batch.merkleRoot}}</p>
+    </div>
+  </div>
+  <div class="merkle-path">
+    <h4>Merkle Path</h4>
+    <st-merkle-path-tree [merklePath]="evidence.proof.batch.merklePath"></st-merkle-path-tree>
+  </div>
+</div>

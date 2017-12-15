@@ -18,12 +18,12 @@ import {
   Component,
   Input,
   OnInit,
-  OnChanges,
   AfterContentInit,
   ViewChild,
 } from "@angular/core";
 import { ChainTreeBuilderService } from "../chain-tree-builder.service";
 import { ChainTreeBuilder } from "mapexplorer-core";
+import { OnChanges } from "@angular/core/src/metadata/lifecycle_hooks";
 
 @Component({
   selector: "st-map-explorer",
@@ -31,7 +31,7 @@ import { ChainTreeBuilder } from "mapexplorer-core";
   styleUrls: ["./st-map-explorer.component.css"],
 })
 export class StMapExplorerComponent
-  implements OnInit, OnChanges, AfterContentInit {
+  implements OnInit, AfterContentInit, OnChanges {
   @ViewChild("map") map;
 
   private error: string;
@@ -85,15 +85,18 @@ export class StMapExplorerComponent
     this.builder = this.chainTreeBuilderService.getBuilder(
       this.map.nativeElement,
     );
+    this.displayed = "state";
   }
 
   ngOnChanges() {
-    console.log("BLAH");
+    this.build();
   }
 
-  //ng;
-
   ngAfterContentInit() {
+    this.build();
+  }
+
+  build() {
     if (this.builder) {
       this.error = null;
       this.loading = true;
@@ -105,10 +108,6 @@ export class StMapExplorerComponent
           this.error = error.message;
         });
     }
-  }
-
-  transactionUrl(segment) {
-    return segment.meta.evidence.transactions["bitcoin:main"];
   }
 
   show(segment, onHide) {
@@ -125,11 +124,6 @@ export class StMapExplorerComponent
 
   display(tab) {
     this.displayed = tab;
-
-    // this.editors.forEach(editor => {
-    //   editor.resize();
-    //   editor.renderer.updateFull();
-    // });
   }
 
   state() {

@@ -30,6 +30,10 @@ import { MapValidatorService } from "./map-validator.service";
 import { StMapValidatorComponent } from "./st-map-validator/st-map-validator.component";
 import { StPromiseLoaderComponent } from "./st-promise-loader/st-promise-loader.component";
 import { StMerklePathTreeComponent } from "./st-merkle-path-tree/st-merkle-path-tree.component";
+import { StEvidencesComponent } from "./st-evidences/st-evidences.component";
+import { StBitcoinEvidenceComponent } from "./st-bitcoin-evidence/st-bitcoin-evidence.component";
+import { StTmpopEvidenceComponent } from "./st-tmpop-evidence/st-tmpop-evidence.component";
+import { StDummyEvidenceComponent } from "./st-dummy-evidence/st-dummy-evidence.component";
 
 @NgModule({
   declarations: [
@@ -38,6 +42,10 @@ import { StMerklePathTreeComponent } from "./st-merkle-path-tree/st-merkle-path-
     StMapValidatorComponent,
     StPromiseLoaderComponent,
     StMerklePathTreeComponent,
+    StEvidencesComponent,
+    StBitcoinEvidenceComponent,
+    StTmpopEvidenceComponent,
+    StDummyEvidenceComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,6 +59,10 @@ import { StMerklePathTreeComponent } from "./st-merkle-path-tree/st-merkle-path-
     StMapExplorerComponent,
     StMapValidatorComponent,
     StMerklePathTreeComponent,
+    StEvidencesComponent,
+    StBitcoinEvidenceComponent,
+    StTmpopEvidenceComponent,
+    StDummyEvidenceComponent,
   ],
 })
 export class Ng2MapExplorerModule {}

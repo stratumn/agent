@@ -37,7 +37,7 @@
     </div>
     <div class="content" flex="grow">
       <pre *ngIf="displayed == 'state'" flex="grow">
-        {{ state() }}        
+        {{ state() }}
       </pre>
       <div *ngIf="displayed == 'link'" class="link">
         <h4>Map ID</h4>
@@ -56,33 +56,16 @@
         <p>{{segment.link.meta.action}}({{segment.link.meta.arguments | functionArguments}})</p>
       </div>
       <div *ngIf="displayed == 'evidence'" layout-gt-sm="row" layout="column">
-        <div class="info">
-          <h4>State</h4>
-          <p>{{segment.meta.evidence.state}}</p>
-          <div *ngIf="segment.meta.evidence.state === 'COMPLETE'">
-            <h4>Bitcoin Transaction</h4>
-            <p>
-              {{segment.meta.evidence.transactions["bitcoin:main"]}}
-              <a target="_blank" [href]="transactionUrl(segment)">View transaction on Blockchain.info</a>
-            </p>
-
-            <h4>Merkle root</h4>
-            <p>{{segment.meta.evidence.merkleRoot}}</p>
-          </div>
-        </div>
-        <div class="merkle-path" *ngIf="segment.meta.evidence.state === 'COMPLETE'">
-          <h4>Merkle Path</h4>
-          <st-merkle-path-tree [merklePath]="segment.meta.evidence.merklePath"></st-merkle-path-tree>
-        </div>
+        <st-evidences [evidences]="segment.meta.evidences"></st-evidences>
       </div>
       <pre *ngIf="displayed == 'json'">
-        {{ segmentJSON() }}        
+        {{ segmentJSON() }}
       </pre>
     </div>
   </div>
 </div>
 <div *ngIf="loading" layout="row" layout-sm="column" layout-align="space-around">
-    <mat-progress-spinner mat-mode="indeterminate" mat-diameter="80"></mat-progress-spinner>
+  <mat-progress-spinner mat-mode="indeterminate" mat-diameter="80"></mat-progress-spinner>
 </div>
 
 <div class="scroll" #map>
