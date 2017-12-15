@@ -365,13 +365,11 @@ export default function httpServer(agent, opts = {}) {
   app.post(
     '/:process/segments',
     loadProcess,
-    wrap((req, res) => {
-      res.locals.renderErrorAsLink = true;
-
-      return res.locals.process
+    wrap((req, res) =>
+      res.locals.process
         .createMap(...parseArgs(req.body))
-        .then(res.json.bind(res));
-    })
+        .then(res.json.bind(res))
+    )
   );
 
   /**
@@ -413,17 +411,15 @@ export default function httpServer(agent, opts = {}) {
   app.post(
     '/:process/segments/:linkHash/:action',
     loadProcess,
-    wrap((req, res) => {
-      res.locals.renderErrorAsLink = true;
-
-      return res.locals.process
+    wrap((req, res) =>
+      res.locals.process
         .createSegment(
           req.params.linkHash,
           req.params.action,
           ...parseArgs(req.body)
         )
-        .then(res.json.bind(res));
-    })
+        .then(res.json.bind(res))
+    )
   );
 
   /**

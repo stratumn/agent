@@ -24,9 +24,7 @@ function send(method, url, args) {
     request({ method, url, body: args }, (err, res) => {
       if (err) {
         const error =
-          err && err.body && err.body.meta && err.body.meta.errorMessage
-            ? new Error(err.body.meta.errorMessage)
-            : err;
+          err && err.body && err.body.error ? new Error(err.body.error) : err;
         error.status = err.status;
         reject(error);
       } else {
