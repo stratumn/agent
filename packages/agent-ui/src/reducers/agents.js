@@ -1,3 +1,4 @@
+import { REHYDRATE } from 'redux-persist';
 import * as actionTypes from '../constants/actionTypes';
 import * as statusTypes from '../constants/status';
 
@@ -60,6 +61,13 @@ export default function(state = {}, action) {
     case actionTypes.AGENT_INFO_DELETE: {
       const { [agentName]: thisAgent, ...otherAgents } = state;
       return { ...otherAgents };
+    }
+    case REHYDRATE: {
+      const { payload: { agents } } = action;
+      return Object.keys(agents).reduce((newState, a) => {
+        const { [a]: { url } } = agents;
+        return { ...newState, [a]: { url, status: statusTypes.STALE } };
+      }, {});
     }
     default:
       return state;

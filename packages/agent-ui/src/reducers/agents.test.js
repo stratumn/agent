@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-
+import { REHYDRATE } from 'redux-persist';
 import agents from './agents';
 import * as actionTypes from '../constants/actionTypes';
 import * as statusTypes from '../constants/status';
@@ -187,5 +187,34 @@ describe('agents reducer', () => {
       name: 'foobar'
     });
     expect(newState).to.deep.equal({ foo: {}, bar: {} });
+  });
+
+  it('change status to STALE on REHYDRATE', () => {
+    const state = {
+      foo: {
+        status: 'foo',
+        url: 'foo/url',
+        dummy: true
+      },
+      bar: {
+        status: 'bar',
+        url: 'bar/url',
+        nothing: false
+      }
+    };
+    const newState = agents(state, {
+      type: REHYDRATE,
+      payload: { agents: state }
+    });
+    expect(newState).to.deep.equal({
+      foo: {
+        status: statusTypes.STALE,
+        url: 'foo/url'
+      },
+      bar: {
+        status: statusTypes.STALE,
+        url: 'bar/url'
+      }
+    });
   });
 });
