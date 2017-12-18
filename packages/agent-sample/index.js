@@ -1,5 +1,3 @@
-// This file creates an Express server and mounts the agent on it.
-
 import express from 'express';
 import Agent from 'stratumn-agent';
 
@@ -49,5 +47,5 @@ const server = Agent.websocketServer(app, storeHttpClient);
 
 // Start the server.
 server.listen(3000, () => {
-  console.log(`Listening on :${this.address().port}`);
+  console.log(`Listening on ${agentUrl}`);
 });
