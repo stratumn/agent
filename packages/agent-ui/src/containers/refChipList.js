@@ -32,7 +32,7 @@ export const RefChipList = ({
             label={shortHash(linkHash)}
             key={linkHash}
             className={classes.chip}
-            onRequestDelete={() => deleteRef(ref)}
+            onDelete={() => deleteRef(ref)}
           />
         );
       })
