@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --exec babel-node --presets es2015-node4,es2017 -L -i test -i segments -i node_modules index.js",
     "test": "mocha --compilers js:babel-core/register --recursive --require should",
-    "test:ci": "nyc npm test && nyc report --reporter=text-lcov > coverage/coverage.lcov"
+    "test:ci": "mkdir coverage && nyc npm test && nyc report --reporter=text-lcov > coverage/coverage.lcov"
   },
   "author": "Stratumn Team",
   "license": "SEE LICENSE IN LICENSE",
