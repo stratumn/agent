@@ -189,6 +189,18 @@ describe('agents reducer', () => {
     expect(newState).to.deep.equal({ foo: {}, bar: {} });
   });
 
+  it('handles REHYDRATE with empty payload', () => {
+    const state = {
+      foo: {},
+      bar: {}
+    };
+    const newState = agents(state, {
+      type: REHYDRATE,
+      payload: undefined
+    });
+    expect(newState).to.deep.equal(state);
+  });
+
   it('change status to STALE on REHYDRATE', () => {
     const state = {
       foo: {

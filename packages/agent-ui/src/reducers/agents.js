@@ -63,6 +63,8 @@ export default function(state = {}, action) {
       return { ...otherAgents };
     }
     case REHYDRATE: {
+      if (!action.payload) return state;
+
       const { payload: { agents } } = action;
       return Object.keys(agents).reduce((newState, a) => {
         const { [a]: { url } } = agents;
