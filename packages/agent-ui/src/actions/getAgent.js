@@ -1,4 +1,4 @@
-import { getAgent as getAgentClient } from 'stratumn-agent-client';
+import { getAgent as getAgentClient } from '@indigoframework/client';
 import * as actionTypes from '../constants/actionTypes';
 import { openWebSocket, closeWebSocket } from '../utils/webSocketHelpers';
 

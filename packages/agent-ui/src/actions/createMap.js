@@ -1,4 +1,4 @@
-import { getAgent } from 'stratumn-agent-client';
+import { getAgent } from '@indigoframework/client';
 import { getSegmentSuccess, clearRefs } from './';
 import * as actionTypes from '../constants/actionTypes';
 import history from '../store/history';

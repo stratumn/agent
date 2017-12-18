@@ -1,4 +1,4 @@
-import { getAgent } from 'stratumn-agent-client';
+import { getAgent } from '@indigoframework/client';
 import * as actionTypes from '../constants/actionTypes';
 
 const getSegmentsRequest = (agent, process, options) => ({

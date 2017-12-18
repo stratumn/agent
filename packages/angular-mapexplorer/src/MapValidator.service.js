@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { MapValidator } from 'stratumn-cs-validator';
+import { MapValidator } from '@indigoframework/cs-validator';
 
 export default class MapValidatorService {
   constructor($q) {
