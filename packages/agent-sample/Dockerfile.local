@@ -6,8 +6,7 @@
 
 FROM node:8
 
-RUN npm install -g yarn
-RUN npm install -g lerna
+RUN yarn global add lerna
 
 COPY packages packages
 COPY lerna.json lerna.json
