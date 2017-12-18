@@ -92,8 +92,8 @@ export class SelectRefsDialog extends Component {
 }
 
 SelectRefsDialog.propTypes = {
-  agent: PropTypes.string.isRequired,
-  process: PropTypes.string.isRequired,
+  agent: PropTypes.string,
+  process: PropTypes.string,
   processes: PropTypes.arrayOf(PropTypes.string).isRequired,
   fetchSegments: PropTypes.func.isRequired,
   closeDialog: PropTypes.func.isRequired,
@@ -110,6 +110,11 @@ SelectRefsDialog.propTypes = {
       })
     )
   }).isRequired
+};
+
+SelectRefsDialog.defaultProps = {
+  agent: '',
+  process: ''
 };
 
 function mapStateToProps(state, ownProps) {
