@@ -7,4 +7,4 @@ It can be used to test the Indigo Framework without coding anything yourself.
 
 This project provides two docker images:
 * Dockerfile uses the latest dependencies published on npm
-* Dockerfile.dev uses the latest code (and can be used to experiment with local code changes)
+* Dockerfile.local uses the latest code (and can be used to experiment with local code changes)
