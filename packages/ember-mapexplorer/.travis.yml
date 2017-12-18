@@ -1,25 +1,19 @@
 ---
 language: node_js
+sudo: false
+cache: yarn
 node_js:
   # we recommend testing addons with the same minimum supported node version as Ember CLI
   # so that your addon works for all apps
-  - "8"
-
-sudo: false
-
-cache:
-  directories:
-    - $HOME/.npm
+  - 8
 
 before_install:
-  - npm config set spin false
-  - npm install -g npm@4
-  - npm --version
-  - npm install -g phantomjs-prebuilt
+  - yarn global add phantomjs-prebuilt
+  - export PATH=$HOME/.yarn/bin:$PATH
   - phantomjs --version
 
 install:
-  - npm install
+  - yarn
 
 script:
-  - npm test
+  - yarn test
