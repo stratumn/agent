@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { getAgent, resolveLinks } from 'stratumn-agent-client';
+import { getAgent, resolveLinks } from '@indigoframework/client';
 import ChainTree from './ChainTree';
 import compactHash from './compactHash';
 import tagsSet from './tagsSet';

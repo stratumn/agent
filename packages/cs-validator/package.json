@@ -1,9 +1,9 @@
 {
-  "name": "stratumn-cs-validator",
+  "name": "@indigoframework/cs-validator",
   "version": "0.1.0",
   "description": "Core library for building Map Explorer components",
-  "main": "lib/stratumn-cs-validator.js",
-  "module": "lib/stratumn-cs-validator.mjs",
+  "main": "lib/cs-validator.js",
+  "module": "lib/cs-validator.mjs",
   "scripts": {
     "test:unit":
       "mocha --compilers js:babel-register  --require should test/unit/*",
@@ -17,7 +17,7 @@
       "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js",
     "prepublish": "npm run build",
     "postpublish":
-      "aws s3 cp dist/stratumn-cs-validator.js s3://stratumn-libs/stratumn-cs-validator.js --region 'eu-west-1' && aws s3 cp dist/stratumn-cs-validator.min.js s3://stratumn-libs/stratumn-cs-validator.min.js --region 'eu-west-1' && aws s3 cp dist/stratumn-cs-validator.js s3://stratumn-libs/stratumn-cs-validator-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/stratumn-cs-validator.min.js s3://stratumn-libs/stratumn-cs-validator-${npm_package_version}.min.js --region 'eu-west-1'"
+      "aws s3 cp dist/cs-validator.js s3://stratumn-libs/cs-validator.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.min.js s3://stratumn-libs/cs-validator.min.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.js s3://stratumn-libs/cs-validator-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.min.js s3://stratumn-libs/cs-validator-${npm_package_version}.min.js --region 'eu-west-1'"
   },
   "repository": {
     "type": "git",
@@ -64,10 +64,10 @@
     "zock": "^0.2.6"
   },
   "dependencies": {
+    "@indigoframework/client": "^0.1.0",
     "canonicaljson": "^1.0.0",
     "httpplease": "^0.16.4",
     "deepmerge": "2.0.1",
-    "js-sha256": "^0.3.0",
-    "stratumn-agent-client": "^3.0.2"
+    "js-sha256": "^0.3.0"
   }
 }

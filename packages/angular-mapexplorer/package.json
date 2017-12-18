@@ -1,10 +1,10 @@
 {
-  "name": "angular-mapexplorer",
-  "version": "1.2.0",
+  "name": "@indigoframework/angular-mapexplorer",
+  "version": "0.1.0",
   "description": "AngularJS 1.6 directive to display an Indigo Map Explorer.",
   "author": "Stratumn Team",
   "license": "Apache-2.0",
-  "homepage": "",
+  "homepage": "https://indigoframework.com",
   "main": "lib/angular-mapexplorer.js",
   "module": "lib/angular-mapexplorer.mjs",
   "scripts": {
@@ -18,14 +18,14 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
+    "@indigoframework/mapexplorer-core": "^0.1.0",
+    "@indigoframework/cs-validator": "0.1.0",
     "angular": "~1.5.11",
     "angular-animate": "~1.5.11",
     "angular-aria": "~1.5.11",
     "angular-material": "^1.1.0",
     "angular-route": "~1.5.11",
     "angular-sanitize": "~1.5.11",
-    "mapexplorer-core": "^2.0.1",
-    "stratumn-cs-validator": "0.1.0",
     "md-color-picker": "^0.2.6"
   },
   "devDependencies": {
@@ -64,6 +64,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stratumn/indigo"
+    "url": "https://github.com/stratumn/indigo-js"
   }
 }

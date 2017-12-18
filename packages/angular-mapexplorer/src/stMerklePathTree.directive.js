@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { MerklePathTree } from 'mapexplorer-core';
+import { MerklePathTree } from '@indigoframework/mapexplorer-core';
 
 export default function stMerklePathTree() {
   return {

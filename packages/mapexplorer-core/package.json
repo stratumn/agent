@@ -1,6 +1,6 @@
 {
-  "name": "mapexplorer-core",
-  "version": "2.0.1",
+  "name": "@indigoframework/mapexplorer-core",
+  "version": "0.1.0",
   "description": "Core library for building Map Explorer components",
   "main": "lib/mapexplorer-core.js",
   "module": "lib/mapexplorer-core.mjs",
@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/stratumn/indigo-js",
   "devDependencies": {
+    "@indigoframework/agent": "^0.1.0",
     "@metahub/karma-rollup-preprocessor": "^3.0.0",
     "babel-cli": "^6.5.1",
     "babel-plugin-external-helpers": "^6.8.0",
@@ -60,16 +61,15 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-uglify": "^2.0.1",
     "should": "^8.2.2",
-    "zock": "^0.2.6",
-    "stratumn-agent": "^0.18.3"
+    "zock": "^0.2.6"
   },
   "dependencies": {
+    "@indigoframework/client": "^0.1.0",
     "d3-array": "^1.0.0",
     "d3-ease": "^1.0.0",
     "d3-hierarchy": "^1.0.0",
     "d3-selection": "^1.0.0",
     "d3-transition": "^1.0.1",
-    "d3-zoom": "^1.0.2",
-    "stratumn-agent-client": "^3.0.2"
+    "d3-zoom": "^1.0.2"
   }
 }
