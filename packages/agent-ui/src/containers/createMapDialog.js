@@ -42,7 +42,7 @@ export const CreateMapDialog = ({
   );
 
   return (
-    <Dialog open={show} onRequestClose={() => closeDialog()}>
+    <Dialog open={show} onClose={() => closeDialog()}>
       <DialogTitle>Create map</DialogTitle>
       <DialogContent>
         {error && (

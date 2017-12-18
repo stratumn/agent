@@ -48,7 +48,7 @@ export const AppendSegmentDialog = ({
   );
 
   return (
-    <Dialog open={show} onRequestClose={() => closeDialog()}>
+    <Dialog open={show} onClose={() => closeDialog()}>
       <DialogTitle>Append segment</DialogTitle>
       <DialogContent>
         <Select

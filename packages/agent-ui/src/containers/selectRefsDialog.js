@@ -69,7 +69,7 @@ export class SelectRefsDialog extends Component {
     };
 
     return (
-      <Dialog maxWidth="md" open={show} onRequestClose={() => closeDialog()}>
+      <Dialog maxWidth="md" open={show} onClose={() => closeDialog()}>
         <DialogTitle>Select refs</DialogTitle>
         <DialogContent>
           <RefChipList withOpenButton={false} />
