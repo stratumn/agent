@@ -20,30 +20,34 @@ import { Link } from 'react-router';
 import SearchInput from '../components/SearchInput';
 
 export default class App extends Component {
-	constructor(props, context) {
-		super(props, context);
-		this.path = context.path;
-	}
+  constructor(props, context) {
+    super(props, context);
+    this.path = context.path;
+  }
 
-	render() {
-		return (
-			<div>
-				<h1><Link to={`${this.path}/`}>Indigo Explorer</Link></h1>
-				<MuiThemeProvider>		
-					<div>									
-						<SearchInput />
-						{this.props.children}
-					</div>
-				</MuiThemeProvider>
-			</div>
-		);
-	}
+  render() {
+    return (
+      <div>
+        <h1>
+          <Link to={`${this.path}/`} href={`${this.path}/`}>
+            TMPop Explorer
+          </Link>
+        </h1>
+        <MuiThemeProvider>
+          <div>
+            <SearchInput />
+            {this.props.children}
+          </div>
+        </MuiThemeProvider>
+      </div>
+    );
+  }
 }
 
 App.propTypes = {
-	children: PropTypes.object,
+  children: PropTypes.element.isRequired
 };
 
 App.contextTypes = {
-	path: PropTypes.string,
+  path: PropTypes.string
 };

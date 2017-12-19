@@ -19,53 +19,62 @@ import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 import Layout from './containers/Layout';
 import BlockContainer from './containers/BlockContainer';
 import Index from './containers/Index';
-import IndigoReader from './IndigoReader';
-import IndigoReaderProvider from './containers/IndigoReaderProvider';
+import TMReader from './TMReader';
+import TMReaderProvider from './containers/TMReaderProvider';
 import IndigoPathProvider from './containers/IndigoPathProvider';
 
-export default class IndigoExplorer extends Component {
+export default class TMPopExplorer extends Component {
   constructor(props) {
     super(props);
     const isMounted = !!this.props.route;
     const properties = isMounted ? this.props.route : this.props;
 
-    const remote = properties.remote;
-    const secure = properties.secure;
+    const { remote, secure } = { properties };
 
     if (!remote) {
       throw new Error('Missing indigo remote definition');
     }
 
-    this.indigoReader = new IndigoReader(remote, secure);
+    this.tmReader = new TMReader(remote, secure);
 
-		this.rootPath = isMounted ? this.props.route.mount : '/';
-		this.linkPath = this.rootPath;
+    this.rootPath = isMounted ? this.props.route.mount : '/';
+    this.linkPath = this.rootPath;
 
-		if (this.linkPath.slice(-1) === '/') {
-			this.linkPath = this.linkPath.slice(0, -1);
-		}
+    if (this.linkPath.slice(-1) === '/') {
+      this.linkPath = this.linkPath.slice(0, -1);
+    }
   }
 
   render() {
     const routes = (
-      <IndigoReaderProvider reader={this.indigoReader}>
+      <TMReaderProvider reader={this.tmReader}>
         <IndigoPathProvider path={this.linkPath}>
           <Router history={browserHistory}>
             <Route path={this.rootPath} component={Layout}>
               <IndexRoute component={Index} />
-              <Route path='blocks/:height' component={BlockContainer} />						
+              <Route path="blocks/:height" component={BlockContainer} />
             </Route>
-				  </Router>
+          </Router>
         </IndigoPathProvider>
-      </IndigoReaderProvider>
+      </TMReaderProvider>
     );
 
     return routes;
   }
 }
 
-IndigoExplorer.propTypes = {
+TMPopExplorer.propTypes = {
+  /* eslint-disable react/no-unused-prop-types */
   remote: PropTypes.string,
-  route: PropTypes.object,
-  secure: PropTypes.bool,
+  route: PropTypes.shape({
+    mount: PropTypes.string
+  }),
+  secure: PropTypes.bool
+  /* eslint-enable react/no-unused-prop-types */
+};
+
+TMPopExplorer.defaultProps = {
+  remote: '',
+  route: false,
+  secure: false
 };

@@ -16,51 +16,50 @@
 
 import React, { Component, PropTypes } from 'react';
 import Status from '../components/Status';
-import IndigoReader from '../IndigoReader';
+import TMReader from '../TMReader';
 
 export default class StatusContainer extends Component {
-	constructor(props, context) {
-		super(props, context);
+  constructor(props, context) {
+    super(props, context);
 
-		this.reader = this.context.reader;
-		this.state = {
-			status: null,
-		};	
+    this.reader = this.context.reader;
+    this.state = {
+      status: null
+    };
 
-		this.handleStatus = this.handleStatus.bind(this);
-	}
+    this.handleStatus = this.handleStatus.bind(this);
+  }
 
-	handleStatus(status) {
-		this.setState({
-			status: status
-		});
-	}
+  componentDidMount() {
+    this.timer = setInterval(
+      () => this.reader.getStatus().then(this.handleStatus),
+      this.props.refreshInterval
+    );
+  }
 
-	componentDidMount() {
-		this.timer = setInterval(
-			() =>this.reader.getStatus().then(this.handleStatus), this.props.refreshInterval
-		);
-	}	
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
 
-	componentWillUnmount() {
-		clearTimeout(this.timer);
-	}
+  handleStatus(status) {
+    this.setState({
+      status: status
+    });
+  }
 
-	render() {
-		return (
-			<Status status={this.state.status} />
-		);
-	}
+  render() {
+    return <Status status={this.state.status} />;
+  }
 }
 
 StatusContainer.contextTypes = {
-	reader: PropTypes.instanceOf(IndigoReader),	
+  reader: PropTypes.instanceOf(TMReader)
 };
 
 StatusContainer.propTypes = {
-	refreshInterval: PropTypes.number,
+  refreshInterval: PropTypes.number
 };
 
 StatusContainer.defaultProps = {
-	refreshInterval: 1000,
+  refreshInterval: 1000
 };

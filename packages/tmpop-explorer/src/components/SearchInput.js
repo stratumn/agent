@@ -16,32 +16,37 @@
 
 import React, { Component, PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
 import { Link } from 'react-router';
 
 export default class SearchInput extends Component {
-	constructor(props, context) {
-		super(props, context);
-		
+  constructor(props, context) {
+    super(props, context);
+
     this.path = context.path;
-		this.handleInputChange = this.handleInputChange.bind(this);
-		this.state = { height: null };
-	}
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.state = { height: null };
+  }
 
-	handleInputChange(event, newValue) {
-		this.setState({ height: newValue });
-	}
+  handleInputChange(event, newValue) {
+    this.setState({ height: newValue });
+  }
 
-	render() {
-		return (
-			<div>
-				<TextField hintText="Block Height" onChange={this.handleInputChange} />
-        <Link to={`${this.path}/blocks/${this.state.height}`} className='button'>Search</ Link>
-			</div>
-		);
-	}
+  render() {
+    return (
+      <div>
+        <TextField hintText="Block Height" onChange={this.handleInputChange} />
+        <Link
+          to={`${this.path}/blocks/${this.state.height}`}
+          href={`${this.path}/blocks/${this.state.height}`}
+          className="button"
+        >
+          Search
+        </Link>
+      </div>
+    );
+  }
 }
 
 SearchInput.contextTypes = {
-	path: PropTypes.string,
+  path: PropTypes.string
 };

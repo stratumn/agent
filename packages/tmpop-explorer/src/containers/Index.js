@@ -14,17 +14,19 @@
   limitations under the License.
 */
 
-import React, { Component } from 'react';
+import React from 'react';
 import StatusContainer from './StatusContainer';
 import FeedContainer from './FeedContainer';
 
-export default class Index extends Component {
-	render() {
-		return (
-			<div>
-				<StatusContainer />
-				<FeedContainer />
-			</div>
-		);
-	}
-}
+const Index = () => ({
+  render() {
+    return (
+      <div>
+        <StatusContainer />
+        <FeedContainer />
+      </div>
+    );
+  }
+});
+
+export default Index;

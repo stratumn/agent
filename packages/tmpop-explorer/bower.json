@@ -1,21 +1,12 @@
 {
-  "name": "indigo-explorer",
+  "name": "tmpop-explorer",
   "version": "0.1.0",
-  "description": "IndigoExplorer",
-  "main": "dist/indigo-explorer.js",
-  "homepage": "https://github.com/stratumn/indigoexplorer",
-  "authors": [
-    "Stratumn Team"
-  ],
-  "moduleType": [
-    "amd",
-    "globals",
-    "node"
-  ],
-  "keywords": [
-    "react",
-    "react-component"
-  ],
+  "description": "TMPopExplorer",
+  "main": "dist/tmpop-explorer.js",
+  "homepage": "https://github.com/stratumn/indigo-js",
+  "authors": ["Stratumn Team"],
+  "moduleType": ["amd", "globals", "node"],
+  "keywords": ["react", "react-component"],
   "license": "SEE LICENSE FILE",
   "ignore": [
     ".editorconfig",

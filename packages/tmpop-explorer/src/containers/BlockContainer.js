@@ -16,49 +16,50 @@
 
 import React, { Component, PropTypes } from 'react';
 import Block from '../components/Block';
-import IndigoReader from '../IndigoReader';
+import TMReader from '../TMReader';
 
 export default class BlockContainer extends Component {
-	constructor(props, context) {
-		super(props, context);
+  constructor(props, context) {
+    super(props, context);
 
-		this.reader = this.context.reader;
-		this.height = this.props.params.height;
-		this.state = { block: null };
+    this.reader = this.context.reader;
+    this.height = this.props.params.height;
+    this.state = { block: null };
 
-		this.handleBlockReceived = this.handleBlockReceived.bind(this);
-	}
+    this.handleBlockReceived = this.handleBlockReceived.bind(this);
+  }
 
-	handleBlockReceived(block) {
-		this.setState({ block: block });
-	}
+  componentDidMount() {
+    this.fetch();
+  }
 
-	componentWillReceiveProps(nextProps) {
-		this.height = nextProps.params.height;
-		this._fetch();
-	}
+  componentWillReceiveProps(nextProps) {
+    this.height = nextProps.params.height;
+    this.fetch();
+  }
 
-	componentDidMount() {
-		this._fetch();
-	}
+  handleBlockReceived(block) {
+    this.setState({ block: block });
+  }
 
-	render() {
-		return (
-			<Block block={this.state.block} />
-		);
-	}
+  fetch() {
+    this.reader
+      .getBlock(this.height)
+      .then(this.handleBlockReceived)
+      .catch(err => console.log(err));
+  }
 
-	_fetch() {
-		this.reader.getBlock(this.height)
-			.then(this.handleBlockReceived)
-			.catch(err => console.log(err));
-	}
+  render() {
+    return <Block block={this.state.block} />;
+  }
 }
 
 BlockContainer.contextTypes = {
-	reader: PropTypes.instanceOf(IndigoReader),
+  reader: PropTypes.instanceOf(TMReader)
 };
 
 BlockContainer.propTypes = {
-	params: PropTypes.object.isRequired,
+  params: PropTypes.shape({
+    height: PropTypes.number
+  }).isRequired
 };

@@ -27,10 +27,35 @@ function encodeData(data) {
     .join('&');
 }
 
-export default class IndigoReader {
+function parseBlock(block) {
+  const parsedTransactions = block.data.txs.map(tx => {
+    const data = JSON.parse(atob(tx));
+
+    return {
+      data,
+      block
+    };
+  });
+
+  block.data.txs = parsedTransactions;
+
+  return block;
+}
+
+function parseEvent(event) {
+  const obj = JSON.parse(event.data);
+
+  if (obj.result.data) {
+    return parseBlock(obj.result.data.data.block);
+  }
+
+  return {};
+}
+
+export default class TMReader {
   constructor(remote, secure = false) {
     const transferProtocol = secure ? 'https' : 'http';
-    this.indigoUrl = `${transferProtocol}://${remote}/`;
+    this.tmUrl = `${transferProtocol}://${remote}/`;
 
     const wsPrefix = secure ? 'wss' : 'ws';
     this.wsUrl = `${wsPrefix}://${remote}/websocket`;
@@ -39,7 +64,7 @@ export default class IndigoReader {
     const ws = new WebSocket(this.wsUrl);
 
     ws.onmessage = event => {
-      const block = this._parseEvent(event);
+      const block = parseEvent(event);
 
       if (block) {
         this.subscriptionHandlers.forEach(handler => handler(block));
@@ -48,39 +73,39 @@ export default class IndigoReader {
 
     ws.onopen = () => {
       ws.send(
-        `{"jsonrpc": "2.0", "method": "subscribe", "params": {"query": "tm.event='NewBlock'" }, "id": "IndigoReaderNewBlock"}`
+        `{"jsonrpc": "2.0", "method": "subscribe", "params": {"query": "tm.event='NewBlock'" }, "id": "TMReaderNewBlock"}`
       );
     };
   }
 
   getGenesis() {
-    return this._sendRequest('genesis');
+    return this.sendRequest('genesis');
   }
 
   getNetInfo() {
-    return this._sendRequest('net_info');
+    return this.sendRequest('net_info');
   }
 
   getNumUnconfirmedTxs() {
-    return this._sendRequest('num_unconfirmed_txs');
+    return this.sendRequest('num_unconfirmed_txs');
   }
 
   getStatus() {
-    return this._sendRequest('status');
+    return this.sendRequest('status');
   }
 
   getUnconfirmedTxs() {
-    return this._sendRequest('unconfirmed_txs');
+    return this.sendRequest('unconfirmed_txs');
   }
 
   getBlock(height) {
-    return this._sendRequest('block', {
+    return this.sendRequest('block', {
       height
-    }).then(res => this._parseBlock(res.block));
+    }).then(res => parseBlock(res.block));
   }
 
   getBlockchain(minHeight, maxHeight) {
-    return this._sendRequest('blockchain', {
+    return this.sendRequest('blockchain', {
       minHeight,
       maxHeight
     });
@@ -97,32 +122,9 @@ export default class IndigoReader {
     }
   }
 
-  _parseEvent(event) {
-    const obj = JSON.parse(event.data);
-
-    if (obj.result.data) {
-      return this._parseBlock(obj.result.data.data.block);
-    }
-  }
-
-  _parseBlock(block) {
-    const parsedTransactions = block.data.txs.map(tx => {
-      const data = JSON.parse(atob(tx));
-
-      return {
-        data,
-        block
-      };
-    });
-
-    block.data.txs = parsedTransactions;
-
-    return block;
-  }
-
-  _sendRequest(endpoint, args = {}) {
+  sendRequest(endpoint, args = {}) {
     return http
-      .get(`${this.indigoUrl}${endpoint}?${encodeData(args)}`)
+      .get(`${this.tmUrl}${endpoint}?${encodeData(args)}`)
       .then(res => {
         if (res.body.error) {
           return Promise.reject(new Error(res.body.error));

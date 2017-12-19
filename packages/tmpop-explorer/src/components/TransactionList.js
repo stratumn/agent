@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import {
   Table,
   TableBody,
@@ -25,47 +25,50 @@ import {
 } from 'material-ui/Table';
 import { Link } from 'react-router';
 
-export default class TransactionList extends Component {
-  render() {
-    const rowsTransactions = this.props.transactions.map(tx => {
-      const data = tx.data;
-      return (
-        <TableRow key={data.linkHash}>
-          <TableRowColumn>
-            <Link to={`/blocks/${tx.block.header.height}`}>
-              {tx.block.header.height}
-            </Link>
-          </TableRowColumn>
-          {data.linkHash}
-          <TableRowColumn />
-          <TableRowColumn style={{ maxWidth: 500, overflowX: 'scroll' }}>
-            <pre>{JSON.stringify(data.link, undefined, 2)}</pre>
-          </TableRowColumn>
-        </TableRow>
-      );
-    });
+const TransactionList = ({ transactions }) => {
+  const rowsTransactions = transactions.map(tx => {
+    const { data } = tx;
     return (
-      <div>
-        <h1>Transactions</h1>
-        <Table
-          selectable={false}
-          style={{ tableLayout: 'auto' }}
-          fixedHeader={false}
-        >
-          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-            <TableRow>
-              <TableHeaderColumn>Block Height</TableHeaderColumn>
-              <TableHeaderColumn>Link Hash</TableHeaderColumn>
-              <TableHeaderColumn>Link</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody displayRowCheckbox={false}>{rowsTransactions}</TableBody>
-        </Table>
-      </div>
+      <TableRow key={data.linkHash}>
+        <TableRowColumn>
+          <Link
+            to={`/blocks/${tx.block.header.height}`}
+            href={`/blocks/${tx.block.header.height}`}
+          >
+            {tx.block.header.height}
+          </Link>
+        </TableRowColumn>
+        {data.linkHash}
+        <TableRowColumn />
+        <TableRowColumn style={{ maxWidth: 500, overflowX: 'scroll' }}>
+          <pre>{JSON.stringify(data.link, undefined, 2)}</pre>
+        </TableRowColumn>
+      </TableRow>
     );
-  }
-}
+  });
+  return (
+    <div>
+      <h1>Transactions</h1>
+      <Table
+        selectable={false}
+        style={{ tableLayout: 'auto' }}
+        fixedHeader={false}
+      >
+        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+          <TableRow>
+            <TableHeaderColumn>Block Height</TableHeaderColumn>
+            <TableHeaderColumn>Link Hash</TableHeaderColumn>
+            <TableHeaderColumn>Link</TableHeaderColumn>
+          </TableRow>
+        </TableHeader>
+        <TableBody displayRowCheckbox={false}>{rowsTransactions}</TableBody>
+      </Table>
+    </div>
+  );
+};
 
 TransactionList.propTypes = {
-  transactions: PropTypes.array
+  transactions: PropTypes.arrayOf(PropTypes.object).isRequired
 };
+
+export default TransactionList;

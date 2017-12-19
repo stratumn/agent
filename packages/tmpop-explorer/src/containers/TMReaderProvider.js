@@ -13,3 +13,30 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+import { Component, PropTypes, Children } from 'react';
+import TMReader from '../TMReader';
+
+export default class TMReaderProvider extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.reader = props.reader;
+  }
+
+  getChildContext() {
+    return { reader: this.reader };
+  }
+
+  render() {
+    return Children.only(this.props.children);
+  }
+}
+
+TMReaderProvider.propTypes = {
+  children: PropTypes.element.isRequired,
+  reader: PropTypes.instanceOf(TMReader).isRequired
+};
+
+TMReaderProvider.childContextTypes = {
+  reader: PropTypes.instanceOf(TMReader)
+};
