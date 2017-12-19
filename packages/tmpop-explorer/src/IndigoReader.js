@@ -22,7 +22,9 @@ import Promise from 'bluebird';
 const http = httpplease.use(promises(Promise)).use(jsonresponse);
 
 function encodeData(data) {
-  return Object.keys(data).map(key => [key, data[key]].map(encodeURIComponent).join('=')).join('&');
+  return Object.keys(data)
+    .map(key => [key, data[key]].map(encodeURIComponent).join('='))
+    .join('&');
 }
 
 export default class IndigoReader {
@@ -36,7 +38,7 @@ export default class IndigoReader {
     this.subscriptionHandlers = [];
     const ws = new WebSocket(this.wsUrl);
 
-    ws.onmessage = (event) => {
+    ws.onmessage = event => {
       const block = this._parseEvent(event);
 
       if (block) {
@@ -45,7 +47,9 @@ export default class IndigoReader {
     };
 
     ws.onopen = () => {
-      ws.send('{"jsonrpc": "2.0", "method": "subscribe", "params": {"event": "NewBlock"}, "id": "IndigoReaderNewBlock"}');
+      ws.send(
+        `{"jsonrpc": "2.0", "method": "subscribe", "params": {"query": "tm.event='NewBlock'" }, "id": "IndigoReaderNewBlock"}`
+      );
     };
   }
 
@@ -71,9 +75,8 @@ export default class IndigoReader {
 
   getBlock(height) {
     return this._sendRequest('block', {
-        height
-      })
-      .then(res => this._parseBlock(res.block));
+      height
+    }).then(res => this._parseBlock(res.block));
   }
 
   getBlockchain(minHeight, maxHeight) {
@@ -103,12 +106,12 @@ export default class IndigoReader {
   }
 
   _parseBlock(block) {
-    const parsedTransactions = block.data.txs.map((tx) => {
+    const parsedTransactions = block.data.txs.map(tx => {
       const data = JSON.parse(atob(tx));
 
       return {
         data,
-        block,
+        block
       };
     });
 
@@ -118,7 +121,8 @@ export default class IndigoReader {
   }
 
   _sendRequest(endpoint, args = {}) {
-    return http.get(`${this.indigoUrl}${endpoint}?${encodeData(args)}`)
+    return http
+      .get(`${this.indigoUrl}${endpoint}?${encodeData(args)}`)
       .then(res => {
         if (res.body.error) {
           return Promise.reject(new Error(res.body.error));
