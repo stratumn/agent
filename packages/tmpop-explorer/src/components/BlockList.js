@@ -14,55 +14,79 @@
   limitations under the License.
 */
 
-import React, { PropTypes } from 'react';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import React, { PropTypes, Component } from 'react';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn
+} from 'material-ui/Table';
 import { Link } from 'react-router';
 
-export default class BlockList extends React.Component {
-	constructor(props, context) {
-		super(props, context);
-		this.path = context.path;
-	}
+export default class BlockList extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.path = context.path;
+  }
 
-	render() {
-		const rowsBlocks = this.props.blocks.map((block) => {
-			return (
-				<TableRow key={block.header.last_commit_hash}>
-					<TableRowColumn style={{width: '100px'}}>
-						<Link to={`${this.path}/blocks/${block.header.height}`}>{block.header.height}</Link>
-					</TableRowColumn>
-					<TableRowColumn style={{width: '240px'}}>{block.header.time}</TableRowColumn>
-					<TableRowColumn style={{width: '400px', fontFamily: 'Roboto Mono, Monospace'}}>{block.header.last_commit_hash}</TableRowColumn>
-					<TableRowColumn style={{width: '120px'}}>{block.data.txs.length}</TableRowColumn>
-				</TableRow>
-			);
-		});
+  render() {
+    const rowsBlocks = this.props.blocks.map(block => (
+      <TableRow key={block.header.last_commit_hash}>
+        <TableRowColumn style={{ width: '100px' }}>
+          <Link
+            to={`${this.path}/blocks/${block.header.height}`}
+            href={`${this.path}/blocks/${block.header.height}`}
+          >
+            {block.header.height}
+          </Link>
+        </TableRowColumn>
+        <TableRowColumn style={{ width: '240px' }}>
+          {block.header.time}
+        </TableRowColumn>
+        <TableRowColumn
+          style={{ width: '400px', fontFamily: 'Roboto Mono, Monospace' }}
+        >
+          {block.header.last_commit_hash}
+        </TableRowColumn>
+        <TableRowColumn style={{ width: '120px' }}>
+          {block.data.txs.length}
+        </TableRowColumn>
+      </TableRow>
+    ));
 
-		return (			
-			<div style={{minHeight: '400px'}}>
-				<h1>Blocks</h1>
-				<Table selectable={false}>
-					<TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-					<TableRow>
-						<TableHeaderColumn style={{width: '100px'}}>Height</TableHeaderColumn>
-						<TableHeaderColumn style={{width: '240px'}}>Timestamp</TableHeaderColumn>
-						<TableHeaderColumn style={{width: '400px'}}>Hash</TableHeaderColumn>
-						<TableHeaderColumn style={{width: '120px'}}>Transactions</TableHeaderColumn>
-					</TableRow>
-					</TableHeader>
-					<TableBody displayRowCheckbox={false}>
-						{rowsBlocks}
-					</TableBody>
-				</Table>
-			</div>                  
-		);
-	}
+    return (
+      <div style={{ minHeight: '400px' }}>
+        <h1>Blocks</h1>
+        <Table selectable={false}>
+          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+            <TableRow>
+              <TableHeaderColumn style={{ width: '100px' }}>
+                Height
+              </TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '240px' }}>
+                Timestamp
+              </TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '400px' }}>
+                Hash
+              </TableHeaderColumn>
+              <TableHeaderColumn style={{ width: '120px' }}>
+                Transactions
+              </TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody displayRowCheckbox={false}>{rowsBlocks}</TableBody>
+        </Table>
+      </div>
+    );
+  }
 }
 
 BlockList.propTypes = {
-	blocks: PropTypes.array
+  blocks: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 BlockList.contextTypes = {
-	path: PropTypes.string,
+  path: PropTypes.string
 };

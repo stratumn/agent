@@ -15,56 +15,58 @@
 */
 
 import React, { Component, PropTypes } from 'react';
-import Feed from '../components/Feed';
-import IndigoReader from '../IndigoReader';
 import FifoArray from 'fifo-array';
+import Feed from '../components/Feed';
+import TMReader from '../TMReader';
 
 export default class FeedContainer extends Component {
-	constructor(props, context) {
-		super(props, context);
+  constructor(props, context) {
+    super(props, context);
 
-		this.reader = this.context.reader;
-		this.state = {
-			blocks: new FifoArray(this.props.maxBlocks),
-			transactions: new FifoArray(this.props.maxTransactions),
-		};	
+    this.reader = this.context.reader;
+    this.state = {
+      blocks: new FifoArray(this.props.maxBlocks),
+      transactions: new FifoArray(this.props.maxTransactions)
+    };
 
-		this.handleBlock = this.handleBlock.bind(this);
-	}
+    this.handleBlock = this.handleBlock.bind(this);
+  }
 
-	handleBlock(block) {
-		this.setState(prevState => {
-			prevState.transactions.push(...block.data.txs);
-			prevState.blocks.push(block);
-			return prevState;
-		});
-	}
+  componentDidMount() {
+    this.reader.subscribe(this.handleBlock);
+  }
 
-	componentDidMount() {
-		this.reader.subscribe(this.handleBlock);
-	}	
+  componentWillUnmount() {
+    this.reader.unsubscribe(this.handleBlock);
+  }
 
-	componentWillUnmount() {
-		this.reader.unsubscribe(this.handleBlock);
-	}
+  handleBlock(block) {
+    this.setState(prevState => {
+      if (block.data) {
+        prevState.transactions.push(...block.data.txs);
+        prevState.blocks.push(block);
+      }
+      return prevState;
+    });
+  }
 
-	render() {
-		return (
-			<Feed blocks={this.state.blocks} transactions={this.state.transactions} />
-		);
-	}
+  render() {
+    return (
+      <Feed blocks={this.state.blocks} transactions={this.state.transactions} />
+    );
+  }
 }
 
 FeedContainer.contextTypes = {
-	reader: PropTypes.instanceOf(IndigoReader),	
+  reader: PropTypes.instanceOf(TMReader)
 };
 
 FeedContainer.defaultProps = {
-	maxBlocks: 5,
-	maxTransactions: 5,
+  maxBlocks: 5,
+  maxTransactions: 5
 };
 
 FeedContainer.propTypes = {
-	maxBlocks: PropTypes.number,
-	maxTransactions: PropTypes.number,
+  maxBlocks: PropTypes.number,
+  maxTransactions: PropTypes.number
 };

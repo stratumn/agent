@@ -2,16 +2,16 @@
   "name": "@indigoframework/tmpop-explorer",
   "version": "0.1.0",
   "description": "Block Explorer for Indigo Tendermint Store",
-  "main": "lib/IndigoExplorer.js",
+  "main": "lib/TMPopExplorer.js",
   "author": "Stratumn",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/stratumn/indigo-explorer",
+  "homepage": "https://github.com/stratumn/indigo-js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/stratumn/indigo-explorer.git"
+    "url": "https://github.com/stratumn/indigo-js.git"
   },
   "bugs": {
-    "url": "https://github.com/stratumn/indigo-explorer/issues"
+    "url": "https://github.com/stratumn/indigo-js/issues"
   },
   "dependencies": {
     "bluebird": "^3.4.7",
@@ -25,9 +25,6 @@
     "react-tap-event-plugin": "^2.0.1"
   },
   "devDependencies": {
-    "babel-eslint": "^4.1.3",
-    "eslint": "^1.6.0",
-    "eslint-plugin-react": "^3.5.1",
     "gulp": "^3.9.0",
     "react": "^15.4.2",
     "react-component-gulp-tasks": "^0.7.6",
@@ -46,16 +43,14 @@
   "scripts": {
     "build": "gulp clean && NODE_ENV=production gulp build",
     "examples": "gulp dev:server",
-    "lint": "eslint ./; true",
     "publish:site": "NODE_ENV=production gulp publish:examples",
     "release": "NODE_ENV=production gulp release",
     "start": "gulp dev",
     "test": "echo \"no tests yet\" && exit 0",
     "watch": "gulp watch:lib",
-    "update-license-headers": "./update-license-headers.sh",
     "version:app":
-      "sed -i '' \"s/\\\"indigo-explorer\\\": \\\".*\\\"/\\\"indigo-explorer\\\": \\\"^$npm_package_version\\\"/g\" ./app/package.json",
-    "version": "npm run version:app && git add ./app/package.json",
+      "sed -i '' \"s/\\\"tmpop-explorer\\\": \\\".*\\\"/\\\"tmpop-explorer\\\": \\\"^$npm_package_version\\\"/g\" ./app/package.json",
+    "version": "yarn version:app && git add ./app/package.json",
     "env": "echo $npm_package_version"
   },
   "keywords": ["react", "react-component"]

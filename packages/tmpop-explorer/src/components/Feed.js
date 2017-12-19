@@ -14,24 +14,20 @@
   limitations under the License.
 */
 
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import BlockList from './BlockList';
 import TransactionList from './TransactionList';
 
-class Feed extends Component {
-	render () {
-		return (            
-			<div className="application" style={{width: '100%', margin: 'auto'}}>
-				<BlockList blocks={this.props.blocks} />
-				<TransactionList transactions={this.props.transactions} />
-			</div>            
-		);
-	}
-}
+const Feed = ({ blocks, transactions }) => (
+  <div className="application" style={{ width: '100%', margin: 'auto' }}>
+    <BlockList blocks={blocks} />
+    <TransactionList transactions={transactions} />
+  </div>
+);
 
 Feed.propTypes = {
-	blocks: PropTypes.array,
-	transactions: PropTypes.array,
+  blocks: PropTypes.arrayOf(PropTypes.object).isRequired,
+  transactions: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 export default Feed;

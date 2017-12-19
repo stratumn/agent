@@ -1,16 +1,16 @@
-# Indigo Explorer
+# TMPop Explorer
 
-A block explorer for the indigo blockchain.
+A block explorer for the Indigo Tendermint Store.
 
 ## Demo & Examples
 
-Live demo: [stratumn.github.io/indigoexplorer](http://Stratumn.github.io/indigoexplorer/)
+Live demo: [stratumn.github.io/indigoexplorer](http://stratumn.github.io/indigoexplorer/)
 
 To build the examples locally, run:
 
 ```
-npm install
-npm start
+yarn
+yarn start
 ```
 
 Then open [`localhost:8000`](http://localhost:8000) in a browser.
@@ -18,12 +18,12 @@ Then open [`localhost:8000`](http://localhost:8000) in a browser.
 
 ## Installation
 
-The easiest way to use indigo-explorer is to install it from NPM and include it in your own React build process (using [Browserify](http://browserify.org), [Webpack](http://webpack.github.io/), etc).
+The easiest way to use tmpop-explorer is to install it from NPM and include it in your own React build process (using [Browserify](http://browserify.org), [Webpack](http://webpack.github.io/), etc).
 
-You can also use the standalone build by including `dist/indigo-explorer.js` in your page. If you use this, make sure you have already included React, and it is available as a global variable.
+You can also use the standalone build by including `dist/tmpop-explorer.js` in your page. If you use this, make sure you have already included React, and it is available as a global variable.
 
 ```
-npm install indigo-explorer --save
+yarn install @indigoframework/tmpop-explorer --save
 ```
 
 
@@ -32,19 +32,19 @@ npm install indigo-explorer --save
 Include the react component in your application:
 
 ```
-var IndigoExplorer = require('indigo-explorer');
+var TMPopExplorer = require('@indigoframework/tmpop-explorer');
 
 // OR with ES6 import
-import IndigoExplorer from 'react-mapexplorer';
+import TMPopExplorer from 'react-mapexplorer';
 
-<IndigoExplorer remote="localhost:46657"/>
+<TMPopExplorer remote="localhost:46657"/>
 ```
 
-If your application already uses a router, the indigo explorer can also be "mounted":
+If your application already uses a router, the tmpop explorer can also be "mounted":
 
 ```
 <Router history={browserHistory}>
-	<Route path='/blockexplorer*' mount='/blockexplorer' component={IndigoExplorer} remote="localhost:46657"/>
+	<Route path='/blockexplorer*' mount='/blockexplorer' component={TMPopExplorer} remote="localhost:46657"/>
 </Router>
 ```
 
@@ -65,4 +65,4 @@ To build, watch and serve the examples (which will also watch the component sour
 
 Copyright 2017 Stratumn SAS. All rights reserved.
 
-Unless otherwise noted, the Stratumn Agent Javascript Library source files are distributed under the Apache License 2.0 found in the LICENSE file.
+Unless otherwise noted, the TMPop Explorer source files are distributed under the Apache License 2.0 found in the LICENSE file.

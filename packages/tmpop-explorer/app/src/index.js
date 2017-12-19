@@ -14,29 +14,27 @@
   limitations under the License.
 */
 
+import './index.css';
+
 let React;
 let ReactDOM;
-let IndigoExplorer;
+let TMPopExplorer;
 
 if (process.env.NODE_ENV === 'development') {
   // In development, use parent module.
   React = require('../../node_modules/react');
   ReactDOM = require('../../node_modules/react-dom');
-  IndigoExplorer = require('../../lib/IndigoExplorer');
+  TMPopExplorer = require('../../lib/TMPopExplorer');
 } else {
   React = require('react');
   ReactDOM = require('react-dom');
-  IndigoExplorer = require('indigo-explorer');
+  TMPopExplorer = require('@indigoframework/tmpop-explorer');
 }
 
-import './index.css';
-
-var App = React.createClass({
-	render () {
-		return (
-      <IndigoExplorer remote={`${location.hostname}:46657`} />
-		);
-	}
+const App = React.createClass({
+  render() {
+    return <TMPopExplorer remote={`${location.hostname}:46657`} />;
+  }
 });
 
 ReactDOM.render(<App />, document.getElementById('app'));

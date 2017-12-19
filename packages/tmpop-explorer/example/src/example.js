@@ -14,22 +14,27 @@
   limitations under the License.
 */
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var IndigoExplorer = require('indigo-explorer');
-import { Router, Route, browserHistory } from 'react-router';
+var React = require("react");
+var ReactDOM = require("react-dom");
+var TMPopExplorer = require("@indigoframework/tmpop-explorer");
+import { Router, Route, browserHistory } from "react-router";
 
 var App = React.createClass({
-	render () {
-		return (
+  render() {
+    return (
       <div>
         <Router history={browserHistory}>
-          <Route path='/blockexplorer*' mount='/blockexplorer' component={IndigoExplorer} remote="localhost:46657"/>
+          <Route
+            path="/blockexplorer*"
+            mount="/blockexplorer"
+            component={TMPopExplorer}
+            remote="localhost:46657"
+          />
         </Router>
-        <IndigoExplorer remote="localhost:46657" />
+        <TMPopExplorer remote="localhost:46657" />
       </div>
-		);
-	}
+    );
+  }
 });
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(<App />, document.getElementById("app"));
