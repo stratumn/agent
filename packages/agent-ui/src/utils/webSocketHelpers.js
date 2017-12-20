@@ -23,6 +23,7 @@ export const openWebSocket = (name, url, dispatch) => {
     }
   };
   webSockets = { ...webSockets, [name]: ws };
+  return ws;
 };
 
 export const closeWebSocket = name => {
