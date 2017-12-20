@@ -1,6 +1,6 @@
 {
   "name": "@indigoframework/agent-sample",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "A sample Javascript agent.",
   "main": "index.js",
   "scripts": {
