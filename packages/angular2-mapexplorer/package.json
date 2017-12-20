@@ -15,7 +15,9 @@
     "build:docs": "ng build --output-path docs",
     "build": "rollup -c rollup.config.js"
   },
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@angular/animations": "^5.0.4",
     "@angular/cdk": "^5.0.0-rc.2",

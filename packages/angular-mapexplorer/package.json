@@ -17,6 +17,9 @@
     "build": "yarn build:npm && yarn build:browser",
     "prepublish": "yarn build"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@indigoframework/mapexplorer-core": "^0.1.0",
     "@indigoframework/cs-validator": "0.1.0",

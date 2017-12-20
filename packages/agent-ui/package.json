@@ -4,7 +4,6 @@
   "description": "Stratumn agent user interface",
   "author": "Stratumn team",
   "license": "Apache-2.0",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/stratumn/indigo-js.git"
@@ -24,6 +23,7 @@
     "test:ci": "react-scripts build && CI=true react-scripts test --env=jsdom --coverage",
     "eject": "react-scripts eject"
   },
+  "private": true,
   "dependencies": {
     "@indigoframework/client": "^0.1.0",
     "@indigoframework/react-mapexplorer": "^0.1.0",

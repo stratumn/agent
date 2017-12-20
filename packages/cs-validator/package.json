@@ -5,25 +5,29 @@
   "main": "lib/cs-validator.js",
   "module": "lib/cs-validator.mjs",
   "scripts": {
-    "test:unit":
-      "mocha --compilers js:babel-register  --require should test/unit/*",
-    "test:unit:ci":
-      "nyc yarn test:unit && nyc report --reporter=text-lcov > coverage.lcov",
+    "test:unit": "mocha --compilers js:babel-register  --require should test/unit/*",
+    "test:unit:ci": "nyc yarn test:unit && nyc report --reporter=text-lcov > coverage.lcov",
     "test:integration": "karma start karma.conf.js",
     "test:integration:ci": "yarn test:integration --single-run",
     "test": "yarn test:unit && yarnn test:integration",
     "test:ci": "yarn test:unit:ci && yarn test:integration:ci",
-    "build":
-      "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js",
+    "build": "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js",
     "prepublish": "yarn build",
-    "postpublish":
-      "aws s3 cp dist/cs-validator.js s3://stratumn-libs/cs-validator.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.min.js s3://stratumn-libs/cs-validator.min.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.js s3://stratumn-libs/cs-validator-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.min.js s3://stratumn-libs/cs-validator-${npm_package_version}.min.js --region 'eu-west-1'"
+    "postpublish": "aws s3 cp dist/cs-validator.js s3://stratumn-libs/cs-validator.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.min.js s3://stratumn-libs/cs-validator.min.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.js s3://stratumn-libs/cs-validator-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.min.js s3://stratumn-libs/cs-validator-${npm_package_version}.min.js --region 'eu-west-1'"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/stratumn/indigo-js.git"
   },
-  "keywords": ["stratumn", "blockchain", "validator", "chainscript"],
+  "keywords": [
+    "stratumn",
+    "blockchain",
+    "validator",
+    "chainscript"
+  ],
   "author": "Stratumn Team",
   "license": "Apache-2.0",
   "bugs": {

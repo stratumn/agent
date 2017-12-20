@@ -1,28 +1,32 @@
 {
   "name": "@indigoframework/agent",
   "version": "0.1.0",
-  "description":
-    "NodeJS module that exposes functions to create Stratumn agents using Javascript",
+  "description": "NodeJS module that exposes functions to create Stratumn agents using Javascript",
   "main": "lib/index.js",
   "scripts": {
-    "test":
-      "mocha --compilers js:babel-core/register --recursive --require should",
-    "test:ci":
-      "nyc yarn test && nyc report --reporter=text-lcov > coverage/coverage.lcov",
+    "test": "mocha --compilers js:babel-core/register --recursive --require should",
+    "test:ci": "nyc yarn test && nyc report --reporter=text-lcov > coverage/coverage.lcov",
     "build:lib": "babel src --out-dir lib",
     "clean": "rimraf lib coverage",
     "preversion": "yarn clean && yarn test",
     "version": "yarn build:lib",
     "postversion": "git push && git push --tags && yarn clean",
     "prepublish": "yarn clean && yarn build:lib",
-    "swagger:generate":
-      "swagger-jsdoc --definition doc/swaggerDef.js --output doc/swagger.json src/httpServer.js && docker run --rm -v $(pwd)/doc:/opt swagger2markup/swagger2markup convert --swaggerInput /opt/swagger.json --outputFile /opt/swaggerDoc --config /opt/swagger2markup.properties"
+    "swagger:generate": "swagger-jsdoc --definition doc/swaggerDef.js --output doc/swagger.json src/httpServer.js && docker run --rm -v $(pwd)/doc:/opt swagger2markup/swagger2markup convert --swaggerInput /opt/swagger.json --outputFile /opt/swaggerDoc --config /opt/swagger2markup.properties"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/stratumn/indigo-js.git"
   },
-  "keywords": ["stratumn", "sdk", "blockchain", "client"],
+  "keywords": [
+    "stratumn",
+    "sdk",
+    "blockchain",
+    "client"
+  ],
   "author": "Stratumn Team",
   "license": "Apache-2.0",
   "bugs": {
