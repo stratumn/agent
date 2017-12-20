@@ -1,6 +1,6 @@
 {
   "name": "@indigoframework/tmpop-explorer",
-  "version": "0.2.0-0",
+  "version": "0.2.0-1",
   "description": "Block Explorer for Indigo Tendermint Store",
   "main": "lib/TMPopExplorer.js",
   "author": "Stratumn",
