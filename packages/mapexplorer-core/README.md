@@ -1,6 +1,6 @@
 # MapExplorer Core
 
-[![npm](https://img.shields.io/npm/v/mapexplorer-core.svg)](https://www.npmjs.com/package/mapexplorer-core)
+[![npm](https://img.shields.io/npm/v/@indigoframework/mapexplorer-core.svg)](https://www.npmjs.com/package/@indigoframework/mapexplorer-core)
 
 Core library for building Map Explorer components
 

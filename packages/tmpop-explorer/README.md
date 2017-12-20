@@ -2,6 +2,8 @@
 
 A block explorer for the Indigo Tendermint Store.
 
+[![npm](https://img.shields.io/npm/v/@indigoframework/tmpop-explorer.svg)](https://www.npmjs.com/package/@indigoframework/tmpop-explorer)
+
 ## Example
 
 To build the example locally, run:

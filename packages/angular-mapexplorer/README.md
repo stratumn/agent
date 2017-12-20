@@ -2,7 +2,7 @@
 
 AngularJS 1.6 directive to display an Indigo Map Explorer
 
-[![npm](https://img.shields.io/npm/v/angular-mapexplorer.svg)](https://www.npmjs.com/package/angular-mapexplorer)
+[![npm](https://img.shields.io/npm/v/@indigoframework/angular-mapexplorer.svg)](https://www.npmjs.com/package/@indigoframework/angular-mapexplorer)
 
 ## Demo
 http://stratumn.github.io/angular-mapexplorer/
