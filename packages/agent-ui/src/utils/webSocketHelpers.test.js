@@ -11,22 +11,19 @@ import {
 
 chai.use(sinonChai);
 
+// see https://github.com/thoov/mock-socket/issues/176
+jest.useFakeTimers();
+
 describe('webSocket actions', () => {
   let mockServer;
   let dispatchSpy;
   let closeSpy;
 
-  // delay the websocket response when the connection is open
-  // due to timeout hack in mock library:
-  // https://github.com/thoov/mock-socket/blob/9fc37773a7b95f944aaffc5aac449b57dc4f037b/src/helpers/delay.js#L1
-  const openWebSocketPromise = (name, url, onClose = null) =>
-    new Promise(resolve => {
-      openWebSocket(name, url);
-      mockServer.clients().forEach(ws => {
-        if (onClose) ws.onclose = onClose;
-        ws.onopen = resolve;
-      });
-    });
+  const openTestWebSocket = (name, url, onClose = null) => {
+    const ws = openWebSocket(name, url);
+    if (onClose) ws.onclose = onClose;
+    jest.runOnlyPendingTimers();
+  };
 
   beforeEach(() => {
     mockServer = new Server('ws://foo/bar');
@@ -50,12 +47,12 @@ describe('webSocket actions', () => {
       expect(mockServer.clients()).to.have.lengthOf(0);
     });
 
-    it('closes previously opened ws', () =>
-      openWebSocketPromise('myWS', 'http://foo/bar', closeSpy)
-        .then(() => openWebSocket('myWS', 'http://foo/bar'))
-        .then(() => {
-          expect(closeSpy.callCount).to.equal(1);
-        }));
+    it('closes previously opened ws', () => {
+      openTestWebSocket('myWS', 'http://foo/bar', closeSpy);
+      openTestWebSocket('myWS', 'http://foo/bar');
+
+      expect(closeSpy.callCount).to.equal(1);
+    });
 
     it('dispatches a notification action on didSave message', () => {
       openWebSocket('myWS', 'http://foo/bar', dispatchSpy);
@@ -86,12 +83,11 @@ describe('webSocket actions', () => {
   });
 
   describe('closeWebSocket()', () => {
-    it('correctly closes a websocket', () =>
-      openWebSocketPromise('myWS', 'http://foo/bar', closeSpy)
-        .then(() => closeWebSocket('myWS'))
-        .then(() => {
-          expect(closeSpy.callCount).to.equal(1);
-        }));
+    it('correctly closes a websocket', () => {
+      openTestWebSocket('myWS', 'http://foo/bar', closeSpy);
+      closeWebSocket('myWS');
+      expect(closeSpy.callCount).to.equal(1);
+    });
 
     it('does not fail to close unknown ws', () => {
       expect(() => closeWebSocket('myWS')).to.not.throw();
@@ -99,15 +95,13 @@ describe('webSocket actions', () => {
   });
 
   describe('closeAllWebSockets', () => {
-    it('closes all websockets', () =>
-      Promise.all([
-        openWebSocketPromise('myWS1', 'http://foo/bar', closeSpy),
-        openWebSocketPromise('myWS2', 'http://foo/bar', closeSpy)
-      ]).then(() => {
-        const clients = mockServer.clients();
-        expect(clients).to.have.lengthOf(2);
-        closeAllWebSockets();
-        expect(closeSpy.callCount).to.equal(2);
-      }));
+    it('closes all websockets', () => {
+      openTestWebSocket('myWS1', 'http://foo/bar', closeSpy);
+      openTestWebSocket('myWS2', 'http://foo/bar', closeSpy);
+
+      expect(mockServer.clients()).to.have.lengthOf(2);
+      closeAllWebSockets();
+      expect(closeSpy.callCount).to.equal(2);
+    });
   });
 });
