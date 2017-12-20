@@ -47,8 +47,9 @@
     "start": "gulp dev",
     "test": "echo \"no tests yet\" && exit 0",
     "watch": "gulp watch:lib",
-    "version:app": "sed -i '' \"s/\\\"tmpop-explorer\\\": \\\".*\\\"/\\\"tmpop-explorer\\\": \\\"^$npm_package_version\\\"/g\" ./app/package.json",
-    "version": "yarn version:app && git add ./app/package.json",
+    "version:app": "sed -i 's#\"version\": \".*\"#\"version\": \"$npm_package_version\"#g' ./app/package.json",
+    "version:app:dependency": "sed -i 's#tmpop-explorer\": \".*\"#tmpop-explorer\": \"^$npm_package_version\"#g' ./app/package.json",
+    "version": "yarn version:app && yarn version:app:dependency && git add ./app/package.json",
     "env": "echo $npm_package_version"
   },
   "publishConfig": {
