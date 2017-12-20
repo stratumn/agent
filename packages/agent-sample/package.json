@@ -1,5 +1,5 @@
 {
-  "name": "agent-sample",
+  "name": "@indigoframework/agent-sample",
   "version": "0.2.0",
   "description": "A sample Javascript agent.",
   "main": "index.js",
@@ -8,13 +8,21 @@
     "test": "mocha --compilers js:babel-core/register --recursive --require should",
     "test:ci": "mkdir coverage && nyc npm test && nyc report --reporter=text-lcov > coverage/coverage.lcov"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "Stratumn Team",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
     "url": "https://github.com/stratumn/indigo-js.git"
   },
-  "keywords": ["stratumn", "agent", "sample", "blockchain"],
+  "keywords": [
+    "stratumn",
+    "agent",
+    "sample",
+    "blockchain"
+  ],
   "dependencies": {
     "express": "^4.14.0",
     "stratumn-agent": "^0.18.0"

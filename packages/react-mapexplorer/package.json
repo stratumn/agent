@@ -16,6 +16,9 @@
     "start": "rollup -c -w",
     "prepublish": "yarn build"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@indigoframework/mapexplorer-core": "^0.1.0",
     "radium": "^0.19.5"
@@ -38,6 +41,14 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-postcss": "^0.5.5"
   },
-  "files": ["dist"],
-  "keywords": ["react", "react-component", "indigo", "Stratumn", "MapExplorer"]
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "react",
+    "react-component",
+    "indigo",
+    "Stratumn",
+    "MapExplorer"
+  ]
 }
