@@ -1,6 +1,6 @@
 {
   "name": "@indigoframework/client",
-  "version": "0.1.0",
+  "version": "0.2.0-0",
   "description": "Stratumn Indigo agent client library",
   "main": "lib/stratumn-agent-client.js",
   "module": "lib/stratumn-agent-client.mjs",
@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/stratumn/indigo-js",
   "devDependencies": {
-    "@indigoframework/agent": "^0.1.0",
+    "@indigoframework/agent": "^0.2.0-0",
     "babel-cli": "^6.5.1",
     "babel-core": "^6.5.2",
     "babel-plugin-external-helpers": "^6.8.0",
@@ -57,9 +57,9 @@
     "should": "^8.2.2"
   },
   "dependencies": {
+    "deepmerge": "2.0.1",
     "httpplease": "^0.16.4",
     "qs": "stratumn/qs#rename-formats-default",
-    "deepmerge": "2.0.1",
     "setimmediate": "^1.0.5"
   },
   "resolutions": {

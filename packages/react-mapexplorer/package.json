@@ -1,6 +1,6 @@
 {
   "name": "@indigoframework/react-mapexplorer",
-  "version": "0.1.0",
+  "version": "0.2.0-0",
   "description": "React component that displays a Map Explorer",
   "author": "Stratumn",
   "license": "Apache-2.0",
@@ -20,7 +20,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@indigoframework/mapexplorer-core": "^0.1.0",
+    "@indigoframework/mapexplorer-core": "^0.2.0-0",
     "radium": "^0.19.5"
   },
   "peerDependencies": {
