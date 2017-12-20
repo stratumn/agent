@@ -23,9 +23,7 @@
     "test:ci": "react-scripts build && CI=true react-scripts test --env=jsdom --coverage",
     "eject": "react-scripts eject"
   },
-  "publishConfig": {
-    "access": "public"
-  },
+  "private": true,
   "dependencies": {
     "@indigoframework/client": "^0.1.0",
     "@indigoframework/react-mapexplorer": "^0.1.0",

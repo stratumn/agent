@@ -8,9 +8,7 @@
     "test": "mocha --compilers js:babel-core/register --recursive --require should",
     "test:ci": "mkdir coverage && nyc npm test && nyc report --reporter=text-lcov > coverage/coverage.lcov"
   },
-  "publishConfig": {
-    "access": "public"
-  },
+  "private": true,
   "author": "Stratumn Team",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
