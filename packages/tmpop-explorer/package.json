@@ -1,6 +1,6 @@
 {
   "name": "@indigoframework/tmpop-explorer",
-  "version": "0.1.0",
+  "version": "0.2.0-0",
   "description": "Block Explorer for Indigo Tendermint Store",
   "main": "lib/TMPopExplorer.js",
   "author": "Stratumn",
@@ -25,11 +25,11 @@
     "react-tap-event-plugin": "^2.0.1"
   },
   "devDependencies": {
+    "express": "^4.14.0",
     "gulp": "^3.9.0",
     "react": "^15.4.2",
     "react-component-gulp-tasks": "^0.7.6",
-    "react-dom": "^15.4.2",
-    "express": "^4.14.0"
+    "react-dom": "^15.4.2"
   },
   "peerDependencies": {
     "react": "^15.4.2"

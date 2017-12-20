@@ -1,6 +1,6 @@
 {
   "name": "@indigoframework/agent-sample",
-  "version": "0.1.0",
+  "version": "0.2.0-0",
   "description": "A sample Javascript agent.",
   "main": "index.js",
   "scripts": {
@@ -27,10 +27,10 @@
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
+    "babel-core": "^6.11.4",
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015-node4": "latest",
     "babel-preset-es2017": "^6.9.0",
-    "babel-core": "^6.11.4",
     "mocha": "^2.5.3",
     "nodemon": "^1.9.2",
     "nyc": "^11.2.1",
