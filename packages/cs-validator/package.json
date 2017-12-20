@@ -13,7 +13,7 @@
     "test:ci": "yarn test:unit:ci && yarn test:integration:ci",
     "build": "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js",
     "prepublish": "yarn build",
-    "postpublish": "aws s3 cp dist/cs-validator.js s3://stratumn-libs/cs-validator.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.min.js s3://stratumn-libs/cs-validator.min.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.js s3://stratumn-libs/cs-validator-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.min.js s3://stratumn-libs/cs-validator-${npm_package_version}.min.js --region 'eu-west-1'"
+    "postpublish": "aws s3 cp dist/cs-validator.js s3://stratumn-libs/cs-validator.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.min.js s3://stratumn-libs/cs-validator.min.js --region 'eu-west-1' && aws s3 cp dist/cs-validator.js s3://stratumn-libs/cs-validator-${npm_package_version}.js --region 'eu-west-1'"
   },
   "publishConfig": {
     "access": "public"
