@@ -24,7 +24,8 @@
           "**/*.test.js",
           "**/rollup*.js",
           "**/karma.conf.js",
-          "**/setupTests.js"
+          "**/setupTests.js",
+          "**/gulpfile.js"
         ],
         "optionalDependencies": false
       }
