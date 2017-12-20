@@ -2,11 +2,9 @@
 
 A block explorer for the Indigo Tendermint Store.
 
-## Demo & Examples
+## Example
 
-Live demo: [stratumn.github.io/indigoexplorer](http://stratumn.github.io/indigoexplorer/)
-
-To build the examples locally, run:
+To build the example locally, run:
 
 ```
 yarn
@@ -23,7 +21,7 @@ The easiest way to use tmpop-explorer is to install it from NPM and include it i
 You can also use the standalone build by including `dist/tmpop-explorer.js` in your page. If you use this, make sure you have already included React, and it is available as a global variable.
 
 ```
-yarn install @indigoframework/tmpop-explorer --save
+yarn install @indigoframework/tmpop-explorer
 ```
 
 
