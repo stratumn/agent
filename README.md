@@ -4,6 +4,7 @@
 
 [Stratumn](https://stratumn.com)'s javascript libraries to create Indigo applications and networks.
 
+[![npm](https://img.shields.io/npm/v/@indigoframework/agent.svg)](https://www.npmjs.com/package/@indigoframework/agent)
 [![build status](https://travis-ci.org/stratumn/indigo-js.svg?branch=master)](https://travis-ci.org/stratumn/indigo-js)
 [![codecov](https://codecov.io/gh/stratumn/indigo-js/branch/master/graph/badge.svg)](https://codecov.io/gh/stratumn/indigo-js)
 

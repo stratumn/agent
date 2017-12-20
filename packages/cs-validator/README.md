@@ -2,6 +2,8 @@
 
 Library for validating chainscript objects
 
+[![npm](https://img.shields.io/npm/v/@indigoframework/cs-validator.svg)](https://www.npmjs.com/package/@indigoframework/cs-validator)
+
 ## Installation
 
 ### Browser

@@ -2,7 +2,7 @@
 
 This NodeJS module exposes functions to create Stratumn agents using Javascript.
 
-[![npm](https://img.shields.io/npm/v/stratumn-agent.svg)](https://www.npmjs.com/package/stratumn-agent)
+[![npm](https://img.shields.io/npm/v/@indigoframework/agent.svg)](https://www.npmjs.com/package/@indigoframework/agent)
 
 Copyright 2017 Stratumn SAS. All rights reserved.
 

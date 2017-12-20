@@ -1,6 +1,6 @@
 # Agent client for Javascript
 
-[![npm](https://img.shields.io/npm/v/stratumn-agent-client.svg)](https://www.npmjs.com/package/stratumn-agent-client)
+[![npm](https://img.shields.io/npm/v/@indigoframework/client.svg)](https://www.npmjs.com/package/@indigoframework/client)
 
 ## Installation
 
