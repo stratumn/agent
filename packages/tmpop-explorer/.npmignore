@@ -1,4 +1,6 @@
 .editorconfig
+.eslintignore
+gulpfile.js
 
 # Logs
 logs
@@ -24,3 +26,4 @@ app
 
 # Bower build
 dist
+bower.json
