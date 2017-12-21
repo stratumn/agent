@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import Agent from 'stratumn-agent';
+import Agent from '@indigoframework/agent';
 import messageBoard from '../lib/actions-message';
 
 describe('message board', () => {

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import Agent from 'stratumn-agent';
+import Agent from '@indigoframework/agent';
 import warehouseTracker from '../lib/actions-warehouse';
 
 describe('warehouse tracker', () => {
