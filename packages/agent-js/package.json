@@ -1,6 +1,6 @@
 {
   "name": "@indigoframework/agent",
-  "version": "0.2.0-1",
+  "version": "0.2.0-2",
   "description": "NodeJS module that exposes functions to create Stratumn agents using Javascript",
   "main": "lib/index.js",
   "scripts": {
