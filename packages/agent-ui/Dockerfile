@@ -1,6 +1,4 @@
-FROM node:8
-
-RUN npm install -g yarn
+FROM node:8-alpine
 
 RUN mkdir /agent-ui
 ADD package.json /agent-ui/package.json
@@ -12,5 +10,5 @@ WORKDIR /agent-ui
 ENV NODE_ENV production
 RUN yarn build
 
-RUN npm install -g serve
+RUN yarn global add serve
 CMD serve -s build -p 4000
