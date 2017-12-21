@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
 import { Link } from 'react-router';
 
@@ -34,7 +35,7 @@ export default class SearchInput extends Component {
   render() {
     return (
       <div>
-        <TextField hintText="Block Height" onChange={this.handleInputChange} />
+        <TextField label="Block Height" onChange={this.handleInputChange} />
         <Link
           to={`${this.path}/blocks/${this.state.height}`}
           href={`${this.path}/blocks/${this.state.height}`}

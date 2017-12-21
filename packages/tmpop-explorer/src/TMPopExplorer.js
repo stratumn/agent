@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 import Layout from './containers/Layout';
 import BlockContainer from './containers/BlockContainer';
@@ -27,9 +28,7 @@ export default class TMPopExplorer extends Component {
   constructor(props) {
     super(props);
     const isMounted = !!this.props.route;
-    const properties = isMounted ? this.props.route : this.props;
-
-    const { remote, secure } = { properties };
+    const { remote, secure } = isMounted ? this.props.route : this.props;
 
     if (!remote) {
       throw new Error('Missing indigo remote definition');

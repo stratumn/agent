@@ -14,27 +14,25 @@
   limitations under the License.
 */
 
-var React = require("react");
-var ReactDOM = require("react-dom");
-var TMPopExplorer = require("@indigoframework/tmpop-explorer");
 import { Router, Route, browserHistory } from "react-router";
+import React from "react";
+import ReactDOM from "react-dom";
+import TMPopExplorer from "@indigoframework/tmpop-explorer";
 
-var App = React.createClass({
-  render() {
-    return (
-      <div>
-        <Router history={browserHistory}>
-          <Route
-            path="/blockexplorer*"
-            mount="/blockexplorer"
-            component={TMPopExplorer}
-            remote="localhost:46657"
-          />
-        </Router>
-        <TMPopExplorer remote="localhost:46657" />
-      </div>
-    );
-  }
-});
+const App = () => {
+  return (
+    <div>
+      {/* <Router history={browserHistory}>
+        <Route
+          path="/blockexplorer*"
+          mount="/blockexplorer"
+          component={TMPopExplorer}
+          remote="localhost:46657"
+        />
+      </Router> */}
+      <TMPopExplorer remote="localhost:46657" />
+    </div>
+  );
+};
 
-ReactDOM.render(<App />, document.getElementById("app"));
+ReactDOM.render(<App />, document.getElementById("root"));
