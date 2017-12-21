@@ -1,15 +1,16 @@
-FROM mhart/alpine-node:6.7.0
+FROM node:8.9.3-alpine
 
-RUN apk add --no-cache git make gcc g++ python
+RUN yarn global add serve
 
 ADD package.json /src/package.json
-RUN cd /src; npm install
-ADD . /src/
+ADD yarn.lock /src/yarn.lock
 
+RUN cd /src; yarn
+
+ADD . /src/
 WORKDIR /src/
 
 ENV NODE_ENV production
+RUN yarn build
 
-RUN npm run build
-
-CMD node express.js
+CMD serve -s build -p 4000
