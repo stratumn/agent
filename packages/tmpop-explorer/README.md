@@ -4,9 +4,16 @@ A block explorer for the Indigo Tendermint Store.
 
 [![npm](https://img.shields.io/npm/v/@indigoframework/tmpop-explorer.svg)](https://www.npmjs.com/package/@indigoframework/tmpop-explorer)
 
-#### Local Development
+## Installation
 
-Now you're ready to run a local version of rollup that will watch your `src/` component and automatically recompile it into `dist/` whenever you make changes.
+```
+npm install --save tmpop-explorer
+```
+
+
+## Local Development
+
+You should first run a local version of rollup that will watch your `src/` component and automatically recompile it into `lib/` whenever you make changes.
 
 We'll also be running our `example/` create-react-app that's linked to the local version of your `tmpop-explorer` module.
 
@@ -18,7 +25,7 @@ npm start # runs rollup with watch flag
 
 # (in another tab, run the example create-react-app)
 cd example
-npm link react-poop-emoji
+npm link tmpop-explorer
 npm install
 npm start # runs create-react-app hot-reload dev server
 ```
