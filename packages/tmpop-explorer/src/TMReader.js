@@ -17,9 +17,8 @@
 import httpplease from 'httpplease';
 import promises from 'httpplease-promises';
 import jsonresponse from 'httpplease/plugins/jsonresponse';
-import Promise from 'bluebird';
 
-const http = httpplease.use(promises(Promise)).use(jsonresponse);
+const http = httpplease.use(promises()).use(jsonresponse);
 
 function encodeData(data) {
   return Object.keys(data)
