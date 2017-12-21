@@ -2,7 +2,9 @@
   "name": "@indigoframework/tmpop-explorer",
   "version": "0.2.0-1",
   "description": "Block Explorer for Indigo Tendermint Store",
-  "main": "lib/TMPopExplorer.js",
+  "main": "lib/index.js",
+  "module": "lib/index.es.js",
+  "jsnext:main": "lib/index.es.js",
   "author": "Stratumn",
   "license": "Apache-2.0",
   "homepage": "https://github.com/stratumn/indigo-js",
@@ -19,38 +21,39 @@
     "fifo-array": "^0.1.2",
     "httpplease": "^0.16.4",
     "httpplease-promises": "^0.3.0",
-    "material-ui": "^0.16.7",
-    "radium": "^0.18.1",
+    "material-ui": "^1.0.0-beta.24",
+    "radium": "^0.19.6",
     "react-router": "^3.0.2",
     "react-tap-event-plugin": "^2.0.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "express": "^4.14.0",
-    "gulp": "^3.9.0",
-    "react": "^15.4.2",
-    "react-component-gulp-tasks": "^0.7.6",
-    "react-dom": "^15.4.2"
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "rollup": "0.50.0",
+    "rollup-plugin-babel": "3.0.2",
+    "rollup-plugin-commonjs": "8.2.1",
+    "rollup-plugin-node-resolve": "3.0.0",
+    "rollup-plugin-postcss": "0.5.5"
   },
   "peerDependencies": {
-    "react": "^15.4.2"
-  },
-  "resolutions": {
-    "require-dir": "0.3.2"
+    "react": "^16.0.0",
+    "prop-types": "^15.5.4"
   },
   "browserify-shim": {
     "react": "global:React"
   },
   "scripts": {
-    "build": "gulp clean && NODE_ENV=production gulp build",
-    "examples": "gulp dev:server",
-    "release": "NODE_ENV=production gulp release",
-    "start": "gulp dev",
-    "test": "echo \"no tests yet\" && exit 0",
-    "watch": "gulp watch:lib",
+    "build": "rollup -c",
+    "start": "rollup -c -w",
     "version:app": "sed -i \"s#\\\"version\\\": \\\".*\\\"#\\\"version\\\": \\\"$npm_package_version\\\"#g\" ./app/package.json",
     "version:app:dependency": "sed -i \"s#tmpop-explorer\\\": \\\".*\\\"#tmpop-explorer\\\": \\\"^$npm_package_version\\\"#g\" ./app/package.json",
     "version": "yarn version:app && yarn version:app:dependency && git add ./app/package.json",
-    "env": "echo $npm_package_version",
     "prepublish": "yarn build"
   },
   "publishConfig": {

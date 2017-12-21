@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import BlockList from './BlockList';
 import TransactionList from './TransactionList';
 

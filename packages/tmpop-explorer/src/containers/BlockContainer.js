@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Block from '../components/Block';
 import TMReader from '../TMReader';
 

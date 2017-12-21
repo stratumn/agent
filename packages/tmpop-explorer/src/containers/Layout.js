@@ -14,12 +14,14 @@
   limitations under the License.
 */
 
-import React, { Component, PropTypes } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import { withStyles } from 'material-ui/styles';
 import SearchInput from '../components/SearchInput';
+import layout from '../styles/layout';
 
-export default class App extends Component {
+class App extends Component {
   constructor(props, context) {
     super(props, context);
     this.path = context.path;
@@ -33,12 +35,10 @@ export default class App extends Component {
             TMPop Explorer
           </Link>
         </h1>
-        <MuiThemeProvider>
-          <div>
-            <SearchInput />
-            {this.props.children}
-          </div>
-        </MuiThemeProvider>
+        <div>
+          <SearchInput />
+          {this.props.children}
+        </div>
       </div>
     );
   }
@@ -51,3 +51,5 @@ App.propTypes = {
 App.contextTypes = {
   path: PropTypes.string
 };
+
+export default withStyles(layout)(App);

@@ -14,14 +14,13 @@
   limitations under the License.
 */
 
-import React, { PropTypes } from 'react';
-import {
-  Table,
+import React from 'react';
+import PropTypes from 'prop-types';
+import Table, {
   TableBody,
-  TableHeader,
-  TableHeaderColumn,
+  TableHead,
   TableRow,
-  TableRowColumn
+  TableCell
 } from 'material-ui/Table';
 import { Link } from 'react-router';
 
@@ -30,38 +29,33 @@ const TransactionList = ({ transactions }) => {
     const { data } = tx;
     return (
       <TableRow key={data.linkHash}>
-        <TableRowColumn>
+        <TableCell>
           <Link
             to={`/blocks/${tx.block.header.height}`}
             href={`/blocks/${tx.block.header.height}`}
           >
             {tx.block.header.height}
           </Link>
-        </TableRowColumn>
-        {data.linkHash}
-        <TableRowColumn />
-        <TableRowColumn style={{ maxWidth: 500, overflowX: 'scroll' }}>
+        </TableCell>
+        <TableCell>{data.linkHash}</TableCell>
+        <TableCell style={{ maxWidth: 500, overflowX: 'scroll' }}>
           <pre>{JSON.stringify(data.link, undefined, 2)}</pre>
-        </TableRowColumn>
+        </TableCell>
       </TableRow>
     );
   });
   return (
     <div>
       <h1>Transactions</h1>
-      <Table
-        selectable={false}
-        style={{ tableLayout: 'auto' }}
-        fixedHeader={false}
-      >
-        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+      <Table style={{ tableLayout: 'auto' }}>
+        <TableHead>
           <TableRow>
-            <TableHeaderColumn>Block Height</TableHeaderColumn>
-            <TableHeaderColumn>Link Hash</TableHeaderColumn>
-            <TableHeaderColumn>Link</TableHeaderColumn>
+            <TableCell>Block Height</TableCell>
+            <TableCell>Link Hash</TableCell>
+            <TableCell>Link</TableCell>
           </TableRow>
-        </TableHeader>
-        <TableBody displayRowCheckbox={false}>{rowsTransactions}</TableBody>
+        </TableHead>
+        <TableBody>{rowsTransactions}</TableBody>
       </Table>
     </div>
   );

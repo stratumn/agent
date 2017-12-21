@@ -14,16 +14,15 @@
   limitations under the License.
 */
 
-import React, { PropTypes } from 'react';
-import {
-  Table,
+import React from 'react';
+import PropTypes from 'prop-types';
+import Table, {
   TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn
+  TableHead,
+  TableCell,
+  TableRow
 } from 'material-ui/Table';
-import CircularProgress from 'material-ui/CircularProgress';
+import { CircularProgress } from 'material-ui/Progress';
 import Radium, { Style } from 'radium';
 import TransactionList from './TransactionList';
 
@@ -68,86 +67,81 @@ const Block = ({ block }) => {
 
     return (
       <div>
-        <Style rules={rules} />
-        <h1>Block #{header.height}</h1>
+        <Style rules={rules} /> <h1> Block# {header.height} </h1>
         <div style={styles.block}>
-          <Table selectable={false} className="compact">
-            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+          <Table className="compact">
+            <TableHead>
               <TableRow>
-                <TableHeaderColumn>Summary</TableHeaderColumn>
+                <TableCell> Summary </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody displayRowCheckbox={false}>
+            </TableHead>
+            <TableBody>
               <TableRow>
-                <TableHeaderColumn>Chain ID</TableHeaderColumn>
-                <TableRowColumn>{header.chain_id}</TableRowColumn>
-              </TableRow>
-              <TableRow>
-                <TableHeaderColumn>Height</TableHeaderColumn>
-                <TableRowColumn>{header.height}</TableRowColumn>
+                <TableCell> Chain ID </TableCell>
+                <TableCell> {header.chain_id} </TableCell>
               </TableRow>
               <TableRow>
-                <TableHeaderColumn>Timestamp</TableHeaderColumn>
-                <TableRowColumn>{header.time}</TableRowColumn>
+                <TableCell> Height </TableCell>
+                <TableCell> {header.height} </TableCell>
               </TableRow>
               <TableRow>
-                <TableHeaderColumn>Number Of Transactions</TableHeaderColumn>
-                <TableRowColumn>{header.num_txs}</TableRowColumn>
+                <TableCell> Timestamp </TableCell>
+                <TableCell> {header.time} </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Number Of Transactions</TableCell>
+                <TableCell> {header.num_txs} </TableCell>
               </TableRow>
             </TableBody>
           </Table>
-          <Table selectable={false} className="compact">
-            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+          <Table className="compact">
+            <TableHead>
               <TableRow>
-                <TableHeaderColumn>Hashes</TableHeaderColumn>
+                <TableCell> Hashes </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody displayRowCheckbox={false}>
+            </TableHead>
+            <TableBody>
               <TableRow>
-                <TableHeaderColumn>Hash</TableHeaderColumn>
-                <TableRowColumn>{header.last_commit_hash}</TableRowColumn>
-              </TableRow>
-              <TableRow>
-                <TableHeaderColumn>Previous Block</TableHeaderColumn>
-                <TableRowColumn>{header.last_block_id.hash}</TableRowColumn>
+                <TableCell> Hash </TableCell>
+                <TableCell> {header.last_commit_hash} </TableCell>
               </TableRow>
               <TableRow>
-                <TableHeaderColumn>Validators Hash</TableHeaderColumn>
-                <TableRowColumn>{header.validators_hash}</TableRowColumn>
+                <TableCell> Previous Block </TableCell>
+                <TableCell> {header.last_block_id.hash} </TableCell>
               </TableRow>
               <TableRow>
-                <TableHeaderColumn>Application Hash</TableHeaderColumn>
-                <TableRowColumn>{header.app_hash}</TableRowColumn>
+                <TableCell> Validators Hash </TableCell>
+                <TableCell> {header.validators_hash} </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell> Application Hash </TableCell>
+                <TableCell> {header.app_hash} </TableCell>
               </TableRow>
             </TableBody>
           </Table>
           <div style={styles.margin}>
             <Table
-              selectable={false}
-              style={{ tableLayout: 'auto' }}
-              fixedHeader={false}
+              style={{
+                tableLayout: 'auto'
+              }}
             >
-              <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+              <TableHead>
                 <TableRow>
-                  <TableHeaderColumn>Signatures</TableHeaderColumn>
-                  <TableHeaderColumn />
+                  <TableCell> Signatures </TableCell>
+                  <TableCell />
                 </TableRow>
                 <TableRow>
-                  <TableHeaderColumn>Address</TableHeaderColumn>
-                  <TableHeaderColumn>Signature</TableHeaderColumn>
+                  <TableCell> Address </TableCell>
+                  <TableCell> Signature </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody displayRowCheckbox={false}>
+              </TableHead>
+              <TableBody>
                 {block.last_commit.precommits.map(precommit => {
                   if (precommit) {
                     return (
                       <TableRow key={precommit.validator_address}>
-                        <TableRowColumn>
-                          {precommit.validator_address}
-                        </TableRowColumn>
-                        <TableRowColumn>
-                          {precommit.signature.data}
-                        </TableRowColumn>
+                        <TableCell>{precommit.validator_address}</TableCell>
+                        <TableCell> {precommit.signature.data} </TableCell>
                       </TableRow>
                     );
                   }

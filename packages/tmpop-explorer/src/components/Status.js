@@ -14,15 +14,10 @@
   limitations under the License.
 */
 
-import React, { PropTypes } from 'react';
-import {
-  Table,
-  TableBody,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn
-} from 'material-ui/Table';
-import CircularProgress from 'material-ui/CircularProgress';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Table, { TableBody, TableRow, TableCell } from 'material-ui/Table';
+import { CircularProgress } from 'material-ui/Progress';
 
 const Status = ({ status }) => {
   if (status) {
@@ -30,37 +25,37 @@ const Status = ({ status }) => {
     return (
       <div>
         <h2>Node Info</h2>
-        <Table selectable={false} className="compact">
-          <TableBody displayRowCheckbox={false}>
+        <Table className="compact">
+          <TableBody>
             <TableRow>
-              <TableHeaderColumn>Public Key</TableHeaderColumn>
-              <TableRowColumn>{nodeInfo.pub_key}</TableRowColumn>
+              <TableCell>Public Key</TableCell>
+              <TableCell>{nodeInfo.pub_key}</TableCell>
             </TableRow>
             <TableRow>
-              <TableHeaderColumn>Moniker</TableHeaderColumn>
-              <TableRowColumn>{nodeInfo.moniker}</TableRowColumn>
+              <TableCell>Moniker</TableCell>
+              <TableCell>{nodeInfo.moniker}</TableCell>
             </TableRow>
             <TableRow>
-              <TableHeaderColumn>Version</TableHeaderColumn>
-              <TableRowColumn>{nodeInfo.version}</TableRowColumn>
+              <TableCell>Version</TableCell>
+              <TableCell>{nodeInfo.version}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
 
         <h2>Blockchain Info</h2>
-        <Table selectable={false} className="compact">
-          <TableBody displayRowCheckbox={false}>
+        <Table className="compact">
+          <TableBody>
             <TableRow>
-              <TableHeaderColumn>Latest block height</TableHeaderColumn>
-              <TableRowColumn>{status.latest_block_height}</TableRowColumn>
+              <TableCell>Latest block height</TableCell>
+              <TableCell>{status.latest_block_height}</TableCell>
             </TableRow>
             <TableRow>
-              <TableHeaderColumn>Latest block hash</TableHeaderColumn>
-              <TableRowColumn>{status.latest_block_hash}</TableRowColumn>
+              <TableCell>Latest block hash</TableCell>
+              <TableCell>{status.latest_block_hash}</TableCell>
             </TableRow>
             <TableRow>
-              <TableHeaderColumn>Latest app hash</TableHeaderColumn>
-              <TableRowColumn>{status.latest_app_hash}</TableRowColumn>
+              <TableCell>Latest app hash</TableCell>
+              <TableCell>{status.latest_app_hash}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
