@@ -23,6 +23,7 @@ export default {
       module: false
     }),
     commonjs({
+      exclude: 'src/**',
       namedExports: {
         'node_modules/radium/lib/index.js': ['Style'],
         'node_modules/material-ui/Table/index.js': [
