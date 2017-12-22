@@ -1,6 +1,6 @@
 {
   "name": "@indigoframework/tmpop-explorer",
-  "version": "0.2.0-1",
+  "version": "0.2.0-3",
   "description": "Block Explorer for Indigo Tendermint Store",
   "main": "lib/index.js",
   "module": "lib/index.es.js",
@@ -41,8 +41,8 @@
     "rollup-plugin-postcss": "^0.5.5"
   },
   "peerDependencies": {
-    "react": "^16.0.0",
-    "prop-types": "^15.5.4"
+    "prop-types": "^15.5.4",
+    "react": "^16.0.0"
   },
   "browserify-shim": {
     "react": "global:React"

@@ -1,6 +1,6 @@
 {
   "name": "@indigoframework/cs-validator",
-  "version": "0.2.0-1",
+  "version": "0.2.0-3",
   "description": "Core library for building Map Explorer components",
   "main": "lib/cs-validator.js",
   "module": "lib/cs-validator.mjs",
@@ -68,7 +68,7 @@
     "zock": "^0.2.6"
   },
   "dependencies": {
-    "@indigoframework/client": "^0.2.0-1",
+    "@indigoframework/client": "^0.2.0-3",
     "canonicaljson": "^1.0.0",
     "deepmerge": "2.0.1",
     "httpplease": "^0.16.4",
