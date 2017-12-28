@@ -216,7 +216,10 @@ export function getStyles() {
     },
 
     close: {
-      color: 'white'
+      color: 'white',
+      border: 'none',
+      background: '#2E2E2E',
+      cursor: 'pointer'
     }
   };
 }
