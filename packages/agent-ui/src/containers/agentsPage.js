@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -9,43 +9,31 @@ import { getAgent, removeAgent } from '../actions';
 import { AgentsManager } from '../components';
 import * as statusTypes from '../constants/status';
 
-export class AgentsPage extends Component {
-  componentDidMount() {
-    const { agents, fetchAgent } = this.props;
-    agents
-      .filter(({ status }) => status === statusTypes.STALE)
-      .forEach(({ name, url }) => fetchAgent(name, url));
-  }
-
-  render() {
-    const { agents, fetchAgent, deleteAgent } = this.props;
-    return (
-      <div style={{ padding: '1em' }}>
-        <Typography type="display1">Agents</Typography>
-        <Typography paragraph>
-          An agent executes the logic of your processes. A process is defined by
-          a set of actions that may be used in the workflow. An instance of a
-          process is called a map. It contains the different steps of the
-          process, called segments.
-        </Typography>
-        {(!agents || agents.length === 0) && (
-          <Typography>
-            It looks like you are not connected to any agent right now. Enter a
-            name and an url to connect to an agent. If you are running an agent
-            locally, it will usually be on http://localhost:3000
-          </Typography>
-        )}
-        {agents && (
-          <AgentsManager
-            agents={agents}
-            addAgent={fetchAgent}
-            deleteAgent={deleteAgent}
-          />
-        )}
-      </div>
-    );
-  }
-}
+export const AgentsPage = ({ agents, fetchAgent, deleteAgent }) => (
+  <div style={{ padding: '1em' }}>
+    <Typography type="display1">Agents</Typography>
+    <Typography paragraph>
+      An agent executes the logic of your processes. A process is defined by a
+      set of actions that may be used in the workflow. An instance of a process
+      is called a map. It contains the different steps of the process, called
+      segments.
+    </Typography>
+    {(!agents || agents.length === 0) && (
+      <Typography>
+        It looks like you are not connected to any agent right now. Enter a name
+        and an url to connect to an agent. If you are running an agent locally,
+        it will usually be on http://localhost:3000
+      </Typography>
+    )}
+    {agents && (
+      <AgentsManager
+        agents={agents}
+        addAgent={fetchAgent}
+        deleteAgent={deleteAgent}
+      />
+    )}
+  </div>
+);
 
 AgentsPage.defaultProps = {
   agents: []

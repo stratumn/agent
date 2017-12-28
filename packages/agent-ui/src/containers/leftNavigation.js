@@ -67,7 +67,7 @@ const AgentNavigationLinks = ({ agents, agent, process }) => (
     {agents.map(a => (
       <div key={a.name} id={a.name}>
         <AgentNavigationLink text={a.name} to={`/${a.name}`} />
-        <Collapse in={!!(agent && a.name === agent)} transitionDuration="auto">
+        <Collapse in={!!(agent && a.name === agent)}>
           <List disablePadding>
             {a.processes.map(p => (
               <div key={p}>
@@ -76,10 +76,7 @@ const AgentNavigationLinks = ({ agents, agent, process }) => (
                   to={`/${a.name}/${p}`}
                   margin="1em"
                 />
-                <Collapse
-                  in={!!(process && p === process)}
-                  transitionDuration="auto"
-                >
+                <Collapse in={!!(process && p === process)}>
                   <AgentNavigationLink
                     text="maps"
                     to={`/${a.name}/${p}/maps`}
