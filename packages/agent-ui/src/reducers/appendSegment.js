@@ -5,6 +5,11 @@ import * as statusTypes from '../constants/status';
 
 const appendSegmentDialogReducer = (state = { show: false }, action) => {
   switch (action.type) {
+    case actionTypes.APPEND_SEGMENT_DIALOG_MISSING_PREVIOUS:
+      return {
+        show: true,
+        error: 'You need to select a segment to append to'
+      };
     case actionTypes.APPEND_SEGMENT_DIALOG_OPEN:
       return {
         show: true,

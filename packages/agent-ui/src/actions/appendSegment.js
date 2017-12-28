@@ -21,9 +21,17 @@ const appendSegmentClear = () => ({
   type: actionTypes.APPEND_SEGMENT_CLEAR
 });
 
-export const openDialog = agentName => (dispatch, getState) => {
-  const { agents, mapExplorer: { linkHash, processName } } = getState();
-  if (agents[agentName] && agents[agentName].processes[processName]) {
+export const openDialog = (agentName, processName) => (dispatch, getState) => {
+  const {
+    agents,
+    mapExplorer: { linkHash, processName: selectedSegmentProcess }
+  } = getState();
+
+  if (processName !== selectedSegmentProcess || !linkHash) {
+    dispatch({
+      type: actionTypes.APPEND_SEGMENT_DIALOG_MISSING_PREVIOUS
+    });
+  } else if (agents[agentName] && agents[agentName].processes[processName]) {
     const { init, ...segmentActions } = agents[agentName].processes[
       processName
     ].actions;

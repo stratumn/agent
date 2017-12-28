@@ -50,6 +50,19 @@ describe('<AppendSegmentDialog />', () => {
     expect(props).to.deep.equal({ show: false });
   });
 
+  it('sets a validity flag in case of missing pre-condition', () => {
+    const props = mapStateToProps({
+      appendSegment: {
+        dialog: { show: true, error: 'pre-condition failed' }
+      }
+    });
+    expect(props).to.deep.equal({
+      show: true,
+      valid: false,
+      error: 'pre-condition failed'
+    });
+  });
+
   it('extracts error from state', () => {
     const props = mapStateToProps({
       appendSegment: {
@@ -75,6 +88,20 @@ describe('<AppendSegmentDialog />', () => {
       <AppendSegmentDialog {...requiredProps} show={false} />
     );
     expect(dialog.children()).to.have.length(0);
+  });
+
+  it('shows a simple dialog if pre-condition failed', () => {
+    const dialog = mount(
+      <AppendSegmentDialog
+        {...requiredProps}
+        show
+        valid={false}
+        error="invalid"
+      />
+    );
+
+    expect(dialog.find('Button')).to.have.length(1);
+    expect(dialog.find('DialogContentText.error')).to.have.length(1);
   });
 
   it('provides a button to close dialog', () => {
