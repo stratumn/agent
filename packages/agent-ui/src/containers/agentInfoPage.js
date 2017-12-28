@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, NavLink, Link } from 'react-router-dom';
+import { withRouter, NavLink } from 'react-router-dom';
 
 import Button from 'material-ui/Button';
 import { CircularProgress } from 'material-ui/Progress';
@@ -36,7 +36,7 @@ export const AgentInfoPage = ({ name, url, status, fetchAgent, classes }) => {
       <Typography type="subheading">{name}</Typography>
       <PrettyDivider />
       <Typography type="headline">Endpoint</Typography>
-      <Typography type="subheading" component={Link} to={url} paragraph>
+      <Typography type="subheading" component="a" href={url} paragraph>
         {url}
       </Typography>
       {status === statusTypes.FAILED && (
@@ -48,8 +48,8 @@ export const AgentInfoPage = ({ name, url, status, fetchAgent, classes }) => {
         You can use this URL to connect to your agent, using the&nbsp;
         <Typography
           type="caption"
-          component={Link}
-          to="https://github.com/stratumn/indigo-js/tree/master/packages/agent-client-js"
+          component="a"
+          href="https://github.com/stratumn/indigo-js/tree/master/packages/agent-client-js"
         >
           Stratumn Javascript Agent Client
         </Typography>
