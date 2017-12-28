@@ -20,42 +20,34 @@ import radium from 'radium';
 import MerklePathComponent from './MerklePathComponent';
 
 const BitcoinEvidence = ({ evidence }) => {
-  let evidenceInfo;
-  let evidenceTree;
-  const evidenceComplete = evidence.state === 'COMPLETE';
+  const tx = evidence.proof.txid;
+  const evidenceInfo = (
+    <div>
+      <h4>Bitcoin Transaction</h4>
+      <p>
+        {tx}
+        <a target="_blank" href={`https://blockchain.info/tx/${tx}`}>
+          View transaction on Blockchain.info
+        </a>
+      </p>
 
-  if (evidenceComplete) {
-    const tx = evidence.proof.txid ? evidence.proof.txid : '';
-    evidenceInfo = (
-      <div>
-        <h4>Bitcoin Transaction</h4>
-        <p>
-          {tx}
-          <a target="_blank" href={`https://blockchain.info/tx/${tx}`}>
-            View transaction on Blockchain.info
-          </a>
-        </p>
+      <h4>Merkle root</h4>
+      <p>{evidence.proof.batch.merkleRoot}</p>
+    </div>
+  );
 
-        <h4>Merkle root</h4>
-        <p>{evidence.proof.batch.merkleRoot}</p>
-      </div>
-    );
-
-    evidenceTree = (
-      <div className="merkle-path">
-        <h4>Merkle Path</h4>
-        <MerklePathComponent merklePath={evidence.proof.batch.merklePath} />
-      </div>
-    );
-  }
+  const evidenceTree = (
+    <div className="merkle-path">
+      <h4>Merkle Path</h4>
+      <MerklePathComponent merklePath={evidence.proof.batch.merklePath} />
+    </div>
+  );
 
   return (
     <div>
       <h2>Bitcoin evidence</h2>
       <div className="evidence">
         <div className="info">
-          <h4>State</h4>
-          <p>{evidence.state}</p>
           <h4>Chain</h4>
           <p>{evidence.provider}</p>
           {evidenceInfo}
