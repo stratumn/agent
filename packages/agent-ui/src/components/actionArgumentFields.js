@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { v4 as uuid } from 'uuid';
 
 import TextField from 'material-ui/TextField';
 
 export const ActionArgumentFields = ({ args, valueChanged }) =>
   args.map((arg, index) => (
     <TextField
-      key={arg}
+      key={uuid()}
       label={arg}
       onChange={e => {
         valueChanged(index, e.target.value);
