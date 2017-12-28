@@ -17,13 +17,14 @@ const linkTextFont = 'Gibson-Regular, Montserrat, sans-serif';
 
 export function getRules() {
   const brandPrimary = '#EC714A';
-  const segmentPrimaryColor = '#7BC0D2';
-  const segmentSecondaryColor = '#459FB7';
+
+  const segmentPrimaryColor = '#293047';
+  const segmentSecondaryColor = '#040406';
   const segmentTextColor = 'white';
   const segmentTextFont = '"RationalTWText-SemiBold", "Roboto Mono", monospace';
 
-  const selectedSegmentPrimaryColor = '#3E3E3E';
-  const selectedSegmentSecondaryColor = '#2E2E2E';
+  const selectedSegmentPrimaryColor = '#2be4a6';
+  const selectedSegmentSecondaryColor = '#13966a';
 
   const foreignSegmentPrimaryColor = '#CD5C5C';
   const foreignSegmentSecondaryColor = '#8B0000';
