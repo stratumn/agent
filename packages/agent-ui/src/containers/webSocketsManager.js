@@ -44,6 +44,12 @@ WebSocketsManager.propTypes = {
 };
 
 export const mapStateToProps = state => {
+  if (!state.agents) {
+    return {
+      agents: []
+    };
+  }
+
   const agents = Object.keys(state.agents)
     .filter(
       a =>

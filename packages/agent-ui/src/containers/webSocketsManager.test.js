@@ -11,21 +11,18 @@ import * as statusTypes from '../constants/status';
 chai.use(sinonChai);
 
 describe('<WebSocketsManager />', () => {
-  let openStub;
   let closeStub;
 
   const requiredProps = {
-    dispatch: () => {},
-    webSocketUrls: []
+    fetchAgent: () => {},
+    agents: []
   };
 
   beforeEach(() => {
-    openStub = sinon.stub(webSocket, 'openWebSocket');
     closeStub = sinon.stub(webSocket, 'closeAllWebSockets');
   });
 
   afterEach(() => {
-    openStub.restore();
     closeStub.restore();
   });
 
@@ -34,19 +31,22 @@ describe('<WebSocketsManager />', () => {
     expect(mgr.getElement()).to.be.null;
   });
 
-  it('open websockets on mount', () => {
+  it('fetches stale agents on mount', () => {
+    const fetchAgentSpy = sinon.spy();
     shallow(
       <WebSocketsManager
-        {...requiredProps}
-        webSocketUrls={[
-          { name: 'foo', url: 'bar' },
-          { name: 'bar', url: 'foo' }
+        fetchAgent={fetchAgentSpy}
+        agents={[
+          { name: 'foo', url: 'bar', status: statusTypes.STALE },
+          { name: 'baz', url: 'baz', status: statusTypes.LOADED },
+          { name: 'bar', url: 'foo', status: statusTypes.STALE }
         ]}
       />
     );
-    expect(openStub.callCount).to.equal(2);
-    expect(openStub.getCall(0).args[0]).to.equal('foo');
-    expect(openStub.getCall(0).args[1]).to.equal('bar');
+
+    expect(fetchAgentSpy.callCount).to.equal(2);
+    expect(fetchAgentSpy.getCall(0).args[0]).to.equal('foo');
+    expect(fetchAgentSpy.getCall(0).args[1]).to.equal('bar');
   });
 
   it('closes websockets on unmount', () => {
@@ -55,19 +55,25 @@ describe('<WebSocketsManager />', () => {
     expect(closeStub.callCount).to.equal(1);
   });
 
-  it('returns empty webSocketUrls on empty state', () => {
-    expect(mapStateToProps({})).to.deep.equal({ webSocketUrls: [] });
+  it('returns empty agents list on empty state', () => {
+    expect(mapStateToProps({})).to.deep.equal({ agents: [] });
   });
 
-  it('extracts only loaded agents', () => {
+  it('extracts all agents regardless of status', () => {
     const state = {
       agents: {
         foo: { status: statusTypes.LOADED, name: 'foo', url: 'http://foo' },
-        bar: { status: statusTypes.FAILED, name: 'bar', url: 'http://bar' }
+        bar: { status: statusTypes.FAILED, name: 'bar', url: 'http://bar' },
+        baz: { status: statusTypes.STALE, name: 'baz', url: 'http://baz' }
       }
     };
-    const { webSocketUrls } = mapStateToProps(state);
-    expect(webSocketUrls).to.have.lengthOf(1);
-    expect(webSocketUrls).to.deep.equal([{ name: 'foo', url: 'http://foo' }]);
+
+    const { agents } = mapStateToProps(state);
+    expect(agents).to.have.lengthOf(3);
+    expect(agents).to.deep.equal([
+      { name: 'foo', url: 'http://foo', status: statusTypes.LOADED },
+      { name: 'bar', url: 'http://bar', status: statusTypes.FAILED },
+      { name: 'baz', url: 'http://baz', status: statusTypes.STALE }
+    ]);
   });
 });
