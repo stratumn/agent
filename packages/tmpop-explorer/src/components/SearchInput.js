@@ -28,8 +28,8 @@ export default class SearchInput extends Component {
     this.state = { height: null };
   }
 
-  handleInputChange(event, newValue) {
-    this.setState({ height: newValue });
+  handleInputChange(event) {
+    this.setState({ height: event.target.value });
   }
 
   render() {
