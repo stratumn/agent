@@ -20,14 +20,14 @@ import {
   OnChanges,
   ViewChild,
   Input,
-  ElementRef,
+  ElementRef
 } from "@angular/core";
-import { MerklePathTree } from "mapexplorer-core";
+import { MerklePathTree } from "@indigoframework/mapexplorer-core";
 
 @Component({
   selector: "st-merkle-path-tree",
   template: '<div class="merkle-path"></div>',
-  styleUrls: ["./st-merkle-path-tree.component.css"],
+  styleUrls: ["./st-merkle-path-tree.component.css"]
 })
 export class StMerklePathTreeComponent implements OnInit, OnChanges {
   @Input() merklePath;

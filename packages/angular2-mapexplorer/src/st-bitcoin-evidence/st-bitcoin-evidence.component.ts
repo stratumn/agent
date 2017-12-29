@@ -19,7 +19,7 @@ import { Component, Input, ElementRef } from "@angular/core";
 @Component({
   selector: "st-bitcoin-evidence",
   templateUrl: "./st-bitcoin-evidence.component.html",
-  styleUrls: ["./st-bitcoin-evidence.component.css"],
+  styleUrls: ["./st-bitcoin-evidence.component.css"]
 })
 export class StBitcoinEvidenceComponent {
   @Input() evidence;
@@ -27,7 +27,12 @@ export class StBitcoinEvidenceComponent {
   constructor(public element: ElementRef) {}
 
   transactionUrl() {
-    return `https://blockchain.info/tx/${this.evidence.proof.txid}`;
+    let txid = this.evidence.proof.txid;
+    if (this.evidence.provider.match(/test/)) {
+      return `https://live.blockcypher.com/btc-testnet/tx/${txid}`;
+    } else {
+      return `https://blockchain.info/tx/${txid}`;
+    }
   }
 
   date() {
