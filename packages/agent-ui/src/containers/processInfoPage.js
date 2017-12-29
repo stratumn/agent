@@ -48,9 +48,12 @@ const renderFossilizer = fossilizer => (
     <Typography type="subheading">
       Fossilizer description: {fossilizer.description}
     </Typography>
-    <Typography type="subheading">
-      Fossilizer blockchain: {fossilizer.blockchain}
-    </Typography>
+    {fossilizer.blockchain && (
+      <Typography type="subheading">
+        Fossilizer blockchain: {fossilizer.blockchain}
+      </Typography>
+    )}
+    <PrettyDivider />
   </div>
 );
 
