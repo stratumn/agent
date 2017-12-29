@@ -19,7 +19,7 @@ module.exports = function(defaults) {
   // console.log(app)
 
   app.options.sassOptions.includePaths.push(
-    'node_modules/mapexplorer-core/assets/stylesheets'
+    'node_modules/@indigoframework/mapexplorer-core/assets/stylesheets'
   );
 
   return app.toTree();

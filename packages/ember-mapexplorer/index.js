@@ -7,10 +7,11 @@ module.exports = {
     this._super.included(app);
 
     app.options.sassOptions = app.options.sassOptions || {};
-    app.options.sassOptions.includePaths = app.options.sassOptions.includePaths || [];
+    app.options.sassOptions.includePaths =
+      app.options.sassOptions.includePaths || [];
 
     app.options.sassOptions.includePaths.push(
-      'node_modules/mapexplorer-core/assets/stylesheets'
+      'node_modules/@indigoframework/mapexplorer-core/assets/stylesheets'
     );
 
     this.import('vendor/mapexplorer-core.js');

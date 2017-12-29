@@ -1,10 +1,8 @@
 {
-  "name": "ember-mapexplorer",
-  "version": "2.0.0",
+  "name": "@indigoframework/ember-mapexplorer",
+  "version": "0.2.0",
   "description": "Ember addon that displays a Map Explorer",
-  "keywords": [
-    "ember-addon"
-  ],
+  "keywords": ["ember-addon"],
   "license": "Apache-2.0",
   "author": "Stratumn team",
   "directories": {
@@ -19,12 +17,12 @@
     "update-license-headers": "./update-license-headers.sh"
   },
   "dependencies": {
+    "@indigoframework/mapexplorer-core": "^0.2.0-3",
     "broccoli-funnel": "^2.0.1",
     "broccoli-merge-trees": "^2.0.0",
     "ember-cli-babel": "^6.11.0",
     "ember-cli-htmlbars": "^2.0.1",
-    "ember-paper": "^1.0.0-beta.1",
-    "mapexplorer-core": "^1.2.0"
+    "ember-paper": "^1.0.0-beta.1"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.5",
