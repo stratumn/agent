@@ -21,13 +21,20 @@ import MerklePathComponent from './MerklePathComponent';
 
 const BitcoinEvidence = ({ evidence }) => {
   const tx = evidence.proof.txid;
+  let url;
+
+  if (evidence.provider.match(/test/)) {
+    url = `https://live.blockcypher.com/btc-testnet/tx/${tx}`;
+  } else {
+    url = `https://blockchain.info/tx/${tx}`;
+  }
   const evidenceInfo = (
     <div>
       <h4>Bitcoin Transaction</h4>
       <p>
         {tx}
-        <a target="_blank" href={`https://blockchain.info/tx/${tx}`}>
-          View transaction on Blockchain.info
+        <a target="_blank" href={url}>
+          View transaction on a block explorer
         </a>
       </p>
 
