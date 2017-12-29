@@ -5,13 +5,14 @@
   <h4>Bitcoin Transaction</h4>
   <p>
     {{get evidence.transactions 'bitcoin:main'}}
-    <a target="_blank" href="https://blockchain.info/tx/{{evidence.proof.txid}}">View transaction on Blockchain.info</a>
+    <a target="_blank" href="{{url}}">View transaction on a block explorer</a>
   </p>
 
   <h4>Merkle root</h4>
   <p>{{evidence.proof.batch.merkleRoot}}</p>
 </div>
 <div class="merkle-path">
+  {{#if merklePathPresent}}
   <h4>Merkle Path</h4>
-  {{merkle-path-tree merkle-path=evidence.proof.batch.merklePath}}
+  {{merkle-path-tree merkle-path=evidence.proof.batch.merklePath}} {{/if}}
 </div>
