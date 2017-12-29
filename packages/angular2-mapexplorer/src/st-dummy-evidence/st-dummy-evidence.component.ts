@@ -19,10 +19,14 @@ import { Component, Input, ElementRef } from "@angular/core";
 @Component({
   selector: "st-dummy-evidence",
   templateUrl: "./st-dummy-evidence.component.html",
-  styleUrls: ["./st-dummy-evidence.component.css"],
+  styleUrls: ["./st-dummy-evidence.component.css"]
 })
 export class StDummyEvidenceComponent {
   @Input() evidence;
 
   constructor(public element: ElementRef) {}
+
+  date() {
+    return new Date(this.evidence.proof.timestamp * 1000).toUTCString();
+  }
 }

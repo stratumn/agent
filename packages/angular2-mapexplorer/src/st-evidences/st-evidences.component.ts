@@ -15,12 +15,12 @@
 */
 
 import { Component, ViewChild, Input, ElementRef } from "@angular/core";
-import { MerklePathTree } from "mapexplorer-core";
+import { MerklePathTree } from "@indigoframework/mapexplorer-core";
 
 @Component({
   selector: "st-evidences",
   templateUrl: "./st-evidences.component.html",
-  styleUrls: ["./st-evidences.component.css"],
+  styleUrls: ["./st-evidences.component.css"]
 })
 export class StEvidencesComponent {
   @Input() evidences;

@@ -15,7 +15,7 @@
 */
 
 import { Injectable } from "@angular/core";
-import { MapValidator } from "stratumn-cs-validator";
+import { MapValidator } from "@indigoframework/cs-validator";
 
 @Injectable()
 export class MapValidatorService {

@@ -15,7 +15,7 @@
 */
 
 import { Injectable } from "@angular/core";
-import { ChainTreeBuilder } from "mapexplorer-core";
+import { ChainTreeBuilder } from "@indigoframework/mapexplorer-core";
 
 @Injectable()
 export class ChainTreeBuilderService {
@@ -31,9 +31,9 @@ export class ChainTreeBuilderService {
         id: map.mapId,
         agentUrl: map.agentURL,
         process: map.process,
-        chainscript: map.chainscript,
+        chainscript: map.chainscript
       },
-      options,
+      options
     );
   }
 }
