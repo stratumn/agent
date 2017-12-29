@@ -33,6 +33,7 @@ export function getRules() {
 
   return {
     color: 'white',
+    '-webkit-font-smoothing': 'antialiased',
 
     'h1, h2, h4, li, a': {
       fontFamily: 'Gibson-SemiBold, Montserrat, sans-serif'
@@ -69,8 +70,8 @@ export function getRules() {
     },
 
     'li.active': {
-      color: brandPrimary,
-      borderBottom: `2px solid ${brandPrimary}`
+      color: '#2BE4A6',
+      borderBottom: `2px solid #2BE4A6`
     },
 
     li: {
@@ -190,7 +191,7 @@ export function getStyles() {
     },
 
     title: {
-      background: '#2E2E2E',
+      background: '#040406',
       padding: '10px 100px',
       display: 'flex',
       flexDirection: 'row',
@@ -199,12 +200,12 @@ export function getStyles() {
     },
 
     titleh2: {
-      fontWeight: '100',
-      fontFamily: linkTextFont
+      fontWeight: '300',
+      fontFamily: 'Gibson-Light, Montserrat, sans-serif'
     },
 
     body: {
-      background: '#3E3E3E',
+      background: '#293047',
       padding: '0 100px',
       maxHeight: '400px',
       overflowY: 'scroll',
@@ -219,7 +220,7 @@ export function getStyles() {
     close: {
       color: 'white',
       border: 'none',
-      background: '#2E2E2E',
+      background: 'transparent',
       cursor: 'pointer'
     }
   };
