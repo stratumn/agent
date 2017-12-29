@@ -45,7 +45,7 @@ describe('open action', () => {
         .build()
     );
 
-    openDialog('aa')(dispatchSpy, getStateStub);
+    openDialog('aa', 'p')(dispatchSpy, getStateStub);
     expect(getStateStub.callCount).to.equal(1);
     expect(dispatchSpy.callCount).to.equal(1);
     expect(dispatchSpy.getCall(0).args[0]).to.deep.equal({
@@ -69,7 +69,7 @@ describe('open action', () => {
         .build()
     );
 
-    openDialog('a')(dispatchSpy, getStateStub);
+    openDialog('a', 'p')(dispatchSpy, getStateStub);
     expect(dispatchSpy.callCount).to.equal(1);
     expect(dispatchSpy.getCall(0).args[0].actions).to.deep.equal({
       message: { args: ['author', 'text'] }
@@ -84,9 +84,39 @@ describe('open action', () => {
         .build()
     );
 
-    openDialog('a')(dispatchSpy, getStateStub);
+    openDialog('a', 'unknownProcess')(dispatchSpy, getStateStub);
     expect(getStateStub.callCount).to.equal(1);
     expect(dispatchSpy.callCount).to.equal(0);
+  });
+
+  it('dispatches error when parent segment is not selected', () => {
+    const p1 = new TestProcessBuilder('p1')
+      .withAction('message', ['author', 'text'])
+      .build();
+
+    const p2 = new TestProcessBuilder('p2')
+      .withAction('message', ['author', 'text'])
+      .build();
+
+    getStateStub.returns(
+      new TestStateBuilder()
+        .withAgent(
+          'a',
+          new TestAgentBuilder()
+            .withProcess(p1)
+            .withProcess(p2)
+            .build()
+        )
+        .withSelectedMapExplorerSegment('lh', 'p1')
+        .build()
+    );
+
+    openDialog('a', 'p2')(dispatchSpy, getStateStub);
+    expect(getStateStub.callCount).to.equal(1);
+    expect(dispatchSpy.callCount).to.equal(1);
+    expect(dispatchSpy.getCall(0).args[0].type).to.equal(
+      actionTypes.APPEND_SEGMENT_DIALOG_MISSING_PREVIOUS
+    );
   });
 });
 

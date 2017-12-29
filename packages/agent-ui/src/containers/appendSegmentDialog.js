@@ -27,6 +27,7 @@ export const AppendSegmentDialog = ({
   show,
   actions,
   selectedAction,
+  valid,
   error,
   appendSegment,
   closeDialog,
@@ -34,6 +35,22 @@ export const AppendSegmentDialog = ({
 }) => {
   if (!show) {
     return null;
+  }
+
+  if (!valid) {
+    return (
+      <Dialog open={show} onClose={() => closeDialog()}>
+        <DialogTitle>Append segment</DialogTitle>
+        <DialogContent>
+          <DialogContentText className="error">{error}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color="default" onClick={() => closeDialog()}>
+            Back
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
   }
 
   const { args } = actions[selectedAction];
@@ -87,6 +104,7 @@ export const AppendSegmentDialog = ({
 
 AppendSegmentDialog.defaultProps = {
   error: '',
+  valid: true,
   actions: {},
   selectedAction: ''
 };
@@ -96,6 +114,7 @@ AppendSegmentDialog.propTypes = {
   actions: PropTypes.object,
   /* eslint-enable react/forbid-prop-types */
   selectedAction: PropTypes.string,
+  valid: PropTypes.bool,
   error: PropTypes.string,
   appendSegment: PropTypes.func.isRequired,
   closeDialog: PropTypes.func.isRequired,
@@ -112,6 +131,14 @@ export function mapStateToProps({ appendSegment }) {
   if (!show) {
     return {
       show
+    };
+  }
+
+  if (appendSegment.dialog.error) {
+    return {
+      show,
+      valid: false,
+      error: appendSegment.dialog.error
     };
   }
 
