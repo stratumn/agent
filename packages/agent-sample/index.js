@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import crypto from 'crypto';
 import express from 'express';
 import Agent from '@indigoframework/agent';
 
@@ -28,6 +29,15 @@ const storeHttpClient = Agent.storeHttpClient(
   process.env.STRATUMN_STORE_URL || 'http://store:5000'
 );
 
+const fossilizerHttpClients = [];
+// Create an HTTP fossilizer client to fossilize segments.
+// Assumes an HTTP fossilizer server is available on env.STRATUMN_FOSSILIZER_URL or http://fossilizer:6000.
+fossilizerHttpClients.push(
+  Agent.fossilizerHttpClient(
+    process.env.STRATUMN_FOSSILIZER_URL || 'http://fossilizer:6000'
+  )
+);
+
 // Create an agent.
 const agentUrl = process.env.STRATUMN_AGENT_URL || 'http://localhost:3000';
 const agent = Agent.create({
@@ -37,15 +47,29 @@ const agent = Agent.create({
 // Adds all processes from a name, its actions, the store client, and the fossilizer client.
 // As many processes as one needs can be added.
 // A different storeHttpClient and fossilizerHttpClient may be used.
-agent.addProcess('message', messageBoard, storeHttpClient, null, {
-  // plugins you want to use
-  plugins: [plugins.agentUrl(agentUrl), plugins.actionArgs, plugins.stateHash]
-});
+agent.addProcess(
+  'message',
+  messageBoard,
+  storeHttpClient,
+  fossilizerHttpClients,
+  {
+    salt: process.env.STRATUMN_SALT || crypto.randomBytes(32).toString('hex'),
+    // plugins you want to use
+    plugins: [plugins.agentUrl(agentUrl), plugins.actionArgs, plugins.stateHash]
+  }
+);
 
-agent.addProcess('warehouse', warehouseTracker, storeHttpClient, null, {
-  // plugins you want to use
-  plugins: [plugins.agentUrl(agentUrl), plugins.actionArgs, plugins.stateHash]
-});
+agent.addProcess(
+  'warehouse',
+  warehouseTracker,
+  storeHttpClient,
+  fossilizerHttpClients,
+  {
+    salt: process.env.STRATUMN_SALT || crypto.randomBytes(32).toString('hex'),
+    // plugins you want to use
+    plugins: [plugins.agentUrl(agentUrl), plugins.actionArgs, plugins.stateHash]
+  }
+);
 
 // Creates an HTTP server for the agent with CORS enabled.
 const agentHttpServer = Agent.httpServer(agent, { cors: {} });
