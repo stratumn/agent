@@ -4,14 +4,14 @@
       <h4>Bitcoin Transaction</h4>
       <p>
         {{evidence.proof.txid}}
-        <a target="_blank" ng-href="https://blockchain.info/tx/{evidence.proof.txid}">View transaction on Blockchain.info</a>
+        <a target="_blank" ng-href="{{evidence.url}}">View transaction on a block explorer</a>
       </p>
 
       <h4>Merkle root</h4>
       <p>{{evidence.proof.batch.merkleRoot}}</p>
     </div>
   </div>
-  <div class="merkle-path">
+  <div class="merkle-path" ng-show="evidence.proof.batch.merklePath.length > 0">
     <h4>Merkle Path</h4>
     <st-merkle-path-tree merkle-path="evidence.proof.batch.merklePath"></st-merkle-path-tree>
   </div>
