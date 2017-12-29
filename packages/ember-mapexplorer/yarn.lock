@@ -96,6 +96,27 @@
   dependencies:
     "@glimmer/util" "^0.22.3"
 
+"@indigoframework/client@^0.2.0-3":
+  version "0.2.0-3"
+  resolved "https://registry.yarnpkg.com/@indigoframework/client/-/client-0.2.0-3.tgz#1883dfe34057341fced199c8f0922fa08ceef91c"
+  dependencies:
+    deepmerge "2.0.1"
+    httpplease "^0.16.4"
+    qs stratumn/qs#rename-formats-default
+    setimmediate "^1.0.5"
+
+"@indigoframework/mapexplorer-core@^0.2.0":
+  version "0.2.0-3"
+  resolved "https://registry.yarnpkg.com/@indigoframework/mapexplorer-core/-/mapexplorer-core-0.2.0-3.tgz#60d261e67069952f4087067ad4b1f5c0e894efba"
+  dependencies:
+    "@indigoframework/client" "^0.2.0-3"
+    d3-array "^1.0.0"
+    d3-ease "^1.0.0"
+    d3-hierarchy "^1.0.0"
+    d3-selection "^1.0.0"
+    d3-transition "^1.0.1"
+    d3-zoom "^1.0.2"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -1601,10 +1622,6 @@ caniuse-lite@^1.0.30000780, caniuse-lite@^1.0.30000783:
   version "1.0.30000783"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000783.tgz#9b5499fb1b503d2345d12aa6b8612852f4276ffd"
 
-canonical-json@0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/canonical-json/-/canonical-json-0.0.4.tgz#6579c072c3db5c477ec41dc978fbf2b8f41074a3"
-
 capture-exit@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/capture-exit/-/capture-exit-1.2.0.tgz#1c5fcc489fd0ab00d4f1ac7ae1072e3173fbab6f"
@@ -2097,9 +2114,9 @@ deep-is@~0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
 
-deepmerge@^0.2.10:
-  version "0.2.10"
-  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-0.2.10.tgz#8906bf9e525a4fbf1b203b2afcb4640249821219"
+deepmerge@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.0.1.tgz#25c1c24f110fb914f80001b925264dd77f3f4312"
 
 defined@^1.0.0:
   version "1.0.0"
@@ -4161,10 +4178,6 @@ js-reporters@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/js-reporters/-/js-reporters-1.2.0.tgz#7cf2cb698196684790350d0c4ca07f4aed9ec17e"
 
-js-sha256@^0.3.0:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.3.2.tgz#db09592455164191ce8171a4888cd957c67bf0ed"
-
 js-tokens@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-1.0.1.tgz#cc435a5c8b94ad15acb7983140fc80182c89aeae"
@@ -4707,22 +4720,6 @@ makeerror@1.0.x:
 map-obj@^1.0.0, map-obj@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
-
-mapexplorer-core@^1.2.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/mapexplorer-core/-/mapexplorer-core-1.2.1.tgz#91214d9edb71646f4daf1f2ddd5cd7e0beae26ef"
-  dependencies:
-    canonical-json "0.0.4"
-    d3-array "^1.0.0"
-    d3-ease "^1.0.0"
-    d3-hierarchy "^1.0.0"
-    d3-selection "^1.0.0"
-    d3-transition "^1.0.1"
-    d3-zoom "^1.0.2"
-    deepmerge "^0.2.10"
-    httpplease "^0.16.4"
-    js-sha256 "^0.3.0"
-    stratumn-agent-client "^1.9.0"
 
 markdown-it-terminal@0.1.0:
   version "0.1.0"
@@ -5415,9 +5412,9 @@ q@^1.1.2:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
 
-qs@6.5.1, qs@^6.4.0, qs@~6.5.1:
+qs@6.5.1, qs@^6.4.0, "qs@github:stratumn/qs#rename-formats-default", qs@~6.5.1:
   version "6.5.1"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.1.tgz#349cdf6eef89ec45c12d7d5eb3fc0c870343a6d8"
+  resolved "https://codeload.github.com/stratumn/qs/tar.gz/99fe1ec74140e09a51c41169264bad7924571945"
 
 qs@~6.3.0:
   version "6.3.2"
@@ -6192,14 +6189,6 @@ stdout-stream@^1.4.0:
   dependencies:
     readable-stream "^2.0.1"
 
-stratumn-agent-client@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/stratumn-agent-client/-/stratumn-agent-client-1.9.0.tgz#f4618103add5360c20101efdebb78f6c20f7270b"
-  dependencies:
-    httpplease "^0.16.4"
-    setimmediate "^1.0.5"
-    xmlhttprequest "~1.7.0"
-
 string-template@~0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/string-template/-/string-template-0.2.1.tgz#42932e598a352d01fc22ec3367d9d84eec6c9add"
@@ -6765,10 +6754,6 @@ xmlhttprequest-ssl@1.5.3:
 xmlhttprequest@*:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
-
-xmlhttprequest@~1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/xmlhttprequest/-/xmlhttprequest-1.7.0.tgz#dc697a8df0258afacad526c1c296b1bdd12c4ab3"
 
 xtend@^4.0.0, xtend@~4.0.0:
   version "4.0.1"
