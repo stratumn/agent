@@ -49,7 +49,7 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "start": "rollup -c -w",
+    "start": "yarn build -w",
     "version:app": "sed -i \"s#\\\"version\\\": \\\".*\\\"#\\\"version\\\": \\\"$npm_package_version\\\"#g\" ./app/package.json",
     "version:app:dependency": "sed -i \"s#tmpop-explorer\\\": \\\".*\\\"#tmpop-explorer\\\": \\\"^$npm_package_version\\\"#g\" ./app/package.json",
     "version": "yarn version:app && yarn version:app:dependency && git add ./app/package.json",

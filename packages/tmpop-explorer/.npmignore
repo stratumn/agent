@@ -13,8 +13,5 @@ coverage
 coverage.html
 .cover*
 
-# Example
-example
-
 # Docker app
 app
