@@ -18,8 +18,6 @@ coverage.html
 # Dependency directory
 node_modules
 
-# Example build directory
-example/dist
 .publish
 
 # App build directories

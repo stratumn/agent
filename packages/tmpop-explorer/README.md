@@ -1,13 +1,13 @@
 # TMPop Explorer
 
-A block explorer for the Indigo Tendermint Store.
+A block explorer for Indigo's Tendermint Store.
 
 [![npm](https://img.shields.io/npm/v/@indigoframework/tmpop-explorer.svg)](https://www.npmjs.com/package/@indigoframework/tmpop-explorer)
 
 ## Installation
 
 ```
-npm install --save tmpop-explorer
+npm install --save @indigoframework/tmpop-explorer
 ```
 
 
@@ -15,22 +15,20 @@ npm install --save tmpop-explorer
 
 You should first run a local version of rollup that will watch your `src/` component and automatically recompile it into `lib/` whenever you make changes.
 
-We'll also be running our `example/` create-react-app that's linked to the local version of your `tmpop-explorer` module.
+We'll also be running our `app/` create-react-app that's linked to the local version of your `tmpop-explorer` module.
 
 ```bash
-# run example to start developing your new component against
-npm link # the link commands are important for local development
-npm install # disregard any warnings about missing peer dependencies
-npm start # runs rollup with watch flag
+yarn link # the link commands are important for local development
+yarn start # runs rollup with watch flag
 
-# (in another tab, run the example create-react-app)
-cd example
-npm link tmpop-explorer
-npm install
-npm start # runs create-react-app hot-reload dev server
+# (in another tab, run the app)
+cd app
+yarn link @indigoframework/tmpop-explorer
+yarn
+yarn start # runs create-react-app hot-reload dev server
 ```
 
-Now, anytime you make a change to your component in `src/` or to the example application's `example/src`, `create-react-app` will live-reload your local dev server so you can iterate on your component in real-time.
+Now, anytime you make a change to your component in `src/` or to the application's `app/src`, `create-react-app` will live-reload your local dev server so you can iterate on your component in real-time.
 
 
 ## Installation
@@ -50,7 +48,7 @@ Include the react component in your application:
 var TMPopExplorer = require('@indigoframework/tmpop-explorer');
 
 // OR with ES6 import
-import TMPopExplorer from 'react-mapexplorer';
+import TMPopExplorer from '@indigoframework/tmpop-mapexplorer';
 
 <TMPopExplorer remote="localhost:46657"/>
 ```
@@ -68,13 +66,11 @@ Note: the path should always end with * so that subroutes work. Make sure it doe
 ### Properties
 
 * `remote`: the address used to contact the Indigo Node (mandatory).
-* `mount`: the mountpoint for the indigo explorer in your routing scheme (mandatory if included as a route).
+* `mount`: the mountpoint for the tmpop explorer in your routing scheme (mandatory if included as a route).
 
 ## Development (`src`, `lib` and the build process)
 
 **NOTE:** The source code for the component is in `src`. A transpiled CommonJS version (generated with Babel) is available in `lib` for use with node.js, browserify and webpack. A UMD bundle is also built to `lib`, which can be included without the need for any build system.
-
-To build, watch and serve the examples (which will also watch the component source), run `npm start`. If you just want to watch changes to `src` and rebuild `lib`, run `npm run watch` (this is useful if you are working with `npm link`).
 
 ## License
 
