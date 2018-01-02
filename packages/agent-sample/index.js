@@ -28,6 +28,16 @@ const storeHttpClient = Agent.storeHttpClient(
   process.env.STRATUMN_STORE_URL || 'http://store:5000'
 );
 
+const fossilizerHttpClients = [];
+// Create HTTP fossilizer clients to fossilize segments.
+// You need to provide a comma-separated list of fossilizer urls in the env.STRATUMN_FOSSILIZERS_URLS.
+if (process.env.STRATUMN_FOSSILIZERS_URLS) {
+  const urls = process.env.STRATUMN_FOSSILIZERS_URLS.split(',');
+  for (let i = 0; i < urls.length; i += 1) {
+    fossilizerHttpClients.push(Agent.fossilizerHttpClient(urls[i]));
+  }
+}
+
 // Create an agent.
 const agentUrl = process.env.STRATUMN_AGENT_URL || 'http://localhost:3000';
 const agent = Agent.create({
@@ -37,15 +47,27 @@ const agent = Agent.create({
 // Adds all processes from a name, its actions, the store client, and the fossilizer client.
 // As many processes as one needs can be added.
 // A different storeHttpClient and fossilizerHttpClient may be used.
-agent.addProcess('message', messageBoard, storeHttpClient, null, {
-  // plugins you want to use
-  plugins: [plugins.agentUrl(agentUrl), plugins.actionArgs, plugins.stateHash]
-});
+agent.addProcess(
+  'message',
+  messageBoard,
+  storeHttpClient,
+  fossilizerHttpClients,
+  {
+    // plugins you want to use
+    plugins: [plugins.agentUrl(agentUrl), plugins.actionArgs, plugins.stateHash]
+  }
+);
 
-agent.addProcess('warehouse', warehouseTracker, storeHttpClient, null, {
-  // plugins you want to use
-  plugins: [plugins.agentUrl(agentUrl), plugins.actionArgs, plugins.stateHash]
-});
+agent.addProcess(
+  'warehouse',
+  warehouseTracker,
+  storeHttpClient,
+  fossilizerHttpClients,
+  {
+    // plugins you want to use
+    plugins: [plugins.agentUrl(agentUrl), plugins.actionArgs, plugins.stateHash]
+  }
+);
 
 // Creates an HTTP server for the agent with CORS enabled.
 const agentHttpServer = Agent.httpServer(agent, { cors: {} });
