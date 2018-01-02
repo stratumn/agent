@@ -21,11 +21,21 @@ If you want a specific version, include `https://libs.stratumn.com/mapexplorer-c
 ### Node.js
 
 ```
-$ npm install mapexplorer-core
+$ npm install @indigoframework/mapexplorer-core
 ```
 
 ```javascript
-var MapexplorerCore = require('mapexplorer-core');
+var MapexplorerCore = require('@indigoframework/mapexplorer-core');
+
+// or using es6
+import {
+  ChainTreeBuilder,
+  defaultOptions,
+  ChainTree,
+  MerklePathTree,
+  compactHash,
+  parseChainscript
+} from '@indigoframework/mapexplorer-core
 ```
 
 ## Usage

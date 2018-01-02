@@ -1,6 +1,6 @@
-# Stratumn agent for NodeJS
+# Indigo agent for NodeJS
 
-This NodeJS module exposes functions to create Stratumn agents using Javascript.
+This NodeJS module exposes functions to create Indigo agents using Javascript.
 
 [![npm](https://img.shields.io/npm/v/@indigoframework/agent.svg)](https://www.npmjs.com/package/@indigoframework/agent)
 
@@ -12,7 +12,7 @@ Unless otherwise noted, the Stratumn Agent Javascript Library source files are d
 
 ```javascript
 var express = require('express');
-var Agent = require('stratumn-agent');
+var Agent = require('@indigoframework/agent');
 var plugins = Agent.plugins;
 
 // Load actions.
