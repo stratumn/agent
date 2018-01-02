@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import crypto from 'crypto';
 import express from 'express';
 import Agent from '@indigoframework/agent';
 
@@ -30,13 +29,14 @@ const storeHttpClient = Agent.storeHttpClient(
 );
 
 const fossilizerHttpClients = [];
-// Create an HTTP fossilizer client to fossilize segments.
-// Assumes an HTTP fossilizer server is available on env.STRATUMN_FOSSILIZER_URL or http://fossilizer:6000.
-fossilizerHttpClients.push(
-  Agent.fossilizerHttpClient(
-    process.env.STRATUMN_FOSSILIZER_URL || 'http://fossilizer:6000'
-  )
-);
+// Create HTTP fossilizer clients to fossilize segments.
+// You need to provide a comma-separated list of fossilizer urls in the env.STRATUMN_FOSSILIZERS_URLS.
+if (process.env.STRATUMN_FOSSILIZERS_URLS) {
+  const urls = process.env.STRATUMN_FOSSILIZERS_URLS.split(',');
+  for (let i = 0; i < urls.length; i += 1) {
+    fossilizerHttpClients.push(Agent.fossilizerHttpClient(urls[i]));
+  }
+}
 
 // Create an agent.
 const agentUrl = process.env.STRATUMN_AGENT_URL || 'http://localhost:3000';
@@ -53,7 +53,6 @@ agent.addProcess(
   storeHttpClient,
   fossilizerHttpClients,
   {
-    salt: process.env.STRATUMN_SALT || crypto.randomBytes(32).toString('hex'),
     // plugins you want to use
     plugins: [plugins.agentUrl(agentUrl), plugins.actionArgs, plugins.stateHash]
   }
@@ -65,7 +64,6 @@ agent.addProcess(
   storeHttpClient,
   fossilizerHttpClients,
   {
-    salt: process.env.STRATUMN_SALT || crypto.randomBytes(32).toString('hex'),
     // plugins you want to use
     plugins: [plugins.agentUrl(agentUrl), plugins.actionArgs, plugins.stateHash]
   }
