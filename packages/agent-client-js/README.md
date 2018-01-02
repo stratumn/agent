@@ -18,7 +18,7 @@ If you want a specific version, include `https://libs.stratumn.com/stratumn-agen
 ### Node.js
 
 ```
-$ npm install stratumn-agent-client
+$ npm install @indigoframework/client
 ```
 
 ```javascript

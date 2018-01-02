@@ -9,16 +9,10 @@ http://stratumn.github.io/angular-mapexplorer/
 
 ## Install
 
-### Bower
-
-```
-$ bower install angular-mapexplorer
-```
-
 ### npm
 
 ```
-$ npm install angular-mapexplorer
+$ npm install @indigoframework/angular-mapexplorer
 ```
 
 You might also need `tinycolor.js` and `angular-drop`.
@@ -60,7 +54,7 @@ Default: noop
 
 Callback called when a segment content is hidden
 
-Plus all options inherited from [MapExplorer Core](https://github.com/stratumn/mapexplorer-core)
+Plus all options inherited from [MapExplorer Core](https://github.com/stratumn/indigo-js/tree/master/packages/mapexplorer-core)
 
 ## Development
 

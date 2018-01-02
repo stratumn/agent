@@ -12,20 +12,23 @@ Library for validating chainscript objects
 <!-- Polyfill for browser compatibility -->
 <script src="https://libs.stratumn.com/babel-polyfill.min.js"></script>
 <!-- Actual Library -->
-<script src="https://libs.stratumn.com/stratumn-cs-validator.js"></script>
+<script src="https://libs.stratumn.com/cs-validator.js"></script>
 ```
 
-If you want a specific version, include `https://libs.stratumn.com/stratumn-cs-validator{version}.js` instead (for instance `https://libs.stratumn.com/stratumn-cs-validator-0.1.0.js`).
+If you want a specific version, include `https://libs.stratumn.com/cs-validator{version}.js` instead (for instance `https://libs.stratumn.com/cs-validator-0.1.0.js`).
 
 
 ### Node.js
 
 ```
-$ npm install stratumn-cs-validator
+$ npm install @indigoframework/cs-validator
 ```
 
 ```javascript
-var StratumnCsValidator = require('stratumn-cs-validator');
+var StratumnCsValidator = require('@indigoframework/cs-validator');
+
+// or using es6
+import { MapValidator, SegmentValidator } from '@indigoframework/cs-validator';
 ```
 
 ## Usage

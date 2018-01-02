@@ -7,14 +7,14 @@ A react component used to display a Map Explorer from chainscript.
 ## Installation
 
 ```
-npm install react-mapexplorer --save
+npm install @indigoframework/react-mapexplorer --save
 ```
 
 #### Local Development
 
 Now you're ready to run a local version of rollup that will watch your `src/` component and automatically recompile it into `dist/` whenever you make changes.
 
-We'll also be running our `example/` create-react-app that's linked to the local version of your `react-poop-emoji` module.
+We'll also be running our `example/` create-react-app that's linked to the local version of your `react-mapexplorer` module.
 
 ```bash
 # run example to start developing your new component against
@@ -24,7 +24,7 @@ npm start # runs rollup with watch flag
 
 # (in another tab, run the example create-react-app)
 cd example
-npm link react-poop-emoji
+npm link @indigoframework/react-mapexplorer
 npm install
 npm start # runs create-react-app hot-reload dev server
 ```
