@@ -294,34 +294,34 @@ export default class Process {
    * @returns {Promise} - a promise that resolve with the an object containing segments found and other info related to pagination
    */
   findSegmentsForPagination(limit, offset, opts) {
-    const segmentsFound = [];
-    let keepSearching = true;
-    let nextOffset = offset;
-    let nextLimit = limit;
-    let hasMore;
-    const condition = () => keepSearching;
-    const body = () => {
-      const options = { ...opts, offset: nextOffset, limit: nextLimit };
-      let foundThisTime;
+    const firstArg = {
+      segments: [],
+      offset,
+      limit,
+      hasMore: true
+    };
+    const condition = ({ hasMore, segments }) =>
+      hasMore && segments.length < limit;
+    const findSegmentsChunk = arg => {
+      const options = { ...opts, offset: arg.offset, limit: arg.limit };
+      let beforeFilter;
       return this.storeClient
         .findSegments(this.name, options)
         .then(s => {
-          foundThisTime = s.length;
+          beforeFilter = s.length;
           return this.filterSegments(s);
         })
-        .then(filteredSegments => {
-          segmentsFound.push(...filteredSegments);
-          hasMore = foundThisTime === options.limit;
-          keepSearching = hasMore && segmentsFound.length < limit;
-          nextOffset += nextLimit;
-          nextLimit -= segmentsFound.length;
-        });
+        .then(filteredSegments => ({
+          segments: [...arg.segments, ...filteredSegments],
+          hasMore: beforeFilter === arg.limit,
+          offset: arg.offset + arg.limit,
+          limit: limit - arg.segments.length - filteredSegments.length
+        }));
     };
-    return promiseWhile(condition, body).then(() => ({
-      segments: segmentsFound,
-      offset: nextOffset,
-      hasMore
-    }));
+    return promiseWhile(condition, findSegmentsChunk, firstArg).then(
+      // filter out limit, impl detail
+      ({ limit: na, ...result }) => result
+    );
   }
 
   /**

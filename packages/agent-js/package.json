@@ -42,7 +42,6 @@
     "express": "^4.14.0",
     "qs": "^6.5.1",
     "request": "^2.73.0",
-    "sinon": "^4.1.4",
     "superagent": "^2.1.0",
     "uuid": "^3.0.0",
     "ws": "^2.0.0"
@@ -60,6 +59,7 @@
     "nyc": "^11.2.1",
     "rimraf": "^2.5.3",
     "should": "^8.2.2",
+    "sinon": "^4.1.4",
     "superagent-mocker": "^0.4.0",
     "supertest": "^1.2.0",
     "swagger-jsdoc": "^1.9.7"

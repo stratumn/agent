@@ -1,8 +1,13 @@
 import co from 'co';
 
-const makeLoop = (condition, body) =>
+const makeLoop = (condition, body, firstArg) =>
   function* loop() {
-    while (condition()) yield body();
+    let arg = firstArg;
+    while (condition(arg)) {
+      arg = yield body(arg);
+    }
+    return arg;
   };
 
-export default (condition, body) => co(makeLoop(condition, body));
+export default (condition, body, firstArg = null) =>
+  co(makeLoop(condition, body, firstArg));
