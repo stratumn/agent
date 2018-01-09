@@ -20,6 +20,7 @@ import getActionsInfo from './getActionsInfo';
 import getPluginsInfo from './getPluginsInfo';
 import hashJson from './hashJson';
 import filterAsync from './filterAsync';
+import promiseWhile from './promiseWhile';
 
 export default class Process {
   constructor(name, actions, storeClient, fossilizerClients, opts = {}) {
@@ -279,6 +280,48 @@ export default class Process {
     return this.storeClient
       .findSegments(this.name, options)
       .then(s => this.filterSegments(s));
+  }
+
+  /**
+   * Finds segments with details.
+   * @param {number} [offset] - offset of the first segment to return
+   * @param {number} [limit] - maximum number of segments to return
+   * @param {object} [opts] - filtering options
+   * @param {string[]} [opts.mapIds] - an array of map IDs the segments must have
+   * @param {string} [opts.prevLinkHash] - a previous link hash the segments must have
+   * @param {string[]} [opts.linkHashes] - an array of linkHashes the segments must have
+   * @param {string[]} [opts.tags] - an array of tags the segments must have
+   * @returns {Promise} - a promise that resolve with the an object containing segments found and other info related to pagination
+   */
+  findSegmentsForPagination(limit, offset, opts) {
+    const segmentsFound = [];
+    let keepSearching = true;
+    let nextOffset = offset;
+    let nextLimit = limit;
+    let hasMore;
+    const condition = () => keepSearching;
+    const body = () => {
+      const options = { ...opts, offset: nextOffset, limit: nextLimit };
+      let foundThisTime;
+      return this.storeClient
+        .findSegments(this.name, options)
+        .then(s => {
+          foundThisTime = s.length;
+          return this.filterSegments(s);
+        })
+        .then(filteredSegments => {
+          segmentsFound.push(...filteredSegments);
+          hasMore = foundThisTime === options.limit;
+          keepSearching = hasMore && segmentsFound.length < limit;
+          nextOffset += nextLimit;
+          nextLimit -= segmentsFound.length;
+        });
+    };
+    return promiseWhile(condition, body).then(() => ({
+      segments: segmentsFound,
+      offset: nextOffset,
+      hasMore
+    }));
   }
 
   /**

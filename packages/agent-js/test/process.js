@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import sinon from 'sinon';
 import create from '../src/create';
 import memoryStore from '../src/memoryStore';
 import hashJson from '../src/hashJson';
@@ -51,9 +52,11 @@ const processInfo = {
 // TODO: could be improved by using a dummy fossilizer.
 describe('Process', () => {
   let process;
+  let memStore;
 
   beforeEach(() => {
-    process = create().addProcess('basic', actions, memoryStore(), null, {
+    memStore = memoryStore();
+    process = create().addProcess('basic', actions, memStore, null, {
       plugins
     });
   });
@@ -320,6 +323,37 @@ describe('Process', () => {
         .then(() => process.findSegments())
         .then(body => {
           body.should.have.length(1);
+        });
+    });
+  });
+
+  describe('#findSegmentsForPagination()', () => {
+    it('calls findSegments twice', () => {
+      let filtered = false;
+      process.plugins = [
+        {
+          filterSegment() {
+            if (!filtered) {
+              filtered = true;
+              return false;
+            }
+            return true;
+          }
+        }
+      ];
+      const findSegmentsSpy = sinon.spy(memStore, 'findSegments');
+      const newMap = a => process.createMap([], a, null, null);
+      return newMap(1)
+        .then(newMap.bind(null, 2))
+        .then(newMap.bind(null, 3))
+        .then(newMap.bind(null, 4))
+        .then(() => process.findSegmentsForPagination(3, 0))
+        .then(({ segments, ...rest }) => {
+          segments
+            .map(({ link: { state: { a } } }) => a)
+            .length.should.equal(3);
+          rest.should.be.deepEqual({ hasMore: true, offset: 4 });
+          findSegmentsSpy.callCount.should.be.eql(2);
         });
     });
   });
