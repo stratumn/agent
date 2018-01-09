@@ -272,28 +272,10 @@ export default class Process {
    * @param {string} [opts.prevLinkHash] - a previous link hash the segments must have
    * @param {string[]} [opts.linkHashes] - an array of linkHashes the segments must have
    * @param {string[]} [opts.tags] - an array of tags the segments must have
-   * @returns {Promise} - a promise that resolve with the segments
-   */
-  findSegments(opts) {
-    const options = opts;
-
-    return this.storeClient
-      .findSegments(this.name, options)
-      .then(s => this.filterSegments(s));
-  }
-
-  /**
-   * Finds segments with details.
-   * @param {number} [offset] - offset of the first segment to return
-   * @param {number} [limit] - maximum number of segments to return
-   * @param {object} [opts] - filtering options
-   * @param {string[]} [opts.mapIds] - an array of map IDs the segments must have
-   * @param {string} [opts.prevLinkHash] - a previous link hash the segments must have
-   * @param {string[]} [opts.linkHashes] - an array of linkHashes the segments must have
-   * @param {string[]} [opts.tags] - an array of tags the segments must have
    * @returns {Promise} - a promise that resolve with the an object containing segments found and other info related to pagination
    */
-  findSegmentsForPagination(limit, offset, opts) {
+  findSegments(opts = {}) {
+    const { offset = 0, limit = 20 } = opts;
     const firstArg = {
       segments: [],
       offset,

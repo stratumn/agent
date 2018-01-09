@@ -188,12 +188,12 @@ describe('Agent', () => {
             .createMap(null, 'a', 'b', 'c')
         )
         .then(() => agent.findSegments('first'))
-        .then(sgmts1 => {
-          foundSegments = sgmts1;
+        .then(({ segments }) => {
+          foundSegments = segments;
           return agent.findSegments('second');
         })
-        .then(sgmts2 => {
-          foundSegments.concat(sgmts2).length.should.be.exactly(2);
+        .then(({ segments }) => {
+          [...foundSegments, ...segments].length.should.be.exactly(2);
           callCount.should.be.exactly(2);
         });
     });
@@ -217,12 +217,12 @@ describe('Agent', () => {
             .createMap(null, 'a', 'b', 'c')
         )
         .then(() => agent.findSegments('first'))
-        .then(sgmts1 => {
-          foundSegments = sgmts1;
+        .then(({ segments }) => {
+          foundSegments = segments;
           return agent.findSegments('second');
         })
-        .then(sgmts2 => {
-          foundSegments.concat(sgmts2).length.should.be.exactly(2);
+        .then(({ segments }) => {
+          [...foundSegments, ...segments].length.should.be.exactly(2);
           callCount.should.be.exactly(2);
         });
     });
@@ -328,11 +328,11 @@ describe('Agent', () => {
         .createMap(null, 1, 2, 3)
         .then(s1 => p1.createSegment(s1.meta.linkHash, 'action', [], 5))
         .then(() => agent.findSegments('basic'))
-        .then(segments => segments.length.should.be.exactly(2))
+        .then(({ segments }) => segments.length.should.be.exactly(2))
         .then(() => p2.createMap(null, 4, 5, 6))
         .then(s1 => p2.createSegment(s1.meta.linkHash, 'action', [], 5))
         .then(() => agent.findSegments('basic2'))
-        .then(segments => segments.length.should.be.exactly(2))
+        .then(({ segments }) => segments.length.should.be.exactly(2))
         .then(() => agent.findSegments('none'))
         .then(() => {
           throw new Error('Should have failed');
@@ -354,9 +354,9 @@ describe('Agent', () => {
             .createMap(null, 'a', 'b', 'c')
         )
         .then(() => agent.findSegments('first'))
-        .then(segments => segments.length.should.be.exactly(1))
+        .then(({ segments }) => segments.length.should.be.exactly(1))
         .then(() => agent.findSegments('second'))
-        .then(segments => segments.length.should.be.exactly(1));
+        .then(({ segments }) => segments.length.should.be.exactly(1));
     });
 
     it('only finds the segments of a given process when specified', () => {
@@ -370,7 +370,7 @@ describe('Agent', () => {
             .createMap(null, 'a', 'b', 'c')
         )
         .then(() => agent.findSegments('second'))
-        .then(segments => segments.length.should.be.exactly(1));
+        .then(({ segments }) => segments.length.should.be.exactly(1));
     });
   });
 

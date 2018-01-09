@@ -296,10 +296,10 @@ describe('Process', () => {
         process.createMap([], 2, 2, 3)
       ])
         .then(() => process.findSegments())
-        .then(body => {
-          body.should.be.an.Array();
-          body.length.should.be.exactly(1);
-          body[0].link.state.a.should.be.exactly(1);
+        .then(({ segments }) => {
+          segments.should.be.an.Array();
+          segments.length.should.be.exactly(1);
+          segments[0].link.state.a.should.be.exactly(1);
         });
     });
 
@@ -321,41 +321,37 @@ describe('Process', () => {
       return process
         .createMap([], 2, 2, 3)
         .then(() => process.findSegments())
-        .then(body => {
-          body.should.have.length(1);
+        .then(({ segments }) => {
+          segments.should.have.length(1);
         });
     });
   });
 
-  describe('#findSegmentsForPagination()', () => {
-    it('calls findSegments twice', () => {
-      let filtered = false;
-      process.plugins = [
-        {
-          filterSegment() {
-            if (!filtered) {
-              filtered = true;
-              return false;
-            }
-            return true;
+  it('calls store#findSegments twice', () => {
+    let filtered = false;
+    process.plugins = [
+      {
+        filterSegment() {
+          if (!filtered) {
+            filtered = true;
+            return false;
           }
+          return true;
         }
-      ];
-      const findSegmentsSpy = sinon.spy(memStore, 'findSegments');
-      const newMap = a => process.createMap([], a, null, null);
-      return newMap(1)
-        .then(newMap.bind(null, 2))
-        .then(newMap.bind(null, 3))
-        .then(newMap.bind(null, 4))
-        .then(() => process.findSegmentsForPagination(3, 0))
-        .then(({ segments, ...rest }) => {
-          segments
-            .map(({ link: { state: { a } } }) => a)
-            .length.should.equal(3);
-          rest.should.be.deepEqual({ hasMore: true, offset: 4 });
-          findSegmentsSpy.callCount.should.be.eql(2);
-        });
-    });
+      }
+    ];
+    const findSegmentsSpy = sinon.spy(memStore, 'findSegments');
+    const newMap = a => process.createMap([], a, null, null);
+    return newMap(1)
+      .then(newMap.bind(null, 2))
+      .then(newMap.bind(null, 3))
+      .then(newMap.bind(null, 4))
+      .then(() => process.findSegments({ offset: 0, limit: 3 }))
+      .then(({ segments, ...rest }) => {
+        segments.map(({ link: { state: { a } } }) => a).length.should.equal(3);
+        rest.should.be.deepEqual({ hasMore: true, offset: 4 });
+        findSegmentsSpy.callCount.should.be.eql(2);
+      });
   });
 
   describe('#getSegment()', () => {
