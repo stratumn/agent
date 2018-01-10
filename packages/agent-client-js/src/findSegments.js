@@ -25,20 +25,31 @@ export default function findSegments(adaptor, process, opts = {}) {
     options.limit = options.batchSize || DEFAULT_BATCH_SIZE;
     delete options.batchSize;
     options.offset = 0;
-    let lastBatch = [];
+    let keepFetching = true;
     const result = [];
 
     return promiseWhile(
-      () => lastBatch.length === options.limit,
+      () => keepFetching,
       () =>
-        findSegments(adaptor, process, options).then(newSegments => {
-          lastBatch = newSegments;
-          result.push(...newSegments);
-          options.offset += options.limit;
+        findSegments(
+          adaptor,
+          process,
+          options
+        ).then(({ segments, hasMore, offset }) => {
+          result.push(...segments);
+          options.offset = offset;
+          keepFetching = hasMore;
         })
-    ).then(() => result);
+    ).then(() => ({
+      segments: result,
+      hasMore: false,
+      offset: options.offset
+    }));
   }
   return adaptor
     .findSegments(process.name, opts)
-    .then(res => res.body.map(obj => segmentify(adaptor, process, obj)));
+    .then(({ body: { segments, ...rest } }) => ({
+      segments: segments.map(obj => segmentify(adaptor, process, obj)),
+      ...rest
+    }));
 }

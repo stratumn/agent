@@ -27,7 +27,7 @@ describe('#findSegments', () => {
     it('finds the segments', () =>
       processCbWithMaps()
         .then(() => processCb().findSegments())
-        .then(segments => {
+        .then(({ segments }) => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(2);
         }));
@@ -38,12 +38,12 @@ describe('#findSegments', () => {
         .then(segment => segment.addTag('myTag'))
         .then(segment => segment.addTag('myTag2'))
         .then(() => processCb().findSegments({ tags: ['myTag', 'myTag2'] }))
-        .then(segments => {
+        .then(({ segments }) => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(1);
         })
         .then(() => processCb().findSegments({ tags: ['myTag'] }))
-        .then(segments => {
+        .then(({ segments }) => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(2);
         }));
@@ -59,7 +59,7 @@ describe('#findSegments', () => {
             linkHashes: [lHash, 'badLinkHash']
           });
         })
-        .then(segments => {
+        .then(({ segments }) => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(1);
         })
@@ -69,7 +69,7 @@ describe('#findSegments', () => {
             linkHashes: [lHash, segment.meta.linkHash]
           })
         )
-        .then(segments => {
+        .then(({ segments }) => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(2);
         });
@@ -80,16 +80,16 @@ describe('#findSegments', () => {
         .then(segment =>
           processCb().findSegments({ mapIds: [segment.link.meta.mapId] })
         )
-        .then(segments => {
+        .then(({ segments }) => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(1);
         }));
 
     [1, 2].forEach(batchSize => {
-      it('loads all segments with a limit of -1', () =>
+      it(`loads all segments with a limit of -1 with batchSize ${batchSize}`, () =>
         processCbWithMaps()
           .then(() => processCb().findSegments({ limit: -1, batchSize }))
-          .then(segments => {
+          .then(({ segments }) => {
             segments.should.be.an.Array();
             segments.length.should.be.exactly(2);
           }));
@@ -98,7 +98,7 @@ describe('#findSegments', () => {
     it('returns segmentified segments', () =>
       processCbWithMaps()
         .then(() => processCb().findSegments())
-        .then(segments => {
+        .then(({ segments }) => {
           segments.forEach(segment => segment.getPrev.should.be.a.Function());
         }));
   });

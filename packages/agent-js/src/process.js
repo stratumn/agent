@@ -275,7 +275,10 @@ export default class Process {
    * @returns {Promise} - a promise that resolve with the an object containing segments found and other info related to pagination
    */
   findSegments(opts = {}) {
-    const { offset = 0, limit = 20 } = opts;
+    let { offset = 0, limit = 20 } = opts;
+    // when using http api, offset and limit can be strings..
+    offset = Number(offset);
+    limit = Number(limit);
     const firstArg = {
       segments: [],
       offset,
