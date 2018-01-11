@@ -1,0 +1,43 @@
+{
+  "name": "@indigoframework/utils",
+  "version": "0.2.0",
+  "description": "NodeJS module that exposes utils related to Stratumn Indigoframework",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jest --watch",
+    "test:ci": "jest --coverage",
+    "build:lib": "babel src --out-dir lib --ignore test.js",
+    "clean": "rimraf lib coverage",
+    "preversion": "yarn clean && yarn test",
+    "version": "yarn build:lib",
+    "postversion": "git push && git push --tags && yarn clean",
+    "prepublish": "yarn clean && yarn build:lib"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stratumn/indigo-js.git"
+  },
+  "keywords": [
+    "stratumn",
+    "sdk",
+    "blockchain",
+    "client"
+  ],
+  "author": "Stratumn Team",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/stratumn/indigo-js/issues"
+  },
+  "dependencies": {
+    "co": "^4.6.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "chai": "^4.1.2",
+    "jest": "^22.0.5"
+  }
+}

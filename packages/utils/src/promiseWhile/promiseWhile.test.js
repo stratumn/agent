@@ -1,4 +1,5 @@
-import promiseWhile from '../src/promiseWhile';
+import { expect } from 'chai';
+import promiseWhile from './';
 
 describe('promiseWhile', () => {
   it('loops sequentially', () => {
@@ -15,7 +16,8 @@ describe('promiseWhile', () => {
       });
 
     return promiseWhile(condition, body, arg).then(({ res }) => {
-      res.length.should.be.eql(10);
+      expect(res).to.have.lengthOf(10);
+      // res.length.should.be.eql(10);
     });
   });
 });
