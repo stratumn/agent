@@ -29,7 +29,7 @@ export default function(agentName, processName, options) {
           const proc = a.getProcess(processName);
           return proc.findSegments(options);
         })
-        .then(segments => dispatch(getSegmentsSuccess(segments)))
+        .then(({ segments }) => dispatch(getSegmentsSuccess(segments)))
         .catch(err => dispatch(getSegmentsFailure(err)));
     }
     return dispatch(
