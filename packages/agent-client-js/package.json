@@ -6,7 +6,7 @@
   "module": "lib/stratumn-agent-client.mjs",
   "browser": "lib/stratumn-agent-client.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register --recursive --require babel-polyfill --require should 2> /dev/null",
+    "test": "mocha --compilers js:babel-core/register --recursive --require babel-polyfill --require should ",
     "test:ci": "nyc yarn test && nyc report --reporter=text-lcov > coverage/coverage.lcov",
     "build": "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js && rollup -c rollup.browser.min.config.js",
     "clean": "rimraf lib coverage",
@@ -58,6 +58,7 @@
     "should": "^8.2.2"
   },
   "dependencies": {
+    "@indigoframework/utils": "^0.2.0",
     "deepmerge": "2.0.1",
     "httpplease": "^0.16.4",
     "qs": "stratumn/qs#rename-formats-default",

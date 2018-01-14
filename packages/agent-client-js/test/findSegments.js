@@ -51,7 +51,7 @@ describe('#findSegments', () => {
     it('finds segments with a matching linkHash', () => {
       let lHash;
       let segment1;
-      processCbWithMaps()
+      return processCbWithMaps()
         .then(segment => {
           lHash = segment.meta.linkHash;
           segment1 = segment;
@@ -89,11 +89,21 @@ describe('#findSegments', () => {
       it(`loads all segments with a limit of -1 with batchSize ${batchSize}`, () =>
         processCbWithMaps()
           .then(() => processCb().findSegments({ limit: -1, batchSize }))
-          .then(({ segments }) => {
+          .then(({ segments, hasMore }) => {
             segments.should.be.an.Array();
             segments.length.should.be.exactly(2);
+            hasMore.should.be.false();
           }));
     });
+
+    it('should return pagination info', () =>
+      processCbWithMaps()
+        .then(() => processCb().findSegments({ limit: 1 }))
+        .then(({ segments, hasMore, offset }) => {
+          segments.length.should.be.exactly(1);
+          hasMore.should.be.true();
+          offset.should.be.exactly(1);
+        }));
 
     it('returns segmentified segments', () =>
       processCbWithMaps()

@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
+import { promiseWhile } from '@indigoframework/utils';
 import uuid from 'uuid';
 import processify from './processify';
 import getActionsInfo from './getActionsInfo';
 import getPluginsInfo from './getPluginsInfo';
 import hashJson from './hashJson';
 import filterAsync from './filterAsync';
-import promiseWhile from './promiseWhile';
 
 export default class Process {
   constructor(name, actions, storeClient, fossilizerClients, opts = {}) {

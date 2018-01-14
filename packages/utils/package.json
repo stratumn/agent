@@ -32,10 +32,12 @@
     "url": "https://github.com/stratumn/indigo-js/issues"
   },
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "co": "^4.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "chai": "^4.1.2",
     "jest": "^22.0.5"
