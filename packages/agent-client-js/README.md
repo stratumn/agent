@@ -185,7 +185,7 @@ AgentClient
 
 ### Process#findSegments(opts)
 
-Returns a promise that resolves with existing segments.
+Returns a promise that resolves with existing segments and other info related to pagination.
 
 Available options are:
 
@@ -204,8 +204,10 @@ AgentClient
     const process = agent.processes.firstProcess;
     return process.findSegments({ tags: ['tag1', 'tag2'], offset: 20, limit: 10 });
   })
-  .then(function(segments) {
-    console.log(segments);
+  .then(function(results) {
+    console.log(results.segments);
+    console.log(results.hasMore);
+    console.log(results.offset);
   })
   .catch(function(err) {
     // Handle errors
