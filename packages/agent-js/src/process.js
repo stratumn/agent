@@ -264,6 +264,14 @@ export default class Process {
   }
 
   /**
+   * The structure returned by findSegments containing segments found and other info related to pagination.
+   * @typedef {Object} FindSegmentsResult
+   * @property {object[]} segments - an array of segments found
+   * @property {boolean} hasMore - a boolean indicating if there are more segments to be fetched
+   * @property {number} offset - a number indicating the offset to use in the next search
+   */
+
+  /**
    * Finds segments.
    * @param {object} [opts] - filtering options
    * @param {number} [opts.offset] - offset of the first segment to return
@@ -272,7 +280,7 @@ export default class Process {
    * @param {string} [opts.prevLinkHash] - a previous link hash the segments must have
    * @param {string[]} [opts.linkHashes] - an array of linkHashes the segments must have
    * @param {string[]} [opts.tags] - an array of tags the segments must have
-   * @returns {Promise} - a promise that resolve with the an object containing segments found and other info related to pagination
+   * @returns {Promise(FindSegmentsResult)} - a promise that resolves with a FindSegmentResult object
    */
   findSegments(opts = {}) {
     let { offset = 0, limit = 20 } = opts;

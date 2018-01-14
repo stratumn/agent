@@ -1,7 +1,7 @@
 {
   "info": {
     "title": "Agent",
-    "version": "0.18.3"
+    "version": "0.2.0"
   },
   "consumes": "application/json",
   "produces": "application/json",
@@ -232,11 +232,27 @@
         ],
         "responses": {
           "200": {
-            "description": "Segments",
+            "description": "Segments results",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Segment"
+              "type": "object",
+              "required": [
+                "segments",
+                "hasMore",
+                "offset"
+              ],
+              "properties": {
+                "segments": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Segment"
+                  }
+                },
+                "hasMore": {
+                  "type": "boolean"
+                },
+                "offset": {
+                  "type": "number"
+                }
               }
             }
           },
