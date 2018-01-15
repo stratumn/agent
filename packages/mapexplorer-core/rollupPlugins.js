@@ -11,7 +11,7 @@ const plugins = [
   babel(
     Object.assign(
       {
-        exclude: ['node_modules/**', '../agent-client-js/**']
+        exclude: ['node_modules/**', '../agent-client-js/**', '../utils/**']
       },
       babelrc()
     )
