@@ -6,7 +6,7 @@ export default {
     babel(
       Object.assign(
         {
-          exclude: 'node_modules/**'
+          exclude: ['node_modules/**', '../utils/**']
         },
         babelrc()
       )

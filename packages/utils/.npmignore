@@ -1,0 +1,5 @@
+.DS_Store
+*.log
+test
+coverage
+.nyc_output

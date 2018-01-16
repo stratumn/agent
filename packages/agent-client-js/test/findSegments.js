@@ -27,7 +27,7 @@ describe('#findSegments', () => {
     it('finds the segments', () =>
       processCbWithMaps()
         .then(() => processCb().findSegments())
-        .then(segments => {
+        .then(({ segments }) => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(2);
         }));
@@ -38,12 +38,12 @@ describe('#findSegments', () => {
         .then(segment => segment.addTag('myTag'))
         .then(segment => segment.addTag('myTag2'))
         .then(() => processCb().findSegments({ tags: ['myTag', 'myTag2'] }))
-        .then(segments => {
+        .then(({ segments }) => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(1);
         })
         .then(() => processCb().findSegments({ tags: ['myTag'] }))
-        .then(segments => {
+        .then(({ segments }) => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(2);
         }));
@@ -51,7 +51,7 @@ describe('#findSegments', () => {
     it('finds segments with a matching linkHash', () => {
       let lHash;
       let segment1;
-      processCbWithMaps()
+      return processCbWithMaps()
         .then(segment => {
           lHash = segment.meta.linkHash;
           segment1 = segment;
@@ -59,7 +59,7 @@ describe('#findSegments', () => {
             linkHashes: [lHash, 'badLinkHash']
           });
         })
-        .then(segments => {
+        .then(({ segments }) => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(1);
         })
@@ -69,7 +69,7 @@ describe('#findSegments', () => {
             linkHashes: [lHash, segment.meta.linkHash]
           })
         )
-        .then(segments => {
+        .then(({ segments }) => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(2);
         });
@@ -80,25 +80,35 @@ describe('#findSegments', () => {
         .then(segment =>
           processCb().findSegments({ mapIds: [segment.link.meta.mapId] })
         )
-        .then(segments => {
+        .then(({ segments }) => {
           segments.should.be.an.Array();
           segments.length.should.be.exactly(1);
         }));
 
     [1, 2].forEach(batchSize => {
-      it('loads all segments with a limit of -1', () =>
+      it(`loads all segments with a limit of -1 with batchSize ${batchSize}`, () =>
         processCbWithMaps()
           .then(() => processCb().findSegments({ limit: -1, batchSize }))
-          .then(segments => {
+          .then(({ segments, hasMore }) => {
             segments.should.be.an.Array();
             segments.length.should.be.exactly(2);
+            hasMore.should.be.false();
           }));
     });
+
+    it('should return pagination info', () =>
+      processCbWithMaps()
+        .then(() => processCb().findSegments({ limit: 1 }))
+        .then(({ segments, hasMore, offset }) => {
+          segments.length.should.be.exactly(1);
+          hasMore.should.be.true();
+          offset.should.be.exactly(1);
+        }));
 
     it('returns segmentified segments', () =>
       processCbWithMaps()
         .then(() => processCb().findSegments())
-        .then(segments => {
+        .then(({ segments }) => {
           segments.forEach(segment => segment.getPrev.should.be.a.Function());
         }));
   });

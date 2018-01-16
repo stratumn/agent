@@ -12,6 +12,7 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
+    "bootstrap:link": "lerna link",
     "clean": "lerna clean",
     "lint": "eslint packages/*/src packages/*/test",
     "test": "lerna run --parallel test:ci",

@@ -9,7 +9,8 @@ config.plugins.push(
   }),
   commonjs({
     namedExports: {
-      'node_modules/qs/lib/index.js': ['stringify']
+      'node_modules/qs/lib/index.js': ['stringify'],
+      '../utils/lib/index.js': ['promiseWhile']
     }
   })
 );

@@ -500,11 +500,23 @@ export default function httpServer(agent, opts = {}) {
    *           type: string
    *     responses:
    *       200:
-   *         description: Segments
+   *         description: Segments results
    *         schema:
-   *           type: array
-   *           items:
-   *             $ref: '#/definitions/Segment'
+   *           type: object
+   *           required:
+   *             - segments
+   *             - hasMore
+   *             - offset
+   *           properties:
+   *             segments:
+   *               type: array
+   *               items:
+   *                 $ref: '#/definitions/Segment'
+   *             hasMore:
+   *               type: boolean
+   *             offset:
+   *               type: number
+   * 
    *       404:
    *         description: Process not found
    */

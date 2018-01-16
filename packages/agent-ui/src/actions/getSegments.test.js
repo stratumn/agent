@@ -82,7 +82,7 @@ describe('getSegments action', () => {
   });
 
   it('dispatches a success action when fetching segments succeeds', () => {
-    const findSegmentsStub = sinon.stub().resolves(['1', '2']);
+    const findSegmentsStub = sinon.stub().resolves({ segments: ['1', '2'] });
     stratumnClientStub.resolves({
       getProcess: () => ({
         findSegments: findSegmentsStub

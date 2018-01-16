@@ -5,7 +5,7 @@
 ## Overview
 
 ### Version information
-*Version* : 0.18.3
+*Version* : 0.2.0
 
 
 
@@ -117,8 +117,17 @@ Finds the segments that match the given filter.
 
 |HTTP Code|Description|Schema|
 |---|---|---|
-|**200**|Segments|< [Segment](#segment) > array|
+|**200**|Segments results|[Response 200](#process-segments-get-response-200)|
 |**404**|Process not found|No Content|
+
+<a name="process-segments-get-response-200"></a>
+**Response 200**
+
+|Name|Schema|
+|---|---|
+|**hasMore**  <br>*required*|boolean|
+|**offset**  <br>*required*|number|
+|**segments**  <br>*required*|< [Segment](#segment) > array|
 
 
 <a name="process-segments-linkhash-get"></a>

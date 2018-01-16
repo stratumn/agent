@@ -113,7 +113,7 @@ function loadRef(agentUrl, ref, links) {
           limit: -1
         })
       )
-      .then(segments => {
+      .then(({ segments }) => {
         if (!segments || segments.length === 0) {
           throw new Error(
             `loadRef: no segments for map ${ref.data.link.meta.mapId}`

@@ -14,31 +14,43 @@
   limitations under the License.
 */
 
+import { promiseWhile } from '@indigoframework/utils';
 import segmentify from './segmentify';
-import promiseWhile from './promiseWhile';
 
 const DEFAULT_BATCH_SIZE = 20;
 
 export default function findSegments(adaptor, process, opts = {}) {
-  const options = Object.assign({}, opts);
   if (opts.limit === -1) {
-    options.limit = options.batchSize || DEFAULT_BATCH_SIZE;
-    delete options.batchSize;
-    options.offset = 0;
-    let lastBatch = [];
-    const result = [];
+    const { batchSize = DEFAULT_BATCH_SIZE, ...restOpts } = opts;
+    const firstArg = {
+      offset: 0,
+      hasMore: true
+    };
+    const results = [];
+
+    const condition = ({ hasMore }) => hasMore;
+    const findSegmentsChunk = arg => {
+      const options = { ...restOpts, offset: arg.offset, limit: batchSize };
+      return findSegments(
+        adaptor,
+        process,
+        options
+      ).then(({ segments, ...rest }) => {
+        results.push(...segments);
+        return rest;
+      });
+    };
 
     return promiseWhile(
-      () => lastBatch.length === options.limit,
-      () =>
-        findSegments(adaptor, process, options).then(newSegments => {
-          lastBatch = newSegments;
-          result.push(...newSegments);
-          options.offset += options.limit;
-        })
-    ).then(() => result);
+      condition,
+      findSegmentsChunk,
+      firstArg
+    ).then(({ offset, hasMore }) => ({ segments: results, offset, hasMore }));
   }
   return adaptor
     .findSegments(process.name, opts)
-    .then(res => res.body.map(obj => segmentify(adaptor, process, obj)));
+    .then(({ body: { segments, ...rest } }) => ({
+      segments: segments.map(obj => segmentify(adaptor, process, obj)),
+      ...rest
+    }));
 }

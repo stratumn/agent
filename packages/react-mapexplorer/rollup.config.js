@@ -34,7 +34,8 @@ export default {
         'node_modules/**',
         '../mapexplorer-core/**',
         '../agent-client-js/**',
-        '../cs-validator/**'
+        '../cs-validator/**',
+        '../utils/**'
       ]
     })
   ]

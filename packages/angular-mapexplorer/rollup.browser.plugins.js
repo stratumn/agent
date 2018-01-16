@@ -19,7 +19,8 @@ module.exports = [
           'node_modules/**',
           '../mapexplorer-core/**',
           '../cs-validator/**',
-          '../agent-client-js/**'
+          '../agent-client-js/**',
+          '../utils/**'
         ]
       },
       babelrc()

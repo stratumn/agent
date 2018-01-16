@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { promiseWhile } from '@indigoframework/utils';
 import uuid from 'uuid';
 import processify from './processify';
 import getActionsInfo from './getActionsInfo';
@@ -263,6 +264,14 @@ export default class Process {
   }
 
   /**
+   * The structure returned by findSegments containing segments found and other info related to pagination.
+   * @typedef {Object} FindSegmentsResult
+   * @property {object[]} segments - an array of segments found
+   * @property {boolean} hasMore - a boolean indicating if there are more segments to be fetched
+   * @property {number} offset - a number indicating the offset to use in the next search
+   */
+
+  /**
    * Finds segments.
    * @param {object} [opts] - filtering options
    * @param {number} [opts.offset] - offset of the first segment to return
@@ -271,14 +280,41 @@ export default class Process {
    * @param {string} [opts.prevLinkHash] - a previous link hash the segments must have
    * @param {string[]} [opts.linkHashes] - an array of linkHashes the segments must have
    * @param {string[]} [opts.tags] - an array of tags the segments must have
-   * @returns {Promise} - a promise that resolve with the segments
+   * @returns {Promise(FindSegmentsResult)} - a promise that resolves with a FindSegmentResult object
    */
-  findSegments(opts) {
-    const options = opts;
-
-    return this.storeClient
-      .findSegments(this.name, options)
-      .then(s => this.filterSegments(s));
+  findSegments(opts = {}) {
+    let { offset = 0, limit = 20 } = opts;
+    // when using http api, offset and limit can be strings..
+    offset = Number(offset);
+    limit = Number(limit);
+    const firstArg = {
+      segments: [],
+      offset,
+      limit,
+      hasMore: true
+    };
+    const condition = ({ hasMore, segments }) =>
+      hasMore && segments.length < limit;
+    const findSegmentsChunk = arg => {
+      const options = { ...opts, offset: arg.offset, limit: arg.limit };
+      let beforeFilter;
+      return this.storeClient
+        .findSegments(this.name, options)
+        .then(s => {
+          beforeFilter = s.length;
+          return this.filterSegments(s);
+        })
+        .then(filteredSegments => ({
+          segments: [...arg.segments, ...filteredSegments],
+          hasMore: beforeFilter === arg.limit,
+          offset: arg.offset + arg.limit,
+          limit: limit - arg.segments.length - filteredSegments.length
+        }));
+    };
+    return promiseWhile(condition, findSegmentsChunk, firstArg).then(
+      // filter out limit, impl detail
+      ({ limit: na, ...result }) => result
+    );
   }
 
   /**
