@@ -17,7 +17,6 @@ describe('promiseWhile', () => {
 
     return promiseWhile(condition, body, arg).then(({ res }) => {
       expect(res).to.have.lengthOf(10);
-      // res.length.should.be.eql(10);
     });
   });
 });
