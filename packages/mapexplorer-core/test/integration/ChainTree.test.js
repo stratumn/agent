@@ -207,13 +207,12 @@ describe('ChainTree', () => {
     });
   });
 
-  describe('with spacific options', () => {
+  describe('with specific options', () => {
     afterEach(() => {
       selectAll('svg').remove();
     });
 
     it('should disable withFocus', () => {
-      // const options = { ...defaultOptions, withFocus: false };
       const options = Object.assign(defaultOptions, { withFocus: false });
       tree = new ChainTree('body', options);
       tree.display(validMap);
