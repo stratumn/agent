@@ -181,6 +181,10 @@ describe('ChainTree', () => {
         .selectAll('#ref-link')
         .size()
         .should.be.eql(1);
+      svg
+        .selectAll('.selected')
+        .size()
+        .should.be.eql(1);
     });
 
     it('displays base node related links', () => {
@@ -198,6 +202,33 @@ describe('ChainTree', () => {
         .should.be.eql(4);
       svg
         .selectAll('#ref-link')
+        .size()
+        .should.be.eql(0);
+    });
+  });
+
+  describe('with spacific options', () => {
+    afterEach(() => {
+      selectAll('svg').remove();
+    });
+
+    it('should disable withFocus', () => {
+      // const options = { ...defaultOptions, withFocus: false };
+      const options = Object.assign(defaultOptions, { withFocus: false });
+      tree = new ChainTree('body', options);
+      tree.display(validMap);
+
+      const e = document.createEvent('UIEvents');
+      e.initUIEvent('click', true, true);
+
+      svg = select('body').select('svg');
+      svg
+        .select('g.node')
+        .node()
+        .dispatchEvent(e);
+
+      svg
+        .selectAll('.selected')
         .size()
         .should.be.eql(0);
     });
