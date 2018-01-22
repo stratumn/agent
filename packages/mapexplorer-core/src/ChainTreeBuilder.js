@@ -33,6 +33,7 @@ function load(map) {
 
 export const defaultOptions = {
   withArgs: false,
+  withFocus: true,
   duration: 750,
   verticalSpacing: 1.4,
   polygonSize: { width: 78, height: 91 },

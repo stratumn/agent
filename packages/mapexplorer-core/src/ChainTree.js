@@ -84,15 +84,17 @@ export default class ChainTree {
         return translate(origin.x0, origin.y0);
       })
       .on('click', function onClick(d) {
-        selectAll('g.node').classed('selected', false);
-        select(this).classed('selected', true);
-        if (d.data.link.meta.refs) {
-          self.displayNodeLinks(d);
-        } else {
-          self.displayCurrentMapLinks();
-        }
-        if (d.data.parentRef != null) {
-          self.drawForeignChildRef(d);
+        if (self.options.withFocus) {
+          selectAll('g.node').classed('selected', false);
+          select(this).classed('selected', true);
+          if (d.data.link.meta.refs) {
+            self.displayNodeLinks(d);
+          } else {
+            self.displayCurrentMapLinks();
+          }
+          if (d.data.parentRef != null) {
+            self.drawForeignChildRef(d);
+          }
         }
         self.options.onclick(
           d,
