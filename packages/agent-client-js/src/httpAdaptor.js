@@ -29,35 +29,35 @@ export default class httpAdaptor {
   }
 
   getProcesses() {
-    return get(url.resolve(this.url, '/processes'));
+    return get(url.resolve(this.url, 'processes'));
   }
 
   createMap(processName, refs, ...args) {
-    return post(url.resolve(this.url, `/${processName}/segments`), [
+    return post(url.resolve(this.url, `${processName}/segments`), [
       refs,
       ...args
     ]);
   }
 
   getSegment(processName, linkHash) {
-    return get(url.resolve(this.url, `/${processName}/segments/${linkHash}`));
+    return get(url.resolve(this.url, `${processName}/segments/${linkHash}`));
   }
 
   findSegments(processName, opts = {}) {
     return get(
-      url.resolve(this.url, `/${processName}/segments${makeQueryString(opts)}`)
+      url.resolve(this.url, `${processName}/segments${makeQueryString(opts)}`)
     );
   }
 
   getMapIds(processName, opts = {}) {
     return get(
-      url.resolve(this.url, `/${processName}/maps${makeQueryString(opts)}`)
+      url.resolve(this.url, `${processName}/maps${makeQueryString(opts)}`)
     );
   }
 
   createSegment(processName, linkHash, action, refs, ...args) {
     return post(
-      url.resolve(this.url, `/${processName}/segments/${linkHash}/${action}`),
+      url.resolve(this.url, `${processName}/segments/${linkHash}/${action}`),
       [refs, ...args]
     );
   }
