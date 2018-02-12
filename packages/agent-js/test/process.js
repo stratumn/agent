@@ -112,7 +112,7 @@ describe('Process', () => {
 
   describe('#createMap()', () => {
     it('resolves with the first segment', () =>
-      process.createMap(null, 1, 2, 3).then(segment => {
+      process.createMap(null, null, 1, 2, 3).then(segment => {
         segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
         segment.link.meta.mapId.should.be.a.String();
         segment.link.meta.process.should.be.exactly('basic');
@@ -132,13 +132,13 @@ describe('Process', () => {
         }
       };
       return process
-        .createMap([], 1, 2, 3)
+        .createMap([], [], 1, 2, 3)
         .then(() => callCount.should.be.exactly(1));
     });
 
     it('resolves with good references', () =>
       process
-        .createMap(refs.getGoodRefs(process.name), 1, 2, 3)
+        .createMap([], refs.getGoodRefs(process.name), 1, 2, 3)
         .then(segment => {
           segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
           segment.link.meta.mapId.should.be.a.String();
@@ -150,7 +150,7 @@ describe('Process', () => {
 
     it('resolves with bad reference', () =>
       process
-        .createMap(refs.getBadRefs(), 1, 2, 3)
+        .createMap([], refs.getBadRefs(), 1, 2, 3)
         .then(() => {
           throw new Error('createMap should fail');
         })
@@ -165,10 +165,16 @@ describe('Process', () => {
     it('resolves with the new segment', () => {
       let sgmt1;
       return process
-        .createMap([], 1, 2, 3)
+        .createMap([], [], 1, 2, 3)
         .then(segment1 => {
           sgmt1 = segment1;
-          return process.createSegment(segment1.meta.linkHash, 'action', [], 4);
+          return process.createSegment(
+            segment1.meta.linkHash,
+            'action',
+            [],
+            [],
+            4
+          );
         })
         .then(segment2 => {
           segment2.link.state.should.deepEqual({
@@ -186,12 +192,13 @@ describe('Process', () => {
 
     it('resolves with good references', () => {
       let sgmt1;
-      return process.createMap([], 1, 2, 3).then(segment1 => {
+      return process.createMap([], [], 1, 2, 3).then(segment1 => {
         sgmt1 = segment1;
         return process
           .createSegment(
             segment1.meta.linkHash,
             'action',
+            [],
             refs.getGoodRefs(process.name, segment1.meta.linkHash),
             4
           )
@@ -208,11 +215,12 @@ describe('Process', () => {
     });
 
     it('checks loadSegment function with good references', () =>
-      process.createMap([], 1, 2, 3).then(segment1 =>
+      process.createMap([], [], 1, 2, 3).then(segment1 =>
         process
           .createSegment(
             segment1.meta.linkHash,
             'testLoadSegments',
+            [],
             refs.getGoodRefs(process.name, segment1.meta.linkHash)
           )
           .then(segment2 => {
@@ -223,7 +231,7 @@ describe('Process', () => {
       ));
 
     it('should call the #SavedLinks() event', () =>
-      process.createMap([], 1, 2, 3).then(segment1 => {
+      process.createMap([], [], 1, 2, 3).then(segment1 => {
         let callCount = 0;
         actions.events = {
           SavedLinks(l) {
@@ -238,7 +246,7 @@ describe('Process', () => {
         };
 
         return process
-          .createSegment(segment1.meta.linkHash, 'action', [], 4)
+          .createSegment(segment1.meta.linkHash, 'action', [], [], 4)
           .then(() => {
             callCount.should.be.exactly(1);
           });
@@ -246,7 +254,7 @@ describe('Process', () => {
 
     it('sets the evidence state appropriately', () =>
       process
-        .createMap([], 1, 2, 3)
+        .createMap([], [], 1, 2, 3)
         .then(segment => {
           segment.meta.should.deepEqual({
             linkHash: segment.meta.linkHash,
@@ -267,6 +275,7 @@ describe('Process', () => {
             prevSegment.meta.linkHash,
             'action',
             [],
+            [],
             2
           );
         })
@@ -275,7 +284,7 @@ describe('Process', () => {
 
   describe('#saveEvidence()', () => {
     it('resolves', () =>
-      process.createMap([], 1, 2, 3).then(segment1 =>
+      process.createMap([], [], 1, 2, 3).then(segment1 =>
         process.saveEvidence(segment1.meta.linkHash, {
           test: true
         })
@@ -292,8 +301,8 @@ describe('Process', () => {
         }
       ];
       return Promise.all([
-        process.createMap([], 1, 2, 3),
-        process.createMap([], 2, 2, 3)
+        process.createMap([], [], 1, 2, 3),
+        process.createMap([], [], 2, 2, 3)
       ])
         .then(() => process.findSegments())
         .then(({ segments }) => {
@@ -319,7 +328,7 @@ describe('Process', () => {
       ];
 
       return process
-        .createMap([], 2, 2, 3)
+        .createMap([], [], 2, 2, 3)
         .then(() => process.findSegments())
         .then(({ segments }) => {
           segments.should.have.length(1);
@@ -341,7 +350,7 @@ describe('Process', () => {
       }
     ];
     const findSegmentsSpy = sinon.spy(memStore, 'findSegments');
-    const newMap = a => process.createMap([], a, null, null);
+    const newMap = a => process.createMap([], [], a, null, null);
     return newMap(1)
       .then(newMap.bind(null, 2))
       .then(newMap.bind(null, 3))
@@ -365,7 +374,7 @@ describe('Process', () => {
       ];
 
       return process
-        .createMap([], 2, 2, 3)
+        .createMap([], [], 2, 2, 3)
         .then(s => process.getSegment(s.meta.linkHash))
         .then(() => {
           throw new Error('should not resolve');
