@@ -7,13 +7,13 @@
   "jsnext:main": "lib/index.es.js",
   "author": "Stratumn",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/stratumn/indigo-js",
+  "homepage": "https://github.com/stratumn/js-indigocore",
   "repository": {
     "type": "git",
-    "url": "https://github.com/stratumn/indigo-js.git"
+    "url": "https://github.com/stratumn/js-indigocore.git"
   },
   "bugs": {
-    "url": "https://github.com/stratumn/indigo-js/issues"
+    "url": "https://github.com/stratumn/js-indigocore/issues"
   },
   "dependencies": {
     "classnames": "^2.1.2",

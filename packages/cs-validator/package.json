@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stratumn/indigo-js.git"
+    "url": "https://github.com/stratumn/js-indigocore.git"
   },
   "keywords": [
     "stratumn",
@@ -31,9 +31,9 @@
   "author": "Stratumn Team",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/stratumn/indigo-js/issues"
+    "url": "https://github.com/stratumn/js-indigocore/issues"
   },
-  "homepage": "https://github.com/stratumn/indigo-js",
+  "homepage": "https://github.com/stratumn/js-indigocore",
   "devDependencies": {
     "@metahub/karma-rollup-preprocessor": "^3.0.0",
     "babel-cli": "^6.5.1",

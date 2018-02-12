@@ -49,7 +49,7 @@ export const AgentInfoPage = ({ name, url, status, fetchAgent, classes }) => {
         <Typography
           type="caption"
           component="a"
-          href="https://github.com/stratumn/indigo-js/tree/master/packages/agent-client-js"
+          href="https://github.com/stratumn/js-indigocore/tree/master/packages/agent-client-js"
         >
           Stratumn Javascript Agent Client
         </Typography>
