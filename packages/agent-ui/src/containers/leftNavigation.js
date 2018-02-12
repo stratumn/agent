@@ -131,7 +131,7 @@ const IndigoExternalLinks = () => (
     <ListItem
       button
       component="a"
-      href="https://github.com/stratumn/indigo-js/issues/new"
+      href="https://github.com/stratumn/js-indigocore/issues/new"
     >
       <WhiteListItemText text="Report issue" />
     </ListItem>

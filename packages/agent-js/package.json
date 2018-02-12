@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stratumn/indigo-js.git"
+    "url": "https://github.com/stratumn/js-indigocore.git"
   },
   "keywords": [
     "stratumn",
@@ -30,7 +30,7 @@
   "author": "Stratumn Team",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/stratumn/indigo-js/issues"
+    "url": "https://github.com/stratumn/js-indigocore/issues"
   },
   "dependencies": {
     "@indigoframework/utils": "^0.2.0",

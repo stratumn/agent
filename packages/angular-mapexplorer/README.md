@@ -54,7 +54,7 @@ Default: noop
 
 Callback called when a segment content is hidden
 
-Plus all options inherited from [MapExplorer Core](https://github.com/stratumn/indigo-js/tree/master/packages/mapexplorer-core)
+Plus all options inherited from [MapExplorer Core](https://github.com/stratumn/js-indigocore/tree/master/packages/mapexplorer-core)
 
 ## Development
 

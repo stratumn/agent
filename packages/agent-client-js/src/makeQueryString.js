@@ -24,7 +24,7 @@ export default function makeQueryString(obj) {
   // use brackets format for compatibility with GO:
   // https://github.com/google/go-querystring
   // see also conversation in:
-  // https://github.com/stratumn/indigo-js/pull/18
+  // https://github.com/stratumn/js-indigocore/pull/18
   const query = stringify(obj, { arrayFormat: 'brackets' });
   if (query.length) {
     return `?${query}`;
