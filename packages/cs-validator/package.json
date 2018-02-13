@@ -9,7 +9,7 @@
     "test:unit:ci": "nyc yarn test:unit && nyc report --reporter=text-lcov > coverage.lcov",
     "test:integration": "karma start karma.conf.js",
     "test:integration:ci": "yarn test:integration --single-run",
-    "test": "yarn test:unit && yarnn test:integration",
+    "test": "yarn test:unit && yarn test:integration",
     "test:ci": "yarn test:unit:ci && yarn test:integration:ci",
     "build": "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js",
     "prepublish": "yarn build",

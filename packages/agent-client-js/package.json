@@ -6,15 +6,19 @@
   "module": "lib/stratumn-agent-client.mjs",
   "browser": "lib/stratumn-agent-client.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register --recursive --require babel-polyfill --require should ",
-    "test:ci": "nyc yarn test && nyc report --reporter=text-lcov > coverage/coverage.lcov",
-    "build": "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js && rollup -c rollup.browser.min.config.js",
+    "test":
+      "mocha --compilers js:babel-core/register --recursive --require babel-polyfill --require should ",
+    "test:ci":
+      "nyc yarn test && nyc report --reporter=text-lcov > coverage/coverage.lcov",
+    "build":
+      "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js && rollup -c rollup.browser.min.config.js",
     "clean": "rimraf lib coverage",
     "preversion": "yarn clean && yarn test",
     "version": "yarn build",
     "postversion": "git push && git push --tags && yarn clean",
     "prepublish": "yarn clean && yarn build",
-    "postpublish": "aws s3 cp dist/stratumn-agent-client.js s3://stratumn-libs/stratumn-agent-client.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.min.js s3://stratumn-libs/stratumn-agent-client.min.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.js s3://stratumn-libs/stratumn-agent-client-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.min.js s3://stratumn-libs/stratumn-agent-client-${npm_package_version}.min.js --region 'eu-west-1'"
+    "postpublish":
+      "aws s3 cp dist/stratumn-agent-client.js s3://stratumn-libs/stratumn-agent-client.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.min.js s3://stratumn-libs/stratumn-agent-client.min.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.js s3://stratumn-libs/stratumn-agent-client-${npm_package_version}.js --region 'eu-west-1' && aws s3 cp dist/stratumn-agent-client.min.js s3://stratumn-libs/stratumn-agent-client-${npm_package_version}.min.js --region 'eu-west-1'"
   },
   "publishConfig": {
     "access": "public"
@@ -23,12 +27,7 @@
     "type": "git",
     "url": "https://github.com/stratumn/js-indigocore.git"
   },
-  "keywords": [
-    "stratumn",
-    "sdk",
-    "blockchain",
-    "client"
-  ],
+  "keywords": ["stratumn", "sdk", "blockchain", "client"],
   "author": "Stratumn Team",
   "license": "Apache-2.0",
   "bugs": {
@@ -52,9 +51,12 @@
     "rollup": "^0.50.0",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.0.0",
+  	"rollup-plugin-json": "^2.1.0",
+	  "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-uglify": "^2.0.1",
+  	"rollup-plugin-uglify": "^3.0.0",
     "rollup-pluginutils": "^2.0.1",
+	  "setimmediate": "^1.0.5",
     "should": "^8.2.2"
   },
   "dependencies": {
@@ -62,7 +64,9 @@
     "deepmerge": "2.0.1",
     "httpplease": "^0.16.4",
     "qs": "stratumn/qs#rename-formats-default",
-    "setimmediate": "^1.0.5"
+    "canonicaljson": "1.0.0",
+    "tweetnacl": "1.0.0",
+    "jmespath": "^0.15.0"
   },
   "resolutions": {
     "xmlhttprequest": "1.7.0"
