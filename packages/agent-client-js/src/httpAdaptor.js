@@ -32,8 +32,9 @@ export default class httpAdaptor {
     return get(url.resolve(this.url, 'processes'));
   }
 
-  createMap(processName, refs, ...args) {
+  createMap(processName, signatures, refs, ...args) {
     return post(url.resolve(this.url, `${processName}/segments`), [
+      signatures,
       refs,
       ...args
     ]);
@@ -55,10 +56,10 @@ export default class httpAdaptor {
     );
   }
 
-  createSegment(processName, linkHash, action, refs, ...args) {
+  createSegment(processName, linkHash, action, signatures, refs, ...args) {
     return post(
       url.resolve(this.url, `${processName}/segments/${linkHash}/${action}`),
-      [refs, ...args]
+      [signatures, refs, ...args]
     );
   }
 

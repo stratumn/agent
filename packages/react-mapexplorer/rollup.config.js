@@ -19,6 +19,9 @@ export default {
   ],
   external: ['react', 'react-dom', 'prop-types'],
   plugins: [
+    babel({
+      include: ['src/**']
+    }),
     resolve({
       module: false
     }),
@@ -28,15 +31,6 @@ export default {
         'node_modules/qs/lib/index.js': ['stringify']
       }
     }),
-    postcss({}),
-    babel({
-      exclude: [
-        'node_modules/**',
-        '../mapexplorer-core/**',
-        '../agent-client-js/**',
-        '../cs-validator/**',
-        '../utils/**'
-      ]
-    })
+    postcss({})
   ]
 };

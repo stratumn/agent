@@ -14,9 +14,16 @@
   limitations under the License.
 */
 
+import { sign as nacl } from 'tweetnacl';
 import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#createMap', () => {
+  const testKey = {
+    type: 'ed25519'
+  };
+  const { secretKey } = nacl.keyPair();
+  testKey.secret = Buffer.from(secretKey).toString('base64');
+
   runTestsWithDataAndAgent(processCb => {
     it('creates a map', () =>
       processCb()
@@ -62,6 +69,39 @@ describe('#createMap', () => {
         .catch(err => {
           err.message.should.be.exactly('a title is required');
           err.status.should.be.exactly(400);
+        }));
+
+    it('creates a map with signatures', () =>
+      processCb()
+        .withKey(testKey)
+        .sign()
+        .createMap('test')
+        .then(s1 => {
+          s1.link.signatures.should.be.an.Array();
+          s1.link.signatures.length.should.be.equal(1);
+        }));
+
+    it('provides #sign() with the right data based on the process\' "signed" property', () =>
+      processCb()
+        .withKey(testKey)
+        .withRefs([{ linkHash: 'test', process: 'test' }])
+        .sign({ refs: true })
+        .createMap('hello')
+        .then(segment2 => {
+          segment2.link.signatures[0].payload.should.be.exactly('[meta.refs]');
+        }));
+
+    it('fails when an error occurs while signing the payload', () =>
+      processCb()
+        .sign()
+        .createMap('test')
+        .then(() => {
+          throw new Error('it should have failed');
+        })
+        .catch(err => {
+          err.message.should.be.exactly(
+            'key is not defined (use: segment.withKey(key)'
+          );
         }));
   });
 });
