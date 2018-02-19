@@ -15,7 +15,7 @@
 */
 
 export default {
-  getGoodRefs(process, linkHash) {
+  getValidRefs(process, linkHash) {
     const l =
       linkHash ||
       'fa871e81c469fa947eacd40f89dc5627a0cb3a96551a651c034787c752d4448f';
@@ -53,7 +53,7 @@ export default {
     return [goodLink, goodSegment, otherProcess];
   },
 
-  getBadRefs() {
+  getInvalidRefs() {
     return [{ process: 'foo', meta: 'father' }];
   }
 };

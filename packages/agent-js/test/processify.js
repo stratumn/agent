@@ -15,6 +15,7 @@
 */
 
 import processify from '../src/processify';
+import signatures from './utils/signatures';
 
 describe('processify', () => {
   const actions = {
@@ -32,6 +33,9 @@ describe('processify', () => {
     tag() {
       this.meta.tags = ['tag'];
       this.append();
+    },
+    updateType() {
+      this.append(null, null, 'new');
     },
     reject() {
       this.reject('error');
@@ -116,13 +120,43 @@ describe('processify', () => {
   });
 
   it('formats link.meta with signatures', () => {
-    const refs = [
-      {
-        process: 'test',
-        linkHash: 'test'
-      }
-    ];
-    const mAgent = processify(actions, null, null, refs);
-    return mAgent.add('test').then(res => res.meta.refs.length.should.eql(1));
+    const mAgent = processify(
+      actions,
+      null,
+      signatures.getValidSignatures(),
+      []
+    );
+    return mAgent.add('test').then(res => {
+      res.signatures.length.should.eql(1);
+      res.signatures[0].should.deepEqual(signatures.getValidSignatures()[0]);
+    });
   });
+
+  it('handle bad signatures format (missing property)', () => {
+    const mAgent = processify(
+      actions,
+      null,
+      signatures.getInvalidSignatures(),
+      []
+    );
+    return mAgent
+      .reject()
+      .catch(res =>
+        res.message.should.eql('missing type, public key, signature or payload')
+      );
+  });
+
+  it('adds action, inputs and type to the link.meta', () =>
+    processify(actions)
+      .add('test')
+      .then(s => {
+        s.meta.action.should.be.exactly('add');
+        s.meta.type.should.be.exactly('add');
+        s.meta.inputs.should.deepEqual(['test']);
+      }));
+
+  it('allows an action to update the link type', () =>
+    processify(actions)
+      .updateType('test')
+      .then(s => s.meta.type.should.be.exactly('new')));
 });

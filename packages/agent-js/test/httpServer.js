@@ -330,7 +330,7 @@ describe('HttpServer()', () => {
     it('renders the first segment with good refs', () => {
       const req = makePostRequest(server, `/${process.name}/segments`, [
         [],
-        refs.getGoodRefs(process.name),
+        refs.getValidRefs(process.name),
         1,
         2,
         3
@@ -353,7 +353,7 @@ describe('HttpServer()', () => {
     it('renders the first segment with bad process ref', () => {
       const req = makePostRequest(server, `/${process.name}/segments`, [
         [],
-        refs.getBadRefs(),
+        refs.getInvalidRefs(),
         1,
         2,
         3

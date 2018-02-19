@@ -14,24 +14,25 @@
   limitations under the License.
 */
 
-import pluginTest from '.';
-import actionArgs from '../../src/plugins/actionArgs';
-
-pluginTest(actionArgs, {
-  '#createMap()'(segment) {
-    segment.link.meta.action.should.be.exactly('init');
-    segment.link.meta.arguments.should.deepEqual([1, 2, 3]);
+export default {
+  getValidSignatures() {
+    return [
+      {
+        type: 'ED25519',
+        publicKey: 'SOMEPUBLICKEY',
+        payload: 'JMESPATHQUERY',
+        signature: 'SIGNATURE'
+      }
+    ];
   },
 
-  '#createSegment()'(segment) {
-    segment.link.meta.action.should.be.exactly('action');
-    segment.link.meta.arguments.should.deepEqual([4]);
-  },
-
-  '#action()'(link) {
-    return (
-      (link.meta.action === null).should.be.true &&
-      (link.meta.arguments === null).should.be.true
-    );
+  getInvalidSignatures() {
+    return [
+      {
+        type: 'MISSING PUBLIC KEY',
+        payload: 'TEST',
+        signature: 'TEST'
+      }
+    ];
   }
-});
+};

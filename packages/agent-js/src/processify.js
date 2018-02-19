@@ -75,10 +75,15 @@ export default function processify(
         state: { ...(link.state || {}) },
         meta: loadMeta(link.meta, refs),
         signatures: loadSignatures(signatures),
-        append(state, meta) {
+        append(state, meta, type) {
           link = {
             state: state || this.state,
-            meta: { ...(meta || this.meta) },
+            meta: {
+              ...(meta || this.meta),
+              type: type || action,
+              action,
+              inputs: args
+            },
             signatures: this.signatures
           };
           resolve(link);

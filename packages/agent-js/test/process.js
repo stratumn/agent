@@ -21,6 +21,7 @@ import hashJson from '../src/hashJson';
 import { memoryStoreInfo } from './fixtures';
 import actions from './utils/basicActions';
 import refs from './utils/refs';
+import signatures from './utils/signatures';
 
 const plugins = [
   {
@@ -116,6 +117,9 @@ describe('Process', () => {
         segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
         segment.link.meta.mapId.should.be.a.String();
         segment.link.meta.process.should.be.exactly('basic');
+        segment.link.meta.action.should.be.exactly('init');
+        segment.link.meta.type.should.be.exactly('init');
+        segment.link.meta.inputs.should.deepEqual([1, 2, 3]);
         segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
       }));
 
@@ -136,9 +140,9 @@ describe('Process', () => {
         .then(() => callCount.should.be.exactly(1));
     });
 
-    it('resolves with good references', () =>
+    it('resolves with appropriate references', () =>
       process
-        .createMap([], refs.getGoodRefs(process.name), 1, 2, 3)
+        .createMap([], refs.getValidRefs(process.name), 1, 2, 3)
         .then(segment => {
           segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
           segment.link.meta.mapId.should.be.a.String();
@@ -148,15 +152,36 @@ describe('Process', () => {
           segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
         }));
 
-    it('resolves with bad reference', () =>
+    it('throws on a bad reference', () =>
       process
-        .createMap([], refs.getBadRefs(), 1, 2, 3)
+        .createMap([], refs.getInvalidRefs(), 1, 2, 3)
         .then(() => {
           throw new Error('createMap should fail');
         })
         .catch(err => {
           err.message.should.be.exactly(
             'missing segment or (process and linkHash)'
+          );
+        }));
+
+    it('resolves with the appropriate signatures', () =>
+      process
+        .createMap(signatures.getValidSignatures(), [], 1, 2, 3)
+        .then(segment => {
+          segment.link.signatures.should.deepEqual(
+            signatures.getValidSignatures()
+          );
+        }));
+
+    it('throws on a bad signature', () =>
+      process
+        .createMap(signatures.getInvalidSignatures(), [], 1, 2, 3)
+        .then(() => {
+          throw new Error('createMap should fail');
+        })
+        .catch(err => {
+          err.message.should.be.exactly(
+            'missing type, public key, signature or payload'
           );
         }));
   });
@@ -186,6 +211,9 @@ describe('Process', () => {
           segment2.link.meta.prevLinkHash.should.be.exactly(
             sgmt1.meta.linkHash
           );
+          segment2.link.meta.action.should.be.exactly('action');
+          segment2.link.meta.type.should.be.exactly('action');
+          segment2.link.meta.inputs.should.deepEqual([4]);
           segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
         });
     });
@@ -199,7 +227,7 @@ describe('Process', () => {
             segment1.meta.linkHash,
             'action',
             [],
-            refs.getGoodRefs(process.name, segment1.meta.linkHash),
+            refs.getValidRefs(process.name, segment1.meta.linkHash),
             4
           )
           .then(segment2 => {
@@ -221,7 +249,7 @@ describe('Process', () => {
             segment1.meta.linkHash,
             'testLoadSegments',
             [],
-            refs.getGoodRefs(process.name, segment1.meta.linkHash)
+            refs.getValidRefs(process.name, segment1.meta.linkHash)
           )
           .then(segment2 => {
             segment2.link.state.nbSeg.should.be.exactly(1);
