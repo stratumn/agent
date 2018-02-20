@@ -2140,6 +2140,10 @@ jade@0.26.3:
     commander "0.6.1"
     mkdirp "0.3.0"
 
+jmespath@^0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
+
 js-sha256@^0.3.0:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.3.2.tgz#db09592455164191ce8171a4888cd957c67bf0ed"
@@ -3840,6 +3844,10 @@ tunnel-agent@^0.6.0:
   resolved "https://registry.yarnpkg.com/tunnel-agent/-/tunnel-agent-0.6.0.tgz#27a5dea06b36b04a0a9966774b290868f0fc40fd"
   dependencies:
     safe-buffer "^5.0.1"
+
+tweetnacl@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-1.0.0.tgz#713d8b818da42068740bf68386d0479e66fc8a7b"
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"

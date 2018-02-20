@@ -25,11 +25,10 @@ module.exports = function configure(config) {
     rollupPreprocessor: {
       options: {
         plugins: [
-          ...plugins,
           istanbul({
             include: ['src/**/*.js']
           })
-        ],
+        ].concat(plugins),
         // will help to prevent conflicts between different tests entries
         format: 'iife',
         output: {
@@ -75,7 +74,8 @@ module.exports = function configure(config) {
     // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
-    browsers: ['Chrome', 'PhantomJS'],
+    browsers: ['Chrome'],
+    // browsers: ['Chrome', 'PhantomJS'],
 
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 60000,

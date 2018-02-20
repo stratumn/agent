@@ -14,14 +14,23 @@
       "stateHash":
         "c30d47feab3b31632bbeb665833d7d4d72b9ad76e1e5e46e13b4a662111ef604",
       "prevLinkHash":
-        "32fc2804fb82472a44cafdd325745706318d9bed958fef14b535d91fb9527287",
+        "7b13ff6c5e06e888b15de2902f7b48fca6f0219649e250326ebcb270df0f0dab",
       "action": "register",
-      "arguments": ["Seb", "17htLPy4SdLxec5y55Zk4JPvqKvtUJLmS1"]
-    }
+      "inputs": ["hello", "me"]
+    },
+    "signatures": [
+      {
+        "type": "ed25519",
+        "payload": "[meta.inputs,meta.prevLinkHash]",
+        "signature":
+          "wPOxyhbMVJu8Kb9eKTM4vdQuHROM1pohbOWXNfogDcVpBbHfTje4OeQo+qgwy00nTmRJmAhmCD1R/JCI8+xOAg==",
+        "publicKey": "kPaPL6nqw4W96FSgtzZcWA9FBdz7QaAPFWg4FXUZ+RQ="
+      }
+    ]
   },
   "meta": {
     "linkHash":
-      "5b597c841a72f4608e130217a16c1a3a33d4a55957f49b4f0d02b563a92ffc4f",
+      "ebd42fac63645963480d262605f23b3434baae65d56724ebb23a698f596c4419",
     "evidences": [
       {
         "state": "COMPLETE",
