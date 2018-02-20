@@ -24,6 +24,8 @@ const plugins = [
   commonjs({
     namedExports: {
       '../agent-client-js/node_modules/qs/lib/index.js': ['stringify'],
+      'node_modules/tweetnacl/nacl-fast.js': ['sign'],
+      'node_modules/jmespath/jmespath.js': ['search'],
       'node_modules/qs/lib/index.js': ['stringify'],
       'node_modules/canonicaljson/lib/canonicaljson.js': ['stringify']
     }

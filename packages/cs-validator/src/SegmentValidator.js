@@ -14,12 +14,18 @@
   limitations under the License.
 */
 
+import { sign as nacl } from 'tweetnacl';
+import { stringify } from 'canonicaljson';
+import { search } from 'jmespath';
+
 import httpplease from 'httpplease';
 import hashJson from './hashJson';
 
 import computeMerkleParent from './computeMerkleParent';
 
 const blockCypherCache = {};
+
+const handledKeyFormats = ['ed25519'];
 
 function getFossil(txId) {
   if (blockCypherCache[txId]) {
@@ -93,6 +99,40 @@ function validateMerklePath(evidence, linkHash) {
   return null;
 }
 
+function validateSignature(sig, link) {
+  if (!sig.type || !sig.publicKey || !sig.signature || !sig.payload) {
+    return `missing type, public key, signature or payload in ${sig}`;
+  }
+
+  const { publicKey, payload, type, signature } = sig;
+
+  const publicKeyBytes = Buffer.from(publicKey, 'base64');
+  if (publicKeyBytes.length !== nacl.publicKeyLength) {
+    return `public key length must be ${nacl.publicKeyLength}, got ${publicKeyBytes.length}`;
+  }
+
+  const signatureBytes = Buffer.from(signature, 'base64');
+  if (signatureBytes.length !== nacl.signatureLength) {
+    return `signature length must be ${nacl.signatureLength}, got ${signatureBytes.length}`;
+  }
+
+  if (!handledKeyFormats.includes(type.toLowerCase())) {
+    return `signature type [${type}] is not handled: use one of [${handledKeyFormats}]`;
+  }
+
+  const signedData = search(link, payload).filter(Boolean);
+  if (!signedData || signedData.length === 0) {
+    return `jmespath query ${payload} did not match any data`;
+  }
+
+  const signedDataBytes = Buffer.from(stringify(signedData));
+  if (!nacl.detached.verify(signedDataBytes, signatureBytes, publicKeyBytes)) {
+    return 'signature do not match public key';
+  }
+
+  return null;
+}
+
 export default class SegmentValidator {
   constructor(segment) {
     this.segment = segment;
@@ -103,6 +143,7 @@ export default class SegmentValidator {
     errors.stateHash.push(this.validateStateHash());
     errors.merklePath.push(this.validateEvidences());
     errors.fossil.push(this.validateFossils());
+    errors.signatures.push(this.validateSignatures());
   }
 
   validateLinkHash() {
@@ -153,6 +194,20 @@ export default class SegmentValidator {
 
           return null;
         })
+        .filter(err => err != null);
+    }
+    return errors.length > 0 ? errors[0] : null;
+  }
+
+  validateSignatures() {
+    const { signatures } = this.segment.link;
+    let errors = [];
+    if (signatures) {
+      if (!Array.isArray(signatures)) {
+        return `segment.link.signatures should be an array, got ${signatures}`;
+      }
+      errors = signatures
+        .map(sig => validateSignature(sig, this.segment.link))
         .filter(err => err != null);
     }
     return errors.length > 0 ? errors[0] : null;
