@@ -26,7 +26,8 @@ export default class MapValidator {
       linkHash: [],
       stateHash: [],
       merklePath: [],
-      fossil: []
+      fossil: [],
+      signatures: []
     };
   }
 

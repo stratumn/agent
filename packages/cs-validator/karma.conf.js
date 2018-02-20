@@ -25,11 +25,10 @@ module.exports = function configure(config) {
     rollupPreprocessor: {
       options: {
         plugins: [
-          ...plugins,
           istanbul({
             include: ['src/**/*.js']
           })
-        ],
+        ].concat(plugins),
         // will help to prevent conflicts between different tests entries
         format: 'iife',
         output: {
