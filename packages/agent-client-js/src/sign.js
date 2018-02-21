@@ -30,10 +30,10 @@ const attributesMap = {
  * Each property maps to a boolean saying wether or not it should be signed.
  * @param {object} obj - a segment (or a process in case of a new map) to be signed.
  * @param {object} properties - a segment (or a process in case of a new map) to be signed.
- * @param {bool} [data.action] - name of the action the user is calling.
- * @param {bool} [data.inputs] - user-defined inputs (action arguments).
- * @param {bool} [data.prevLinkHash] - previous link hash of a segment.
- * @param {bool} [data.refs] - references of a segment.
+ * @param {bool} [properties.action] - name of the action the user is calling.
+ * @param {bool} [properties.inputs] - user-defined inputs (action arguments).
+ * @param {bool} [properties.prevLinkHash] - previous link hash of a segment.
+ * @param {bool} [properties.refs] - references of a segment.
  * @returns {object} the provided object extended with the attributes to sign.
  */
 export const signedProperties = (obj, properties) => {
@@ -97,17 +97,17 @@ export const sign = (key, data) =>
     }
 
     // define what will be signed
-    const payloadPath = buildPayloadPath(data);
+    const payload = buildPayloadPath(data);
 
     // extract payload from a (simulated) link
     // remove null/undefined elements from the result of the JMESPATH query
-    const payload = (search({ meta: data }, payloadPath) || []).filter(Boolean);
-    if (!payload || payload.length === 0) {
-      reject(new Error(`jmespath query ${payloadPath} did not match any data`));
+    const payloadData = (search({ meta: data }, payload) || []).filter(Boolean);
+    if (!payloadData || payloadData.length === 0) {
+      reject(new Error(`jmespath query ${payload} did not match any data`));
     }
 
     // serialize payload using canonicaljson
-    const payloadBytes = Buffer.from(stringify(payload));
+    const payloadBytes = Buffer.from(stringify(payloadData));
 
     // sign the payload and resolve with the signature
     const signature = naclSign.detached(payloadBytes, key.secret);
@@ -116,6 +116,6 @@ export const sign = (key, data) =>
       type: key.type,
       publicKey: key.public,
       signature: Buffer.from(signature).toString('base64'),
-      payload: payloadPath
+      payload: payload
     });
   });
