@@ -23,7 +23,7 @@ function isSchemeHandled(alg) {
 }
 
 /**
- * Signs a payload
+ * Attach a key to a process or a segment.
 * @param {object} obj - either a process or a segment
 * @param {object} key - a key object
 * @param {string} key.type - the signature scheme that should be used with this key (eg: ed25519)

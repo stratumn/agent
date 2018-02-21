@@ -20,6 +20,7 @@ import { search } from 'jmespath';
 
 const attributesMap = {
   inputs: 'meta.inputs',
+  action: 'meta.action',
   prevLinkHash: 'meta.prevLinkHash',
   refs: 'meta.refs'
 };
@@ -28,13 +29,14 @@ const attributesMap = {
  * Defines the object properties to be signed.
  * Each property maps to a boolean saying wether or not it should be signed.
  * @param {object} obj - a segment (or a process in case of a new map) to be signed.
- * @param {object} data - a segment (or a process in case of a new map) to be signed.
+ * @param {object} properties - a segment (or a process in case of a new map) to be signed.
+ * @param {bool} [data.action] - name of the action the user is calling.
  * @param {bool} [data.inputs] - user-defined inputs (action arguments).
  * @param {bool} [data.prevLinkHash] - previous link hash of a segment.
  * @param {bool} [data.refs] - references of a segment.
  * @returns {object} the provided object extended with the attributes to sign.
  */
-const signedProperties = (obj, properties) => {
+export const signedProperties = (obj, properties) => {
   if (properties) {
     Object.keys(properties).forEach(p => {
       if (!attributesMap[p]) {
@@ -49,6 +51,7 @@ const signedProperties = (obj, properties) => {
   return Object.assign(obj, {
     signed: properties || {
       inputs: true,
+      action: true,
       prevLinkHash: obj.meta ? !!obj.meta.linkHash : false,
       refs: true
     }
@@ -77,12 +80,13 @@ const buildPayloadPath = properties => {
  * @param {string} key.public - the base64 encoded public key
  * @param {Buffer} key.secret - a Buffer (or Uint8Array) containing the private key
  * @param {object} data - an object containing the properties to sign.
- * @param {bool} [data.inputs] - user-defined inputs (action arguments).
- * @param {bool} [data.prevLinkHash] - previous link hash of a segment.
- * @param {bool} [data.refs] - references of a segment.
+ * @param {string[]} [data.inputs] - user-defined inputs (action arguments).
+ * @param {string} [data.action] - name of the action the user is calling.
+ * @param {string} [data.prevLinkHash] - previous link hash of a segment.
+ * @param {object[]} [data.refs] - references of a segment.
  * @returns {object} a signature
  */
-const sign = (key, data) =>
+export const sign = (key, data) =>
   new Promise((resolve, reject) => {
     if (!data) {
       reject(new Error('trying to sign an emtpy payload'));
@@ -115,5 +119,3 @@ const sign = (key, data) =>
       payload: payloadPath
     });
   });
-
-export { sign, signedProperties };

@@ -86,6 +86,7 @@ describe('#segmentify', () => {
           const signedSeg = segment1.sign();
           signedSeg.signed.should.deepEqual({
             refs: true,
+            action: true,
             inputs: true,
             prevLinkHash: true
           });

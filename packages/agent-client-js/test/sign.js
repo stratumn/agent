@@ -38,6 +38,7 @@ describe('#signedProperties', () => {
     it('assigns default properties to sign when called without argument on a segment', () =>
       signedProperties({ meta: { linkHash: 'test' } }).signed.should.deepEqual({
         inputs: true,
+        action: true,
         prevLinkHash: true,
         refs: true
       }));
@@ -45,13 +46,14 @@ describe('#signedProperties', () => {
     it('does not enable signing prevLinkHash by default when called on a process', () =>
       signedProperties({}).signed.should.deepEqual({
         inputs: true,
+        action: true,
         prevLinkHash: false,
         refs: true
       }));
 
     it('fails if trying to add a invalid propery to be signed', () =>
       (() => signedProperties({}, { unknown: true })).should.throw(
-        'Cannot sign property unknown, it has to be one of inputs,prevLinkHash,refs'
+        'Cannot sign property unknown, it has to be one of inputs,action,prevLinkHash,refs'
       ));
   });
 });
@@ -68,6 +70,7 @@ describe('#sign', () => {
 
   const testData = {
     refs: [{ test: 'test' }],
+    action: 'test',
     prevLinkHash: 'test',
     inputs: ['1', '2']
   };
@@ -75,7 +78,7 @@ describe('#sign', () => {
   it('outputs a signature given a key and data to sign', () =>
     sign(testKey, testData).then(sig => {
       sig.payload.should.be.exactly(
-        '[meta.refs,meta.prevLinkHash,meta.inputs]'
+        '[meta.refs,meta.action,meta.prevLinkHash,meta.inputs]'
       );
       sig.publicKey.should.be.exactly(
         Buffer.from(
@@ -86,14 +89,14 @@ describe('#sign', () => {
 
   it('build the payload accordingly to the provided data', () =>
     sign(testKey, { ...testData, inputs: false }).then(sig =>
-      sig.payload.should.be.exactly('[meta.refs,meta.prevLinkHash]')
+      sig.payload.should.be.exactly('[meta.refs,meta.action,meta.prevLinkHash]')
     ));
 
   it('outputs a valid signature', () =>
     sign(testKey, { ...testData, inputs: false }).then(sig => {
       const { signature, publicKey } = sig;
       const payloadBytes = Buffer.from(
-        stringify([testData.refs, testData.prevLinkHash])
+        stringify([testData.refs, testData.action, testData.prevLinkHash])
       );
       const verif = nacl.detached.verify(
         payloadBytes,
@@ -116,7 +119,7 @@ describe('#sign', () => {
     return sign(externalKey, { ...testData, inputs: false }).then(sig => {
       const { signature, publicKey } = sig;
       const payloadBytes = Buffer.from(
-        stringify([testData.refs, testData.prevLinkHash])
+        stringify([testData.refs, testData.action, testData.prevLinkHash])
       );
       publicKey.should.be.exactly(
         'wzItvU7C9JA+JY0zR6OuTJ7Wq6gGBeIqa4JBk0ZFbgs='
@@ -130,14 +133,14 @@ describe('#sign', () => {
     });
   });
 
-  it('fails if the provided data does not match [inputs, refs, prevLinkHash]', () =>
+  it('fails if the provided data does not match [inputs, action, refs, prevLinkHash]', () =>
     sign(testKey, { ...testData, unknown: 'test' })
       .then(() => {
         throw new Error('should have failed');
       })
       .catch(err =>
         err.message.should.be.exactly(
-          'Cannot sign property unknown, it has to be one of inputs,prevLinkHash,refs'
+          'Cannot sign property unknown, it has to be one of inputs,action,prevLinkHash,refs'
         )
       ));
 

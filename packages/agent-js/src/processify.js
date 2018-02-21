@@ -45,7 +45,7 @@ const loadRefs = refs => {
 };
 
 const loadMeta = (inputMeta, refs) => ({
-  ...(inputMeta || {}),
+  ...JSON.parse(JSON.stringify(inputMeta || {})),
   refs: loadRefs(refs)
 });
 
@@ -56,7 +56,7 @@ export default function processify(
   refs,
   getSegment
 ) {
-  let link = { ...(initialLink || {}) };
+  let link = JSON.parse(JSON.stringify(initialLink || {}));
 
   const methods = protoChain(
     {
@@ -72,7 +72,7 @@ export default function processify(
   const promisify = action => (...args) =>
     new Promise((resolve, reject) => {
       const ctx = {
-        state: { ...(link.state || {}) },
+        state: JSON.parse(JSON.stringify(link.state || {})),
         meta: loadMeta(link.meta, refs),
         signatures: loadSignatures(signatures),
         append(state, meta, type) {
@@ -117,8 +117,8 @@ export default function processify(
 
     // Events cannot append or reject.
     const ctx = {
-      state: { ...(link.state || {}) },
-      meta: { ...(link.meta || {}) }
+      state: JSON.parse(JSON.stringify(link.state || {})),
+      meta: JSON.parse(JSON.stringify(link.meta || {}))
     };
 
     Object.keys(actions.events).forEach(key => {

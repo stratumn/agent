@@ -94,7 +94,6 @@ All methods are optional. They can either be synchronous or return a Promise.
 
 ### Available plugins:
 
-- `actionArgs`: Saves the action and its arguments in link meta information.
 - `agentUrl`: Saves in segment meta the URL that can be used to retrieve a segment.
 - `encryptedState`: Encrypts the state before the segment is saved. Filters out segment that cannot be decrypted.
 - `localTime`: Saves the local timestamp in the link meta information.

@@ -40,6 +40,7 @@ export default function segmentify(adaptor, process, segment) {
     if (signed) {
       const data = {
         inputs: signed.inputs ? args : false,
+        action: signed.action ? action : false,
         refs: signed.refs ? refs : false,
         prevLinkHash: signed.prevLinkHash ? segment.meta.linkHash : false
       };
