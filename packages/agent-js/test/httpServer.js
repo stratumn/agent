@@ -309,6 +309,7 @@ describe('HttpServer()', () => {
     it('renders the first segment', () => {
       const req = makePostRequest(server, `/${process.name}/segments`, [
         [],
+        [],
         1,
         2,
         3
@@ -328,7 +329,8 @@ describe('HttpServer()', () => {
 
     it('renders the first segment with good refs', () => {
       const req = makePostRequest(server, `/${process.name}/segments`, [
-        refs.getGoodRefs(process.name),
+        [],
+        refs.getValidRefs(process.name),
         1,
         2,
         3
@@ -350,7 +352,8 @@ describe('HttpServer()', () => {
 
     it('renders the first segment with bad process ref', () => {
       const req = makePostRequest(server, `/${process.name}/segments`, [
-        refs.getBadRefs(),
+        [],
+        refs.getInvalidRefs(),
         1,
         2,
         3
@@ -366,6 +369,7 @@ describe('HttpServer()', () => {
     it('updates correclty when adding a process after initial launch', () => {
       const p2 = agent.addProcess('basic2', actions, memoryStore(), null);
       const req = makePostRequest(server, `/${p2.name}/segments`, [
+        null,
         null,
         1,
         2,
@@ -384,7 +388,7 @@ describe('HttpServer()', () => {
     });
 
     it('fails when trying to add segments to a non-existing process', () => {
-      const req = makePostRequest(server, '/lol/segments', [[], 1, 2, 3]);
+      const req = makePostRequest(server, '/lol/segments', [[], [], 1, 2, 3]);
       return testFn(req, (err, res) => {
         if (err) {
           throw err;
@@ -396,11 +400,11 @@ describe('HttpServer()', () => {
 
   describe('POST "/<process>/segments/:linkHash/:action"', () => {
     it('renders the new segment', () =>
-      process.createMap([], 1, 2, 3).then(segment1 => {
+      process.createMap([], [], 1, 2, 3).then(segment1 => {
         const req = makePostRequest(
           server,
           `/${process.name}/segments/${segment1.meta.linkHash}/action`,
-          [[], 4]
+          [[], [], 4]
         );
         return testFn(req, (err, res) => {
           if (err) {
@@ -421,7 +425,7 @@ describe('HttpServer()', () => {
   describe('GET "/<process>/segments/:linkHash"', () => {
     it('renders the segment', () =>
       process
-        .createMap([], 1, 2, 3)
+        .createMap([], [], 1, 2, 3)
         .then(segment =>
           testDeepEquals(
             supertest(server).get(
@@ -436,9 +440,9 @@ describe('HttpServer()', () => {
   describe('GET "/<process>/segments"', () => {
     it('renders the segments', () =>
       process
-        .createMap([], 1, 2, 3)
+        .createMap([], [], 1, 2, 3)
         .then(segment =>
-          process.createSegment(segment.meta.linkHash, 'action', [], 4)
+          process.createSegment(segment.meta.linkHash, 'action', [], [], 4)
         )
         .then(() => process.findSegments({ limit: 20 }))
         .then(segments => {
@@ -452,12 +456,12 @@ describe('HttpServer()', () => {
     it('filters by mapIds', () => {
       let mapId;
       return process
-        .createMap([], 1, 2, 3)
+        .createMap([], [], 1, 2, 3)
         .then(segment1 =>
-          process.createSegment(segment1.meta.linkHash, 'action', [], 4)
+          process.createSegment(segment1.meta.linkHash, 'action', [], [], 4)
         )
         .then(() =>
-          process.createMap([], 4, 5, 6).then(segment2 => {
+          process.createMap([], [], 4, 5, 6).then(segment2 => {
             ({ mapId } = segment2.link.meta);
             return process.findSegments({ mapIds: [mapId] });
           })
@@ -477,9 +481,9 @@ describe('HttpServer()', () => {
   describe('GET "/<process>/maps"', () => {
     it('renders the map IDs', () =>
       process
-        .createMap([], 1, 2, 3)
-        .then(() => process.createMap([], 4, 5, 6))
-        .then(() => process.createMap([], 7, 8, 9))
+        .createMap([], [], 1, 2, 3)
+        .then(() => process.createMap([], [], 4, 5, 6))
+        .then(() => process.createMap([], [], 7, 8, 9))
         .then(() => process.getMapIds(process.name, { limit: 20 }))
         .then(mapIds =>
           testDeepEquals(

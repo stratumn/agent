@@ -32,6 +32,9 @@ describe('#processify', () => {
         testProcess.getSegment.should.be.a.Function();
         testProcess.findSegments.should.be.a.Function();
         testProcess.getMapIds.should.be.a.Function();
+        testProcess.withRefs.should.be.a.Function();
+        testProcess.withKey.should.be.a.Function();
+        testProcess.sign.should.be.a.Function();
       }));
   });
 });

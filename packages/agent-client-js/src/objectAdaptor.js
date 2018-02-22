@@ -30,11 +30,11 @@ export default class objectAdaptor {
     return this.agent.getAllProcesses().then(decorateBody);
   }
 
-  createMap(processName, refs, ...args) {
+  createMap(processName, signatures, refs, ...args) {
     try {
       return this.agent
         .getProcess(processName)
-        .createMap(refs, ...args)
+        .createMap(signatures, refs, ...args)
         .then(decorateBody);
     } catch (err) {
       return Promise.reject(err);
@@ -74,11 +74,11 @@ export default class objectAdaptor {
     }
   }
 
-  createSegment(processName, linkHash, action, refs, ...args) {
+  createSegment(processName, linkHash, action, signatures, refs, ...args) {
     try {
       return this.agent
         .getProcess(processName)
-        .createSegment(linkHash, action, refs, ...args)
+        .createSegment(linkHash, action, signatures, refs, ...args)
         .then(decorateBody);
     } catch (err) {
       return Promise.reject(err);

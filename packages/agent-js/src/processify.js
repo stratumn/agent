@@ -16,10 +16,22 @@
 
 import protoChain from './protoChain';
 
-function loadMeta(inputMeta, refs) {
-  const meta = JSON.parse(JSON.stringify(inputMeta || {}));
-  meta.refs = [];
-  if (refs == null) return meta;
+const loadSignatures = signatures => {
+  if (signatures == null) return [];
+  if (!Array.isArray(signatures)) {
+    throw new Error('Bad signatures type');
+  }
+
+  signatures.forEach(sig => {
+    if (!sig.type || !sig.publicKey || !sig.signature || !sig.payload) {
+      throw new Error(`missing type, public key, signature or payload`);
+    }
+  });
+  return signatures;
+};
+
+const loadRefs = refs => {
+  if (refs == null) return [];
   if (!Array.isArray(refs)) {
     throw new Error('Bad references type');
   }
@@ -28,12 +40,22 @@ function loadMeta(inputMeta, refs) {
     if ((!ref.process || !ref.linkHash) && ref.segment == null) {
       throw new Error(`missing segment or (process and linkHash)`);
     }
-    meta.refs.push(ref);
   });
-  return meta;
-}
+  return refs;
+};
 
-export default function processify(actions, initialLink, refs, getSegment) {
+const loadMeta = (inputMeta, refs) => ({
+  ...JSON.parse(JSON.stringify(inputMeta || {})),
+  refs: loadRefs(refs)
+});
+
+export default function processify(
+  actions,
+  initialLink,
+  signatures,
+  refs,
+  getSegment
+) {
   let link = JSON.parse(JSON.stringify(initialLink || {}));
 
   const methods = protoChain(
@@ -47,13 +69,23 @@ export default function processify(actions, initialLink, refs, getSegment) {
 
   const process = {};
 
-  const promisify = key => (...args) =>
+  const promisify = action => (...args) =>
     new Promise((resolve, reject) => {
       const ctx = {
         state: JSON.parse(JSON.stringify(link.state || {})),
         meta: loadMeta(link.meta, refs),
-        append(state, meta) {
-          link = { state: state || this.state, meta: meta || this.meta };
+        signatures: loadSignatures(signatures),
+        append(state, meta, type) {
+          link = {
+            state: state || this.state,
+            meta: {
+              ...(meta || this.meta),
+              type: type || action,
+              action,
+              inputs: args
+            },
+            signatures: this.signatures
+          };
           resolve(link);
         },
         reject(error) {
@@ -67,7 +99,7 @@ export default function processify(actions, initialLink, refs, getSegment) {
         }
       };
 
-      methods[key].apply(ctx, args);
+      methods[action].apply(ctx, args);
     });
 
   // Promisify all methods

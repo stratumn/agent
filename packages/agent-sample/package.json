@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --exec babel-node -L -i test -i segments -i node_modules index.js",
     "test": "mocha --compilers js:babel-core/register --recursive --require should",
-    "test:ci": "mkdir coverage && nyc npm test && nyc report --reporter=text-lcov > coverage/coverage.lcov"
+    "test:ci": "mkdir coverage ; nyc npm test && nyc report --reporter=text-lcov > coverage/coverage.lcov"
   },
   "private": true,
   "author": "Stratumn Team",

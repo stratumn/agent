@@ -11,15 +11,15 @@ const plugins = [
   babel(
     Object.assign(
       {
-        exclude: ['node_modules/**', '../agent-client-js/**', '../utils/**']
+        include: ['src/**', 'test/integration/**']
       },
       babelrc()
     )
   ),
-  builtins(),
   nodeResolve({
     browser: true,
-    module: false
+    module: false,
+    preferBuiltins: true
   }),
   commonjs({
     namedExports: {
@@ -28,6 +28,7 @@ const plugins = [
       'node_modules/canonicaljson/lib/canonicaljson.js': ['stringify']
     }
   }),
+  builtins(),
   globals()
 ];
 

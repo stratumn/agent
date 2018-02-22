@@ -163,6 +163,36 @@ AgentClient
     // Handle errors
   });
 ```
+### Process#withKey(...args)
+
+Attach a key to a process. This is needed whenever one wants to send signatures when creating a map or appending a segment.
+
+```javascript
+// the secret key must be stored in a secure location
+const key = {
+  type: 'ed25519' // the signature scheme, 'ed25519' is currently the only option
+  secret: 'YOURBASE64ENCODEDPRIVATEKEY' // a 64-bytes private key encoded in base64 
+}
+
+AgentClient
+  .getAgent('http://localhost:3000')
+  .then(function(agent) {
+    const process = agent.processes.firstProcess;
+    return process
+      .withKey(key)
+      .sign()
+      .createMap('A new map');
+
+    // you could also have added references to the first segment:
+    // return process.withKey(key).sign({refs: true}).withRefs('abc123').createMap('A new map, with references');
+  })
+  .then(function(segment) {
+    console.log(segment);
+  })
+  .catch(function(err) {
+    // Handle errors
+  });
+```
 
 ### Process#getSegment(linkHash)
 
@@ -277,6 +307,45 @@ AgentClient
   .then(function(segment) {
     // you can also add references to a new segment
     return segment.withRefs('acee2427').addMessage('Hello, World, with References!');
+  })
+  .then(function(segment) {
+    // you can also add signatures to a new segment
+    // calling sign() without argument will create a signature of the prevLinkHash, references, the action and its inputs.
+    // a key is needed to create a signature, it should be attached to the process, the current segment or any previous one (see example below).
+    return segment.withKey(someKey).sign().addMessage('Hello, World, with Signatures!');
+  })
+  .then(function(segment) {
+    console.log(segment);
+  })
+  .catch(function(err) {
+    // Handle errors
+  });
+```
+
+### Segment#:sign(key)
+
+Specifies the properties of the segment that should be signed
+
+```javascript
+// the secret key must be stored in a secure location
+const key = {
+  type: 'ed25519' // the signature scheme, 'ed25519' is currently the only option
+  secret: 'YOURBASE64ENCODEDPRIVATEKEY' // a 64-bytes private key encoded in base64 
+}
+
+AgentClient
+  .getAgent('http://localhost:3000')
+  .then(function(agent) {
+    const process = agent.processes.firstProcess;
+    // attach a key to the process to be able to send signatures
+    return process
+      .withKey(key)
+      .getSegment('aee5427');
+  })
+  .then(function(segment) {
+    // you can specify which properties you wish to sign (prevLinkHash, action, inputs, references). By default, all 4 are signed when calling sign() without argument.
+    // Here we don't have to call withKey() on the segment since the key is alredy attached to the process.
+    return segment.sign({prevLinkHash: true, inputs: true}).addMessage('Hello, World!');
   })
   .then(function(segment) {
     console.log(segment);

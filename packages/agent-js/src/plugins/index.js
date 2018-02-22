@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import actionArgs from './actionArgs';
 import agentUrl from './agentUrl';
 import encryptedState from './encryptedState';
 import localTime from './localTime';
@@ -23,7 +22,6 @@ import stateHash from './stateHash';
 import agentVersion from './agentVersion';
 
 module.exports = {
-  actionArgs,
   agentUrl,
   agentVersion,
   encryptedState,

@@ -147,6 +147,7 @@ export default class Process {
 
   /**
    * Creates the first segment of a map, calling the #init() function of the agent.
+   * @param {object[]} [signatures] - the optional list of signatures of the new segment
    * @param {object[]} [refs] - the optional list of references of the new map
    * @param {string} [refs.process] - ref process name from the same store
    * @param {string} [refs.linkHash] - ref linkHash from the same store
@@ -155,12 +156,13 @@ export default class Process {
    * @param {...} args - the arguments to pass to the init function
    * @returns {Promise} - a promise that resolve with the segment
    */
-  createMap(refs, ...args) {
+  createMap(signatures, refs, ...args) {
     const initialLink = { meta: { mapId: uuid.v4() } };
     let link;
     return processify(
       this.actions,
       initialLink,
+      signatures,
       refs,
       this.storeClient.getSegment
     )
@@ -181,6 +183,7 @@ export default class Process {
    * Appends a segment to a map.
    * @param {string} prevLinkHash - the previous link hash
    * @param {string} action - the name of the transition function to call
+   * @param {object[]} [signatures] - the optional list of signatures of the new segment
    * @param {object[]} [refs] - the optional list of references of the new segment
    * @param {string} [refs.process] - ref process name from the same store
    * @param {string} [refs.linkHash] - ref linkHash from the same store
@@ -189,7 +192,7 @@ export default class Process {
    * @param {...} args - the arguments to pass to the transition function
    * @returns {Promise} - a promise that resolve with the segment
    */
-  createSegment(prevLinkHash, action, refs, ...args) {
+  createSegment(prevLinkHash, action, signatures, refs, ...args) {
     if (!this.actions[action]) {
       const err = new Error('not found');
       err.status = 404;
@@ -211,6 +214,7 @@ export default class Process {
         const process = processify(
           this.actions,
           initialLink,
+          signatures,
           refs,
           this.storeClient.getSegment
         );

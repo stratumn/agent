@@ -14,10 +14,23 @@
   limitations under the License.
 */
 
+import { sign } from './sign';
 import segmentify from './segmentify';
 
 export default function createMap(adaptor, process, ...args) {
-  return adaptor
-    .createMap(process.name, process.refs, ...args)
-    .then(res => segmentify(adaptor, process, res.body));
+  const { signed, refs, key } = process;
+
+  const createSignedMap = signature =>
+    adaptor
+      .createMap(process.name, signature ? [signature] : [], refs, ...args)
+      .then(res => segmentify(adaptor, process, res.body));
+
+  if (signed) {
+    const data = {
+      inputs: signed.inputs ? args : false,
+      refs: signed.refs ? refs : false
+    };
+    return sign(key, data).then(createSignedMap);
+  }
+  return createSignedMap();
 }
