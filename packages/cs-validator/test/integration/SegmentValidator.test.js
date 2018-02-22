@@ -23,13 +23,21 @@ import invalidMerklePathParent from '../fixtures/invalidMerklePathParent.json';
 import invalidMerkleRoot from '../fixtures/invalidMerkleRoot.json';
 import invalidFossil from '../fixtures/invalidFossil.json';
 
+import sigBadFormat from '../fixtures/signatures/sigBadFormat.json';
+import sigBadPublicKeyLength from '../fixtures/signatures/sigBadPublicKeyLength.json';
+import sigBadSigLength from '../fixtures/signatures/sigBadSigLength.json';
+import sigEmptyPayload from '../fixtures/signatures/sigEmptyPayload.json';
+import sigBadScheme from '../fixtures/signatures/sigBadScheme.json';
+import sigNoMatch from '../fixtures/signatures/sigNoMatch.json';
+
 describe('SegmentValidator', () => {
   function validate(segment) {
     const errors = {
       linkHash: [],
       stateHash: [],
       merklePath: [],
-      fossil: []
+      fossil: [],
+      signatures: []
     };
     new SegmentValidator(segment).validate(errors);
     return errors;
@@ -104,5 +112,41 @@ describe('SegmentValidator', () => {
         })
         .catch(done);
     });
+  });
+
+  describe('With signatures', () => {
+    it('checks the format', () =>
+      Promise.all(validate(sigBadFormat).signatures).then(errs =>
+        errs[0].should.eql(
+          'missing type, public key, signature or payload in [object Object]'
+        )
+      ));
+
+    it('checks the key length', () =>
+      Promise.all(validate(sigBadPublicKeyLength).signatures).then(errs =>
+        errs[0].should.eql('public key length must be 32, got 3')
+      ));
+
+    it('checks the signature length', () =>
+      Promise.all(validate(sigBadSigLength).signatures).then(errs =>
+        errs[0].should.eql('signature length must be 64, got 3')
+      ));
+
+    it('checks the signature scheme', () =>
+      Promise.all(validate(sigBadScheme).signatures).then(errs =>
+        errs[0].should.eql(
+          'signature type [unknown] is not handled: use one of [ed25519]'
+        )
+      ));
+
+    it('checks that the signed data is not empty', () =>
+      Promise.all(validate(sigEmptyPayload).signatures).then(errs =>
+        errs[0].should.eql('jmespath query [nothing] did not match any data')
+      ));
+
+    it('checks that the signature matched the mublic key', () =>
+      Promise.all(validate(sigNoMatch).signatures).then(errs =>
+        errs[0].should.eql('signature do not match public key')
+      ));
   });
 });

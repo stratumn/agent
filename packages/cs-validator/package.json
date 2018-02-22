@@ -72,6 +72,8 @@
     "canonicaljson": "^1.0.0",
     "deepmerge": "2.0.1",
     "httpplease": "^0.16.4",
-    "js-sha256": "^0.3.0"
+    "js-sha256": "^0.3.0",
+    "tweetnacl": "1.0.0",
+    "jmespath": "^0.15.0"
   }
 }

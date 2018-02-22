@@ -1,0 +1,27 @@
+{
+  "link": {
+    "state": {
+      "test": "test"
+    },
+    "meta": {
+      "mapId": "5770eeadd6a22a8f2bd2bbf6",
+      "prevLinkHash":
+        "32fc2804fb82472a44cafdd325745706318d9bed958fef14b535d91fb9527287",
+      "action": "register",
+      "inputs": ["Seb", "17htLPy4SdLxec5y55Zk4JPvqKvtUJLmS1"]
+    },
+    "signatures": [
+      {
+        "type": "ed25519",
+        "payload": "[nothing]",
+        "publicKey": "suDBwQpmfeuKye6hK99K7DmcV+9ai1mekdt1PzBPy04=",
+        "signature":
+          "mEkg4XVyGHfwbKgZYnI9bFckJUQZ3nTtUdqqdH77dwJ4dDZ9N/KehgB5xBlO+/2BpkPRcKLFrfeZa1xOQbpGDw=="
+      }
+    ]
+  },
+  "meta": {
+    "linkHash":
+      "5b597c841a72f4608e130217a16c1a3a33d4a55957f49b4f0d02b563a92ffc4f"
+  }
+}
