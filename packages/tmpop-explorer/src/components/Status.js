@@ -22,6 +22,7 @@ import { CircularProgress } from 'material-ui/Progress';
 const Status = ({ status }) => {
   if (status) {
     const nodeInfo = status.node_info;
+    const pubKey = status.pub_key;
     return (
       <div>
         <h2>Node Info</h2>
@@ -29,7 +30,7 @@ const Status = ({ status }) => {
           <TableBody>
             <TableRow>
               <TableCell>Public Key</TableCell>
-              <TableCell>{nodeInfo.pub_key}</TableCell>
+              <TableCell>{pubKey.data}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Moniker</TableCell>
