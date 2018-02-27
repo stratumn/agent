@@ -15,7 +15,7 @@
 */
 
 import withRefs from './withRefs';
-import withKey from './withKey';
+import { withKey } from './withKey';
 import { sign, signedProperties } from './sign';
 
 export default function segmentify(adaptor, process, segment) {

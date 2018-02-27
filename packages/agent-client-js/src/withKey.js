@@ -22,15 +22,13 @@ function isSchemeHandled(alg) {
   return handledKeyFormats.includes(alg.toLowerCase());
 }
 
-/**
- * Attach a key to a process or a segment.
-* @param {object} obj - either a process or a segment
+/** 
+* checks if the key is well formatted and that the signature scheme is handled
 * @param {object} key - a key object
 * @param {string} key.type - the signature scheme that should be used with this key (eg: ed25519)
 * @param {string} key.secret - the base64-encoded private key (64 bytes long)
- * @returns {object} the updated process or segment with a key
- */
-export default function withKey(obj, key) {
+*/
+export function validateKey(key) {
   if (!key || !key.type || !key.secret) {
     throw new Error(
       "key object must comply to the format : {type: 'ed25519', secret: 'YOURSECRETKEY'}"
@@ -47,13 +45,34 @@ export default function withKey(obj, key) {
       `secret key length must be ${nacl.secretKeyLength}, got ${secretKeyBytes.length}`
     );
   }
-  const publicKeyBytes = secretKeyBytes.slice(nacl.publicKeyLength);
+  return true;
+}
 
+/** 
+ *
+* @param {object} key - a key object
+* @param {string} key.type - the signature scheme that should be used with this key (eg: ed25519)
+* @param {string} key.secret - the base64-encoded private key (64 bytes long)
+*/
+export const parseKey = key => ({
+  ...key,
+  secret: Buffer.from(key.secret, 'base64'),
+  public: Buffer.from(key.secret, 'base64')
+    .slice(nacl.publicKeyLength)
+    .toString('base64')
+});
+
+/**
+ * Attach a key to a process or a segment.
+* @param {object} obj - either a process or a segment
+* @param {object} key - a key object
+* @param {string} key.type - the signature scheme that should be used with this key (eg: ed25519)
+* @param {string} key.secret - the base64-encoded private key (64 bytes long)
+ * @returns {object} the updated process or segment with a key
+ */
+export function withKey(obj, key) {
+  validateKey(key);
   return Object.assign(obj, {
-    key: {
-      ...key,
-      secret: secretKeyBytes,
-      public: Buffer.from(publicKeyBytes).toString('base64')
-    }
+    key: parseKey(key)
   });
 }
