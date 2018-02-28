@@ -1,6 +1,6 @@
 import { getAgent } from '@indigoframework/client';
 import * as actionTypes from '../constants/actionTypes';
-import { clearRefs, addNotifications } from './';
+import { clearRefs, addNotifications, clearSignature } from './';
 import { makeNewSegmentNotification } from '../utils/notificationHelpers';
 
 const appendSegmentRequest = () => ({
@@ -24,6 +24,7 @@ const appendSegmentClear = () => ({
 export const openDialog = (agentName, processName) => (dispatch, getState) => {
   const {
     agents,
+    key,
     mapExplorer: { linkHash, processName: selectedSegmentProcess }
   } = getState();
 
@@ -41,7 +42,8 @@ export const openDialog = (agentName, processName) => (dispatch, getState) => {
       agent: agentName,
       process: processName,
       actions: segmentActions,
-      parent: linkHash
+      parent: linkHash,
+      key: key
     });
   }
 };
@@ -64,23 +66,30 @@ export const appendSegment = (...args) => (dispatch, getState) => {
   dispatch(appendSegmentRequest());
   const {
     agents,
+    key,
+    signedAttributes,
     appendSegment: { dialog: { agent, process, parent, selectedAction } },
     selectRefs: { refs }
   } = getState();
   if (agents[agent]) {
     const { url } = agents[agent];
     return getAgent(url)
-      .then(a => {
-        const proc = a.getProcess(process);
-        return proc.getSegment(parent);
+      .then(a => a.getProcess(process).getSegment(parent))
+      .then(s => {
+        let parentSegment = s;
+        if (key && Object.keys(signedAttributes).filter(Boolean).length > 0) {
+          parentSegment = parentSegment.withKey(key).sign(signedAttributes);
+        }
+        return parentSegment.withRefs(refs)[selectedAction](...args);
       })
-      .then(parentSegment =>
-        parentSegment.withRefs(refs)[selectedAction](...args)
-      )
       .then(segment => {
+        if (segment && segment.key) {
+          delete segment.key;
+        }
         dispatch(appendSegmentSuccess(segment));
         dispatch(closeDialog());
         dispatch(clearRefs());
+        dispatch(clearSignature());
         dispatch(addNotifications([makeNewSegmentNotification(segment)]));
       })
       .catch(err => {

@@ -18,14 +18,15 @@ import {
   createMap as createMapAction,
   closeCreateMapDialogAndClear
 } from '../actions';
-import { RefChipList } from './';
+import { RefChipList, SignedAttributes } from './';
 
 export const CreateMapDialog = ({
   show,
   args,
   error,
   closeDialog,
-  createMap
+  createMap,
+  userKey
 }) => {
   if (!show) {
     return null;
@@ -40,7 +41,6 @@ export const CreateMapDialog = ({
       }}
     />
   );
-
   return (
     <Dialog open={show} onClose={() => closeDialog()}>
       <DialogTitle>Create map</DialogTitle>
@@ -50,6 +50,13 @@ export const CreateMapDialog = ({
         )}
         {createMapArgsFields}
         <RefChipList />
+        <SignedAttributes
+          userKey={userKey}
+          allowedAttributes={{
+            inputs: true,
+            refs: true
+          }}
+        />
       </DialogContent>
       <DialogActions>
         <Button color="default" onClick={() => closeDialog()}>
@@ -72,7 +79,16 @@ CreateMapDialog.propTypes = {
   args: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   error: PropTypes.string.isRequired,
   createMap: PropTypes.func.isRequired,
-  closeDialog: PropTypes.func.isRequired
+  closeDialog: PropTypes.func.isRequired,
+  userKey: PropTypes.shape({
+    type: PropTypes.string,
+    public: PropTypes.string,
+    secret: PropTypes.instanceOf(Uint8Array)
+  })
+};
+
+CreateMapDialog.defaultProps = {
+  userKey: null
 };
 
 export function mapStateToProps({ createMap }) {
@@ -92,7 +108,8 @@ export function mapStateToProps({ createMap }) {
   return {
     show,
     error,
-    args: createMap.dialog.args
+    args: createMap.dialog.args,
+    userKey: createMap.dialog.key || null
   };
 }
 

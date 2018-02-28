@@ -10,7 +10,7 @@ import stubComponent from '../test/stubComponent';
 import * as statusTypes from '../constants/status';
 
 import { CreateMapDialog, mapStateToProps } from './createMapDialog';
-import { RefChipList } from './';
+import { RefChipList, SignedAttributes } from './';
 
 chai.use(sinonChai);
 
@@ -24,12 +24,18 @@ describe('<CreateMapDialog />', () => {
   };
 
   stubComponent(RefChipList);
+  stubComponent(SignedAttributes);
 
   it('learns to show dialog from state', () => {
     const props = mapStateToProps({
       createMap: { dialog: { show: true, args: ['title'] } }
     });
-    expect(props).to.deep.equal({ show: true, args: ['title'], error: '' });
+    expect(props).to.deep.equal({
+      show: true,
+      args: ['title'],
+      error: '',
+      userKey: null
+    });
   });
 
   it('does not show dialog if state missing', () => {

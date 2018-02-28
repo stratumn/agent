@@ -7,6 +7,7 @@ import * as statusTypes from '../../../constants/status';
 export default class {
   constructor() {
     this.agents = {};
+    this.key = null;
     this.maps = {};
     this.segments = {};
     this.mapExplorer = {};
@@ -25,6 +26,11 @@ export default class {
 
   withAgent(name, agent) {
     this.agents[name] = agent;
+    return this;
+  }
+
+  withKey(key) {
+    this.key = key;
     return this;
   }
 
@@ -58,6 +64,7 @@ export default class {
   build() {
     return {
       agents: this.agents,
+      key: this.key,
       maps: this.maps,
       segments: this.segments,
       mapExplorer: this.mapExplorer,

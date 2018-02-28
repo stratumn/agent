@@ -17,6 +17,7 @@ import * as notifications from '../utils/notificationHelpers';
 import {
   TestStateBuilder,
   TestProcessBuilder,
+  TestKeyBuilder,
   TestAgentBuilder
 } from '../test/builders/state';
 
@@ -41,6 +42,14 @@ describe('open action', () => {
       new TestStateBuilder()
         .withAgent('a', new TestAgentBuilder().build())
         .withAgent('aa', new TestAgentBuilder().withProcess(process).build())
+        .withKey(
+          new TestKeyBuilder()
+            .withType('ed25519')
+            .withSecret('secret')
+            .withPublic('public')
+            .withStatus('LOADED')
+            .build()
+        )
         .withSelectedMapExplorerSegment('lh', 'p')
         .build()
     );
@@ -53,7 +62,13 @@ describe('open action', () => {
       agent: 'aa',
       process: 'p',
       actions: process.actions,
-      parent: 'lh'
+      parent: 'lh',
+      key: {
+        type: 'ed25519',
+        secret: 'secret',
+        public: 'public',
+        status: 'LOADED'
+      }
     });
   });
 
@@ -160,6 +175,8 @@ describe('appendSegment action', () => {
   let getStateStub;
   let testRefs;
   let makeNewSegmentNotificationStub;
+  let testKey;
+  let signedAttributes;
 
   beforeEach(() => {
     dispatchSpy = sinon.spy();
@@ -177,6 +194,16 @@ describe('appendSegment action', () => {
       { process: 'c', linkHash: 'd' }
     ];
 
+    testKey = {
+      type: 'keytype',
+      secret: 'secret',
+      public: 'public'
+    };
+
+    signedAttributes = {
+      inputs: true
+    };
+
     getStateStub = sinon.stub();
     getStateStub.returns({
       agents: { a: { url: '' } },
@@ -193,6 +220,8 @@ describe('appendSegment action', () => {
           selectedAction: 'send'
         }
       },
+      key: testKey,
+      signedAttributes: signedAttributes,
       selectRefs: {
         refs: testRefs
       }
@@ -240,8 +269,25 @@ describe('appendSegment action', () => {
       .returns({
         send: segmentSendActionSpy
       });
+
+    const signSpy = sinon
+      .stub()
+      .onCall(0)
+      .returns({
+        withRefs: withRefsSpy
+      });
+
+    const withKeySpy = sinon
+      .stub()
+      .onCall(0)
+      .returns({
+        sign: signSpy
+      });
+
     getSegmentStub.resolves({
-      withRefs: withRefsSpy
+      withRefs: withRefsSpy,
+      withKey: withKeySpy,
+      sign: signSpy
     });
 
     return appendSegment('jim', 'hates pancakes')(
@@ -262,11 +308,18 @@ describe('appendSegment action', () => {
       expect(withRefsSpy.callCount).to.equal(1);
       expect(withRefsSpy.getCall(0).args[0]).to.deep.equal(testRefs);
 
+      expect(withKeySpy.callCount).to.equal(1);
+      expect(withKeySpy.getCall(0).args[0]).to.deep.equal(testKey);
+
+      expect(signSpy.callCount).to.equal(1);
+      expect(signSpy.getCall(0).args[0]).to.deep.equal(signedAttributes);
+
       verifyDispatchedActions([
         actionTypes.APPEND_SEGMENT_REQUEST,
         actionTypes.APPEND_SEGMENT_SUCCESS,
         actionTypes.APPEND_SEGMENT_DIALOG_CLOSE,
         actionTypes.SELECT_REFS_CLEAR,
+        actionTypes.CLEAR_SIGNED_ATTRIBUTES,
         actionTypes.ADD_NOTIFICATIONS
       ]);
     });

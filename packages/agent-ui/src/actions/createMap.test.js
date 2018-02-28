@@ -15,7 +15,8 @@ import {
 import {
   TestStateBuilder,
   TestAgentBuilder,
-  TestProcessBuilder
+  TestProcessBuilder,
+  TestKeyBuilder
 } from '../test/builders/state';
 
 import * as actionTypes from '../constants/actionTypes';
@@ -44,6 +45,14 @@ describe('openCreateMapDialog action', () => {
           )
           .build()
       )
+      .withKey(
+        new TestKeyBuilder()
+          .withType('ed25519')
+          .withSecret('secret')
+          .withPublic('public')
+          .withStatus('LOADED')
+          .build()
+      )
       .build();
     getStateStub.returns(state);
 
@@ -55,7 +64,13 @@ describe('openCreateMapDialog action', () => {
       type: actionTypes.CREATE_MAP_DIALOG_OPEN,
       agent: 'a',
       process: 'p',
-      args: ['title', 'version']
+      args: ['title', 'version'],
+      key: {
+        type: 'ed25519',
+        secret: 'secret',
+        public: 'public',
+        status: 'LOADED'
+      }
     });
   });
 });
@@ -90,7 +105,11 @@ describe('createMap action', () => {
   let dispatchSpy;
   let getStateStub;
   let withRefsStub;
+  let withKeyStub;
+  let signStub;
   let testRefs;
+  let testKey;
+  let signedAttributes;
 
   beforeEach(() => {
     dispatchSpy = sinon.spy();
@@ -102,10 +121,26 @@ describe('createMap action', () => {
       .returns({
         createMap: createMapStub
       });
+
+    signStub = sinon
+      .stub()
+      .onCall(0)
+      .returns({
+        withRefs: withRefsStub
+      });
+
+    withKeyStub = sinon
+      .stub()
+      .onCall(0)
+      .returns({
+        sign: signStub
+      });
+
     stratumnClientStub = sinon.stub(StratumnAgentClient, 'getAgent');
     stratumnClientStub.resolves({
       getProcess: () => ({
-        withRefs: withRefsStub
+        withRefs: withRefsStub,
+        withKey: withKeyStub
       })
     });
 
@@ -115,6 +150,16 @@ describe('createMap action', () => {
       { process: 'a', linkHash: 'b' },
       { process: 'c', linkHash: 'd' }
     ];
+
+    testKey = {
+      type: 'keytype',
+      secret: 'secret',
+      public: 'public'
+    };
+
+    signedAttributes = {
+      inputs: true
+    };
 
     getStateStub = sinon.stub();
     getStateStub.returns({
@@ -126,6 +171,8 @@ describe('createMap action', () => {
           process: 'p'
         }
       },
+      key: testKey,
+      signedAttributes,
       selectRefs: { refs: testRefs }
     });
   });
@@ -170,6 +217,12 @@ describe('createMap action', () => {
       expect(withRefsStub.callCount).to.equal(1);
       expect(withRefsStub.getCall(0).args[0]).to.deep.equal(testRefs);
 
+      expect(withKeyStub.callCount).to.equal(1);
+      expect(withKeyStub.getCall(0).args[0]).to.deep.equal(testKey);
+
+      expect(signStub.callCount).to.equal(1);
+      expect(signStub.getCall(0).args[0]).to.deep.equal(signedAttributes);
+
       expect(createMapStub.getCall(0).args).to.deep.equal([
         'a new map',
         'that rocks'
@@ -180,6 +233,7 @@ describe('createMap action', () => {
         actionTypes.CREATE_MAP_REQUEST,
         actionTypes.CREATE_MAP_SUCCESS,
         actionTypes.SELECT_REFS_CLEAR,
+        actionTypes.CLEAR_SIGNED_ATTRIBUTES,
         actionTypes.CREATE_MAP_DIALOG_CLOSE,
         actionTypes.SEGMENT_SUCCESS
       ]);

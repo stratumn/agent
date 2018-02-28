@@ -16,7 +16,9 @@ describe('<AgentsPage />', () => {
   const fetchSpy = sinon.spy();
   const requiredProps = {
     fetchAgent: fetchSpy,
-    deleteAgent: () => {}
+    deleteAgent: () => {},
+    addKey: () => {},
+    deleteKey: () => {}
   };
 
   it('contains an AgentsManager to add new agents to monitor', () => {

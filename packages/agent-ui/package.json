@@ -41,6 +41,7 @@
     "react-router-dom": "^4.2.2",
     "react-router-prop-types": "^0.0.2",
     "react-router-redux": "^5.0.0-alpha.7",
+    "react-dropzone": "4.2.8",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
     "redux-persist": "^5.0.1",

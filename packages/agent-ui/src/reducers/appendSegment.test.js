@@ -17,7 +17,12 @@ describe('appendSegment reducer', () => {
         receive: { args: [] },
         kill: { args: ['target'] }
       },
-      selectedAction: 'send'
+      selectedAction: 'send',
+      key: {
+        type: 'keytype',
+        secret: 'secret',
+        public: 'public'
+      }
     },
     request: {}
   };
@@ -27,10 +32,11 @@ describe('appendSegment reducer', () => {
     agent: 'a',
     process: 'p',
     parent: 'l',
-    actions: openedState.dialog.actions
+    actions: openedState.dialog.actions,
+    key: openedState.dialog.key
   };
 
-  it('sets agent, process, parent and actions when opening dialog', () => {
+  it('sets agent, process, parent, key and actions when opening dialog', () => {
     const openState = appendSegment({}, openDialogAction);
 
     expect(openState).to.deep.equal({
@@ -40,6 +46,7 @@ describe('appendSegment reducer', () => {
         process: openDialogAction.process,
         parent: openDialogAction.parent,
         actions: openDialogAction.actions,
+        key: openDialogAction.key,
         selectedAction: 'send'
       },
       request: {}
@@ -54,6 +61,7 @@ describe('appendSegment reducer', () => {
         agent: openDialogAction.agent,
         process: openDialogAction.process,
         parent: openDialogAction.parent,
+        key: openDialogAction.key,
         actions: {},
         selectedAction: undefined
       },

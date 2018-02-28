@@ -5,6 +5,7 @@
  */
 export { default as ActionArgumentFields } from './actionArgumentFields';
 export { default as AgentsManager } from './agentsManager';
+export { default as KeyManager } from './keyManager';
 export { default as MapsList } from './mapsList';
 export { default as PrettyDivider } from './prettyDivider';
 export { default as SegmentsFilter } from './segmentsFilter';

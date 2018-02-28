@@ -12,7 +12,10 @@ import { SegmentPage, mapStateToProps } from './segmentPage';
 chai.use(sinonChai);
 
 describe('<SegmentPage />', () => {
-  const segment = { link: { meta: {} }, meta: { linkHash: 'this is so meta' } };
+  const segment = {
+    link: { meta: { mapId: 'mapId', process: 'process', action: 'action' } },
+    meta: { linkHash: 'this is so meta' }
+  };
   const routeWithLinkHash = { match: { params: { id: 'l' } } };
 
   it('extracts segment loading status', () => {

@@ -25,12 +25,12 @@ describe('MapValidator', () => {
   }
 
   describe('With a valid map', () => {
-    it('validates the linkHash', () =>
-      Promise.all(Object.values(validate(validMap))));
+    it('validates the linkHash', done =>
+      Promise.all(Object.values(validate(validMap))).then(() => done()));
   });
 
   describe('With only a segment', () => {
-    it('validates the linkHash', () =>
-      Promise.all(Object.values(validate(validSegment))));
+    it('validates the linkHash', done =>
+      Promise.all(Object.values(validate(validSegment))).then(() => done()));
   });
 });

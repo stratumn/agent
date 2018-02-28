@@ -17,7 +17,8 @@ const appendSegmentDialogReducer = (state = { show: false }, action) => {
         process: action.process,
         parent: action.parent,
         actions: action.actions,
-        selectedAction: Object.keys(action.actions)[0]
+        selectedAction: Object.keys(action.actions)[0],
+        key: action.key
       };
     case actionTypes.APPEND_SEGMENT_DIALOG_SELECT_ACTION:
       if (Object.keys(state.actions).includes(action.action)) {
