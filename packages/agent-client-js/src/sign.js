@@ -15,9 +15,8 @@
 */
 
 import { sign as naclSign } from 'tweetnacl';
-/* eslint-disable */
+// eslint-disable-next-line import/extensions
 import { stringify } from 'canonicaljson/lib/canonicaljson.js';
-/* eslint-enable */
 import { search } from 'jmespath';
 
 const attributesMap = {

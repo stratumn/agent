@@ -9,32 +9,27 @@ import { FormGroup, FormControlLabel } from 'material-ui/Form';
 
 import { updateSignedAttributes } from '../actions';
 
+const defaultAttributes = {
+  inputs: true,
+  prevLinkHash: true,
+  action: true,
+  refs: true
+};
 export class SignedAttributes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      signed: false,
-      attributes: {
-        inputs: true,
-        action: true,
-        refs: true,
-        prevLinkHash: true
-      }
+      signed: false
     };
   }
 
-  setSignedProperty(attr, value) {
-    const attributes = { ...this.state.attributes, [attr]: value };
-    this.setState({
-      ...this.state,
-      attributes
-    });
-    this.props.updateSignedAttributes(attributes);
-  }
-
   handleSwitch(value) {
-    this.setState({ signed: value, attributes: this.state.attributes });
-    this.props.updateSignedAttributes(this.state.attributes);
+    this.setState({ signed: value });
+    if (value) {
+      this.props.updateSignedAttributes(
+        this.props.attributes || defaultAttributes
+      );
+    }
   }
 
   isKeySet() {
@@ -42,7 +37,7 @@ export class SignedAttributes extends Component {
   }
 
   render() {
-    const { allowedAttributes } = this.props;
+    const { attributes } = this.props;
     return (
       <FormGroup>
         <FormControlLabel
@@ -61,21 +56,22 @@ export class SignedAttributes extends Component {
         />
         {this.state.signed ? (
           <FormGroup row>
-            {Object.keys(allowedAttributes)
-              .filter(name => allowedAttributes[name])
-              .map(attr => (
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.state.attributes[attr]}
-                      onChange={(event, value) =>
-                        this.setSignedProperty(attr, value)}
-                    />
-                  }
-                  label={attr}
-                  key={attr}
-                />
-              ))}
+            {Object.keys(attributes).map(attr => (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={attributes[attr]}
+                    onChange={(event, value) =>
+                      this.props.updateSignedAttributes({
+                        ...attributes,
+                        ...{ [attr]: value }
+                      })}
+                  />
+                }
+                label={attr}
+                key={attr}
+              />
+            ))}
           </FormGroup>
         ) : null}
       </FormGroup>
@@ -85,7 +81,7 @@ export class SignedAttributes extends Component {
 
 SignedAttributes.propTypes = {
   updateSignedAttributes: PropTypes.func.isRequired,
-  allowedAttributes: PropTypes.shape({
+  attributes: PropTypes.shape({
     inputs: PropTypes.bool,
     prevLinkHash: PropTypes.bool,
     action: PropTypes.bool,
@@ -101,16 +97,16 @@ SignedAttributes.propTypes = {
 
 SignedAttributes.defaultProps = {
   userKey: null,
-  allowedAttributes: {
-    inputs: true,
-    prevLinkHash: true,
-    action: true,
-    refs: true
-  }
+  attributes: defaultAttributes
 };
 
-function mapStateToProps(state) {
-  return state;
+function mapStateToProps(state, props) {
+  return {
+    attributes: {
+      ...(props.attributes || defaultAttributes),
+      ...state.signedAttributes
+    }
+  };
 }
 
 export default withStyles()(

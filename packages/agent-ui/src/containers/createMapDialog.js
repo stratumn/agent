@@ -52,7 +52,7 @@ export const CreateMapDialog = ({
         <RefChipList />
         <SignedAttributes
           userKey={userKey}
-          allowedAttributes={{
+          attributes={{
             inputs: true,
             refs: true
           }}
