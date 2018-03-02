@@ -45,7 +45,6 @@ export function validateKey(key) {
       `secret key length must be ${nacl.secretKeyLength}, got ${secretKeyBytes.length}`
     );
   }
-  return true;
 }
 
 /** 
