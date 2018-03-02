@@ -1,10 +1,10 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import KeyManager from './keyManager';
+import KeyManagerWithStyles, { KeyManager } from './keyManager';
 
 chai.use(sinonChai);
 
@@ -17,7 +17,7 @@ describe('<KeyManager />', () => {
   };
 
   const mountKeyManager = props =>
-    mount(<KeyManager {...requiredProps} {...props} />);
+    mount(<KeyManagerWithStyles {...requiredProps} {...props} />);
 
   it('contains a dropzone to upload files', () => {
     const keyManager = mountKeyManager();
@@ -26,15 +26,15 @@ describe('<KeyManager />', () => {
   });
 
   it('calls addKey when uploading a json file', () => {
-    const keyManager = mountKeyManager();
-
-    const fileInput = keyManager.find('input[type="file"]');
-    fileInput.simulate('change', {
-      target: {
-        files: [new File([], 'test.json', { type: 'application/json' })]
-      }
-    });
-    setTimeout(() => expect(requiredProps.addKey.callCount).to.equal(1), 20);
+    const keyManager = shallow(
+      <KeyManager
+        {...requiredProps}
+        {...{ classes: { card: 'test', keyIcon: 'test' } }}
+      />
+    );
+    const stub = sinon.stub(FileReader.prototype, 'readAsText');
+    keyManager.instance().onDrop(['test']);
+    expect(stub.getCall(0).args[0]).to.equal('test');
   });
 
   it('displays an error message', () => {

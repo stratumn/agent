@@ -46,6 +46,8 @@ export const closeCreateMapDialog = () => ({
 export const closeCreateMapDialogAndClear = () => dispatch => {
   dispatch(createMapClear());
   dispatch(closeCreateMapDialog());
+  dispatch(clearRefs());
+  dispatch(clearSignature());
 };
 
 export const createMap = (...args) => (dispatch, getState) => {

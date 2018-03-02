@@ -9,7 +9,9 @@ import Card, { CardHeader } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 
-class KeyManager extends Component {
+import styles from '../styles/keyManager';
+
+export class KeyManager extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -29,11 +31,11 @@ class KeyManager extends Component {
   }
 
   render() {
-    const { userKey } = this.props;
+    const { userKey, classes } = this.props;
     return (
       <div style={{ display: 'flex' }}>
         <Dropzone
-          onDrop={(accepted, rejected) => this.onDrop(accepted, rejected)}
+          onDrop={accepted => this.onDrop(accepted)}
           accept="application/json"
           multiple={false}
         >
@@ -47,11 +49,9 @@ class KeyManager extends Component {
           ) : null}
         </Dropzone>
         {userKey && userKey.public ? (
-          <Card style={{ display: 'flex', marginLeft: '2em' }}>
+          <Card className={classes.card}>
             <CardHeader
-              avatar={
-                <VpnKey style={{ color: 'grey', height: 50, width: 50 }} />
-              }
+              avatar={<VpnKey className={classes.keyIcon} />}
               action={<Button onClick={this.props.deleteKey}>Remove</Button>}
               title={userKey.public}
               subheader={`${userKey.type} public key`}
@@ -68,6 +68,10 @@ KeyManager.defaultProps = {
 };
 
 KeyManager.propTypes = {
+  classes: PropTypes.shape({
+    card: PropTypes.string.isRequired,
+    keyIcon: PropTypes.string.isRequired
+  }).isRequired,
   userKey: PropTypes.shape({
     type: PropTypes.string,
     public: PropTypes.string,
@@ -76,4 +80,4 @@ KeyManager.propTypes = {
   addKey: PropTypes.func.isRequired,
   deleteKey: PropTypes.func.isRequired
 };
-export default withStyles()(KeyManager);
+export default withStyles(styles)(KeyManager);

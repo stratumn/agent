@@ -12,12 +12,10 @@ const uploadKeyFailureEvent = (key, error) => ({
   error
 });
 
-const deleteKeyEvent = () => ({
-  type: actionTypes.KEY_DELETE
-});
-
 export const deleteKey = () => dispatch => {
-  dispatch(deleteKeyEvent());
+  dispatch({
+    type: actionTypes.KEY_DELETE
+  });
 };
 
 export const uploadKey = rawKey => dispatch => {

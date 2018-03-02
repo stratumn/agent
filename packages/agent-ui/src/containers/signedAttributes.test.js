@@ -75,7 +75,7 @@ describe('<SignedAttributes />', () => {
       <SignedAttributes
         {...requiredProps}
         userKey={userKey}
-        allowedAttributes={allowedAttributes}
+        attributes={allowedAttributes}
       />
     );
     signedAttributes.setState({ ...signedAttributes.state(), signed: true });
