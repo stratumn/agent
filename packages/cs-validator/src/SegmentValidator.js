@@ -156,7 +156,7 @@ export default class SegmentValidator {
   }
 
   validateStateHash() {
-    if (this.segment.link.state) {
+    if (this.segment.link.state && this.segment.link.meta.stateHash) {
       const computed = hashJson(this.segment.link.state);
       const actual = this.segment.link.meta.stateHash;
       if (computed !== actual) {
