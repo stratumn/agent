@@ -31,7 +31,7 @@ export class KeyManager extends Component {
   }
 
   render() {
-    const { userKey, classes } = this.props;
+    const { userKey, classes, deleteKey } = this.props;
     return (
       <div style={{ display: 'flex' }}>
         <Dropzone
@@ -52,7 +52,7 @@ export class KeyManager extends Component {
           <Card className={classes.card}>
             <CardHeader
               avatar={<VpnKey className={classes.keyIcon} />}
-              action={<Button onClick={this.props.deleteKey}>Remove</Button>}
+              action={<Button onClick={deleteKey}>Remove</Button>}
               title={userKey.public}
               subheader={`${userKey.type} public key`}
             />
