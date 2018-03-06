@@ -14,45 +14,47 @@
   limitations under the License.
 */
 
-import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import {
   MatButtonModule,
   MatIconModule,
   MatToolbarModule,
-  MatProgressSpinnerModule,
-} from "@angular/material";
+  MatProgressSpinnerModule
+} from '@angular/material';
 
-import { StMapExplorerComponent } from "./st-map-explorer/st-map-explorer.component";
-import { FunctionArgumentsPipe } from "./function-arguments.pipe";
-import { ChainTreeBuilderService } from "./chain-tree-builder.service";
-import { MapValidatorService } from "./map-validator.service";
-import { StMapValidatorComponent } from "./st-map-validator/st-map-validator.component";
-import { StPromiseLoaderComponent } from "./st-promise-loader/st-promise-loader.component";
-import { StMerklePathTreeComponent } from "./st-merkle-path-tree/st-merkle-path-tree.component";
-import { StEvidencesComponent } from "./st-evidences/st-evidences.component";
-import { StBitcoinEvidenceComponent } from "./st-bitcoin-evidence/st-bitcoin-evidence.component";
-import { StTmpopEvidenceComponent } from "./st-tmpop-evidence/st-tmpop-evidence.component";
-import { StDummyEvidenceComponent } from "./st-dummy-evidence/st-dummy-evidence.component";
+import { StMapExplorerComponent } from './st-map-explorer/st-map-explorer.component';
+import { FunctionArgumentsPipe } from './function-arguments.pipe';
+import { SignaturesListPipe } from './signatures-list.pipe';
+import { ChainTreeBuilderService } from './chain-tree-builder.service';
+import { MapValidatorService } from './map-validator.service';
+import { StMapValidatorComponent } from './st-map-validator/st-map-validator.component';
+import { StPromiseLoaderComponent } from './st-promise-loader/st-promise-loader.component';
+import { StMerklePathTreeComponent } from './st-merkle-path-tree/st-merkle-path-tree.component';
+import { StEvidencesComponent } from './st-evidences/st-evidences.component';
+import { StBitcoinEvidenceComponent } from './st-bitcoin-evidence/st-bitcoin-evidence.component';
+import { StTmpopEvidenceComponent } from './st-tmpop-evidence/st-tmpop-evidence.component';
+import { StDummyEvidenceComponent } from './st-dummy-evidence/st-dummy-evidence.component';
 
 @NgModule({
   declarations: [
     StMapExplorerComponent,
     FunctionArgumentsPipe,
+    SignaturesListPipe,
     StMapValidatorComponent,
     StPromiseLoaderComponent,
     StMerklePathTreeComponent,
     StEvidencesComponent,
     StBitcoinEvidenceComponent,
     StTmpopEvidenceComponent,
-    StDummyEvidenceComponent,
+    StDummyEvidenceComponent
   ],
   imports: [
     BrowserModule,
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
-    MatProgressSpinnerModule,
+    MatProgressSpinnerModule
   ],
   providers: [ChainTreeBuilderService, MapValidatorService],
   exports: [
@@ -62,7 +64,7 @@ import { StDummyEvidenceComponent } from "./st-dummy-evidence/st-dummy-evidence.
     StEvidencesComponent,
     StBitcoinEvidenceComponent,
     StTmpopEvidenceComponent,
-    StDummyEvidenceComponent,
-  ],
+    StDummyEvidenceComponent
+  ]
 })
 export class Ng2MapExplorerModule {}

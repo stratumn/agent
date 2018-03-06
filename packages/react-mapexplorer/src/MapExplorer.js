@@ -127,22 +127,29 @@ class MapExplorer extends Component {
               <h4>Map ID</h4>
               <p>{segment.link.meta.mapId}</p>
 
-              <h4>Agent Hash</h4>
-              <p>{segment.link.meta.agentHash}</p>
-
-              <h4>State Hash</h4>
-              <p>{segment.link.meta.stateHash}</p>
-
-              <h4>Previous Link hash</h4>
+              <h4>Previous link hash</h4>
               <p>{segment.link.meta.prevLinkHash}</p>
 
               <h4>Action</h4>
               <p>
                 {segment.link.meta.action}
-                ({(segment.link.meta.arguments || [])
+                ({(segment.link.meta.inputs || [])
                   .map(arg => JSON.stringify(arg, undefined, 2))
                   .join(', ')})
               </p>
+
+              <h4>Type</h4>
+              <p>{segment.link.meta.type}</p>
+
+              <h4>Signed by</h4>
+              <p>
+                {(segment.link.signatures || [])
+                  .map(sig => sig.publicKey)
+                  .join(', ')}
+              </p>
+
+              <h4>Metadata</h4>
+              <pre>{JSON.stringify(segment.link.meta.data, undefined, 2)}</pre>
             </div>
           );
           break;

@@ -20,19 +20,19 @@ import {
   OnInit,
   AfterContentInit,
   ViewChild
-} from "@angular/core";
-import { ChainTreeBuilderService } from "../chain-tree-builder.service";
-import { ChainTreeBuilder } from "@indigoframework/mapexplorer-core";
-import { OnChanges } from "@angular/core/src/metadata/lifecycle_hooks";
+} from '@angular/core';
+import { ChainTreeBuilderService } from '../chain-tree-builder.service';
+import { ChainTreeBuilder } from '@indigoframework/mapexplorer-core';
+import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
-  selector: "st-map-explorer",
-  templateUrl: "./st-map-explorer.component.html",
-  styleUrls: ["./st-map-explorer.component.css"]
+  selector: 'st-map-explorer',
+  templateUrl: './st-map-explorer.component.html',
+  styleUrls: ['./st-map-explorer.component.css']
 })
 export class StMapExplorerComponent
   implements OnInit, AfterContentInit, OnChanges {
-  @ViewChild("map") map;
+  @ViewChild('map') map;
 
   private error: string;
 
@@ -85,7 +85,7 @@ export class StMapExplorerComponent
     this.builder = this.chainTreeBuilderService.getBuilder(
       this.map.nativeElement
     );
-    this.displayed = "state";
+    this.displayed = 'state';
   }
 
   ngOnChanges() {

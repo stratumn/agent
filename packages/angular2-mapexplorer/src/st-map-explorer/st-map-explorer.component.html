@@ -43,17 +43,22 @@
         <h4>Map ID</h4>
         <p>{{segment.link.meta.mapId}}</p>
 
-        <h4>Agent Hash</h4>
-        <p>{{segment.link.meta.agentHash}}</p>
-
-        <h4>State Hash</h4>
-        <p>{{segment.link.meta.stateHash}}</p>
-
         <h4>Previous Link hash</h4>
         <p>{{segment.link.meta.prevLinkHash}}</p>
 
         <h4>Action</h4>
-        <p>{{segment.link.meta.action}}({{segment.link.meta.arguments | functionArguments}})</p>
+        <p>{{segment.link.meta.action}}({{segment.link.meta.inputs | functionArguments}})</p>
+
+        <h4>Type</h4>
+        <p>{{segment.link.meta.type}}</p>
+
+        <h4>Signed by</h4>
+        <p>
+          {{ segment.link.signatures | signaturesList }}
+        </p>
+
+        <h4>Metadata</h4>
+        <pre>{{ segment.link.meta.data | json }}</pre>
       </div>
       <div *ngIf="displayed == 'evidence'" layout-gt-sm="row" layout="column">
         <st-evidences [evidences]="segment.meta.evidences"></st-evidences>

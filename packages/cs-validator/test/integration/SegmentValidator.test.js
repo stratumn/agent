@@ -74,6 +74,16 @@ describe('SegmentValidator', () => {
         done();
       });
     });
+
+    it('skips the linkHash if empty', done => {
+      delete validSegment.link.meta.stateHash;
+      Promise.all(validate(validSegment).stateHash)
+        .then(errors => {
+          errors.filter(Boolean).should.be.empty();
+          done();
+        })
+        .catch(done);
+    });
   });
 
   describe('With a broken merkle path', () => {

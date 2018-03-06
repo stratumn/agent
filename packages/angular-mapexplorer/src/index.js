@@ -34,6 +34,7 @@ import ChainTreeBuilderService from './ChainTreeBuilder.service';
 import MapValidatorService from './MapValidator.service';
 import MapExplorerController from './MapExplorer.controller';
 import functionArguments from './functionArguments.filter';
+import signaturesList from './signaturesList.filter';
 
 export default angular
   .module('stratumn.angular-mapexplorer', [
@@ -62,4 +63,5 @@ export default angular
   .service('ChainTreeBuilderService', ChainTreeBuilderService)
   .service('MapValidatorService', MapValidatorService)
   .controller('MapExplorerController', MapExplorerController)
-  .filter('functionArguments', () => functionArguments).name;
+  .filter('functionArguments', () => functionArguments)
+  .filter('signaturesList', () => signaturesList).name;
