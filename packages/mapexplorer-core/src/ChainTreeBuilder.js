@@ -59,9 +59,7 @@ export const defaultOptions = {
     }
     return (
       link.target.data.link.meta.action +
-      (this.withArgs
-        ? `(${link.target.data.link.meta.arguments.join(', ')})`
-        : '')
+      (this.withArgs ? `(${link.target.data.link.meta.inputs.join(', ')})` : '')
     );
   },
   onclick() {},

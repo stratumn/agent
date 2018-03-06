@@ -124,7 +124,7 @@ Function that returns the text displayed on a segment.
 Default:
   function(node) {
     return node.target.data.link.meta.action +
-        (this.withArgs ? `(${node.target.data.link.meta.arguments.join(', ')})` : '');
+        (this.withArgs ? `(${node.target.data.link.meta.inputs.join(', ')})` : '');
   }
 ```
 
