@@ -54,7 +54,7 @@ agent.addProcess(
   fossilizerHttpClients,
   {
     // plugins you want to use
-    plugins: [plugins.agentUrl(agentUrl), plugins.actionArgs, plugins.stateHash]
+    plugins: [plugins.agentUrl(agentUrl), plugins.stateHash]
   }
 );
 
@@ -65,7 +65,7 @@ agent.addProcess(
   fossilizerHttpClients,
   {
     // plugins you want to use
-    plugins: [plugins.agentUrl(agentUrl), plugins.actionArgs, plugins.stateHash]
+    plugins: [plugins.agentUrl(agentUrl), plugins.stateHash]
   }
 );
 

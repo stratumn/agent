@@ -45,6 +45,19 @@ export class SegmentPage extends Component {
       );
     }
 
+    const stateHash = () => {
+      if (segment.link.meta.stateHash) {
+        return (
+          <div>
+            <Typography type="headline">State hash</Typography>
+            <Typography type="subheading" paragraph>
+              {segment.link.meta.stateHash}
+            </Typography>
+          </div>
+        );
+      }
+      return null;
+    };
     return (
       <div style={{ padding: '1em' }}>
         <Typography type="headline">Link hash</Typography>
@@ -59,10 +72,7 @@ export class SegmentPage extends Component {
         <Typography type="subheading" paragraph>
           {segment.link.meta.process}
         </Typography>
-        <Typography type="headline">State hash</Typography>
-        <Typography type="subheading" paragraph>
-          {segment.link.meta.stateHash}
-        </Typography>
+        {stateHash()}
         <Typography type="headline">Action</Typography>
         <Typography type="subheading" paragraph>
           {segment.link.meta.action}
@@ -117,7 +127,6 @@ export function mapStateToProps(state, ownProps) {
   props.status = status;
   props.error = error;
   props.segment = details;
-
   return props;
 }
 

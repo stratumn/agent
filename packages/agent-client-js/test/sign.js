@@ -19,7 +19,7 @@ import { stringify } from 'canonicaljson';
 import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 import { sign, signedProperties } from '../src/sign';
-import withKey from '../src/withKey';
+import { withKey } from '../src/withKey';
 
 describe('#signedProperties', () => {
   runTestsWithDataAndAgent(processCb => {

@@ -13,8 +13,8 @@ import rootReducer from '../reducers';
 const config = {
   key: 'stratumn-agent-ui',
   storage,
-  // only persist the agents part
-  whitelist: ['agents']
+  // only persist the agents and key parts
+  whitelist: ['agents', 'key']
 };
 
 const persistentReducer = persistReducer(config, rootReducer);

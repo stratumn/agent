@@ -29,6 +29,7 @@ export default {
       namedExports: {
         'node_modules/tweetnacl/nacl-fast.js': ['sign'],
         'node_modules/qs/lib/index.js': ['stringify'],
+        'node_modules/canonicaljson/lib/canonicaljson.js': ['stringify'],
         'node_modules/jmespath/jmespath.js': ['search'],
         '../utils/lib/index.js': ['promiseWhile']
       }

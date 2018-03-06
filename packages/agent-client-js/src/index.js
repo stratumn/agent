@@ -17,5 +17,6 @@
 import getAgent from './getAgent';
 import fromSegment from './fromSegment';
 import resolveLinks from './resolveLinks';
+import { validateKey, parseKey } from './withKey';
 
-export { getAgent, fromSegment, resolveLinks };
+export { getAgent, fromSegment, resolveLinks, validateKey, parseKey };

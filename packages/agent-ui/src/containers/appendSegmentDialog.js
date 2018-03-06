@@ -13,7 +13,7 @@ import { MenuItem } from 'material-ui/Menu';
 import Select from 'material-ui/Select';
 
 import { ActionArgumentFields } from '../components';
-import { RefChipList } from './';
+import { RefChipList, SignedAttributes } from './';
 
 import * as statusTypes from '../constants/status';
 
@@ -31,7 +31,8 @@ export const AppendSegmentDialog = ({
   error,
   appendSegment,
   closeDialog,
-  selectAction
+  selectAction,
+  userKey
 }) => {
   if (!show) {
     return null;
@@ -84,6 +85,7 @@ export const AppendSegmentDialog = ({
         )}
         {appendSegmentArgsFields}
         <RefChipList />
+        <SignedAttributes userKey={userKey} />
       </DialogContent>
       <DialogActions>
         <Button color="default" onClick={() => closeDialog()}>
@@ -106,7 +108,8 @@ AppendSegmentDialog.defaultProps = {
   error: '',
   valid: true,
   actions: {},
-  selectedAction: ''
+  selectedAction: '',
+  userKey: null
 };
 AppendSegmentDialog.propTypes = {
   show: PropTypes.bool.isRequired,
@@ -118,7 +121,12 @@ AppendSegmentDialog.propTypes = {
   error: PropTypes.string,
   appendSegment: PropTypes.func.isRequired,
   closeDialog: PropTypes.func.isRequired,
-  selectAction: PropTypes.func.isRequired
+  selectAction: PropTypes.func.isRequired,
+  userKey: PropTypes.shape({
+    type: PropTypes.string,
+    public: PropTypes.string,
+    secret: PropTypes.instanceOf(Uint8Array)
+  })
 };
 
 export function mapStateToProps({ appendSegment }) {
@@ -142,7 +150,7 @@ export function mapStateToProps({ appendSegment }) {
     };
   }
 
-  const { actions, selectedAction } = appendSegment.dialog;
+  const { actions, selectedAction, key } = appendSegment.dialog;
 
   if (
     appendSegment.request &&
@@ -160,7 +168,8 @@ export function mapStateToProps({ appendSegment }) {
   return {
     show,
     actions,
-    selectedAction
+    selectedAction,
+    userKey: key
   };
 }
 

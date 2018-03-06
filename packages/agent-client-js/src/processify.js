@@ -19,7 +19,7 @@ import withRefs from './withRefs';
 import getSegment from './getSegment';
 import findSegments from './findSegments';
 import getMapIds from './getMapIds';
-import withKey from './withKey';
+import { withKey } from './withKey';
 import { signedProperties } from './sign';
 
 export default function processify(adaptor, process) {

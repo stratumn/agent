@@ -27,4 +27,8 @@ export {
   clearRefs
 } from './selectRefs';
 
+export { uploadKey, deleteKey } from './uploadKey';
+
+export { updateSignedAttributes, clearSignature } from './signedAttributes';
+
 export { addNotifications, removeNotifications } from './notifications';

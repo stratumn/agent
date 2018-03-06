@@ -1,5 +1,5 @@
 import { getAgent } from '@indigoframework/client';
-import { getSegmentSuccess, clearRefs } from './';
+import { getSegmentSuccess, clearRefs, clearSignature } from './';
 import * as actionTypes from '../constants/actionTypes';
 import history from '../store/history';
 
@@ -24,7 +24,7 @@ export const openCreateMapDialog = (agentName, processName) => (
   dispatch,
   getState
 ) => {
-  const { agents } = getState();
+  const { agents, key } = getState();
   if (agents[agentName] && agents[agentName].processes[processName]) {
     const { actions } = agents[agentName].processes[processName];
     if (actions.init) {
@@ -32,7 +32,8 @@ export const openCreateMapDialog = (agentName, processName) => (
         type: actionTypes.CREATE_MAP_DIALOG_OPEN,
         agent: agentName,
         process: processName,
-        args: actions.init.args
+        args: actions.init.args,
+        key: key
       });
     }
   }
@@ -45,12 +46,16 @@ export const closeCreateMapDialog = () => ({
 export const closeCreateMapDialogAndClear = () => dispatch => {
   dispatch(createMapClear());
   dispatch(closeCreateMapDialog());
+  dispatch(clearRefs());
+  dispatch(clearSignature());
 };
 
 export const createMap = (...args) => (dispatch, getState) => {
   dispatch(createMapRequest());
   const {
     agents,
+    key,
+    signedAttributes,
     selectRefs: { refs },
     createMap: { dialog: { agent, process } }
   } = getState();
@@ -58,12 +63,19 @@ export const createMap = (...args) => (dispatch, getState) => {
     const { url } = agents[agent];
     return getAgent(url)
       .then(a => {
-        const proc = a.getProcess(process);
+        let proc = a.getProcess(process);
+        if (key && Object.keys(signedAttributes).filter(Boolean).length > 0) {
+          proc = proc.withKey(key).sign(signedAttributes);
+        }
         return proc.withRefs(refs).createMap(...args);
       })
       .then(segment => {
+        if (segment && segment.key) {
+          delete segment.key;
+        }
         dispatch(createMapSuccess());
         dispatch(clearRefs());
+        dispatch(clearSignature());
         dispatch(closeCreateMapDialog());
         dispatch(getSegmentSuccess(segment));
         history.push(`/${agent}/${process}/segments/${segment.meta.linkHash}`);

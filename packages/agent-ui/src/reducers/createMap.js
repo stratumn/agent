@@ -10,7 +10,8 @@ const createMapDialogReducer = (state = { show: false }, action) => {
         show: true,
         agent: action.agent,
         process: action.process,
-        args: action.args
+        args: action.args,
+        key: action.key
       };
     case actionTypes.CREATE_MAP_DIALOG_CLOSE:
       return {

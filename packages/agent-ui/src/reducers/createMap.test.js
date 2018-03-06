@@ -13,7 +13,12 @@ describe('createMap reducer', () => {
         type: actionTypes.CREATE_MAP_DIALOG_OPEN,
         agent: 'a',
         process: 'p',
-        args: ['title', 'version']
+        args: ['title', 'version'],
+        key: {
+          type: 'keytype',
+          secret: 'secret',
+          public: 'public'
+        }
       }
     );
 
@@ -22,7 +27,12 @@ describe('createMap reducer', () => {
         show: true,
         agent: 'a',
         process: 'p',
-        args: ['title', 'version']
+        args: ['title', 'version'],
+        key: {
+          type: 'keytype',
+          secret: 'secret',
+          public: 'public'
+        }
       },
       request: {}
     });

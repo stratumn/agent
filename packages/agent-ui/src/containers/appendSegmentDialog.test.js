@@ -11,7 +11,7 @@ import { TestProcessBuilder } from '../test/builders/state';
 import stubComponent from '../test/stubComponent';
 
 import { AppendSegmentDialog, mapStateToProps } from './appendSegmentDialog';
-import { RefChipList } from './';
+import { RefChipList, SignedAttributes } from './';
 
 chai.use(sinonChai);
 
@@ -31,6 +31,7 @@ describe('<AppendSegmentDialog />', () => {
   };
 
   stubComponent(RefChipList);
+  stubComponent(SignedAttributes);
 
   it('learns to show dialog from state', () => {
     const props = mapStateToProps({
@@ -41,7 +42,8 @@ describe('<AppendSegmentDialog />', () => {
     expect(props).to.deep.equal({
       show: true,
       actions: testActions,
-      selectedAction: 'a2'
+      selectedAction: 'a2',
+      userKey: undefined
     });
   });
 
