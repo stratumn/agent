@@ -89,12 +89,12 @@ module.exports = function configure(config) {
     singleRun: false
   });
 
-  if (process.env.TRAVIS) {
+  if (process.env.TRAVIS || process.env.SEMAPHORE) {
     config.set({
-      browsers: ['TravisCI_Chrome', 'PhantomJS'],
+      browsers: ['CI_Chrome', 'PhantomJS'],
       customLaunchers: {
-        TravisCI_Chrome: {
-          base: 'Chrome',
+        CI_Chrome: {
+          base: 'ChromeHeadless',
           flags: ['--no-sandbox']
         }
       },
