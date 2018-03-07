@@ -1,7 +1,7 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/0.13/config/configuration-file.html
 
-module.exports = function(config) {
+module.exports = function configure(config) {
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular/cli'],
@@ -33,4 +33,17 @@ module.exports = function(config) {
     browsers: ['Chrome'],
     singleRun: false
   });
+
+  if (process.env.TRAVIS || process.env.SEMAPHORE) {
+    config.set({
+      browsers: ['CI_Chrome'],
+      customLaunchers: {
+        CI_Chrome: {
+          base: 'ChromeHeadless',
+          flags: ['--no-sandbox']
+        }
+      },
+      singleRun: true
+    });
+  }
 };
