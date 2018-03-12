@@ -35,7 +35,7 @@
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89091,
-              "time": 1513260611,
+              "time": "2018-03-12T17:13:59.578+01:00",
               "last_commit_hash": "toAVRGGIdaIf2bjqyYwzRlcYv/E=",
               "data_hash": "OBj8lq6mSXgE9S7KRtTkAppQbuM=",
               "app_hash": "67pv8OR2/ISQtEoYc+3hN0z1UddUePspJkwD4mgUweM="
@@ -43,7 +43,7 @@
             "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89092,
-              "time": 1513260621,
+              "time": "2018-03-12T17:14:09.578+01:00",
               "last_block_id": {
                 "hash": "LA9SfFiog1IFNFEJ89A6lCtOr6Y=",
                 "parts": { "total": 1, "hash": "WzgF9gWDSS6ip3EE/AKkpeDf1CA=" }
@@ -89,7 +89,7 @@
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 10080,
-              "time": 1513178754,
+              "time": "2018-03-12T17:13:59.578+01:00",
               "last_commit_hash": "9laE31aDxLqyZFyIUyHKiI7e09o=",
               "data_hash": "AUy1/CjR0+RfdV/dtIHRlmmhd5Q=",
               "app_hash": "hP+n+Y3Y88J95wkHmIeympvDCwJPN2RT1Te1jlIswHg="
@@ -97,7 +97,7 @@
             "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 10081,
-              "time": 1513178755,
+              "time": "2018-03-12T17:14:09.578+01:00",
               "last_block_id": {
                 "hash": "o+Df26tLQWFKhfTnFEV58lCoRwY=",
                 "parts": { "total": 1, "hash": "mDsO7Kip0jfdxmKp+8wgG0v+xqg=" }
@@ -144,7 +144,7 @@
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89166,
-              "time": 1513261362,
+              "time": "2018-03-12T17:13:59.578+01:00",
               "last_commit_hash": "++7Mc/iycaK7+F/dT8XZyKlBrcY=",
               "data_hash": "8OR67Vhq/IdDBDceFsv2zO5EWoA=",
               "app_hash": "WgkmWitHZTa3/K9QH8tNVqJIuU7v3AgdNSsoUuIh3/s="
@@ -152,7 +152,7 @@
             "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89167,
-              "time": 1513261372,
+              "time": "2018-03-12T17:14:09.578+01:00",
               "last_block_id": {
                 "hash": "HsJlcjHnafWKeY7Qu8ZV5ZKXnKE=",
                 "parts": { "total": 1, "hash": "CF2vAyKaD9Xt55gIex5n6Wk4khY=" }
@@ -198,7 +198,7 @@
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 8557,
-              "time": 1512655037,
+              "time": "2018-03-12T17:13:59.578+01:00",
               "last_commit_hash": "2AeTgI/MSkSRxQd5pHzZ26lTyWM=",
               "data_hash": "ZDob2ZJ3RvFtiP09QL0mqs6pcPE=",
               "app_hash": "eLtJR7SlL+WaVchoWiX+t5QCSZn1NFIaGcl0mT72N8U="
@@ -206,7 +206,7 @@
             "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 8558,
-              "time": 1513177209,
+              "time": "2018-03-12T17:14:09.578+01:00",
               "last_block_id": {
                 "hash": "0gCJX/SVg/NIga4+Az1hDC+p6Gc=",
                 "parts": { "total": 1, "hash": "bPtQZUCYX1R+SrhHA3E/S7dEQdc=" }
@@ -253,7 +253,7 @@
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89169,
-              "time": 1513261392,
+              "time": "2018-03-12T17:13:59.578+01:00",
               "last_commit_hash": "K96agIQeBLq3s5sLJEEaNEfPX48=",
               "data_hash": "7v9FbHAhq2PDzbnR26JNmEoAuN4=",
               "app_hash": "UPyLR2LQxliYCM49QjoxYzv4L2BJTCJR6czQ7C/e+fQ="
@@ -261,7 +261,7 @@
             "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89170,
-              "time": 1513261402,
+              "time": "2018-03-12T17:14:09.578+01:00",
               "last_block_id": {
                 "hash": "95IeSba1tFVdw5+9uUhxnnihSCk=",
                 "parts": { "total": 1, "hash": "x9SJGHPvEiK4x7e7lqLHxn8VIgQ=" }
@@ -315,7 +315,7 @@
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89091,
-              "time": 1513260611,
+              "time": "2018-03-12T17:13:59.578+01:00",
               "last_commit_hash": "toAVRGGIdaIf2bjqyYwzRlcYv/E=",
               "data_hash": "OBj8lq6mSXgE9S7KRtTkAppQbuM=",
               "app_hash": "67pv8OR2/ISQtEoYc+3hN0z1UddUePspJkwD4mgUweM="
@@ -323,7 +323,7 @@
             "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89092,
-              "time": 1513260621,
+              "time": "2018-03-12T17:14:09.578+01:00",
               "last_block_id": {
                 "hash": "LA9SfFiog1IFNFEJ89A6lCtOr6Y=",
                 "parts": { "total": 1, "hash": "WzgF9gWDSS6ip3EE/AKkpeDf1CA=" }
@@ -370,7 +370,7 @@
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89236,
-              "time": 1513262063,
+              "time": "2018-03-12T17:13:59.578+01:00",
               "last_commit_hash": "enmRzfxHlWOq/vldGk5BRU8UnpU=",
               "data_hash": "HVaqh+WqN73miTILP8PO2qcm+cA=",
               "app_hash": "QHOcThPJ6mgsRZT0IRSt00v8TsSId7q0htJHzUQQepE="
@@ -378,7 +378,7 @@
             "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89237,
-              "time": 1513262073,
+              "time": "2018-03-12T17:14:09.578+01:00",
               "num_txs": 1,
               "last_block_id": {
                 "hash": "ATAuHm9wLowafe/xWRPaD0RPrK0=",
@@ -427,7 +427,7 @@
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89237,
-              "time": 1513262073,
+              "time": "2018-03-12T17:13:59.578+01:00",
               "last_commit_hash": "3yOk3nD/hiJzMHWuCAWCnvI1Iug=",
               "data_hash": "rREaKi3zOeL1HUhUl5LJonMVpyw=",
               "app_hash": "R7BB+nBveLV48CNvnplSmVKvIUXdfKWqQCN4JoMzqIM="
@@ -435,7 +435,7 @@
             "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89238,
-              "time": 1513262083,
+              "time": "2018-03-12T17:14:09.578+01:00",
               "last_block_id": {
                 "hash": "aiLkc4pGZxr91v2Q0GRWE+VlK2w=",
                 "parts": { "total": 1, "hash": "m643OqeaycqcTKFclL0YbgXSq+Y=" }
