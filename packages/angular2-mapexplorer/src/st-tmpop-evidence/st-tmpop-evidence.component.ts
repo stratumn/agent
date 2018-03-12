@@ -14,19 +14,15 @@
   limitations under the License.
 */
 
-import { Component, Input, ElementRef } from "@angular/core";
+import { Component, Input, ElementRef } from '@angular/core';
 
 @Component({
-  selector: "st-tmpop-evidence",
-  templateUrl: "./st-tmpop-evidence.component.html",
-  styleUrls: ["./st-tmpop-evidence.component.css"],
+  selector: 'st-tmpop-evidence',
+  templateUrl: './st-tmpop-evidence.component.html',
+  styleUrls: ['./st-tmpop-evidence.component.css']
 })
 export class StTmpopEvidenceComponent {
   @Input() evidence;
 
   constructor(public element: ElementRef) {}
-
-  date() {
-    return new Date(this.evidence.proof.header.time * 1000).toUTCString();
-  }
 }
