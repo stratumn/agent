@@ -33,94 +33,150 @@
       "ebd42fac63645963480d262605f23b3434baae65d56724ebb23a698f596c4419",
     "evidences": [
       {
-        "state": "COMPLETE",
         "backend": "TMPop",
         "provider": "test-chain-qcaYsP",
         "proof": {
-          "original": {
-            "blockHeight": 161,
-            "header": {
-              "chain_id": "test-chain-qcaYsP",
-              "height": 162,
-              "time": 1507729619,
-              "num_txs": 1,
-              "last_block_id": {
-                "hash": "DiGdxqs7Wa96A2bPZ3PH0MmR32M=",
-                "parts": {
-                  "total": 1,
-                  "hash": "CrfUvymrQC/hmByvVfwyaRLOs60="
-                }
-              },
-              "last_commit_hash": "xr9VIk8HUi9/3o8rvqkxtj67znY=",
-              "data_hash": "SJBoSB+1arNisScitiPq4SL4bCk=",
-              "app_hash": "vBoJ6l7cuGNeJzT1pHy6Vge39YU="
+          "block_height": 90,
+          "merkle_root":
+            "ce0719f04277493ecc898b1fa434aafc2b66790bbe80221c27e2b72b0c2f0d9e",
+          "merkle_path": [],
+          "validations_hash":
+            "24f879863854b0fdf97228451d08a3e2e91627051ce84826d793693a6c663a70",
+          "header": {
+            "chain_id": "test-chain-1EeVKO",
+            "height": 90,
+            "time": "2018-03-12T17:13:59.578+01:00",
+            "num_txs": 1,
+            "last_block_id": {
+              "hash": "965AE65F1B03B62E0AAA9B47BCF5F6670773D0A3",
+              "parts": {
+                "total": 1,
+                "hash": "292DE308517B31FA954AD9A61F7AB196268788CB"
+              }
             },
-            "merkleProof": {
-              "LeafHash": "UxHFnsH6OpsajdnKkLzDLCwmSfQ=",
-              "InnerNodes": [
-                {
-                  "Height": 1,
-                  "Size": 2,
-                  "Left": "",
-                  "Right": "H9Bpn7253lN2Wf5dB/YlrQj4MRA="
-                },
-                {
-                  "Height": 2,
-                  "Size": 4,
-                  "Left": "",
-                  "Right": "qG+8tH573onSmA+d/rSdmWngIBc="
-                }
-              ],
-              "RootHash": "vBoJ6l7cuGNeJzT1pHy6Vge39YU="
-            },
-            "signatures": null
+            "total_txs": 1,
+            "last_commit_hash": "E22B342AD198A5EDD16CB5CA359CF94BF8F336B9",
+            "data_hash": "EF3092638EB2924F045F9F299632796BA515F100",
+            "validators_hash": "E4D006A47A5CAD586815D3C4AD01219005953063",
+            "consensus_hash": "0B8CEF95EC57AC2D96038FD0AE3901C14FAE8E73",
+            "app_hash":
+              "5CBFE365008A90A663029E19D16A241E008D2790105C09FABFF1B8222800DE10",
+            "last_results_hash": "",
+            "evidence_hash": ""
           },
-          "current": {
-            "blockHeight": 26589,
-            "header": {
-              "chain_id": "test-chain-qcaYsP",
-              "height": 26590,
-              "time": 1508144436,
-              "last_block_id": {
-                "hash": "oo6c8+qqplexzM2EAS1fEvleFbs=",
-                "parts": {
-                  "total": 1,
-                  "hash": "VABhREUIj6+3rO5ZoLLEwr1n2ME="
-                }
+          "header_votes": [
+            {
+              "pub_key": {
+                "type": "ed25519",
+                "data":
+                  "066D4684CF45AB45C1DB9A1B757E2784C07AFA4E556AE89573D490BA098FE3E1"
               },
-              "last_commit_hash": "6DCHwSYpvYfYUWirEUNwtcEN0vY=",
-              "app_hash": "HAlV4NV4/YeHM9Swn/N7fxRLq7Q="
-            },
-            "merkleProof": {
-              "LeafHash": "UxHFnsH6OpsajdnKkLzDLCwmSfQ=",
-              "InnerNodes": [
-                {
-                  "Height": 1,
-                  "Size": 2,
-                  "Left": "VK87+SPiIYS2SMgFn0+YKNbcrqY=",
-                  "Right": ""
+              "vote": {
+                "validator_address": "979B58E82F6F86C38A9A7E90F1F11C30B82AD19C",
+                "validator_index": 0,
+                "height": 90,
+                "round": 0,
+                "timestamp": "2018-03-12T17:13:59.616+01:00",
+                "type": 2,
+                "block_id": {
+                  "hash": "DD58CA2BD86B9EA21A8DF16C88D53FACFF754A53",
+                  "parts": {
+                    "total": 1,
+                    "hash": "D5A91B06093D95EA3E6DFBE4A9DDCD32B421D553"
+                  }
                 },
-                {
-                  "Height": 3,
-                  "Size": 5,
-                  "Left": "",
-                  "Right": "1OFJQPcT1g2U1kxfx/GHzAgJicI="
-                },
-                {
-                  "Height": 4,
-                  "Size": 12,
-                  "Left": "",
-                  "Right": "FGQMWDyJ4puWCSL0tV7sXiuNfD0="
+                "signature": {
+                  "type": "ed25519",
+                  "data":
+                    "51CA069AF7E55D0AAF9E10827F98DD2AD400C84E890683105375BE7C0DEFCBB4C6B2AB302427DE9C9629DC117E1E4368A9FBCB23113EAA40FDCD2202B5801C06"
                 }
-              ],
-              "RootHash": "HAlV4NV4/YeHM9Swn/N7fxRLq7Q="
+              }
+            }
+          ],
+          "header_validator_set": {
+            "validators": [
+              {
+                "address": "979B58E82F6F86C38A9A7E90F1F11C30B82AD19C",
+                "pub_key": {
+                  "type": "ed25519",
+                  "data":
+                    "066D4684CF45AB45C1DB9A1B757E2784C07AFA4E556AE89573D490BA098FE3E1"
+                },
+                "voting_power": 10,
+                "accum": 0
+              }
+            ],
+            "proposer": null
+          },
+          "next_header": {
+            "chain_id": "test-chain-1EeVKO",
+            "height": 91,
+            "time": "2018-03-12T17:14:00.636+01:00",
+            "num_txs": 0,
+            "last_block_id": {
+              "hash": "DD58CA2BD86B9EA21A8DF16C88D53FACFF754A53",
+              "parts": {
+                "total": 1,
+                "hash": "D5A91B06093D95EA3E6DFBE4A9DDCD32B421D553"
+              }
             },
-            "signatures": null
+            "total_txs": 1,
+            "last_commit_hash": "ADEF7217D27F93CA42ED73BED928CE54DF67092B",
+            "data_hash": "",
+            "validators_hash": "E4D006A47A5CAD586815D3C4AD01219005953063",
+            "consensus_hash": "0B8CEF95EC57AC2D96038FD0AE3901C14FAE8E73",
+            "app_hash":
+              "D30FF7AE21D9E459597C4B1E8084683EE7D3FC5825EF06D74F49E2750F0C5498",
+            "last_results_hash": "585BD7ED566208944B1F2E13170CD4B66325B8EE",
+            "evidence_hash": ""
+          },
+          "next_header_votes": [
+            {
+              "pub_key": {
+                "type": "ed25519",
+                "data":
+                  "066D4684CF45AB45C1DB9A1B757E2784C07AFA4E556AE89573D490BA098FE3E1"
+              },
+              "vote": {
+                "validator_address": "979B58E82F6F86C38A9A7E90F1F11C30B82AD19C",
+                "validator_index": 0,
+                "height": 91,
+                "round": 0,
+                "timestamp": "2018-03-12T17:14:00.676+01:00",
+                "type": 2,
+                "block_id": {
+                  "hash": "28CE09FD5EF34AB988798237FA02757A0B3AEB6E",
+                  "parts": {
+                    "total": 1,
+                    "hash": "CFB8DBF1EC01472AB55427B370EAEAACB16500F3"
+                  }
+                },
+                "signature": {
+                  "type": "ed25519",
+                  "data":
+                    "F54A94D1CCB032E9C1CF2A86ECDEE0049D61B3CAF6E6E90C7A5EA99A55FEAB4B61C17DC4BFF7738916A25460B5FD252535F7F6CF553E27238DA0F35F0A371107"
+                }
+              }
+            }
+          ],
+          "next_header_validator_set": {
+            "validators": [
+              {
+                "address": "979B58E82F6F86C38A9A7E90F1F11C30B82AD19C",
+                "pub_key": {
+                  "type": "ed25519",
+                  "data":
+                    "066D4684CF45AB45C1DB9A1B757E2784C07AFA4E556AE89573D490BA098FE3E1"
+                },
+                "voting_power": 10,
+                "accum": 0
+              }
+            ],
+            "proposer": null
           }
         }
       },
       {
-        "state": "COMPLETE",
         "backend": "dummy",
         "provider": "dummy",
         "proof": {
@@ -128,7 +184,6 @@
         }
       },
       {
-        "state": "COMPLETE",
         "backend": "bcbatch",
         "provider": "dummytimestamper",
         "proof": {

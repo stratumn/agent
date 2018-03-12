@@ -20,11 +20,11 @@ import MerklePathComponent from './MerklePathComponent';
 
 const TMPopEvidence = ({ evidence }) => {
   let merkleTree;
-  if (evidence.proof.merklePath.length > 0) {
+  if (evidence.proof.merkle_path.length > 0) {
     merkleTree = (
       <div className="merkle-path">
         <h4>MerklePath</h4>
-        <MerklePathComponent merklePath={evidence.proof.merklePath} />
+        <MerklePathComponent merklePath={evidence.proof.merkle_path} />
       </div>
     );
   }
@@ -38,19 +38,19 @@ const TMPopEvidence = ({ evidence }) => {
           <p>{evidence.provider}</p>
 
           <h4>Block #</h4>
-          <p>{evidence.proof.blockHeight}</p>
+          <p>{evidence.proof.block_height}</p>
 
           <h4>Time</h4>
-          <p>{new Date(evidence.proof.header.time * 1000).toUTCString()}</p>
+          <p>{evidence.proof.header.time}</p>
 
           <h4>App Hash</h4>
-          <p>{evidence.proof.nextHeader.app_hash}</p>
+          <p>{evidence.proof.next_header.app_hash}</p>
 
           <h4>Validations Hash</h4>
-          <p>{evidence.proof.validationsHash}</p>
+          <p>{evidence.proof.validations_hash}</p>
 
           <h4>Merkle Root</h4>
-          <p>{evidence.proof.merkleRoot}</p>
+          <p>{evidence.proof.merkle_root}</p>
         </div>
         {merkleTree}
       </div>
@@ -63,8 +63,8 @@ TMPopEvidence.propTypes = {
     provider: PropTypes.string,
     backend: PropTypes.string,
     proof: PropTypes.shape({
-      blockHeight: PropTypes.number,
-      validationsHash: PropTypes.string
+      block_height: PropTypes.number,
+      validations_hash: PropTypes.string
     })
   }).isRequired
 };
