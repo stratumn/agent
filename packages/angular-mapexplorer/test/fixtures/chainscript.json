@@ -18,10 +18,10 @@
           "backend": "TMPop",
           "provider": "test-chain-5AKxd9",
           "proof": {
-            "blockHeight": 89091,
-            "merkleRoot":
+            "block_height": 89091,
+            "merkle_root":
               "85e44eee398c3f123cbfabc1c3262392a5f8822da8719552312f6bd7ccd3d79f",
-            "merklePath": [
+            "merkle_path": [
               {
                 "left":
                   "0185cc20bc088fb86eab72f6f921ee568d2be13d0ee273520ebfb916e47cd989",
@@ -31,7 +31,7 @@
                   "85e44eee398c3f123cbfabc1c3262392a5f8822da8719552312f6bd7ccd3d79f"
               }
             ],
-            "validationsHash": null,
+            "validations_hash": null,
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89091,
@@ -40,8 +40,7 @@
               "data_hash": "OBj8lq6mSXgE9S7KRtTkAppQbuM=",
               "app_hash": "67pv8OR2/ISQtEoYc+3hN0z1UddUePspJkwD4mgUweM="
             },
-            "signatures": null,
-            "nextHeader": {
+            "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89092,
               "time": 1513260621,
@@ -51,8 +50,7 @@
               },
               "last_commit_hash": "GvkA0lEZ/ygQuBbo5v/qGqFy9bo=",
               "app_hash": "0U7AaZEW6gBI4Wk4Jg8vLTtgxkJFtXZRkTwWhnjiUVo="
-            },
-            "nextSignatures": null
+            }
           }
         }
       ],
@@ -82,11 +80,11 @@
           "backend": "TMPop",
           "provider": "test-chain-5AKxd9",
           "proof": {
-            "blockHeight": 10080,
-            "merkleRoot":
+            "block_height": 10080,
+            "merkle_root":
               "1cd668505be5dea6c6889690817d565e4784f5393bef5bf663783ec57ba7215c",
-            "merklePath": [],
-            "validationsHash":
+            "merkle_path": [],
+            "validations_hash":
               "7294ece4386d9efb114f8a16646caf52c96ee7f18813bc82b88c5cfff82e9b71",
             "header": {
               "chain_id": "test-chain-5AKxd9",
@@ -96,8 +94,7 @@
               "data_hash": "AUy1/CjR0+RfdV/dtIHRlmmhd5Q=",
               "app_hash": "hP+n+Y3Y88J95wkHmIeympvDCwJPN2RT1Te1jlIswHg="
             },
-            "signatures": null,
-            "nextHeader": {
+            "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 10081,
               "time": 1513178755,
@@ -107,8 +104,7 @@
               },
               "last_commit_hash": "WBz0BqCqNA0XMYsvWvAjkpMZVOY=",
               "app_hash": "9+7WT24R36eCaeRlJcPa+NdtV/Cqj2t0CR2Cr6A+jb0="
-            },
-            "nextSignatures": null
+            }
           }
         }
       ],
@@ -140,11 +136,11 @@
           "backend": "TMPop",
           "provider": "test-chain-5AKxd9",
           "proof": {
-            "blockHeight": 89166,
-            "merkleRoot":
+            "block_height": 89166,
+            "merkle_root":
               "1e09d150cfa8098e4823936251a80e39d402013defe0117a70c60aa767942d08",
-            "merklePath": [],
-            "validationsHash": null,
+            "merkle_path": [],
+            "validations_hash": null,
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89166,
@@ -153,8 +149,7 @@
               "data_hash": "8OR67Vhq/IdDBDceFsv2zO5EWoA=",
               "app_hash": "WgkmWitHZTa3/K9QH8tNVqJIuU7v3AgdNSsoUuIh3/s="
             },
-            "signatures": null,
-            "nextHeader": {
+            "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89167,
               "time": 1513261372,
@@ -164,8 +159,7 @@
               },
               "last_commit_hash": "x/ONHLdqGuTCMdZCBkX7re7KnVY=",
               "app_hash": "FWb7OCABQx7sykKmvlHKk17m+5pP2CRFc9JJug1ZdLI="
-            },
-            "nextSignatures": null
+            }
           }
         }
       ],
@@ -195,11 +189,11 @@
           "backend": "TMPop",
           "provider": "test-chain-5AKxd9",
           "proof": {
-            "blockHeight": 8557,
-            "merkleRoot":
+            "block_height": 8557,
+            "merkle_root":
               "3c8ed59aa7f74a4fd0af498cfdfba87859b60eee872b488ed18a79b6ea12e546",
-            "merklePath": [],
-            "validationsHash":
+            "merkle_path": [],
+            "validations_hash":
               "7294ece4386d9efb114f8a16646caf52c96ee7f18813bc82b88c5cfff82e9b71",
             "header": {
               "chain_id": "test-chain-5AKxd9",
@@ -209,8 +203,7 @@
               "data_hash": "ZDob2ZJ3RvFtiP09QL0mqs6pcPE=",
               "app_hash": "eLtJR7SlL+WaVchoWiX+t5QCSZn1NFIaGcl0mT72N8U="
             },
-            "signatures": null,
-            "nextHeader": {
+            "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 8558,
               "time": 1513177209,
@@ -220,8 +213,7 @@
               },
               "last_commit_hash": "HQhP3Nm72rNgfA5Rm5hhiVyx4OA=",
               "app_hash": "+BDGTGS4bOACY9GevoT1TOOH+0hAIEeLH3lK2UZMkeQ="
-            },
-            "nextSignatures": null
+            }
           }
         }
       ],
@@ -253,11 +245,11 @@
           "backend": "TMPop",
           "provider": "test-chain-5AKxd9",
           "proof": {
-            "blockHeight": 89169,
-            "merkleRoot":
+            "block_height": 89169,
+            "merkle_root":
               "4df4b7014a337f47678324720c5738574561d704e1b9c5b89756c09cfe5aaeb5",
-            "merklePath": [],
-            "validationsHash": null,
+            "merkle_path": [],
+            "validations_hash": null,
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89169,
@@ -266,8 +258,7 @@
               "data_hash": "7v9FbHAhq2PDzbnR26JNmEoAuN4=",
               "app_hash": "UPyLR2LQxliYCM49QjoxYzv4L2BJTCJR6czQ7C/e+fQ="
             },
-            "signatures": null,
-            "nextHeader": {
+            "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89170,
               "time": 1513261402,
@@ -277,8 +268,7 @@
               },
               "last_commit_hash": "+DKFBoDGzXnDyeY3GawCGDqKukE=",
               "app_hash": "YpP4UN7/PvOgjoYGOWM3G4Vn/xuWPUeYxbaRMUW6tIY="
-            },
-            "nextSignatures": null
+            }
           }
         }
       ],
@@ -308,10 +298,10 @@
           "backend": "TMPop",
           "provider": "test-chain-5AKxd9",
           "proof": {
-            "blockHeight": 89091,
-            "merkleRoot":
+            "block_height": 89091,
+            "merkle_root":
               "85e44eee398c3f123cbfabc1c3262392a5f8822da8719552312f6bd7ccd3d79f",
-            "merklePath": [
+            "merkle_path": [
               {
                 "left":
                   "0185cc20bc088fb86eab72f6f921ee568d2be13d0ee273520ebfb916e47cd989",
@@ -321,7 +311,7 @@
                   "85e44eee398c3f123cbfabc1c3262392a5f8822da8719552312f6bd7ccd3d79f"
               }
             ],
-            "validationsHash": null,
+            "validations_hash": null,
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89091,
@@ -330,8 +320,7 @@
               "data_hash": "OBj8lq6mSXgE9S7KRtTkAppQbuM=",
               "app_hash": "67pv8OR2/ISQtEoYc+3hN0z1UddUePspJkwD4mgUweM="
             },
-            "signatures": null,
-            "nextHeader": {
+            "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89092,
               "time": 1513260621,
@@ -341,8 +330,7 @@
               },
               "last_commit_hash": "GvkA0lEZ/ygQuBbo5v/qGqFy9bo=",
               "app_hash": "0U7AaZEW6gBI4Wk4Jg8vLTtgxkJFtXZRkTwWhnjiUVo="
-            },
-            "nextSignatures": null
+            }
           }
         }
       ],
@@ -374,11 +362,11 @@
           "backend": "TMPop",
           "provider": "test-chain-5AKxd9",
           "proof": {
-            "blockHeight": 89236,
-            "merkleRoot":
+            "block_height": 89236,
+            "merkle_root":
               "aeeb4b21675c6f69e021add706141baa48136947961105bb2cde12a7bcc4b0e5",
-            "merklePath": [],
-            "validationsHash": null,
+            "merkle_path": [],
+            "validations_hash": null,
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89236,
@@ -387,8 +375,7 @@
               "data_hash": "HVaqh+WqN73miTILP8PO2qcm+cA=",
               "app_hash": "QHOcThPJ6mgsRZT0IRSt00v8TsSId7q0htJHzUQQepE="
             },
-            "signatures": null,
-            "nextHeader": {
+            "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89237,
               "time": 1513262073,
@@ -400,8 +387,7 @@
               "last_commit_hash": "3yOk3nD/hiJzMHWuCAWCnvI1Iug=",
               "data_hash": "rREaKi3zOeL1HUhUl5LJonMVpyw=",
               "app_hash": "R7BB+nBveLV48CNvnplSmVKvIUXdfKWqQCN4JoMzqIM="
-            },
-            "nextSignatures": null
+            }
           }
         }
       ],
@@ -433,11 +419,11 @@
           "backend": "TMPop",
           "provider": "test-chain-5AKxd9",
           "proof": {
-            "blockHeight": 89237,
-            "merkleRoot":
+            "block_height": 89237,
+            "merkle_root":
               "e0e810c8726b2727041b1dace6498501f6f4676684c9580872efe59d27911e5d",
-            "merklePath": [],
-            "validationsHash": null,
+            "merkle_path": [],
+            "validations_hash": null,
             "header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89237,
@@ -446,8 +432,7 @@
               "data_hash": "rREaKi3zOeL1HUhUl5LJonMVpyw=",
               "app_hash": "R7BB+nBveLV48CNvnplSmVKvIUXdfKWqQCN4JoMzqIM="
             },
-            "signatures": null,
-            "nextHeader": {
+            "next_header": {
               "chain_id": "test-chain-5AKxd9",
               "height": 89238,
               "time": 1513262083,
@@ -457,8 +442,7 @@
               },
               "last_commit_hash": "zh5r4LtW/pWN/5ADWgsm/hUg0BA=",
               "app_hash": "ex9dZjCvI5iBVn/Ui9RCAw46rqbC3bO1LQ7h86YYn6Q="
-            },
-            "nextSignatures": null
+            }
           }
         }
       ],

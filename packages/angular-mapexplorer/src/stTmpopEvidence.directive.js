@@ -3,11 +3,6 @@ export default function stTmpopEvidence() {
     scope: {
       evidence: '=?'
     },
-    templateUrl: '../views/tmpopevidence.html',
-    link: scope => {
-      scope.evidence.date = new Date(
-        scope.evidence.proof.header.time * 1000
-      ).toUTCString();
-    }
+    templateUrl: '../views/tmpopevidence.html'
   };
 }
