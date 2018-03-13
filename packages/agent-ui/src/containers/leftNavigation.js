@@ -6,51 +6,58 @@ import { withRouter, NavLink } from 'react-router-dom';
 import Avatar from 'material-ui/Avatar';
 import Button from 'material-ui/Button';
 import Collapse from 'material-ui/transitions/Collapse';
+import Divider from 'material-ui/Divider';
 import Drawer from 'material-ui/Drawer';
-import List, { ListItem, ListItemText, ListSubheader } from 'material-ui/List';
-import Typography from 'material-ui/Typography';
+import List, {
+  ListItem,
+  ListItemText,
+  ListSubheader,
+  ListItemIcon
+} from 'material-ui/List';
+import ExpandMore from 'material-ui-icons/ExpandMore';
+import { Assignment, Cloud } from 'material-ui-icons';
 import { withStyles } from 'material-ui/styles';
 import layout from '../styles/layout';
 
 import logo from '../images/logo.png';
 import * as statusTypes from '../constants/status';
 
-/* Material UI has a small isue for styling ListItemText so we need that workaround:
- * https://stackoverflow.com/questions/43975839/material-ui-next-styling-text-inside-listitemtext
- */
-const WhiteListItemText = ({ text, margin }) => (
-  <ListItemText
-    disableTypography
-    primary={
-      <Typography type="subheading" style={{ color: 'white' }}>
-        {text}
-      </Typography>
-    }
-    style={{ marginLeft: margin }}
-  />
-);
-
-WhiteListItemText.defaultProps = {
-  margin: '0'
-};
-WhiteListItemText.propTypes = {
-  text: PropTypes.string.isRequired,
-  margin: PropTypes.string
+let AgentNavigationLink = ({ text, to, classes, margin, icon, expandMore }) => {
+  let lic;
+  if (icon) {
+    lic = <ListItemIcon>{icon}</ListItemIcon>;
+  }
+  return (
+    <ListItem button component={NavLink} to={to} style={{ marginLeft: margin }}>
+      {lic}
+      <ListItemText primary={text} classes={{ primary: classes.primary }} />
+      {expandMore && <ExpandMore classes={{ root: classes.rootIcon }} />}
+    </ListItem>
+  );
 };
 
-const AgentNavigationLink = ({ text, to, margin }) => (
-  <ListItem button component={NavLink} to={to}>
-    <WhiteListItemText text={text} margin={margin} />
-  </ListItem>
-);
+AgentNavigationLink.defaultProps = {
+  icon: null,
+  margin: '0',
+  expandMore: false
+};
 
-AgentNavigationLink.defaultProps = WhiteListItemText.defaultProps;
 AgentNavigationLink.propTypes = {
-  ...WhiteListItemText.propTypes,
-  to: PropTypes.string.isRequired
+  text: PropTypes.string.isRequired,
+  to: PropTypes.string.isRequired,
+  classes: PropTypes.shape({
+    primary: PropTypes.string.isRequired
+  }).isRequired,
+  icon: PropTypes.element,
+  margin: PropTypes.string,
+  expandMore: PropTypes.bool
 };
 
-const AgentNavigationLinks = ({ agents, agent, process }) => (
+AgentNavigationLink = withStyles(layout)(AgentNavigationLink);
+
+const AgentNavigationLinks = withStyles(
+  layout
+)(({ agents, agent, process, classes }) => (
   <List>
     <ListSubheader
       style={{
@@ -60,13 +67,18 @@ const AgentNavigationLinks = ({ agents, agent, process }) => (
       }}
     >
       <Avatar alt="Icon" src={logo} />
-      <Button component={NavLink} to="/" color="contrast">
+      <Button component={NavLink} to="/" color="secondary">
         INDIGO AGENT UI
       </Button>
     </ListSubheader>
     {agents.map(a => (
       <div key={a.name} id={a.name}>
-        <AgentNavigationLink text={a.name} to={`/${a.name}`} />
+        <AgentNavigationLink
+          text={a.name}
+          to={`/${a.name}`}
+          icon={<Cloud classes={{ root: classes.rootIcon }} />}
+          expandMore={!agent || a.name !== agent}
+        />
         <Collapse in={!!(agent && a.name === agent)}>
           <List disablePadding>
             {a.processes.map(p => (
@@ -74,7 +86,9 @@ const AgentNavigationLinks = ({ agents, agent, process }) => (
                 <AgentNavigationLink
                   text={p}
                   to={`/${a.name}/${p}`}
-                  margin="1em"
+                  icon={<Assignment classes={{ root: classes.rootIcon }} />}
+                  expandMore={!process || p !== process}
+                  margin="0.5em"
                 />
                 <Collapse in={!!(process && p === process)}>
                   <AgentNavigationLink
@@ -92,15 +106,17 @@ const AgentNavigationLinks = ({ agents, agent, process }) => (
             ))}
           </List>
         </Collapse>
+        <Divider />
       </div>
     ))}
   </List>
-);
+));
 
 AgentNavigationLinks.defaultProps = {
   agent: '',
   process: ''
 };
+
 AgentNavigationLinks.propTypes = {
   agents: PropTypes.arrayOf(
     PropTypes.shape({
@@ -111,41 +127,46 @@ AgentNavigationLinks.propTypes = {
   process: PropTypes.string
 };
 
-const IndigoExternalLinks = () => (
-  <List
-    style={{
-      display: 'flex',
-      flexDirection: 'column'
-    }}
-  >
-    <ListItem
-      style={{
-        marginTop: 'auto'
-      }}
-      button
-      component="a"
-      href="https://indigoframework.com"
-    >
-      <WhiteListItemText text="Documentation" />
+let IndigoExternalLinks = ({ classes }) => (
+  <List>
+    <ListItem button component="a" href="https://indigoframework.com">
+      <ListItemText
+        primary="Documentation"
+        classes={{ primary: classes.primary }}
+      />
     </ListItem>
     <ListItem
       button
       component="a"
       href="https://github.com/stratumn/js-indigocore/issues/new"
     >
-      <WhiteListItemText text="Report issue" />
+      <ListItemText
+        primary="Report issue"
+        classes={{ primary: classes.primary }}
+      />
     </ListItem>
     <ListItem button>
-      <WhiteListItemText text="©2017 Stratumn SAS" />
+      <ListItemText
+        primary="©2017 Stratumn SAS"
+        classes={{ primary: classes.primary }}
+      />
     </ListItem>
   </List>
 );
+
+IndigoExternalLinks.propTypes = {
+  classes: PropTypes.shape({
+    primary: PropTypes.string.isRequired
+  }).isRequired
+};
+
+IndigoExternalLinks = withStyles(layout)(IndigoExternalLinks);
 
 export const LeftNavigation = ({ agents, agent, process, classes }) => {
   const agentsProps = { agents, agent, process };
   return (
     <Drawer
-      type="permanent"
+      variant="permanent"
       classes={{ paper: classes.drawerPaper }}
       anchor="left"
     >

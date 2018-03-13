@@ -37,7 +37,7 @@ export const RefChipList = ({
         );
       })
     ) : (
-      <Typography className={classes.emptyText} type="subheading">
+      <Typography className={classes.emptyText} variant="subheading">
         Add segments as refs...
       </Typography>
     )}

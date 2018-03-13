@@ -17,7 +17,7 @@ const MapsList = ({ agent, process, mapIds }) =>
       <TableHead>
         <TableRow>
           <TableCell>
-            <Typography type="subheading">Process maps:</Typography>
+            <Typography variant="subheading">Process maps:</Typography>
           </TableCell>
           <TableCell />
         </TableRow>
@@ -27,7 +27,7 @@ const MapsList = ({ agent, process, mapIds }) =>
           <TableRow key={id} hover>
             <TableCell>
               <Typography
-                type="subheading"
+                variant="subheading"
                 component={NavLink}
                 to={`/${agent}/${process}/maps/${id}`}
                 style={{ textDecoration: 'none' }}
@@ -48,7 +48,7 @@ const MapsList = ({ agent, process, mapIds }) =>
       </TableBody>
     </Table>
   ) : (
-    <Typography type="subheading" style={{ margin: 20 }}>
+    <Typography variant="subheading" style={{ margin: 20 }}>
       No process map found!
     </Typography>
   );

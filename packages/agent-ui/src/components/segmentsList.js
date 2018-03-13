@@ -50,7 +50,7 @@ export const SegmentsList = ({
   switch (status) {
     case statusTypes.FAILED:
       return (
-        <Typography type="subheading">{`failed to load: ${error}`}</Typography>
+        <Typography variant="subheading">{`failed to load: ${error}`}</Typography>
       );
     case statusTypes.LOADED:
       return segments.length ? (
@@ -58,14 +58,14 @@ export const SegmentsList = ({
           <TableHead>
             <TableRow>
               <TableCell>
-                <Typography type="subheading">Process segments:</Typography>
+                <Typography variant="subheading">Process segments:</Typography>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{segments.map(getTableRow)}</TableBody>
         </Table>
       ) : (
-        <Typography type="subheading" style={{ margin: 20 }}>
+        <Typography variant="subheading" style={{ margin: 20 }}>
           No process segment found!
         </Typography>
       );

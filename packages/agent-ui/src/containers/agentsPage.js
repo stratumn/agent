@@ -20,7 +20,9 @@ export const AgentsPage = ({
 }) => (
   <div>
     <div style={{ padding: '1em' }}>
-      <Typography type="display1">Agents</Typography>
+      <Typography variant="display2" gutterBottom>
+        Agents
+      </Typography>
       <Typography paragraph>
         An agent executes the logic of your processes. A process is defined by a
         set of actions that may be used in the workflow. An instance of a
@@ -44,8 +46,12 @@ export const AgentsPage = ({
     </div>
     <PrettyDivider />
     <div style={{ padding: '1em' }}>
-      <Typography type="display1">Keys</Typography>
-      <Typography paragraph>A key allows you to sign segments.</Typography>
+      <Typography variant="display2" gutterBottom>
+        Keys
+      </Typography>
+      <Typography paragraph>
+        Adding a key allows you to sign your inputs.
+      </Typography>
       <KeyManager userKey={userKey} addKey={addKey} deleteKey={deleteKey} />
     </div>
   </div>

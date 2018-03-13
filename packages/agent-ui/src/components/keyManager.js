@@ -39,7 +39,11 @@ export class KeyManager extends Component {
           accept="application/json"
           multiple={false}
         >
-          <Typography variant="subheading" align="center">
+          <Typography
+            variant="subheading"
+            align="center"
+            style={{ padding: '1em' }}
+          >
             Drag and drop you key file here (json file)
           </Typography>
           {userKey && userKey.error && userKey.error.message ? (

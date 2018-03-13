@@ -16,7 +16,7 @@ import { shortHash } from '../utils/hashUtils';
 const renderTopBarLinks = path => {
   if (!path || path === '/') {
     return (
-      <Typography type="headline" noWrap>
+      <Typography variant="headline" noWrap>
         Welcome to the IndigoCore UI
       </Typography>
     );
@@ -35,11 +35,11 @@ const renderTopBarLinks = path => {
     currentLink += `/${p}`;
     return (
       <div style={{ display: 'flex' }} key={p}>
-        <Typography type="headline" style={{ color: 'gray' }}>
+        <Typography variant="headline" style={{ color: 'gray' }}>
           &nbsp;&gt;&nbsp;
         </Typography>
         <Typography
-          type="headline"
+          variant="headline"
           component={NavLink}
           to={currentLink}
           style={{ textDecoration: 'none' }}
