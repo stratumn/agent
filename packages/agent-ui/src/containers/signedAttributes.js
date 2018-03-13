@@ -29,6 +29,8 @@ export class SignedAttributes extends Component {
       this.props.updateSignedAttributes(
         this.props.attributes || defaultAttributes
       );
+    } else {
+      this.props.updateSignedAttributes({});
     }
   }
 

@@ -23,7 +23,7 @@ const attributesMap = {
   inputs: 'meta.inputs',
   action: 'meta.action',
   prevLinkHash: 'meta.prevLinkHash',
-  refs: 'meta.refs'
+  refs: 'meta.refs[*].linkHash'
 };
 
 /**

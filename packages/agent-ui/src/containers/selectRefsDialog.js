@@ -41,7 +41,7 @@ export class SelectRefsDialog extends Component {
       process: segment.link.meta.process,
       linkHash: segment.meta.linkHash,
       mapId: segment.link.meta.mapId,
-      segment
+      segment: { link: segment.link, meta: segment.meta }
     });
   }
 
