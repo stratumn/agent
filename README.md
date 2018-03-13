@@ -1,4 +1,4 @@
-[![Logo](logo.png)](https://indigoframework.com)
+[![Logo](logo.png)](https://indigocore.org)
 
 # IndigoCore
 
@@ -10,9 +10,9 @@
 
 ---
 
-This repository contains javascript libraries to build [Proof of Process Networks](https://proofofprocess.org) using [IndigoCore](https://indigoframework.com).
+This repository contains javascript libraries to build [Proof of Process Networks](https://proofofprocess.org) using [IndigoCore](https://indigocore.org).
 
-To get started, visit the [IndigoCore website](https://indigoframework.com) and download the [SDK](https://indigoframework.com/documentation/v0.2.0/getting-started/install).
+To get started, visit the [IndigoCore website](https://indigocore.org) and download the [SDK](https://indigocore.org/documentation/v0.2.0/getting-started/install).
 
 ---
 

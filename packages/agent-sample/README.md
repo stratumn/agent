@@ -1,7 +1,7 @@
 # Indigo Agent Sample
 
 This project contains a sample [agent](https://github.com/stratumn/js-indigocore/tree/master/packages/agent-js)
-It can be used to test the Indigo Framework without coding anything yourself.
+It can be used to test IndigoCore without coding anything yourself.
 
 ## Docker images
 

@@ -17,7 +17,7 @@ const renderTopBarLinks = path => {
   if (!path || path === '/') {
     return (
       <Typography type="headline" noWrap>
-        Welcome to the Indigo Framework UI
+        Welcome to the IndigoCore UI
       </Typography>
     );
   }

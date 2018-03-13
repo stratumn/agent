@@ -1,7 +1,7 @@
 {
   "name": "@indigoframework/utils",
   "version": "0.2.0",
-  "description": "NodeJS module that exposes utils related to Stratumn Indigoframework",
+  "description": "NodeJS module that exposes utils related to IndigoCore",
   "main": "lib/index.js",
   "scripts": {
     "test": "jest --watch",
