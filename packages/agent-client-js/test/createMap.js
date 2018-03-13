@@ -88,7 +88,9 @@ describe('#createMap', () => {
         .sign({ refs: true })
         .createMap('hello')
         .then(segment2 => {
-          segment2.link.signatures[0].payload.should.be.exactly('[meta.refs]');
+          segment2.link.signatures[0].payload.should.be.exactly(
+            '[meta.refs[*].linkHash]'
+          );
         }));
 
     it('fails when an error occurs while signing the payload', () =>
