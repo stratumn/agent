@@ -6,7 +6,7 @@ export default theme => ({
     height: '100%'
   },
   rootIcon: {
-    color: 'white',
+    color: theme.palette.secondary.main,
     margin: 0
   },
   appFrame: {
@@ -32,6 +32,6 @@ export default theme => ({
     padding: '1rem'
   },
   primary: {
-    color: 'white'
+    color: theme.palette.secondary.main
   }
 });
