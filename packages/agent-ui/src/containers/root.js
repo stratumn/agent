@@ -6,6 +6,7 @@ import { PersistGate } from 'redux-persist/lib/integration/react';
 
 import { withStyles } from 'material-ui/styles';
 import layout from '../styles/layout';
+import '../styles/style.css';
 
 import history from '../store/history';
 import { App } from './';

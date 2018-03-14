@@ -21,14 +21,16 @@ const formatAction = (name, args) => {
 
 const renderStore = store => (
   <div>
-    <Typography type="subheading">Store adapter name: {store.name}</Typography>
-    <Typography type="subheading">
+    <Typography variant="subheading">
+      Store adapter name: {store.name}
+    </Typography>
+    <Typography variant="subheading">
       Store adapter version: {store.version}
     </Typography>
-    <Typography type="subheading">
+    <Typography variant="subheading">
       Store adapter commit: {store.commit}
     </Typography>
-    <Typography type="subheading">
+    <Typography variant="subheading">
       Store adapter description: {store.description}
     </Typography>
   </div>
@@ -36,20 +38,20 @@ const renderStore = store => (
 
 const renderFossilizer = fossilizer => (
   <div key={fossilizer.name}>
-    <Typography type="subheading">
+    <Typography variant="subheading">
       Fossilizer name: {fossilizer.name}
     </Typography>
-    <Typography type="subheading">
+    <Typography variant="subheading">
       Fossilizer version: {fossilizer.version}
     </Typography>
-    <Typography type="subheading">
+    <Typography variant="subheading">
       Fossilizer commit: {fossilizer.commit}
     </Typography>
-    <Typography type="subheading">
+    <Typography variant="subheading">
       Fossilizer description: {fossilizer.description}
     </Typography>
     {fossilizer.blockchain && (
-      <Typography type="subheading">
+      <Typography variant="subheading">
         Fossilizer blockchain: {fossilizer.blockchain}
       </Typography>
     )}
@@ -60,7 +62,7 @@ const renderFossilizer = fossilizer => (
 export const ProcessInfoPage = ({ agent, process }) => {
   if (!process) {
     return (
-      <Typography type="subheading" className="error">
+      <Typography variant="subheading" className="error">
         This process does not exist. Try reloading the agent.
       </Typography>
     );
@@ -68,29 +70,29 @@ export const ProcessInfoPage = ({ agent, process }) => {
 
   return (
     <div style={{ padding: '1em' }}>
-      <Typography type="display1" paragraph>
+      <Typography variant="display1" paragraph>
         {process.name}
       </Typography>
-      <Typography type="headline">Agent</Typography>
-      <Typography type="subheading">{agent}</Typography>
+      <Typography variant="headline">Agent</Typography>
+      <Typography variant="subheading">{agent}</Typography>
       <PrettyDivider />
-      <Typography type="headline">Actions</Typography>
-      <Typography type="caption">
+      <Typography variant="headline">Actions</Typography>
+      <Typography variant="caption">
         These are the procedures that define how segments are added to your
         maps.
       </Typography>
       <ul>
         {Object.keys(process.actions || []).map(a => (
           <li key={a}>
-            <Typography type="subheading">
+            <Typography variant="subheading">
               {formatAction(a, process.actions[a].args)}
             </Typography>
           </li>
         ))}
       </ul>
       <PrettyDivider />
-      <Typography type="headline">Store</Typography>
-      <Typography type="caption" paragraph>
+      <Typography variant="headline">Store</Typography>
+      <Typography variant="caption" paragraph>
         A store is responsible for saving your data. There are different
         adapters available depending on your needs.
       </Typography>
@@ -99,8 +101,8 @@ export const ProcessInfoPage = ({ agent, process }) => {
         <Typography>Your agent is not connected to a store.</Typography>
       )}
       <PrettyDivider />
-      <Typography type="headline">Fossilizers</Typography>
-      <Typography type="caption" paragraph>
+      <Typography variant="headline">Fossilizers</Typography>
+      <Typography variant="caption" paragraph>
         A fossilizer adds the steps of your workflow to a timeline, such as a
         Blockchain or a trusted timestamping authority.
       </Typography>

@@ -1,11 +1,13 @@
-import { indigo } from 'material-ui/colors';
-
 const drawerWidth = 240;
 
-export default (/* theme */) => ({
+export default theme => ({
   root: {
     width: '100%',
     height: '100%'
+  },
+  rootIcon: {
+    color: theme.palette.secondary.main,
+    margin: 0
   },
   appFrame: {
     position: 'absolute',
@@ -19,12 +21,17 @@ export default (/* theme */) => ({
   drawerPaper: {
     height: '100%',
     width: drawerWidth,
-    backgroundColor: indigo[800]
+    backgroundColor: theme.palette.primary.dark,
+    justifyContent: 'space-between'
   },
   content: {
     width: '100%',
     height: 'calc(100% - 56px)',
     marginTop: 56,
-    marginLeft: drawerWidth - 10
+    marginLeft: drawerWidth - 10,
+    padding: '1rem'
+  },
+  primary: {
+    color: theme.palette.secondary.main
   }
 });

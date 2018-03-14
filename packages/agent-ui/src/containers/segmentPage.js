@@ -31,7 +31,7 @@ export class SegmentPage extends Component {
 
     if (error) {
       return (
-        <Typography type="subheading" className="error">
+        <Typography variant="subheading" className="error">
           {error}
         </Typography>
       );
@@ -39,7 +39,7 @@ export class SegmentPage extends Component {
 
     if (!segment) {
       return (
-        <Typography type="subheading" className="error">
+        <Typography variant="subheading" className="error">
           Could not find segment
         </Typography>
       );
@@ -49,8 +49,8 @@ export class SegmentPage extends Component {
       if (segment.link.meta.stateHash) {
         return (
           <div>
-            <Typography type="headline">State hash</Typography>
-            <Typography type="subheading" paragraph>
+            <Typography variant="headline">State hash</Typography>
+            <Typography variant="subheading" paragraph>
               {segment.link.meta.stateHash}
             </Typography>
           </div>
@@ -60,25 +60,25 @@ export class SegmentPage extends Component {
     };
     return (
       <div style={{ padding: '1em' }}>
-        <Typography type="headline">Link hash</Typography>
-        <Typography type="subheading" paragraph>
+        <Typography variant="headline">Link hash</Typography>
+        <Typography variant="subheading" paragraph>
           {segment.meta.linkHash}
         </Typography>
-        <Typography type="headline">Map ID</Typography>
-        <Typography type="subheading" paragraph>
+        <Typography variant="headline">Map ID</Typography>
+        <Typography variant="subheading" paragraph>
           {segment.link.meta.mapId}
         </Typography>
-        <Typography type="headline">Process</Typography>
-        <Typography type="subheading" paragraph>
+        <Typography variant="headline">Process</Typography>
+        <Typography variant="subheading" paragraph>
           {segment.link.meta.process}
         </Typography>
         {stateHash()}
-        <Typography type="headline">Action</Typography>
-        <Typography type="subheading" paragraph>
+        <Typography variant="headline">Action</Typography>
+        <Typography variant="subheading" paragraph>
           {segment.link.meta.action}
         </Typography>
-        <Typography type="headline">Raw JSON</Typography>
-        <Typography type="body2">
+        <Typography variant="headline">Raw JSON</Typography>
+        <Typography variant="body2">
           <pre>
             <code>{JSON.stringify(segment, null, 2)}</code>
           </pre>

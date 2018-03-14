@@ -22,7 +22,7 @@ export const AgentInfoPage = ({ name, url, status, fetchAgent, classes }) => {
 
   return (
     <div style={{ padding: '1em' }}>
-      <Typography type="display1" paragraph>
+      <Typography variant="display2" gutterBottom>
         Agent info
       </Typography>
       <Typography>
@@ -32,22 +32,22 @@ export const AgentInfoPage = ({ name, url, status, fetchAgent, classes }) => {
         called segments.
       </Typography>
       <PrettyDivider />
-      <Typography type="headline">Name</Typography>
-      <Typography type="subheading">{name}</Typography>
+      <Typography variant="headline">Name</Typography>
+      <Typography variant="subheading">{name}</Typography>
       <PrettyDivider />
-      <Typography type="headline">Endpoint</Typography>
-      <Typography type="subheading" component="a" href={url} paragraph>
+      <Typography variant="headline">Endpoint</Typography>
+      <Typography variant="subheading" component="a" href={url} paragraph>
         {url}
       </Typography>
       {status === statusTypes.FAILED && (
-        <Typography type="subheading" className="error" paragraph>
+        <Typography variant="subheading" className="error" paragraph>
           There was an issue loading your agent
         </Typography>
       )}
-      <Typography type="caption" style={{ display: 'flex' }}>
+      <Typography variant="caption" style={{ display: 'flex' }}>
         You can use this URL to connect to your agent, using the&nbsp;
         <Typography
-          type="caption"
+          variant="caption"
           component="a"
           href="https://github.com/stratumn/js-indigocore/tree/master/packages/agent-client-js"
         >
@@ -57,7 +57,7 @@ export const AgentInfoPage = ({ name, url, status, fetchAgent, classes }) => {
       </Typography>
       <PrettyDivider />
       <Button
-        raised
+        variant="raised"
         color="primary"
         onClick={() => {
           if (url) {
@@ -68,7 +68,7 @@ export const AgentInfoPage = ({ name, url, status, fetchAgent, classes }) => {
         Refresh
       </Button>
       &nbsp;
-      <Button raised color="primary" component={NavLink} to="/">
+      <Button variant="raised" color="primary" component={NavLink} to="/">
         Add a new agent
       </Button>
     </div>

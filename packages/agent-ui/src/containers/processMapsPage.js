@@ -37,7 +37,7 @@ export class ProcessMapsPage extends Component {
     switch (status) {
       case statusTypes.FAILED:
         return (
-          <Typography type="subheading">{`failed to load: ${error}`}</Typography>
+          <Typography variant="subheading">{`failed to load: ${error}`}</Typography>
         );
       case statusTypes.LOADED:
         return <MapsList agent={agent} process={process} mapIds={mapIds} />;

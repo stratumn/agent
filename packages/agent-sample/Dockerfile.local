@@ -2,7 +2,7 @@
 # It uses lerna to build an image that contains latest versions of the local
 # packages.
 # From the root directory, run:
-# docker build -t indigoframework/agent-sample:local -f ./packages/agent-sample/Dockerfile.local .
+# docker build -t indigocore/agent-sample:local -f ./packages/agent-sample/Dockerfile.local .
 
 FROM node:8
 

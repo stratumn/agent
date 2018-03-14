@@ -102,7 +102,7 @@ export class SegmentsFilter extends Component {
     const { process } = this.state;
     return (
       <TableCell padding="dense">
-        <Typography type="body2">Process:</Typography>
+        <Typography variant="body2">Process:</Typography>
         <Select value={process} onChange={this.selectProcess}>
           {processes.map(p => (
             <MenuItem key={p} value={p}>

@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import { withStyles } from 'material-ui/styles';
+import { createMuiTheme, withStyles } from 'material-ui/styles';
+import { indigo } from 'material-ui/colors';
 import layout from '../styles/layout';
 
 import {
@@ -15,16 +17,30 @@ import {
   WebSocketsManager
 } from './';
 
+const theme = createMuiTheme({
+  palette: {
+    primary: indigo,
+    secondary: {
+      main: '#FFFFFF'
+    }
+  },
+  typography: {
+    fontFamily: 'EuclidCircularB,Roboto,"Helvetica Neue",Arial,sans-serif'
+  }
+});
+
 export const App = ({ classes, location }) => (
-  <div className={classes.appFrame}>
-    <TopBar />
-    <LeftNavigation />
-    <ContentPage />
-    <CreateMapDialog />
-    <AppendSegmentDialog />
-    <SelectRefsDialog location={location} />
-    <WebSocketsManager />
-  </div>
+  <MuiThemeProvider theme={theme}>
+    <div className={classes.appFrame}>
+      <TopBar />
+      <LeftNavigation />
+      <ContentPage />
+      <CreateMapDialog />
+      <AppendSegmentDialog />
+      <SelectRefsDialog location={location} />
+      <WebSocketsManager />
+    </div>
+  </MuiThemeProvider>
 );
 
 App.propTypes = {
