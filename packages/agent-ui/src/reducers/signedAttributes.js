@@ -9,7 +9,7 @@ export default function(state = {}, action) {
         ...signedAttributes
       };
     case actionTypes.CLEAR_SIGNED_ATTRIBUTES:
-      return null;
+      return {};
     default:
       return state;
   }

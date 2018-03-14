@@ -88,13 +88,14 @@ describe('<SelectRefsDialog />', () => {
   it('correctly adds a ref when using addSegmentAsRef', () => {
     const testSegment = {
       link: { meta: { process: 'iamprocess', mapId: 'mapId' } },
-      meta: { linkHash: 'bighash' }
+      meta: { linkHash: 'bighash' },
+      junk: { test: 'test' }
     };
     const expectedRef = {
       process: 'iamprocess',
       linkHash: 'bighash',
       mapId: 'mapId',
-      segment: testSegment
+      segment: { link: testSegment.link, meta: testSegment.meta }
     };
     const dialog = shallow(<SelectRefsDialog {...requiredProps} />);
     dialog.instance().addSegmentAsRef(testSegment);

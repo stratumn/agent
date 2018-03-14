@@ -59,6 +59,7 @@ export const closeDialog = () => ({
 
 export const closeDialogAndClear = () => dispatch => {
   dispatch(appendSegmentClear());
+  dispatch(clearSignature());
   dispatch(closeDialog());
 };
 

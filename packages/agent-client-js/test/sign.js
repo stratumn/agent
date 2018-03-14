@@ -78,7 +78,7 @@ describe('#sign', () => {
   it('outputs a signature given a key and data to sign', () =>
     sign(testKey, testData).then(sig => {
       sig.payload.should.be.exactly(
-        '[meta.refs,meta.action,meta.prevLinkHash,meta.inputs]'
+        '[meta.refs[*].linkHash,meta.action,meta.prevLinkHash,meta.inputs]'
       );
       sig.publicKey.should.be.exactly(
         Buffer.from(
@@ -89,14 +89,20 @@ describe('#sign', () => {
 
   it('build the payload accordingly to the provided data', () =>
     sign(testKey, { ...testData, inputs: false }).then(sig =>
-      sig.payload.should.be.exactly('[meta.refs,meta.action,meta.prevLinkHash]')
+      sig.payload.should.be.exactly(
+        '[meta.refs[*].linkHash,meta.action,meta.prevLinkHash]'
+      )
     ));
 
   it('outputs a valid signature', () =>
     sign(testKey, { ...testData, inputs: false }).then(sig => {
       const { signature, publicKey } = sig;
       const payloadBytes = Buffer.from(
-        stringify([testData.refs, testData.action, testData.prevLinkHash])
+        stringify([
+          testData.refs.map(r => r.linkHash).filter(Boolean),
+          testData.action,
+          testData.prevLinkHash
+        ])
       );
       const verif = nacl.detached.verify(
         payloadBytes,
@@ -119,7 +125,11 @@ describe('#sign', () => {
     return sign(externalKey, { ...testData, inputs: false }).then(sig => {
       const { signature, publicKey } = sig;
       const payloadBytes = Buffer.from(
-        stringify([testData.refs, testData.action, testData.prevLinkHash])
+        stringify([
+          testData.refs.map(r => r.linkHash).filter(Boolean),
+          testData.action,
+          testData.prevLinkHash
+        ])
       );
       publicKey.should.be.exactly(
         'wzItvU7C9JA+JY0zR6OuTJ7Wq6gGBeIqa4JBk0ZFbgs='

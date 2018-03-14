@@ -22,7 +22,7 @@ describe('signedAttributes reducer', () => {
 
   it('updates state when clearing attributes', () => {
     const initialState = { random: 'junk', signedAttributes: { action: true } };
-    const expectedState = null;
+    const expectedState = {};
     const newState = signedAttributes(initialState, {
       type: actionTypes.CLEAR_SIGNED_ATTRIBUTES
     });

@@ -161,6 +161,7 @@ export function mapStateToProps({ appendSegment }) {
       show,
       actions,
       selectedAction,
+      userKey: key,
       error: appendSegment.request.error.toString()
     };
   }

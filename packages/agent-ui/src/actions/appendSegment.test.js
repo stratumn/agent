@@ -148,11 +148,14 @@ describe('closeAndClear action', () => {
   it('dispatch clear and close actions', () => {
     const dispatchSpy = sinon.spy();
     closeDialogAndClear()(dispatchSpy);
-    expect(dispatchSpy.callCount).to.deep.equal(2);
+    expect(dispatchSpy.callCount).to.deep.equal(3);
     expect(dispatchSpy.getCall(0).args[0].type).to.equal(
       actionTypes.APPEND_SEGMENT_CLEAR
     );
     expect(dispatchSpy.getCall(1).args[0].type).to.equal(
+      actionTypes.CLEAR_SIGNED_ATTRIBUTES
+    );
+    expect(dispatchSpy.getCall(2).args[0].type).to.equal(
       actionTypes.APPEND_SEGMENT_DIALOG_CLOSE
     );
   });
