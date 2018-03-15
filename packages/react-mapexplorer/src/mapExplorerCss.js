@@ -30,6 +30,7 @@ export function getRules() {
   const foreignSegmentSecondaryColor = '#8B0000';
   const linkTextColor = '#6E6E6E';
   const linkColor = '#CCC';
+  const refLinkColor = '#000';
 
   return {
     color: 'white',
@@ -37,6 +38,18 @@ export function getRules() {
 
     'h1, h2, h4, li, a': {
       fontFamily: 'Gibson-SemiBold, Montserrat, sans-serif'
+    },
+
+    '#triangle': {
+      fill: linkColor
+    },
+
+    '#reverseTriangle': {
+      fill: refLinkColor
+    },
+
+    '#blackTriangle': {
+      fill: 'black'
     },
 
     h1: {
@@ -130,6 +143,18 @@ export function getRules() {
       markerEnd: 'url("#triangle")'
     },
 
+    '.link.references, .link.referencedBy': {
+      stroke: refLinkColor
+    },
+
+    '.link.references': {
+      markerStart: 'url("#reverseTriangle")'
+    },
+
+    '.link.referencedBy': {
+      markerEnd: 'url("#blackTriangle")'
+    },
+
     '.node.selected polygon': {
       fill: selectedSegmentPrimaryColor
     },
@@ -155,14 +180,11 @@ export function getRules() {
     },
 
     '#ref-link': {
-      strokeWidth: 8
-    },
-
-    '#ref-link:hover': {
+      strokeWidth: 8,
       stroke: 'black',
       cursor: 'pointer',
-      strokeWidth: 10,
-      markerEnd: 'url("#blackTriangle")'
+      markerEnd: 'url("#blackTriangle")',
+      markerStart: 'none'
     },
 
     'text#linkLabelRef': {
@@ -184,12 +206,6 @@ export function getRules() {
 
 export function getStyles() {
   return {
-    triangle: {
-      // get the svg that contains the arrow out of the flow
-      position: 'absolute',
-      pointerEvents: 'none'
-    },
-
     title: {
       background: '#040406',
       padding: '10px 100px',

@@ -51,11 +51,11 @@ export const defaultOptions = {
     return `go to map ${compactHash(node.data.link.meta.mapId)}`;
   },
   getLinkText(link) {
-    if (
-      link.ref ||
-      link.target.data.parentRef === link.source.data.meta.linkHash
-    ) {
-      return 'reference';
+    if (link.ref) {
+      return 'references';
+    }
+    if (link.target.data.parentRef === link.source.data.meta.linkHash) {
+      return 'referenced by';
     }
     return (
       link.target.data.link.meta.action +

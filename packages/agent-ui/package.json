@@ -49,6 +49,7 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
+    "@indigoframework/mapexplorer-core": "^0.2.0",
     "chai": "^4.1.2",
     "css.escape": "^1.5.1",
     "enzyme": "^3.1.0",

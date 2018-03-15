@@ -1,3 +1,15 @@
+#triangle {
+  fill: $link-color;
+}
+
+#reverseTriangle {
+  fill: $ref-link-color;
+}
+
+#blackTriangle {
+  fill: "black";
+}
+
 .node {
   cursor: pointer;
 }
@@ -27,6 +39,23 @@
   stroke: $link-color;
   stroke-width: 5px;
   marker-end: url("#triangle");
+}
+
+.link.references {
+  marker-end: none;
+}
+
+.link.references,
+.link.referencedBy {
+  stroke: $ref-link-color;
+}
+
+.link.references {
+  marker-start: 'url("#reverseTriangle")';
+}
+
+.link.referencedBy {
+  marker-end: 'url("#blackTriangle")';
 }
 
 path .link.ref:hover {

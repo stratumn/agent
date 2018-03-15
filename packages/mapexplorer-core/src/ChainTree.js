@@ -33,7 +33,54 @@ export default class ChainTree {
     this.tree = tree();
 
     this.svg = select(element).append('svg');
+
+    select(element)
+      .append('div')
+      .html(
+        `<svg width="0">
+        <marker
+          id="triangle"
+          viewBox="0 0 10 10"
+          refX="0"
+          refY="5"
+          markerUnits="strokeWidth"
+          markerWidth="4"
+          markerHeight="3"
+          orient="auto"
+        >
+          <path d="M 0 0 L 10 5 L 0 10 z" />
+        </marker>
+        <marker
+          id="reverseTriangle"
+          viewBox="0 0 10 10"
+          refX="10"
+          refY="5"
+          markerUnits="strokeWidth"
+          markerWidth="4"
+          markerHeight="3"
+          orient="auto"
+        >
+          <path d="M 0 5 L 10 0 L 10 10 z" />
+        </marker>
+        <marker
+          id="blackTriangle"
+          viewBox="0 0 10 10"
+          refX="0"
+          refY="5"
+          markerUnits="strokeWidth"
+          markerWidth="4"
+          markerHeight="3"
+          orient="auto"
+        >
+          <path fill="black" d="M 0 0 L 10 5 L 0 10 z" />
+        </marker>
+      </svg>`
+      );
     this.innerG = this.svg.append('g');
+    this.svg.on('click', () => {
+      this.innerG.selectAll('g.node.selected').classed('selected', false);
+      this.displayCurrentMapLinks();
+    });
     this.zoomed = () => this.innerG.attr('transform', event.transform);
   }
 
@@ -73,6 +120,7 @@ export default class ChainTree {
       .data(nodes, function key(d) {
         return d ? d.id : this.id;
       });
+
     // Enter any new nodes at the parent's previous position.
     const nodeSelection = node
       .enter()
@@ -104,11 +152,14 @@ export default class ChainTree {
           },
           this
         );
+        event.stopPropagation();
       });
+
     // Draw nodes
     this.drawNodes(nodeSelection);
+
     // Transition all exiting nodes to the parent's new position.
-    const nodeExit = node.exit(); // .transition(treeTransition);
+    const nodeExit = node.exit();
     nodeExit.select('text').style('fill-opacity', 1e-6);
     nodeExit.attr('transform', () => translate(0, 0)).remove();
 
@@ -118,11 +169,12 @@ export default class ChainTree {
       .data(extraNodes, function key(d) {
         return d ? d.id : this.id;
       });
-    // Enter any extra nodes at the parent's previous position.
+
+    // Enter any extra nodes
     const extraNodeSelection = extraNode
       .enter()
       .append('g')
-      .attr('class', () => 'node ref')
+      .attr('class', 'node ref')
       .attr('id', d => d.id)
       .attr('transform', d => translate(d.x, d.y))
       .on('click', function onClick(d) {
@@ -138,11 +190,14 @@ export default class ChainTree {
           },
           this
         );
+        event.stopPropagation();
       });
+
     // Draw extra nodes
     this.drawNodes(extraNodeSelection);
+
     // Transition all exiting nodes to the parent's new position.
-    const extraNodeExit = extraNode.exit(); // .transition(treeTransition);
+    const extraNodeExit = extraNode.exit();
     extraNodeExit.select('text').style('fill-opacity', 1e-6);
     extraNodeExit.attr('transform', () => translate(0, 0)).remove();
 
@@ -150,6 +205,7 @@ export default class ChainTree {
     if (root) {
       this.drawInit(root);
     }
+
     // Draw foreign child references
     nodes
       .filter(n => n.data.parentRef != null)
@@ -268,8 +324,14 @@ export default class ChainTree {
   drawForeignChildRef(refNode) {
     const self = this;
     const foreignLink = makeLink(
-      { x: refNode.x, y: refNode.y + this.options.getArrowLength() },
-      { x: refNode.x, y: refNode.y + this.options.getArrowLength() * 2 },
+      { x: refNode.x, y: refNode.y + this.options.polygonSize.width },
+      {
+        x: refNode.x,
+        y:
+          refNode.y +
+          this.options.polygonSize.width +
+          this.options.getArrowLength()
+      },
       15
     );
     const onClick = () => {
@@ -295,7 +357,7 @@ export default class ChainTree {
 
   drawAncestorsRef(refNode) {
     const self = this;
-    const foreignLink = makeLink({ x: refNode.x, y: refNode.y0 }, refNode, 20);
+    const foreignLink = makeLink(refNode, { x: refNode.x, y: refNode.y0 });
     const onClick = () =>
       loadRef(self.options.agentUrl, refNode, this.links).then(cs =>
         self.display(cs, self.options)
@@ -314,6 +376,7 @@ export default class ChainTree {
     this.innerG.selectAll('path#ref-link').remove();
     this.innerG.selectAll('rect.refLinkBox').remove();
     this.innerG.selectAll('#linkLabelRef').remove();
+
     this.drawForeignRef(refNode, onClick, foreignLink, rect, linkLabel);
   }
 
@@ -363,25 +426,24 @@ export default class ChainTree {
 
   drawLinks(links) {
     const polygon = this.options.polygonSize;
-    const treeTransition = transition()
-      .duration(this.options.duration)
-      .ease(easeLinear);
 
     this.innerG.selectAll('path.link').remove();
     const link = this.innerG.selectAll('path.link').data(links, d => d);
 
-    // Enter any new links at the parent's previous position.
     link
       .enter()
       .insert('path', 'g')
-      .attr('class', 'link')
-      .attr('id', d => `link-${d.source.id}-${d.target.id}`);
-
-    // Transition links to their new position.
-    const linkUpdate = this.innerG
-      .selectAll('path.link:not(.init):not(.ref)')
-      .transition(treeTransition);
-    linkUpdate.attr('d', d => finalLink(d, 15));
+      .classed('link', true)
+      .classed('references', d => d.ref)
+      .classed(
+        'referencedBy',
+        d => d.target.data.parentRef === d.source.data.meta.linkHash
+      )
+      .attr('id', d => `link-${d.source.id}-${d.target.id}`)
+      .attr(
+        'd',
+        d => (d.ref ? finalLink(d, 0, 15 + polygon.width) : finalLink(d, 15))
+      );
 
     link.exit().remove();
 
@@ -450,6 +512,7 @@ export default class ChainTree {
 
     // draw related links
     this.drawLinks(currentMapLinks);
+
     const rootNode = currentMapLinks
       .map(l => l.source)
       .find(n => n.parent === null);
