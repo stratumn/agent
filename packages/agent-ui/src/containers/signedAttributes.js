@@ -45,6 +45,7 @@ export class SignedAttributes extends Component {
         <FormControlLabel
           control={
             <Switch
+              color="primary"
               disabled={!this.isKeySet()}
               checked={this.state.signed}
               onChange={(event, value) => this.handleSwitch(value)}
@@ -63,6 +64,7 @@ export class SignedAttributes extends Component {
                 control={
                   <Checkbox
                     checked={attributes[attr]}
+                    color="primary"
                     onChange={(event, value) =>
                       this.props.updateSignedAttributes({
                         ...attributes,
