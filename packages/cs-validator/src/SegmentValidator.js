@@ -172,7 +172,7 @@ export default class SegmentValidator {
     if (evidences) {
       errors = evidences
         .map(e => {
-          if (e.state === 'COMPLETE' && e.backend === 'bcbatch') {
+          if (e.backend === 'bcbatch') {
             return validateMerklePath(e, this.segment.meta.linkHash);
           }
           return null;
@@ -188,7 +188,7 @@ export default class SegmentValidator {
     if (evidences) {
       errors = evidences
         .map(e => {
-          if (e.state === 'COMPLETE' && e.backend === 'bcbatch') {
+          if (e.backend === 'bcbatch') {
             return validateFossil(e);
           }
 

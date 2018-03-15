@@ -24,7 +24,6 @@
       "5b597c841a72f4608e130217a16c1a3a33d4a55957f49b4f0d02b563a92ffc4g",
     "evidences": [
       {
-        "state": "COMPLETE",
         "backend": "bcbatch",
         "provider": "dummy",
         "proof": {
