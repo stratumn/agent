@@ -32,9 +32,10 @@ export default function handleResponse(err, res) {
 
     if (error) {
       error.status = res ? res.statusCode : 500;
-      error.message = error.message
-        ? error.message
-        : JSON.parse(error.response.error.text).error;
+      error.message =
+        error.response && error.response.text
+          ? JSON.parse(error.response.text).error
+          : error.message;
       reject(error);
     } else {
       resolve(res.body);

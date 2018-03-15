@@ -32,6 +32,10 @@ const actions = {
     this.append();
   },
 
+  anyAction() {
+    this.append();
+  },
+
   addMessage(message, author) {
     if (!message) {
       this.reject('a message is required');

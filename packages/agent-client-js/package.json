@@ -64,7 +64,7 @@
     "deepmerge": "2.0.1",
     "httpplease": "^0.16.4",
     "qs": "stratumn/qs#rename-formats-default",
-    "canonicaljson": "1.0.0",
+    "canonicaljson": "1.0.1",
     "tweetnacl": "1.0.0",
     "jmespath": "^0.15.0"
   },

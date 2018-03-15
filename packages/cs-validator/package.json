@@ -69,7 +69,7 @@
   },
   "dependencies": {
     "@indigoframework/client": "^0.2.0",
-    "canonicaljson": "^1.0.0",
+    "canonicaljson": "^1.0.1",
     "deepmerge": "2.0.1",
     "httpplease": "^0.16.4",
     "js-sha256": "^0.3.0",
