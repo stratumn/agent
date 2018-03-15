@@ -1,7 +1,7 @@
 {
   "info": {
     "title": "Agent",
-    "version": "0.2.0"
+    "version": "0.3.0-alpha1"
   },
   "consumes": "application/json",
   "produces": "application/json",
@@ -46,7 +46,8 @@
     },
     "/{process}/upload": {
       "post": {
-        "description": "Dynamically uploads a new process to a running agent. This endpoint is only available when the agent is started with `enableProcessUpload` to true.",
+        "description":
+          "Dynamically uploads a new process to a running agent. This endpoint is only available when the agent is started with `enableProcessUpload` to true.",
         "parameters": [
           {
             "name": "process",
@@ -156,7 +157,8 @@
           {
             "in": "body",
             "name": "arguments",
-            "description": "Parameters that should be passed on to the init action",
+            "description":
+              "Parameters that should be passed on to the init action",
             "schema": {
               "type": "object"
             }
@@ -235,11 +237,7 @@
             "description": "Segments results",
             "schema": {
               "type": "object",
-              "required": [
-                "segments",
-                "hasMore",
-                "offset"
-              ],
+              "required": ["segments", "hasMore", "offset"],
               "properties": {
                 "segments": {
                   "type": "array",
@@ -359,27 +357,23 @@
         },
         "provider": {
           "type": "string",
-          "description": "Origin of the evidence (Chain, Identifier of the third-party...)"
+          "description":
+            "Origin of the evidence (Chain, Identifier of the third-party...)"
         },
         "proof": {
           "type": "object",
-          "description": "Actual, objectively verifiable, proof of existence of the Segment"
+          "description":
+            "Actual, objectively verifiable, proof of existence of the Segment"
         }
       }
     },
     "Segment": {
       "type": "object",
-      "required": [
-        "link",
-        "meta"
-      ],
+      "required": ["link", "meta"],
       "properties": {
         "link": {
           "type": "object",
-          "required": [
-            "state",
-            "meta"
-          ],
+          "required": ["state", "meta"],
           "properties": {
             "state": {
               "type": "object",
@@ -393,18 +387,17 @@
         },
         "meta": {
           "type": "object",
-          "required": [
-            "linkHash",
-            "evidences"
-          ],
+          "required": ["linkHash", "evidences"],
           "properties": {
             "linkHash": {
               "type": "string",
-              "description": "Identifier of this segment. Computed as the hash of its link."
+              "description":
+                "Identifier of this segment. Computed as the hash of its link."
             },
             "evidences": {
               "type": "array",
-              "description": "List of evidences that proves the existence of this segment",
+              "description":
+                "List of evidences that proves the existence of this segment",
               "items": {
                 "$ref": "#/definitions/Evidence"
               }
@@ -425,11 +418,13 @@
           "properties": {
             "actions": {
               "type": "object",
-              "description": "A map of all available actions in this process along with their arguments"
+              "description":
+                "A map of all available actions in this process along with their arguments"
             },
             "pluginsInfo": {
               "type": "array",
-              "description": "List of the plugins that have been activated for this process",
+              "description":
+                "List of the plugins that have been activated for this process",
               "items": {
                 "type": "object",
                 "properties": {
@@ -446,13 +441,15 @@
         },
         "fossilizersInfo": {
           "type": "array",
-          "description": "Information about the fossilizer that will be used for the segments created by this process",
+          "description":
+            "Information about the fossilizer that will be used for the segments created by this process",
           "items": {
             "type": "object"
           }
         },
         "storeInfo": {
-          "description": "Information about the store that will be used for the segments created by this process",
+          "description":
+            "Information about the store that will be used for the segments created by this process",
           "type": "object"
         }
       }
