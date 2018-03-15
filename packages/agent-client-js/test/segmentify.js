@@ -136,6 +136,22 @@ describe('#segmentify', () => {
             })
         ));
 
+    it('replaces undefined inputs by null', () =>
+      processCb()
+        .createMap('hi there')
+        .then(segment1 =>
+          segment1
+            .withKey(testKey)
+            .sign({ inputs: true })
+            .anyAction(undefined)
+            .then(segment2 => {
+              segment2.link.signatures[0].payload.should.be.exactly(
+                '[meta.inputs]'
+              );
+              segment2.link.meta.inputs.should.deepEqual([null]);
+            })
+        ));
+
     it('fails when an error occurs while signing the payload', () =>
       processCb()
         .createMap('hi there')
