@@ -17,13 +17,7 @@ export default {
       format: 'es'
     }
   ],
-  external: [
-    'react',
-    'react-dom',
-    'prop-types',
-    '@indigoframework/mapexplorer-core',
-    'radium'
-  ],
+  external: ['react', 'react-dom', 'prop-types', 'radium'],
   plugins: [
     babel({
       include: ['src/**']
