@@ -25,9 +25,6 @@ export default function segmentify(adaptor, process, segment) {
     // TODO: handle multi-sig on a single segment
     const { signed, refs, key } = segment;
 
-    // canonicaljson does not handle serializing 'undefined', use null instead
-    const cleanedArgs = args.map(arg => (arg === undefined ? null : arg));
-
     const createSegment = signature =>
       adaptor
         .createSegment(
@@ -36,13 +33,13 @@ export default function segmentify(adaptor, process, segment) {
           action,
           signature ? [signature] : [],
           refs,
-          ...cleanedArgs
+          ...args
         )
         .then(res => segmentify(adaptor, process, { ...res.body, key: key }));
 
     if (signed) {
       const data = {
-        inputs: signed.inputs ? cleanedArgs : false,
+        inputs: signed.inputs ? args : false,
         action: signed.action ? action : false,
         refs: signed.refs ? refs : false,
         prevLinkHash: signed.prevLinkHash ? segment.meta.linkHash : false
