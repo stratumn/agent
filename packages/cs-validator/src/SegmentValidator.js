@@ -21,7 +21,8 @@ import { search } from 'jmespath';
 import httpplease from 'httpplease';
 import hashJson from './hashJson';
 
-import computeMerkleParent from './computeMerkleParent';
+import { validateMerklePath } from './merkle';
+import validateTendermintEvidence from './tendermintEvidence';
 
 const blockCypherCache = {};
 
@@ -54,49 +55,6 @@ function validateFossil(evidence) {
     }
     return null;
   });
-}
-
-function validateMerklePath(evidence, linkHash) {
-  let previous = linkHash;
-
-  let error;
-  evidence.proof.batch.merklePath.every(merkleNode => {
-    if (merkleNode.left === previous || merkleNode.right === previous) {
-      const computedParent = computeMerkleParent(
-        merkleNode.left,
-        merkleNode.right
-      );
-
-      if (computedParent !== merkleNode.parent) {
-        error =
-          `Invalid Merkle Node ${JSON.stringify(merkleNode)}: ` +
-          `computed parent: ${computedParent}`;
-        return false;
-      }
-      previous = merkleNode.parent;
-      return true;
-    }
-    error =
-      `Invalid Merkle Node ${JSON.stringify(merkleNode)}: ` +
-      `previous hash (${previous}) not found`;
-    return false;
-  });
-
-  if (error) {
-    return error;
-  }
-
-  if (evidence.proof.batch.merklePath.length > 0) {
-    const lastMerkleNode =
-      evidence.proof.batch.merklePath[
-        evidence.proof.batch.merklePath.length - 1
-      ];
-    if (lastMerkleNode.parent !== evidence.proof.batch.merkleRoot) {
-      return `Invalid Merkle Root ${evidence.proof.batch
-        .merkleRoot}: not found in Merkle Path`;
-    }
-  }
-  return null;
 }
 
 function validateSignature(sig, link) {
@@ -172,8 +130,15 @@ export default class SegmentValidator {
     if (evidences) {
       errors = evidences
         .map(e => {
-          if (e.state === 'COMPLETE' && e.backend === 'bcbatch') {
-            return validateMerklePath(e, this.segment.meta.linkHash);
+          if (e.backend === 'bcbatch') {
+            return validateMerklePath(
+              this.segment.meta.linkHash,
+              e.proof.batch.merkleRoot,
+              e.proof.batch.merklePath
+            );
+          }
+          if (e.backend === 'TMPop') {
+            return validateTendermintEvidence(e, this.segment.meta.linkHash);
           }
           return null;
         })
@@ -188,7 +153,7 @@ export default class SegmentValidator {
     if (evidences) {
       errors = evidences
         .map(e => {
-          if (e.state === 'COMPLETE' && e.backend === 'bcbatch') {
+          if (e.backend === 'bcbatch') {
             return validateFossil(e);
           }
 
