@@ -120,10 +120,15 @@ SelectRefsDialog.defaultProps = {
 function mapStateToProps(state, ownProps) {
   const { location: { pathname } } = ownProps;
   const { process, agent } = parseAgentAndProcess(pathname);
-  const { segments, selectRefs: { show }, agents } = state;
+  const { segments, selectRefs: { show, refs }, agents } = state;
   const processes = agents[agent]
     ? Object.keys(agents[agent].processes || {})
     : [];
+  if (segments.details && refs) {
+    segments.details = segments.details.filter(
+      s => !refs.find(r => r.linkHash === s.meta.linkHash)
+    );
+  }
   return { agent, process, segments, show, processes };
 }
 

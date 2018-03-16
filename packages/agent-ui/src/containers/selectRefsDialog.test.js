@@ -9,7 +9,9 @@ import configureStore from 'redux-mock-store';
 
 import { TestStateBuilder } from '../test/builders/state';
 
-import { SelectRefsDialog } from './selectRefsDialog';
+import SelectRefsDialogContainer, {
+  SelectRefsDialog
+} from './selectRefsDialog';
 
 chai.use(sinonChai);
 
@@ -127,5 +129,28 @@ describe('<SelectRefsDialog />', () => {
     expect(doneButton).to.have.length(1);
     doneButton.simulate('click');
     expect(requiredProps.closeDialog.callCount).to.equal(1);
+  });
+});
+
+describe('<SelectRefsDialogContainer />', () => {
+  it('filters alreay selected segments from the segments list', () => {
+    const selectedSegment = { meta: { linkHash: '42' } };
+    const availableSegment = { meta: { linkHash: '43' } };
+
+    const testState = new TestStateBuilder()
+      .withSelectedRef({ linkHash: '42' })
+      .withSegment(selectedSegment)
+      .withSegment(availableSegment)
+      .build();
+    const mockStore = configureStore();
+    const store = mockStore(testState);
+
+    const ownProps = { location: { pathname: '' } };
+
+    const dialog = shallow(
+      <SelectRefsDialogContainer store={store} {...ownProps} />
+    );
+    expect(dialog.props().segments.details).to.have.length(1);
+    expect(dialog.props().segments.details[0]).to.equal(availableSegment);
   });
 });

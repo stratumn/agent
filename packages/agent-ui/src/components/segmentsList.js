@@ -80,6 +80,7 @@ SegmentsList.defaultProps = {
   segments: [],
   handleClick: null
 };
+
 SegmentsList.propTypes = {
   agent: PropTypes.string.isRequired,
   process: PropTypes.string.isRequired,
