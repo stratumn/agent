@@ -213,34 +213,8 @@ class MapExplorer extends Component {
       >
         <Style scopeSelector=".react-mapexplorer" rules={rules} />
         {segmentContainer}
-        <svg width="0">
-          <marker
-            id="triangle"
-            viewBox="0 0 10 10"
-            refX="0"
-            refY="5"
-            markerUnits="strokeWidth"
-            markerWidth="4"
-            markerHeight="3"
-            orient="auto"
-            style={styles.triangle}
-          >
-            <path fill="#CCCCCC" d="M 0 0 L 10 5 L 0 10 z" />
-          </marker>
-          <marker
-            id="blackTriangle"
-            viewBox="0 0 10 10"
-            refX="0"
-            refY="5"
-            markerUnits="strokeWidth"
-            markerWidth="4"
-            markerHeight="3"
-            orient="auto"
-            style={styles.triangle}
-          >
-            <path fill="black" d="M 0 0 L 10 5 L 0 10 z" />
-          </marker>
-        </svg>
+        {/* a empty div is needed here to make sure that d3 adds the svg below the segment container */}
+        <div />
       </div>
     );
   }

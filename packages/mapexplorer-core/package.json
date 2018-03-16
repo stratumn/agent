@@ -12,6 +12,7 @@
     "test": "yarn test:unit && yarn test:integration",
     "test:ci": "yarn test:unit:ci && yarn test:integration:ci",
     "build": "rollup -c rollup.npm.config.js && rollup -c rollup.browser.config.js",
+    "start": "rollup -c rollup.npm.config.js -w",
     "prepublish": "yarn build",
     "postpublish": "aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core.js --region 'eu-west-1' && aws s3 cp dist/mapexplorer-core.js s3://stratumn-libs/mapexplorer-core-${npm_package_version}.js --region 'eu-west-1'"
   },

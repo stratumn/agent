@@ -17,7 +17,7 @@ export default {
       format: 'es'
     }
   ],
-  external: ['react', 'react-dom', 'prop-types'],
+  external: ['react', 'react-dom', 'prop-types', 'radium'],
   plugins: [
     babel({
       include: ['src/**']

@@ -14,17 +14,19 @@
   limitations under the License.
 */
 
-export function makeLink(source, target, margin = 0) {
+export function makeLink(source, target, marginTarget = 0, marginSource = 0) {
   const finalTarget = target || source;
   const targetX = finalTarget.x;
-  const targetY = finalTarget.y - margin;
-  return `M${source.y},${source.x}
-    C${(source.y + targetY) / 2},${source.x} ${(source.y + targetY) / 2},
+  const targetY = finalTarget.y - marginTarget;
+
+  const sourceY = source.y + marginSource;
+  return `M${sourceY},${source.x}
+    C${(sourceY + targetY) / 2},${source.x} ${(sourceY + targetY) / 2},
     ${targetX} ${targetY},${targetX}`;
 }
 
-export function finalLink(d, margin) {
-  return makeLink(d.source, d.target, margin);
+export function finalLink(d, marginTarget, marginSource = 0) {
+  return makeLink(d.source, d.target, marginTarget, marginSource);
 }
 
 export function translate(x, y) {
