@@ -44,7 +44,7 @@ export class KeyManager extends Component {
             align="center"
             style={{ padding: '1em' }}
           >
-            Drag and drop you key file here (json file)
+            Drag and drop your key file here (json file)
           </Typography>
           {userKey && userKey.error && userKey.error.message ? (
             <Typography variant="subheading" align="center" color="error">
