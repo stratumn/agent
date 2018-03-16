@@ -61,6 +61,14 @@ export default class {
     return this;
   }
 
+  withSegment(segment) {
+    if (!this.segments.details) {
+      this.segments.details = [];
+    }
+    this.segments.details.push(segment);
+    return this;
+  }
+
   build() {
     return {
       agents: this.agents,
