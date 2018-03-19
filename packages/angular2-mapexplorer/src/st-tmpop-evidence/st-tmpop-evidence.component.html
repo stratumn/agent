@@ -16,14 +16,56 @@
 
 <div class="evidence">
   <div class="info">
+    <h4>Chain ID</h4>
+    <p>{{evidence.provider}}</p>
+
+    <hr />
+
     <h4>Block #</h4>
-    <p>{{evidence.proof.block_height}}</p>
+    <p>{{evidence.proof.header.height}}</p>
 
     <h4>Time</h4>
     <p>{{evidence.proof.header.time}}</p>
 
+    <h4>Last Block</h4>
+    <p>{{evidence.proof.header.last_block_id.hash}}</p>
+
+    <h4>App Hash</h4>
+    <p>{{evidence.proof.header.app_hash}}</p>
+
+    <h4>Validators Hash</h4>
+    <p>{{evidence.proof.header.validators_hash}}</p>
+
+    <h4>Validators</h4>
+    <p>{{votes()}}</p>
+
+    <h4>Expected Validators</h4>
+    <p>{{validators()}}</p>
+
+    <hr />
+
+    <h4>Block #</h4>
+    <p>{{evidence.proof.next_header.height}}</p>
+
+    <h4>Time</h4>
+    <p>{{evidence.proof.next_header.time}}</p>
+
+    <h4>Last Block</h4>
+    <p>{{evidence.proof.next_header.last_block_id.hash}}</p>
+
     <h4>App Hash</h4>
     <p>{{evidence.proof.next_header.app_hash}}</p>
+
+    <h4>Validators Hash</h4>
+    <p>{{evidence.proof.next_header.validators_hash}}</p>
+
+    <h4>Validators</h4>
+    <p>{{nextVotes()}}</p>
+
+    <h4>Expected Validators</h4>
+    <p>{{nextValidators()}}</p>
+
+    <hr />
 
     <h4>Validations Hash</h4>
     <p>{{evidence.proof.validations_hash}}</p>

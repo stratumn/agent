@@ -25,4 +25,26 @@ export class StTmpopEvidenceComponent {
   @Input() evidence;
 
   constructor(public element: ElementRef) {}
+
+  votes() {
+    return this.evidence.proof.header_votes.map(v => v.vote.validator_address);
+  }
+
+  validators() {
+    return this.evidence.proof.header_validator_set.validators.map(
+      v => v.address
+    );
+  }
+
+  nextVotes() {
+    return this.evidence.proof.next_header_votes.map(
+      v => v.vote.validator_address
+    );
+  }
+
+  nextValidators() {
+    return this.evidence.proof.next_header_validator_set.validators.map(
+      v => v.address
+    );
+  }
 }
