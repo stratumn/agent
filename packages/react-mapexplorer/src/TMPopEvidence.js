@@ -17,6 +17,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MerklePathComponent from './MerklePathComponent';
+import TMPopHeader from './TMPopHeader';
 
 const TMPopEvidence = ({ evidence }) => {
   let merkleTree;
@@ -37,14 +38,23 @@ const TMPopEvidence = ({ evidence }) => {
           <h4>Chain ID</h4>
           <p>{evidence.provider}</p>
 
-          <h4>Block #</h4>
-          <p>{evidence.proof.block_height}</p>
+          <hr />
 
-          <h4>Time</h4>
-          <p>{evidence.proof.header.time}</p>
+          <TMPopHeader
+            header={evidence.proof.header}
+            votes={evidence.proof.header_votes}
+            validators={evidence.proof.header_validator_set.validators}
+          />
 
-          <h4>App Hash</h4>
-          <p>{evidence.proof.next_header.app_hash}</p>
+          <hr />
+
+          <TMPopHeader
+            header={evidence.proof.next_header}
+            votes={evidence.proof.next_header_votes}
+            validators={evidence.proof.next_header_validator_set.validators}
+          />
+
+          <hr />
 
           <h4>Validations Hash</h4>
           <p>{evidence.proof.validations_hash}</p>
@@ -63,7 +73,7 @@ TMPopEvidence.propTypes = {
     provider: PropTypes.string,
     backend: PropTypes.string,
     proof: PropTypes.shape({
-      block_height: PropTypes.number,
+      merkle_root: PropTypes.string,
       validations_hash: PropTypes.string
     })
   }).isRequired
