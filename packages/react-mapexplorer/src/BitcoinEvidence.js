@@ -67,7 +67,6 @@ const BitcoinEvidence = ({ evidence }) => {
 
 BitcoinEvidence.propTypes = {
   evidence: PropTypes.shape({
-    state: PropTypes.string.isRequired,
     provider: PropTypes.String,
     backend: PropTypes.string,
     proof: PropTypes.object

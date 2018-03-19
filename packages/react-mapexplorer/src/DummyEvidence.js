@@ -35,7 +35,6 @@ const DummyEvidence = ({ evidence }) => {
 
 DummyEvidence.propTypes = {
   evidence: PropTypes.shape({
-    state: PropTypes.string,
     provider: PropTypes.String,
     backend: PropTypes.string,
     proof: PropTypes.object
