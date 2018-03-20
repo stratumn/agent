@@ -1,1 +1,4 @@
-export { default, timestamp } from 'ember-mapexplorer/helpers/timestamp';
+export {
+  default,
+  timestamp
+} from "@indigoframework/ember-mapexplorer/helpers/timestamp";

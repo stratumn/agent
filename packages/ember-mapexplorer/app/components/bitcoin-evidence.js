@@ -1,1 +1,3 @@
-export { default } from 'ember-mapexplorer/components/bitcoin-evidence';
+export {
+  default
+} from "@indigoframework/ember-mapexplorer/components/bitcoin-evidence";

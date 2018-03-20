@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
-$brand-primary: #EC714A !default;
+@import "mapexplorer-core";
+
+$brand-primary: #ec714a !default;
 
 #triangle-container {
   // get the svg that contains the arrow out of the flow
@@ -23,11 +25,10 @@ $brand-primary: #EC714A !default;
 }
 
 .segment-container {
-
   color: white;
 
   .title {
-    background: #2E2E2E;
+    background: #2e2e2e;
     padding: 10px 100px;
   }
 
@@ -37,24 +38,24 @@ $brand-primary: #EC714A !default;
 
   h1 {
     margin-top: 0;
-    font-family: Gibson-SemiBold, 'Montserrat', sans-serif;
+    font-family: Gibson-SemiBold, "Montserrat", sans-serif;
     font-weight: 600;
     font-size: 11px;
-    color: #CCCCCC;
+    color: #cccccc;
     text-transform: uppercase;
   }
 
   h2 {
     margin-bottom: 0;
-    font-family: Gibson-Light, 'Montserrat', sans-serif;
+    font-family: Gibson-Light, "Montserrat", sans-serif;
     font-weight: 300;
     font-size: 18px;
-    color: #FFFFFF;
+    color: #ffffff;
     text-transform: none;
   }
 
   .body {
-    background: #3E3E3E;
+    background: #3e3e3e;
     padding: 0 100px;
     max-height: 400px;
     overflow-y: scroll;
@@ -62,9 +63,9 @@ $brand-primary: #EC714A !default;
 
   li {
     cursor: pointer;
-    font-family: 'Gibson-Regular', 'Montserrat', sans-serif;
+    font-family: "Gibson-Regular", "Montserrat", sans-serif;
     font-size: 15px;
-    color: #CCCCCC;
+    color: #cccccc;
     margin: 20px 0;
     width: 100px;
   }
@@ -79,7 +80,8 @@ $brand-primary: #EC714A !default;
     width: 100%;
   }
 
-  .ace-tm .ace_gutter, .ace_scroller {
+  .ace-tm .ace_gutter,
+  .ace_scroller {
     padding-top: 20px;
   }
 
@@ -93,23 +95,23 @@ $brand-primary: #EC714A !default;
   }
 
   h4 {
-    font-family: Gibson-SemiBold, 'Montserrat', sans-serif;
+    font-family: Gibson-SemiBold, "Montserrat", sans-serif;
     font-weight: 600;
     font-size: 11px;
-    color: #ADADAD;
+    color: #adadad;
     text-transform: uppercase;
     margin-bottom: 0;
   }
 
   p {
-    font-family: RationalTWText-Light, 'Roboto Mono', monospace;
+    font-family: RationalTWText-Light, "Roboto Mono", monospace;
     font-size: 14px;
     color: white;
     margin-top: 0;
   }
 
   a {
-    font-family: 'Gibson-Regular', 'Montserrat', sans-serif;
+    font-family: "Gibson-Regular", "Montserrat", sans-serif;
     font-size: 15px;
     color: $brand-primary;
     display: block;

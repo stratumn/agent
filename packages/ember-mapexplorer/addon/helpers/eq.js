@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import Ember from 'ember';
+import { helper } from "@ember/component/helper";
 
 const eq = params => params[0] === params[1];
-export default Ember.Helper.helper(eq);
+export default helper(eq);
