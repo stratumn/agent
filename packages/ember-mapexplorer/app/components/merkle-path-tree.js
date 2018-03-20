@@ -14,4 +14,6 @@
   limitations under the License.
 */
 
-export { default } from 'ember-mapexplorer/components/merkle-path-tree';
+export {
+  default
+} from "@indigoframework/ember-mapexplorer/components/merkle-path-tree";

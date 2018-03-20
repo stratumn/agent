@@ -14,18 +14,18 @@
   limitations under the License.
 */
 
-import Ember from 'ember';
-import layout from '../templates/components/merkle-path-tree';
+import Component from "@ember/component";
+import layout from "../templates/components/merkle-path-tree";
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
 
   display() {
-    this.get('tree').display(this.get('merkle-path'));
+    this.get("tree").display(this.get("merkle-path"));
   },
 
   didInsertElement() {
-    this.set('tree', new mapexplorerCore.MerklePathTree(this.$()[0]));
+    this.set("tree", new mapexplorerCore.MerklePathTree(this.$()[0]));
 
     this.display();
   },

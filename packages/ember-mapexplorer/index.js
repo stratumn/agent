@@ -1,8 +1,7 @@
-/* eslint-env node */
-'use strict';
+"use strict";
 
 module.exports = {
-  name: 'ember-mapexplorer',
+  name: "@indigoframework/ember-mapexplorer",
   included: function(app) {
     this._super.included(app);
 
@@ -11,9 +10,11 @@ module.exports = {
       app.options.sassOptions.includePaths || [];
 
     app.options.sassOptions.includePaths.push(
-      'node_modules/@indigoframework/mapexplorer-core/assets/stylesheets'
+      "node_modules/@indigoframework/mapexplorer-core/assets/stylesheets"
     );
 
-    this.import('vendor/mapexplorer-core.js');
+    this.import(
+      "node_modules/@indigoframework/mapexplorer-core/dist/mapexplorer-core.js"
+    );
   }
 };

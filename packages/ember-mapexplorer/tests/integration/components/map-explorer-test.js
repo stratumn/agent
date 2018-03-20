@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { moduleForComponent, test } from 'ember-qunit';
-import hbs from 'htmlbars-inline-precompile';
+import { moduleForComponent, test } from "ember-qunit";
+import hbs from "htmlbars-inline-precompile";
 
-moduleForComponent('map-explorer', 'Integration | Component | map explorer', {
+moduleForComponent("map-explorer", "Integration | Component | map explorer", {
   integration: true
 });
 
-test('it renders', function(assert) {
+test("it renders", function(assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
@@ -33,7 +33,7 @@ test('it renders', function(assert) {
     this.$()
       .text()
       .trim(),
-    ''
+    ""
   );
-  assert.equal(this.$().find('svg').length, 2);
+  assert.equal(this.$().find("svg").length, 2);
 });

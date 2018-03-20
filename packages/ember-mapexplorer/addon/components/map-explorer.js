@@ -14,49 +14,49 @@
   limitations under the License.
 */
 
-import Ember from 'ember';
-import layout from '../templates/components/map-explorer';
+import Component from "@ember/component";
+import layout from "../templates/components/map-explorer";
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
 
   actions: {
     close() {
-      this.set('segment', null);
+      this.set("segment", null);
       this.onHide();
 
-      const onSelectSegment = this.get('onSelectSegment');
+      const onSelectSegment = this.get("onSelectSegment");
       if (onSelectSegment) {
         onSelectSegment(null);
       }
     },
     show(part) {
-      ['state', 'link', 'evidence', 'json'].forEach(part =>
-        this.set(part + 'Showed', false)
+      ["state", "link", "evidence", "json"].forEach(part =>
+        this.set(part + "Showed", false)
       );
-      this.set(part + 'Showed', true);
+      this.set(part + "Showed", true);
     }
   },
 
   init() {
     this._super(...arguments);
-    this.set('stateShowed', true);
+    this.set("stateShowed", true);
   },
 
   didInsertElement() {
     this.set(
-      'builder',
+      "builder",
       new mapexplorerCore.ChainTreeBuilder(this.$()[0], {
         onclick: this.onClick.bind(this),
         onTag: () => {}
       })
     );
 
-    this.get('builder').build({
-      id: this.get('mapId'),
-      agentUrl: this.get('agentUrl'),
-      process: this.get('process'),
-      chainscript: this.get('chainscript')
+    this.get("builder").build({
+      id: this.get("mapId"),
+      agentUrl: this.get("agentUrl"),
+      process: this.get("process"),
+      chainscript: this.get("chainscript")
     });
   },
 
@@ -64,21 +64,21 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     // Temporary solution.
-    const chainscript = this.get('chainscript');
+    const chainscript = this.get("chainscript");
 
     if (chainscript) {
-      let builder = this.get('builder');
+      let builder = this.get("builder");
       builder.chainTree.display(chainscript);
     }
   },
 
   onClick(d, onHide) {
     this.onHide = onHide;
-    this.set('segment', d.data);
+    this.set("segment", d.data);
 
-    const onSelectSegment = this.get('onSelectSegment');
+    const onSelectSegment = this.get("onSelectSegment");
     if (onSelectSegment) {
-      onSelectSegment(this.get('segment'));
+      onSelectSegment(this.get("segment"));
     }
   }
 });

@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import Ember from 'ember';
+import { helper } from "@ember/component/helper";
 
 export function join(items, hash) {
-  const delimiter = hash.delimiter || ',';
+  const delimiter = hash.delimiter || ",";
   return items[0].join(delimiter);
 }
 
-export default Ember.Helper.helper(join);
+export default helper(join);

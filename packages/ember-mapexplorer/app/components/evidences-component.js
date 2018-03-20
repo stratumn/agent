@@ -1,1 +1,3 @@
-export { default } from 'ember-mapexplorer/components/evidences-component';
+export {
+  default
+} from "@indigoframework/ember-mapexplorer/components/evidences-component";
