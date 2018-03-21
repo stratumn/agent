@@ -2,7 +2,11 @@
 <div class="info">
   <h4>Chain ID</h4>
   <p>{{evidence.provider}}</p>
+
   <hr />
+
+  <h4>Block #</h4>
+  <p>{{evidence.proof.header.height}}</p>
 
   <h4>Last Block</h4>
   <p>{{evidence.proof.header.last_block_id.hash}}</p>
@@ -18,7 +22,9 @@
 
   <h4>Expected Validators</h4>
   <p>{{validators}}</p>
+
   <hr />
+
   <h4>Block #</h4>
   <p>{{evidence.proof.next_header.height}}</p>
 
@@ -39,6 +45,7 @@
 
   <h4>Expected Validators</h4>
   <p>{{nextValidators}}</p>
+
   <hr />
 
   <h4>Validations Hash</h4>
