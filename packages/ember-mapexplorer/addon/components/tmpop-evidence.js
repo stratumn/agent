@@ -23,7 +23,31 @@ export default Component.extend({
   didInsertElement() {
     this.set(
       "merklePathPresent",
-      this.get("evidence").proof.merklePath.length > 0
+      this.get("evidence").proof.merkle_path.length > 0
+    );
+
+    this.set(
+      "votes",
+      this.get("evidence").proof.header_votes.map(v => v.vote.validator_address)
+    );
+
+    this.set(
+      "validators",
+      this.get("evidence").proof.header_validator_set.validators.map(
+        v => v.address
+      )
+    );
+
+    this.set(
+      "nextVotes",
+      this.get("evidence").proof.header_votes.map(v => v.vote.validator_address)
+    );
+
+    this.set(
+      "nextValidators",
+      this.get("evidence").proof.next_header_validator_set.validators.map(
+        v => v.address
+      )
     );
   }
 });

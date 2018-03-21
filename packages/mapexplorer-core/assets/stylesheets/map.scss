@@ -7,7 +7,7 @@
 }
 
 #blackTriangle {
-  fill: "black";
+  fill: #000;
 }
 
 .node {
@@ -51,11 +51,11 @@
 }
 
 .link.references {
-  marker-start: 'url("#reverseTriangle")';
+  marker-start: url("#reverseTriangle");
 }
 
 .link.referencedBy {
-  marker-end: 'url("#blackTriangle")';
+  marker-end: url("#blackTriangle");
 }
 
 path .link.ref:hover {
