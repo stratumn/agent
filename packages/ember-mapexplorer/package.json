@@ -3,7 +3,11 @@
   "version": "0.2.0",
   "description": "Ember addon that displays a Map Explorer",
   "keywords": [
-    "ember-addon", "IndigoCore", "MapExplorer", "chainscript", "Stratumn"
+    "ember-addon",
+    "IndigoCore",
+    "MapExplorer",
+    "chainscript",
+    "Stratumn"
   ],
   "license": "Apache-2.0",
   "author": "Stratumn team",
