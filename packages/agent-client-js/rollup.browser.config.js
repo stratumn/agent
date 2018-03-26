@@ -31,6 +31,7 @@ export default {
         'node_modules/qs/lib/index.js': ['stringify'],
         'node_modules/canonicaljson/lib/canonicaljson.js': ['stringify'],
         'node_modules/jmespath/jmespath.js': ['search'],
+        'node_modules/asn1.js/lib/asn1.js': ['define'],
         '../utils/lib/index.js': ['promiseWhile']
       }
     })

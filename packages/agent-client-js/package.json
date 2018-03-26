@@ -61,6 +61,7 @@
   },
   "dependencies": {
     "@indigoframework/utils": "^0.2.0",
+    "asn1.js": "^4.10.1",
     "deepmerge": "2.0.1",
     "httpplease": "^0.16.4",
     "qs": "stratumn/qs#rename-formats-default",

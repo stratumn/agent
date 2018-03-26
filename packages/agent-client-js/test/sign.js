@@ -20,6 +20,15 @@ import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 import { sign, signedProperties } from '../src/sign';
 import { withKey } from '../src/withKey';
+import { decodeSignatureFromPEM, decodePKFromPEM } from '../src/encoding';
+
+const testPrivateKey = `-----BEGIN ED25519 PRIVATE KEY-----
+BEAu3UcG9B1K7E7YbzeVUJPbU9v62rSQPSr87rCbPkwCg+JRhN20fmXhDtzfHTow
+BFVsvHaVt+putNZGntbUraRS
+-----END ED25519 PRIVATE KEY-----`;
+const testPublicKey = `-----BEGIN ED25519 PUBLIC KEY-----
+MCowBQYDK2VwAyEA4lGE3bR+ZeEO3N8dOjAEVWy8dpW36m601kae1tStpFI=
+-----END ED25519 PUBLIC KEY-----`;
 
 describe('#signedProperties', () => {
   runTestsWithDataAndAgent(processCb => {
@@ -59,14 +68,7 @@ describe('#signedProperties', () => {
 });
 
 describe('#sign', () => {
-  const pair = nacl.keyPair();
-  const testKey = withKey(
-    {},
-    {
-      type: 'ed25519',
-      secret: Buffer.from(pair.secretKey).toString('base64')
-    }
-  ).key;
+  const testKey = withKey({}, testPrivateKey).key;
 
   const testData = {
     refs: [{ test: 'test' }],
@@ -80,11 +82,7 @@ describe('#sign', () => {
       sig.payload.should.be.exactly(
         '[meta.refs[*].linkHash,meta.action,meta.prevLinkHash,meta.inputs]'
       );
-      sig.publicKey.should.be.exactly(
-        Buffer.from(
-          nacl.keyPair.fromSecretKey(pair.secretKey).publicKey
-        ).toString('base64')
-      );
+      sig.publicKey.should.be.exactly(testPublicKey);
     }));
 
   it('build the payload accordingly to the provided data', () =>
@@ -97,6 +95,8 @@ describe('#sign', () => {
   it('outputs a valid signature', () =>
     sign(testKey, { ...testData, inputs: false }).then(sig => {
       const { signature, publicKey } = sig;
+      const publicKeyBytes = decodePKFromPEM(publicKey).publicKey;
+      const signatureBytes = decodeSignatureFromPEM(signature).signature;
       const payloadBytes = Buffer.from(
         stringify([
           testData.refs.map(r => r.linkHash).filter(Boolean),
@@ -106,42 +106,11 @@ describe('#sign', () => {
       );
       const verif = nacl.detached.verify(
         payloadBytes,
-        Buffer.from(signature, 'base64'),
-        Buffer.from(publicKey, 'base64')
+        signatureBytes,
+        publicKeyBytes
       );
       verif.should.be.true();
     }));
-
-  it('outputs a valid signature with an externally generated key', () => {
-    const externalKey = withKey(
-      {},
-      {
-        type: 'ed25519',
-        secret:
-          'yFQwrc9r3afEjXJgPCWmrsDFIu74kpzeO45JlvT0DR/DMi29TsL0kD4ljTNHo65MntarqAYF4iprgkGTRkVuCw=='
-      }
-    ).key;
-
-    return sign(externalKey, { ...testData, inputs: false }).then(sig => {
-      const { signature, publicKey } = sig;
-      const payloadBytes = Buffer.from(
-        stringify([
-          testData.refs.map(r => r.linkHash).filter(Boolean),
-          testData.action,
-          testData.prevLinkHash
-        ])
-      );
-      publicKey.should.be.exactly(
-        'wzItvU7C9JA+JY0zR6OuTJ7Wq6gGBeIqa4JBk0ZFbgs='
-      );
-      const verif = nacl.detached.verify(
-        payloadBytes,
-        Buffer.from(signature, 'base64'),
-        Buffer.from(publicKey, 'base64')
-      );
-      verif.should.be.true();
-    });
-  });
 
   it('fails if the provided data does not match [inputs, action, refs, prevLinkHash]', () =>
     sign(testKey, { ...testData, unknown: 'test' })

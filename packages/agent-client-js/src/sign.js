@@ -19,6 +19,8 @@ import { sign as naclSign } from 'tweetnacl';
 import { stringify } from 'canonicaljson/lib/canonicaljson.js';
 import { search } from 'jmespath';
 
+import { encodeSignatureToPEM } from './encoding';
+
 const attributesMap = {
   inputs: 'meta.inputs',
   action: 'meta.action',
@@ -111,12 +113,12 @@ export const sign = (key, data) =>
     const payloadBytes = Buffer.from(stringify(payloadData));
 
     // sign the payload and resolve with the signature
-    const signature = naclSign.detached(payloadBytes, key.secret);
+    const signature = Buffer.from(naclSign.detached(payloadBytes, key.secret));
 
     resolve({
       type: key.type,
       publicKey: key.public,
-      signature: Buffer.from(signature).toString('base64'),
+      signature: encodeSignatureToPEM(signature),
       payload: payload
     });
   });
