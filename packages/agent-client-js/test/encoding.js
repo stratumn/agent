@@ -16,6 +16,7 @@
 import { sign as nacl } from 'tweetnacl';
 
 import {
+  encodePEM,
   decodePEM,
   encodePKToPEM,
   decodePKFromPEM,
@@ -30,9 +31,52 @@ const randomBuffer = length =>
     new Uint8Array(length).map(() => Math.random() * Math.floor(255))
   );
 
-describe('#encodePEM', () => {});
+describe('#encodePEM', () => {
+  it('encodes a Buffer to a PEM string with a label', () => {
+    const buf = Buffer.from([0, 1, 2]);
+    const encoded = encodePEM(buf, 'label');
+    const { body, label } = decodePEM(encoded);
+    body.should.deepEqual(buf);
+    label.should.be.exactly('label');
+  });
 
-describe('#decodePEM', () => {});
+  it('throws an error if no label is specified', () => {
+    const buf = Buffer.from([1, 2, 3]);
+    (() => encodePEM(buf)).should.throw('PEM encoding failed: missing label');
+  });
+});
+
+describe('#decodePEM', () => {
+  it('decodes a PEM string and returns its body and label', () => {
+    const PEMstr = `-----BEGIN label-----
+AAEC
+-----END label-----`;
+    const { body, label } = decodePEM(PEMstr);
+    body.should.deepEqual(Buffer.from([0, 1, 2]));
+    label.should.be.exactly('label');
+  });
+
+  it('throws an error if no labels are found', () => {
+    const PEMstr = `-----BEGIN -----
+    AAEC
+    -----END -----`;
+    (() => decodePEM(PEMstr)).should.throw('Missing PEM label');
+  });
+
+  it('throws an error if begin and end header do not match', () => {
+    const PEMstr = `-----BEGIN one-----
+    AAEC
+    -----END two-----`;
+    (() => decodePEM(PEMstr)).should.throw(
+      'Mismatch between BEGIN and END labels'
+    );
+  });
+
+  it('throws an error if the format is wrong', () => {
+    const PEMstr = 'test';
+    (() => decodePEM(PEMstr)).should.throw('string is not PEM encoded');
+  });
+});
 
 describe('#encodePKToPEM', () => {
   const keyType = 'ED25519 PUBLIC KEY';
@@ -67,12 +111,6 @@ MCowBQYDK2VwAyEA4lGE3bR+ZeEO3N8dOjAEVWy8dpW36m601kae1tStpFI=
     publicKey.length.should.be.exactly(nacl.publicKeyLength);
     encodePKToPEM(publicKey, type).should.be.exactly(testPEMPublicKey);
   });
-
-  it('handles bad key types', () =>
-    (() =>
-      decodePKFromPEM(testPEMPublicKey.replace('ED25519', 'BAD'))).should.throw(
-      'Missing PEM label, or mismatch between BEGIN and END labels'
-    ));
 
   it('handles bad key format', () =>
     (() => decodePKFromPEM({})).should.throw());
@@ -109,14 +147,6 @@ BFVsvHaVt+putNZGntbUraRS
     secretKey.length.should.be.exactly(nacl.secretKeyLength);
     encodeSKToPEM(secretKey, type).should.be.exactly(testPEMPrivateKey);
   });
-
-  it('handles bad key types', () =>
-    (() =>
-      decodeSKFromPEM(
-        testPEMPrivateKey.replace('ED25519', 'BAD')
-      )).should.throw(
-      'Missing PEM label, or mismatch between BEGIN and END labels'
-    ));
 
   it('handles bad key format', () =>
     (() => decodeSKFromPEM({})).should.throw());

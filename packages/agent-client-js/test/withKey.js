@@ -64,7 +64,7 @@ BFVsvHaVt+putNZGntbUraRS
 
     it('fails when key format is wrong', () =>
       (() => processCb().withKey('test')).should.throw(
-        'Missing PEM label, or mismatch between BEGIN and END labels'
+        'string is not PEM encoded'
       ));
   });
 });

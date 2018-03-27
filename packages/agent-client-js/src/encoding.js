@@ -74,14 +74,17 @@ export function encodePEM(data, label) {
 
 export function decodePEM(data) {
   const lines = data.split(/\r?\n/);
+  if (lines.length < 3) {
+    throw new Error('string is not PEM encoded');
+  }
   const beginRE = new RegExp(`-----\\s*BEGIN (.*)\\s*-----`);
   const endRE = new RegExp(`-----\\s*END (.*)\\s*-----`);
   const tagBegin = lines[0].match(beginRE);
   const tagEnd = lines[lines.length - 1].match(endRE);
-  if (!tagBegin || !tagEnd || tagBegin[1] !== tagEnd[1]) {
-    throw new Error(
-      'Missing PEM label, or mismatch between BEGIN and END labels'
-    );
+  if (!tagBegin || !tagEnd || !tagBegin[1]) {
+    throw new Error('Missing PEM label');
+  } else if (tagBegin[1] !== tagEnd[1]) {
+    throw new Error('Mismatch between BEGIN and END labels');
   }
   return {
     body: Buffer.from(lines.slice(1, lines.length - 1).join(''), 'base64'),
