@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import { sign as nacl } from 'tweetnacl';
 import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#createMap', () => {
