@@ -15,8 +15,7 @@ import {
 import {
   TestStateBuilder,
   TestAgentBuilder,
-  TestProcessBuilder,
-  TestKeyBuilder
+  TestProcessBuilder
 } from '../test/builders/state';
 
 import * as actionTypes from '../constants/actionTypes';
@@ -45,14 +44,7 @@ describe('openCreateMapDialog action', () => {
           )
           .build()
       )
-      .withKey(
-        new TestKeyBuilder()
-          .withType('ed25519')
-          .withSecret('secret')
-          .withPublic('public')
-          .withStatus('LOADED')
-          .build()
-      )
+      .withKey({ pem: 'testPEM' })
       .build();
     getStateStub.returns(state);
 
@@ -65,12 +57,7 @@ describe('openCreateMapDialog action', () => {
       agent: 'a',
       process: 'p',
       args: ['title', 'version'],
-      key: {
-        type: 'ed25519',
-        secret: 'secret',
-        public: 'public',
-        status: 'LOADED'
-      }
+      key: { pem: 'testPEM' }
     });
   });
 });
@@ -160,7 +147,8 @@ describe('createMap action', () => {
     testKey = {
       type: 'keytype',
       secret: 'secret',
-      public: 'public'
+      public: 'public',
+      pem: 'testPEM'
     };
 
     signedAttributes = {
@@ -224,7 +212,7 @@ describe('createMap action', () => {
       expect(withRefsStub.getCall(0).args[0]).to.deep.equal(testRefs);
 
       expect(withKeyStub.callCount).to.equal(1);
-      expect(withKeyStub.getCall(0).args[0]).to.deep.equal(testKey);
+      expect(withKeyStub.getCall(0).args[0]).to.deep.equal(testKey.pem);
 
       expect(signStub.callCount).to.equal(1);
       expect(signStub.getCall(0).args[0]).to.deep.equal(signedAttributes);

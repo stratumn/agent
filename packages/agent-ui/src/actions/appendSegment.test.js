@@ -17,7 +17,6 @@ import * as notifications from '../utils/notificationHelpers';
 import {
   TestStateBuilder,
   TestProcessBuilder,
-  TestKeyBuilder,
   TestAgentBuilder
 } from '../test/builders/state';
 
@@ -42,14 +41,7 @@ describe('open action', () => {
       new TestStateBuilder()
         .withAgent('a', new TestAgentBuilder().build())
         .withAgent('aa', new TestAgentBuilder().withProcess(process).build())
-        .withKey(
-          new TestKeyBuilder()
-            .withType('ed25519')
-            .withSecret('secret')
-            .withPublic('public')
-            .withStatus('LOADED')
-            .build()
-        )
+        .withKey({ pem: 'testPEM' })
         .withSelectedMapExplorerSegment('lh', 'p')
         .build()
     );
@@ -63,12 +55,7 @@ describe('open action', () => {
       process: 'p',
       actions: process.actions,
       parent: 'lh',
-      key: {
-        type: 'ed25519',
-        secret: 'secret',
-        public: 'public',
-        status: 'LOADED'
-      }
+      key: { pem: 'testPEM' }
     });
   });
 
@@ -200,7 +187,8 @@ describe('appendSegment action', () => {
     testKey = {
       type: 'keytype',
       secret: 'secret',
-      public: 'public'
+      public: 'public',
+      pem: 'testPEM'
     };
 
     signedAttributes = {
@@ -312,7 +300,7 @@ describe('appendSegment action', () => {
       expect(withRefsSpy.getCall(0).args[0]).to.deep.equal(testRefs);
 
       expect(withKeySpy.callCount).to.equal(1);
-      expect(withKeySpy.getCall(0).args[0]).to.deep.equal(testKey);
+      expect(withKeySpy.getCall(0).args[0]).to.deep.equal(testKey.pem);
 
       expect(signSpy.callCount).to.equal(1);
       expect(signSpy.getCall(0).args[0]).to.deep.equal(signedAttributes);

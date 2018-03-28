@@ -78,8 +78,12 @@ export const appendSegment = (...args) => (dispatch, getState) => {
       .then(a => a.getProcess(process).getSegment(parent))
       .then(s => {
         let parentSegment = s;
-        if (key && Object.keys(signedAttributes).filter(Boolean).length > 0) {
-          parentSegment = parentSegment.withKey(key).sign(signedAttributes);
+        if (
+          key &&
+          key.pem &&
+          Object.keys(signedAttributes).filter(Boolean).length > 0
+        ) {
+          parentSegment = parentSegment.withKey(key.pem).sign(signedAttributes);
         }
         return parentSegment.withRefs(refs)[selectedAction](...args);
       })

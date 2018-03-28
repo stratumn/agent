@@ -95,6 +95,7 @@ SignedAttributes.propTypes = {
     type: PropTypes.string,
     status: PropTypes.string,
     public: PropTypes.string,
+    pem: PropTypes.string,
     secret: PropTypes.instanceOf(Uint8Array)
   })
 };

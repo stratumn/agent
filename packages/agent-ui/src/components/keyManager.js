@@ -5,7 +5,7 @@ import Dropzone from 'react-dropzone';
 
 import { withStyles } from 'material-ui/styles';
 import VpnKey from 'material-ui-icons/VpnKey';
-import Card, { CardHeader } from 'material-ui/Card';
+import Card, { CardHeader, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 
@@ -36,7 +36,7 @@ export class KeyManager extends Component {
       <div style={{ display: 'flex' }}>
         <Dropzone
           onDrop={accepted => this.onDrop(accepted)}
-          accept="application/json"
+          accept=".pem"
           multiple={false}
         >
           <Typography
@@ -44,7 +44,7 @@ export class KeyManager extends Component {
             align="center"
             style={{ padding: '1em' }}
           >
-            Drag and drop your key file here (json file)
+            Drag and drop your private key here. (PEM file)
           </Typography>
           {userKey && userKey.error && userKey.error.message ? (
             <Typography variant="subheading" align="center" color="error">
@@ -57,9 +57,11 @@ export class KeyManager extends Component {
             <CardHeader
               avatar={<VpnKey className={classes.keyIcon} />}
               action={<Button onClick={deleteKey}>Remove</Button>}
-              title={userKey.public}
-              subheader={`${userKey.type} public key`}
+              title={userKey.type.replace('PRIVATE', 'PUBLIC')}
             />
+            <CardContent>
+              <Typography component="p">{userKey.public}</Typography>
+            </CardContent>
           </Card>
         ) : null}
       </div>
@@ -79,6 +81,7 @@ KeyManager.propTypes = {
   userKey: PropTypes.shape({
     type: PropTypes.string,
     public: PropTypes.string,
+    pem: PropTypes.string,
     secret: PropTypes.instanceOf(Uint8Array)
   }),
   addKey: PropTypes.func.isRequired,

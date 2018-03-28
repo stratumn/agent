@@ -47,12 +47,12 @@ describe('<KeyManager />', () => {
 
   it('displays the key', () => {
     const keyManager = mountKeyManager({
-      userKey: { public: 'public', type: 'type' }
+      userKey: { public: 'public', type: 'RSA PRIVATE KEY' }
     });
-    const pubKey = keyManager.find('CardHeader Typography').at(0);
+    const keyType = keyManager.find('CardHeader Typography').at(0);
+    expect(keyType.text()).to.equal('RSA PUBLIC KEY');
+    const pubKey = keyManager.find('CardContent Typography').at(0);
     expect(pubKey.text()).to.equal('public');
-    const keyType = keyManager.find('CardHeader Typography').at(1);
-    expect(keyType.text()).to.equal('type public key');
   });
 
   it('provides a button to remove the key', () => {
