@@ -28,6 +28,14 @@ const attributesMap = {
   refs: 'meta.refs[*].linkHash'
 };
 
+// We need to define which signature algorithm is used for a kind of private key.
+// This is used by the backend to verify the signature.
+export const signatureAlgorithms = {
+  'ED25519 PRIVATE KEY': 'ED25519',
+  'EC PRIVATE KEY': 'ECDSA-SHA256',
+  'RSA PRIVATE KEY': 'SHA256-RSA'
+};
+
 /**
  * Defines the object properties to be signed.
  * Each property maps to a boolean saying wether or not it should be signed.
@@ -79,8 +87,8 @@ const buildPayloadPath = properties => {
 /**
  * Signs a payload
  * @param {object} key - a key object
- * @param {string} key.type - the signature scheme that should be used with this key (eg: ed25519)
- * @param {string} key.public - the base64 encoded public key
+ * @param {string} key.type - the private key type (eg: ED25519 PRIVATE KEY)
+ * @param {string} key.public - the PEM-encoded encoded public key
  * @param {Buffer} key.secret - a Buffer (or Uint8Array) containing the private key
  * @param {object} data - an object containing the properties to sign.
  * @param {string[]} [data.inputs] - user-defined inputs (action arguments).
@@ -99,6 +107,12 @@ export const sign = (key, data) =>
       reject(new Error('key is not defined (use: segment.withKey(key)'));
     }
 
+    const signatureAlgorithm = signatureAlgorithms[key.type];
+    if (!signatureAlgorithm) {
+      reject(
+        new Error(`signing is not supported for this type of key [${key.type}]`)
+      );
+    }
     // define what will be signed
     const payload = buildPayloadPath(data);
 
@@ -116,7 +130,7 @@ export const sign = (key, data) =>
     const signature = Buffer.from(naclSign.detached(payloadBytes, key.secret));
 
     resolve({
-      type: key.type,
+      type: signatureAlgorithm,
       publicKey: key.public,
       signature: encodeSignatureToPEM(signature),
       payload: payload

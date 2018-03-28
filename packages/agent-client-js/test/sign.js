@@ -18,7 +18,7 @@ import { sign as nacl } from 'tweetnacl';
 import { stringify } from 'canonicaljson';
 import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
-import { sign, signedProperties } from '../src/sign';
+import { sign, signedProperties, signatureAlgorithms } from '../src/sign';
 import { withKey } from '../src/withKey';
 import { decodeSignatureFromPEM, decodePKFromPEM } from '../src/encoding';
 
@@ -94,7 +94,8 @@ describe('#sign', () => {
 
   it('outputs a valid signature', () =>
     sign(testKey, { ...testData, inputs: false }).then(sig => {
-      const { signature, publicKey } = sig;
+      const { signature, publicKey, type } = sig;
+      type.should.be.exactly(signatureAlgorithms[testKey.type]);
       const publicKeyBytes = decodePKFromPEM(publicKey).publicKey;
       const signatureBytes = decodeSignatureFromPEM(signature).signature;
       const payloadBytes = Buffer.from(
@@ -151,6 +152,17 @@ describe('#sign', () => {
       .catch(err =>
         err.message.should.be.exactly(
           'key is not defined (use: segment.withKey(key)'
+        )
+      ));
+
+  it('fails when the key type does not match any signature algorithm ', () =>
+    sign({ ...testKey, ...{ type: 'unknown' } }, testData)
+      .then(() => {
+        throw new Error('should have failed');
+      })
+      .catch(err =>
+        err.message.should.be.exactly(
+          'signing is not supported for this type of key [unknown]'
         )
       ));
 });
