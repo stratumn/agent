@@ -6,7 +6,6 @@ const pkg = require('./package.json');
 export default {
   sourcemap: true,
   input: 'src/index.js',
-  name: 'StratumnAgentClient',
   external: Object.keys(pkg.dependencies),
   plugins: [
     babel(
@@ -20,10 +19,14 @@ export default {
   ],
   output: [
     {
+      sourcemap: true,
+      name: 'StratumnAgentClient',
       file: pkg.module,
       format: 'es'
     },
     {
+      sourcemap: true,
+      name: 'StratumnAgentClient',
       file: pkg.main,
       format: 'cjs'
     }
