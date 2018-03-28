@@ -6,9 +6,7 @@ import babel from 'rollup-plugin-babel';
 import babelrc from 'babelrc-rollup';
 
 export default {
-  sourcemap: true,
   input: 'src/index.js',
-  name: 'StratumnAgentClient',
   plugins: [
     babel(
       Object.assign(
@@ -31,11 +29,14 @@ export default {
         'node_modules/qs/lib/index.js': ['stringify'],
         'node_modules/canonicaljson/lib/canonicaljson.js': ['stringify'],
         'node_modules/jmespath/jmespath.js': ['search'],
+        'node_modules/asn1.js/dist/asn1.js': ['define'],
         '../utils/lib/index.js': ['promiseWhile']
       }
     })
   ],
   output: {
+    sourcemap: true,
+    name: 'StratumnAgentClient',
     format: 'umd',
     file: 'dist/stratumn-agent-client.js'
   }

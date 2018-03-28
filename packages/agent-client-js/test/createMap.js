@@ -14,15 +14,13 @@
   limitations under the License.
 */
 
-import { sign as nacl } from 'tweetnacl';
 import { runTestsWithDataAndAgent } from './utils/testSetUp';
 
 describe('#createMap', () => {
-  const testKey = {
-    type: 'ed25519'
-  };
-  const { secretKey } = nacl.keyPair();
-  testKey.secret = Buffer.from(secretKey).toString('base64');
+  const testKey = `-----BEGIN ED25519 PRIVATE KEY-----
+BEA9W3XFkpyKTi/IS8oIf6dFaUL9LbSJiFCobv59peBPZnyM26JsiOYAcfuUpWH9
+elNreOq3rs5cfAkY6vdaDrtm
+-----END ED25519 PRIVATE KEY-----`;
 
   runTestsWithDataAndAgent(processCb => {
     it('creates a map', () =>

@@ -16,61 +16,55 @@
 
 import { sign as nacl } from 'tweetnacl';
 
-const handledKeyFormats = ['ed25519'];
+import { decodeSKFromPEM, encodePKToPEM } from './encoding';
 
-function isSchemeHandled(alg) {
-  return handledKeyFormats.includes(alg.toLowerCase());
-}
+const handledKeyFormats = ['ED25519 PRIVATE KEY'];
 
 /** 
 * checks if the key is well formatted and that the signature scheme is handled
-* @param {object} key - a key object
-* @param {string} key.type - the signature scheme that should be used with this key (eg: ed25519)
-* @param {string} key.secret - the base64-encoded private key (64 bytes long)
+* @param {string} key - a PEM encoded string labeled with the type of the key and containing the DER serialization of the secret key
+ * @returns {string} the type of the key
 */
 export function validateKey(key) {
-  if (!key || !key.type || !key.secret) {
-    throw new Error(
-      "key object must comply to the format : {type: 'ed25519', secret: 'YOURSECRETKEY'}"
-    );
+  if (!key) {
+    throw new Error('key object must comply to the PEM format');
   }
 
-  if (!isSchemeHandled(key.type)) {
-    throw new Error(`${key.type} : Unhandled key type`);
-  }
-
-  const secretKeyBytes = Buffer.from(key.secret, 'base64');
-  if (secretKeyBytes.length !== nacl.secretKeyLength) {
+  const { secretKey, type } = decodeSKFromPEM(key);
+  if (secretKey.length !== nacl.secretKeyLength) {
     throw new Error(
-      `secret key length must be ${nacl.secretKeyLength}, got ${secretKeyBytes.length}`
+      `secret key length must be ${nacl.secretKeyLength}, got ${secretKey.length}`
     );
+  }
+  if (!handledKeyFormats.includes(type)) {
+    throw new Error('Could not parse key: unhandled key type');
   }
 }
 
 /** 
  *
-* @param {object} key - a key object
-* @param {string} key.type - the signature scheme that should be used with this key (eg: ed25519)
-* @param {string} key.secret - the base64-encoded private key (64 bytes long)
+* @param {string} key - a PEM encoded string labeled with the type of the key and containing the DER serialization of the key
 */
-export const parseKey = key => ({
-  ...key,
-  secret: Buffer.from(key.secret, 'base64'),
-  public: Buffer.from(key.secret, 'base64')
-    .slice(nacl.publicKeyLength)
-    .toString('base64')
-});
+export const parseKey = key => {
+  validateKey(key);
 
+  const { secretKey, type } = decodeSKFromPEM(key);
+  const rawPublicKey = secretKey.slice(nacl.publicKeyLength);
+  const publicKeyType = type.replace('PRIVATE', 'PUBLIC');
+
+  return {
+    type,
+    secret: secretKey,
+    public: encodePKToPEM(rawPublicKey, publicKeyType)
+  };
+};
 /**
  * Attach a key to a process or a segment.
 * @param {object} obj - either a process or a segment
-* @param {object} key - a key object
-* @param {string} key.type - the signature scheme that should be used with this key (eg: ed25519)
-* @param {string} key.secret - the base64-encoded private key (64 bytes long)
+* @param {object} key - a PEM encoded key
  * @returns {object} the updated process or segment with a key
  */
 export function withKey(obj, key) {
-  validateKey(key);
   return Object.assign(obj, {
     key: parseKey(key)
   });

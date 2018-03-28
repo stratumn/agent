@@ -14,31 +14,26 @@
   limitations under the License.
 */
 
-import { sign as nacl } from 'tweetnacl';
 import { runTestsWithDataAndAgent } from './utils/testSetUp';
+import { decodeSKFromPEM } from '../src/encoding';
 
 describe('#withKey', () => {
-  const testKey = {
-    type: 'ed25519'
-  };
-  const { secretKey } = nacl.keyPair();
-  testKey.secret = Buffer.from(secretKey).toString('base64');
-
-  const testExternalSecretKey = Buffer.from(
-    'OihdFSC22di2UPIwFObCw5t+XYkdXVcqNVLHq6LuPt3lP0QqTZbhYwzI7Kt9hDQCGmRABxVZATByyXu+myKP8w==',
-    'base64'
-  );
+  const testPrivateKey = `-----BEGIN ED25519 PRIVATE KEY-----
+BEAu3UcG9B1K7E7YbzeVUJPbU9v62rSQPSr87rCbPkwCg+JRhN20fmXhDtzfHTow
+BFVsvHaVt+putNZGntbUraRS
+-----END ED25519 PRIVATE KEY-----`;
+  const testPublicKey = `-----BEGIN ED25519 PUBLIC KEY-----
+MCowBQYDK2VwAyEA4lGE3bR+ZeEO3N8dOjAEVWy8dpW36m601kae1tStpFI=
+-----END ED25519 PUBLIC KEY-----`;
 
   runTestsWithDataAndAgent(processCb => {
     it('adds a "key" property to a process', () =>
       processCb()
-        .withKey(testKey)
+        .withKey(testPrivateKey)
         .key.should.deepEqual({
-          type: 'ed25519',
-          secret: Buffer.from(testKey.secret, 'base64'),
-          public: Buffer.from(
-            Buffer.from(testKey.secret, 'base64').slice(nacl.publicKeyLength)
-          ).toString('base64')
+          type: decodeSKFromPEM(testPrivateKey).type,
+          secret: decodeSKFromPEM(testPrivateKey).secretKey,
+          public: testPublicKey
         }));
 
     it('adds a "key" property to a segment', () =>
@@ -46,45 +41,30 @@ describe('#withKey', () => {
         .createMap('first')
         .then(segment =>
           segment
-            .withKey(testKey)
+            .withKey(testPrivateKey)
             .key.should.have.properties(['type', 'secret', 'public'])
         ));
 
     it('the key can be inherited from a parent', () =>
       processCb()
-        .withKey(testKey)
+        .withKey(testPrivateKey)
         .createMap('first')
         .then(segment =>
           segment.key.should.have.properties(['type', 'secret', 'public'])
         ));
 
-    it('works with a key created externally', () =>
-      processCb()
-        .withKey({
-          type: 'ed25519',
-          secret: testExternalSecretKey.toString('base64')
-        })
-        .createMap('first')
-        .then(segment =>
-          segment.key.should.deepEqual({
-            type: 'ed25519',
-            secret: Buffer.from(testExternalSecretKey, 'base64'),
-            public: Buffer.from(
-              Buffer.from(testExternalSecretKey, 'base64').slice(
-                nacl.publicKeyLength
-              )
-            ).toString('base64')
-          })
-        ));
-
     it('fails when signature schema is not handled', () =>
-      (() => processCb().withKey({ ...testKey, type: 'unknown' })).should.throw(
-        'unknown : Unhandled key type'
-      ));
+      (() =>
+        processCb().withKey(
+          `-----BEGIN UNKNOWN PRIVATE KEY-----
+BEAu3UcG9B1K7E7YbzeVUJPbU9v62rSQPSr87rCbPkwCg+JRhN20fmXhDtzfHTow
+BFVsvHaVt+putNZGntbUraRS
+-----END UNKNOWN PRIVATE KEY-----`
+        )).should.throw('Could not parse key: unhandled key type'));
 
     it('fails when key format is wrong', () =>
-      (() => processCb().withKey({ test: 'test' })).should.throw(
-        "key object must comply to the format : {type: 'ed25519', secret: 'YOURSECRETKEY'}"
+      (() => processCb().withKey('test')).should.throw(
+        'string is not PEM encoded'
       ));
   });
 });
