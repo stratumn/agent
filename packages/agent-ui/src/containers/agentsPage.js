@@ -72,6 +72,7 @@ AgentsPage.propTypes = {
   userKey: PropTypes.shape({
     type: PropTypes.string,
     public: PropTypes.string,
+    pem: PropTypes.string,
     secret: PropTypes.instanceOf(Uint8Array)
   }),
   fetchAgent: PropTypes.func.isRequired,

@@ -30,12 +30,18 @@ export default class {
     return this;
   }
 
+  withPEM(pem) {
+    this.pem = pem;
+    return this;
+  }
+
   build() {
     return {
       type: this.type,
       secret: this.secret,
       public: this.public,
-      status: this.status
+      status: this.status,
+      pem: this.pem
     };
   }
 }

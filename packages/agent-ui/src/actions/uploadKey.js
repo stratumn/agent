@@ -1,9 +1,12 @@
-import { validateKey, parseKey } from '@indigoframework/client';
+import { parseKey } from '@indigoframework/client';
 import * as actionTypes from '../constants/actionTypes';
 
-const uploadKeySuccessEvent = key => ({
+const uploadKeySuccessEvent = (parsedKey, rawKey) => ({
   type: actionTypes.UPLOAD_KEY_SUCCESS,
-  key
+  key: {
+    ...parsedKey,
+    pem: rawKey
+  }
 });
 
 const uploadKeyFailureEvent = (key, error) => ({
@@ -18,12 +21,10 @@ export const deleteKey = () => dispatch => {
   });
 };
 
-export const uploadKey = rawKey => dispatch => {
+export const uploadKey = key => dispatch => {
   try {
-    const key = JSON.parse(rawKey);
-    validateKey(key);
-    dispatch(uploadKeySuccessEvent(parseKey(key)));
+    dispatch(uploadKeySuccessEvent(parseKey(key), key));
   } catch (err) {
-    dispatch(uploadKeyFailureEvent(rawKey, err));
+    dispatch(uploadKeyFailureEvent(key, err));
   }
 };

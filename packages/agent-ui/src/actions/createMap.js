@@ -64,8 +64,12 @@ export const createMap = (...args) => (dispatch, getState) => {
     return getAgent(url)
       .then(a => {
         let proc = a.getProcess(process);
-        if (key && Object.keys(signedAttributes).filter(Boolean).length > 0) {
-          proc = proc.withKey(key).sign(signedAttributes);
+        if (
+          key &&
+          key.pem &&
+          Object.keys(signedAttributes).filter(Boolean).length > 0
+        ) {
+          proc = proc.withKey(key.pem).sign(signedAttributes);
         }
         return proc.withRefs(refs).createMap(...args);
       })

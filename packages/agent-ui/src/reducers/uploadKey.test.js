@@ -11,6 +11,7 @@ describe('uploadKey reducer', () => {
     .withSecret('secret')
     .withPublic('public')
     .withType('type')
+    .withPEM('pem')
     .build();
 
   it('returns previous state for unknown action', () => {
@@ -60,7 +61,8 @@ describe('uploadKey reducer', () => {
         key: {
           type: 'type',
           public: 'public',
-          secret: { data: 'secret' }
+          secret: { data: 'secret' },
+          pem: 'pem'
         }
       }
     });
