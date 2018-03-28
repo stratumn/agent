@@ -155,22 +155,23 @@ BFVsvHaVt+putNZGntbUraRS
 describe('#encodeSignatureToPEM', () => {
   const tag = 'MESSAGE';
   const fakeSig = randomBuffer(nacl.signatureLength);
-  it('encodes a byte array to a PEM string containing the ASN.1 representation of a signed signature', () => {
+
+  it('encodes a byte array signature to a PEM string', () => {
     const PEMSig = encodeSignatureToPEM(fakeSig, tag);
     decodePEM(PEMSig, { tag }).should.not.throw();
     decodeSignatureFromPEM(PEMSig).signature.should.deepEqual(fakeSig);
   });
 
   it('handles bad signature format', () =>
-    (() => encodeSignatureToPEM({})).should.throw());
+    (() => encodeSignatureToPEM(null)).should.throw());
 });
 
 describe('#decodeSignatureFromPEM', () => {
   const testPEMSignature = `-----BEGIN MESSAGE-----
-BEDZR29+Zk8M72ZlgWstb3o96MdKNXeT0Q7LfzDFQKjv9dLjeHpRL4BSjkjPWbuA
-Kmq1nHIk7T7bpLBohyy0lRYO
+epuH8CD4adt7XVG8A5tFUAN+X0bV9ytanYWjCofsITg35gdXAKPiwMWa5hcdKGnG
+kOdXBkj4/e30X6rvntzeCA==
 -----END MESSAGE-----`;
-  it('decodes o a PEM string containing the ASN.1 representation of a signed message to a byte array', () => {
+  it('decodes o a PEM string containing the signature to a byte array', () => {
     const { signature, type } = decodeSignatureFromPEM(testPEMSignature);
     signature.length.should.be.exactly(nacl.signatureLength);
     encodeSignatureToPEM(signature, type).should.be.exactly(testPEMSignature);

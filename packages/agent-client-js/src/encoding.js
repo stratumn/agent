@@ -23,11 +23,6 @@ export const publicKeyOIDs = {
 };
 
 // ASN.1 ED25519 SECRET KEY ENCODER
-function Asn1Signature() {
-  this.octstr();
-}
-const SignatureEncoder = define('Asn1Signature', Asn1Signature);
-
 function Asn1ED25519SecretKey() {
   this.octstr();
 }
@@ -140,19 +135,13 @@ export function decodeSKFromPEM(key) {
 }
 
 export function encodeSignatureToPEM(signature) {
-  let ASN1Bytes;
-  try {
-    ASN1Bytes = SignatureEncoder.encode(signature, 'der');
-  } catch (e) {
-    throw new Error(`Could not encode signature: ${e}`);
-  }
-  return encodePEM(ASN1Bytes, 'MESSAGE');
+  return encodePEM(signature, 'MESSAGE');
 }
 
 export function decodeSignatureFromPEM(signature) {
-  const ASN1Bytes = decodePEM(signature);
+  const { body, label } = decodePEM(signature);
   return {
-    signature: SignatureEncoder.decode(ASN1Bytes.body, 'der'),
-    type: ASN1Bytes.label
+    signature: body,
+    type: label
   };
 }
