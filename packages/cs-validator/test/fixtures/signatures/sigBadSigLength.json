@@ -12,10 +12,12 @@
     },
     "signatures": [
       {
-        "type": "ed25519",
+        "type": "ED25519",
         "payload": "[meta.inputs,meta.prevLinkHash]",
-        "signature": "test",
-        "publicKey": "suDBwQpmfeuKye6hK99K7DmcV+9ai1mekdt1PzBPy04="
+        "publicKey":
+          "-----BEGIN ED25519 PUBLIC KEY-----\nMCowBQYDK2VwAyEAq5tzjDO478fGHGB+cZAOpIghVm+ps6sWMn3AH2UDM2I=\n-----END ED25519 PUBLIC KEY-----",
+        "signature":
+          "-----BEGIN MESSAGE-----\nNw1UYdE0V3iaqZl4kEGuUfyQnGIklDL01CZzDlHwXmhOxwBlDzXEa2FND2qvgGJS\nFL+TFH3teS73bw==\n-----END MESSAGE-----"
       }
     ]
   },

@@ -12,7 +12,7 @@
     },
     "signatures": [
       {
-        "type": "ed25519"
+        "type": "ED25519"
       }
     ]
   },
