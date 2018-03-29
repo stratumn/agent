@@ -68,7 +68,10 @@ export function encodePEM(data, label) {
 }
 
 export function decodePEM(data) {
-  const lines = data.split(/\r?\n/);
+  if (typeof data !== 'string') {
+    throw new Error('PEM data must be a string');
+  }
+  const lines = data.split(/\r?\n/).filter(Boolean);
   if (lines.length < 3) {
     throw new Error('string is not PEM encoded');
   }
@@ -109,7 +112,12 @@ export function encodePKToPEM(publicKey, keyType) {
 
 export function decodePKFromPEM(key) {
   const ASN1Bytes = decodePEM(key);
-  const publicKeyInfo = PublicKeyEncoder.decode(ASN1Bytes.body, 'der');
+  let publicKeyInfo;
+  try {
+    publicKeyInfo = PublicKeyEncoder.decode(ASN1Bytes.body, 'der');
+  } catch (e) {
+    throw new Error(`Could not decode public key: ${e.message}`);
+  }
   return {
     publicKey: publicKeyInfo.publicKey.data,
     type: ASN1Bytes.label
@@ -128,8 +136,14 @@ export function encodeSKToPEM(key, keyType) {
 
 export function decodeSKFromPEM(key) {
   const ASN1Bytes = decodePEM(key);
+  let secretKeyBytes;
+  try {
+    secretKeyBytes = Ed25519SecretKeyEncoder.decode(ASN1Bytes.body, 'der');
+  } catch (e) {
+    throw new Error(`Could not decode secret key: ${e.message}`);
+  }
   return {
-    secretKey: Ed25519SecretKeyEncoder.decode(ASN1Bytes.body, 'der'),
+    secretKey: secretKeyBytes,
     type: ASN1Bytes.label
   };
 }
