@@ -56,6 +56,13 @@ AAEC
     label.should.be.exactly('label');
   });
 
+  it('decodes a PEM string with extra empty lines', () => {
+    const PEMstr = '-----BEGIN label-----\nAAEC\n\n-----END label-----\n\n\n';
+    const { body, label } = decodePEM(PEMstr);
+    body.should.deepEqual(Buffer.from([0, 1, 2]));
+    label.should.be.exactly('label');
+  });
+
   it('throws an error if no labels are found', () => {
     const PEMstr = `-----BEGIN -----
     AAEC
@@ -75,6 +82,10 @@ AAEC
   it('throws an error if the format is wrong', () => {
     const PEMstr = 'test';
     (() => decodePEM(PEMstr)).should.throw('string is not PEM encoded');
+  });
+
+  it('throws an error if the provided data is not a string', () => {
+    (() => decodePEM(null)).should.throw('PEM data must be a string');
   });
 });
 
@@ -113,7 +124,15 @@ MCowBQYDK2VwAyEA4lGE3bR+ZeEO3N8dOjAEVWy8dpW36m601kae1tStpFI=
   });
 
   it('handles bad key format', () =>
-    (() => decodePKFromPEM({})).should.throw());
+    (() => decodePKFromPEM({})).should.throw('PEM data must be a string'));
+
+  it('handles bad key encoding', () =>
+    (() =>
+      decodePKFromPEM(
+        '-----BEGIN ED25519 PUBLIC KEY-----\nBEAu3UcG9B1K7E7YbzeVUJPbU9v62rSQPSr87rCbPkwCg+JRhN20fmXhDtzfHTow\n-----END ED25519 PUBLIC KEY-----'
+      )).should.throw(
+      'Could not decode public key: Failed to match tag: "seq" at: (shallow)'
+    ));
 });
 
 describe('#encodeSKToPEM', () => {
@@ -149,7 +168,15 @@ BFVsvHaVt+putNZGntbUraRS
   });
 
   it('handles bad key format', () =>
-    (() => decodeSKFromPEM({})).should.throw());
+    (() => decodeSKFromPEM({})).should.throw('PEM data must be a string'));
+
+  it('handles bad key encoding', () =>
+    (() =>
+      decodeSKFromPEM(
+        '-----BEGIN ED25519 PRIVATE KEY-----\nBEAu3UcG9B1K7E7YbzeVUJPbU9v62rSQPSr87rCbPkwCg+JRhN20fmXhDtzfHTow\n-----END ED25519 PRIVATE KEY-----'
+      )).should.throw(
+      'Could not decode secret key: Failed to match body of: "octstr" at: (shallow)'
+    ));
 });
 
 describe('#encodeSignatureToPEM', () => {
