@@ -1,36 +1,34 @@
 {
   "link": {
     "state": {
-      "gameId": "Point",
-      "nick": "Seb",
-      "address": "17htLPy4SdLxec5y55Zk4JPvqKvtUJLmS1",
-      "messages": [],
-      "rolls": 0
+      "title": "zer"
     },
     "meta": {
-      "mapId": "5770eeadd6a22a8f2bd2bbf6",
-      "agentHash":
-        "e0b0976355e77077905db39c8dee0879b82e24f962853fa50c87799f8e33d19f",
-      "stateHash":
-        "c30d47feab3b31632bbeb665833d7d4d72b9ad76e1e5e46e13b4a662111ef604",
-      "prevLinkHash":
-        "7b13ff6c5e06e888b15de2902f7b48fca6f0219649e250326ebcb270df0f0dab",
-      "action": "register",
-      "inputs": ["hello", "me"]
+      "mapId": "06dd3ef4-a430-4d5d-8eda-df49b424e611",
+      "process": "TODO list",
+      "action": "init",
+      "type": "init",
+      "inputs": ["zer"],
+      "tags": null,
+      "priority": 0,
+      "prevLinkHash": "",
+      "refs": [],
+      "data": null
     },
     "signatures": [
       {
-        "type": "ed25519",
-        "payload": "[meta.inputs,meta.prevLinkHash]",
+        "type": "ED25519",
+        "publicKey":
+          "-----BEGIN ED25519 PUBLIC KEY-----\nMCowBQYDK2VwAyEAq5tzjDO478fGHGB+cZAOpIghVm+ps6sWMn3AH2UDM2I=\n-----END ED25519 PUBLIC KEY-----",
         "signature":
-          "wPOxyhbMVJu8Kb9eKTM4vdQuHROM1pohbOWXNfogDcVpBbHfTje4OeQo+qgwy00nTmRJmAhmCD1R/JCI8+xOAg==",
-        "publicKey": "kPaPL6nqw4W96FSgtzZcWA9FBdz7QaAPFWg4FXUZ+RQ="
+          "-----BEGIN MESSAGE-----\naW8+pJRRp9wiBs2Q/Yt6zK5SdGK2kyTdrKFFMzxrmyNYEZYfXZ0E7fx/+UsRlDHj\n8dzUoa7de6N8GYxph4+ZDA==\n-----END MESSAGE-----",
+        "payload": "[meta.inputs,meta.refs[*].linkHash]"
       }
     ]
   },
   "meta": {
     "linkHash":
-      "ebd42fac63645963480d262605f23b3434baae65d56724ebb23a698f596c4419",
+      "fd2735fe4db5970814e8ab536e1cef7740fa6cf51ab96ebd1b0703a80baf753e",
     "evidences": [
       {
         "backend": "TMPop",
@@ -38,31 +36,31 @@
         "proof": {
           "block_height": 42,
           "merkle_root":
-            "222322d97fc42ecf980ba82a09b48778fbd38e5f94d5ffa6a593ed1b4dbb6f16",
+            "5aca3222a94466cccfb3d2cf9270c1cc07a5f0090d573d86146e11d43dbd34ba",
           "merkle_path": [
             {
               "left":
-                "ebd42fac63645963480d262605f23b3434baae65d56724ebb23a698f596c4419",
+                "fd2735fe4db5970814e8ab536e1cef7740fa6cf51ab96ebd1b0703a80baf753e",
               "right":
                 "517a64776645416868597355645855617350714e696b746472724f504e48686c",
               "parent":
-                "1c43f6415a2333d69cb9638c27430f7e6b457b5e1d75c460472cff28dc3697b5"
+                "dea2801d35ac2631325e54c0e6d7abbeb6712672ef46774f2b801197a5bc3219"
             },
             {
               "left":
-                "1c43f6415a2333d69cb9638c27430f7e6b457b5e1d75c460472cff28dc3697b5",
+                "dea2801d35ac2631325e54c0e6d7abbeb6712672ef46774f2b801197a5bc3219",
               "right":
                 "eb1eb0978f3b556ad724ae1c4f379fe4b7e3bab6dbf50c36d44f015f62637658",
               "parent":
-                "a26044bca6200577623934964a3765a42527ae039cf91bd186a147fb4347dcfb"
+                "bdc0e381559f7668a6942a85fa28d89c872caa8d89a5ec46d7ca02f99f169d12"
             },
             {
               "left":
-                "a26044bca6200577623934964a3765a42527ae039cf91bd186a147fb4347dcfb",
+                "bdc0e381559f7668a6942a85fa28d89c872caa8d89a5ec46d7ca02f99f169d12",
               "right":
                 "4f42686748646f696b46497174497656586775574363706d6e6962475977656d",
               "parent":
-                "222322d97fc42ecf980ba82a09b48778fbd38e5f94d5ffa6a593ed1b4dbb6f16"
+                "5aca3222a94466cccfb3d2cf9270c1cc07a5f0090d573d86146e11d43dbd34ba"
             }
           ],
           "validations_hash":
@@ -211,7 +209,7 @@
             "validators_hash": "B1042382F0F2772BA1680C8C2603AE4DC15DA84C",
             "consensus_hash": "",
             "app_hash":
-              "84FCD0EB9E062569B67E704FB380236A944873AC2F1631062F72FD1B772CE76F",
+              "018A5332BA3BEB86E93D849F6FDFDD88731131846B6D8E103F7C42DFEC6A5A5C",
             "last_results_hash": "",
             "evidence_hash": ""
           },

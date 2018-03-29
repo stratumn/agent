@@ -32,7 +32,7 @@
     "md-color-picker": "^0.2.6"
   },
   "devDependencies": {
-    "@metahub/karma-rollup-preprocessor": "^3.0.0",
+    "@metahub/karma-rollup-preprocessor": "^3.0.4",
     "angular-mocks": "~1.5.11",
     "babel-cli": "^6.5.1",
     "babel-core": "^6.5.2",

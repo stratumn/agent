@@ -18,5 +18,15 @@ import getAgent from './getAgent';
 import fromSegment from './fromSegment';
 import resolveLinks from './resolveLinks';
 import { validateKey, parseKey } from './withKey';
+import { signatureAlgorithms } from './sign';
+import * as encoding from './encoding';
 
-export { getAgent, fromSegment, resolveLinks, validateKey, parseKey };
+export {
+  getAgent,
+  fromSegment,
+  resolveLinks,
+  validateKey,
+  parseKey,
+  encoding,
+  signatureAlgorithms
+};

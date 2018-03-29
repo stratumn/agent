@@ -17,6 +17,7 @@
 import { sign as nacl } from 'tweetnacl';
 import { stringify } from 'canonicaljson';
 import { search } from 'jmespath';
+import { encoding, signatureAlgorithms } from '@indigoframework/client';
 
 import httpplease from 'httpplease';
 import hashJson from './hashJson';
@@ -25,8 +26,6 @@ import { validateMerklePath } from './merkle';
 import validateTendermintEvidence from './tendermintEvidence';
 
 const blockCypherCache = {};
-
-const handledKeyFormats = ['ed25519'];
 
 function getFossil(txId) {
   if (blockCypherCache[txId]) {
@@ -63,19 +62,20 @@ function validateSignature(sig, link) {
   }
 
   const { publicKey, payload, type, signature } = sig;
+  if (!Object.values(signatureAlgorithms).includes(type)) {
+    return `signature algorithm must be one of ${Object.values(
+      signatureAlgorithms
+    )}, got [${type}]`;
+  }
 
-  const publicKeyBytes = Buffer.from(publicKey, 'base64');
+  const publicKeyBytes = encoding.decodePKFromPEM(publicKey).publicKey;
   if (publicKeyBytes.length !== nacl.publicKeyLength) {
     return `public key length must be ${nacl.publicKeyLength}, got ${publicKeyBytes.length}`;
   }
 
-  const signatureBytes = Buffer.from(signature, 'base64');
+  const signatureBytes = encoding.decodeSignatureFromPEM(signature).signature;
   if (signatureBytes.length !== nacl.signatureLength) {
     return `signature length must be ${nacl.signatureLength}, got ${signatureBytes.length}`;
-  }
-
-  if (!handledKeyFormats.includes(type.toLowerCase())) {
-    return `signature type [${type}] is not handled: use one of [${handledKeyFormats}]`;
   }
 
   const signedData = search(link, payload).filter(Boolean);

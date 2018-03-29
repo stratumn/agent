@@ -134,18 +134,18 @@ describe('SegmentValidator', () => {
 
     it('checks the key length', () =>
       Promise.all(validate(sigBadPublicKeyLength).signatures).then(errs =>
-        errs[0].should.eql('public key length must be 32, got 3')
+        errs[0].should.eql('public key length must be 32, got 28')
       ));
 
     it('checks the signature length', () =>
       Promise.all(validate(sigBadSigLength).signatures).then(errs =>
-        errs[0].should.eql('signature length must be 64, got 3')
+        errs[0].should.eql('signature length must be 64, got 58')
       ));
 
     it('checks the signature scheme', () =>
       Promise.all(validate(sigBadScheme).signatures).then(errs =>
         errs[0].should.eql(
-          'signature type [unknown] is not handled: use one of [ed25519]'
+          'signature algorithm must be one of ED25519,ECDSA-SHA256,SHA256-RSA, got [unknown]'
         )
       ));
 

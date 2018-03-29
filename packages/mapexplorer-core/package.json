@@ -37,7 +37,7 @@
   "homepage": "https://github.com/stratumn/js-indigocore",
   "devDependencies": {
     "@indigoframework/agent": "^0.2.0",
-    "@metahub/karma-rollup-preprocessor": "^3.0.0",
+    "@metahub/karma-rollup-preprocessor": "^3.0.4",
     "babel-cli": "^6.5.1",
     "babel-plugin-external-helpers": "^6.8.0",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
