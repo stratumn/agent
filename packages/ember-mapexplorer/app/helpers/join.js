@@ -14,4 +14,4 @@
   limitations under the License.
 */
 
-export { default, join } from "@indigoframework/ember-mapexplorer/helpers/join";
+export { default, join } from "@indigocore/ember-mapexplorer/helpers/join";

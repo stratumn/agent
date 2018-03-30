@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { Component, ViewChild, Input, ElementRef } from "@angular/core";
-import { MerklePathTree } from "@indigoframework/mapexplorer-core";
+import { Component, ViewChild, Input, ElementRef } from '@angular/core';
+import { MerklePathTree } from '@indigocore/mapexplorer-core';
 
 @Component({
-  selector: "st-evidences",
-  templateUrl: "./st-evidences.component.html",
-  styleUrls: ["./st-evidences.component.css"]
+  selector: 'st-evidences',
+  templateUrl: './st-evidences.component.html',
+  styleUrls: ['./st-evidences.component.css']
 })
 export class StEvidencesComponent {
   @Input() evidences;

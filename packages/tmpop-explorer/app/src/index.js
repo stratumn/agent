@@ -16,7 +16,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TMPopExplorer from '@indigoframework/tmpop-explorer';
+import TMPopExplorer from '@indigocore/tmpop-explorer';
 
 import './index.css';
 

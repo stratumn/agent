@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = {
-  name: "@indigoframework/ember-mapexplorer",
+  name: "@indigocore/ember-mapexplorer",
   included: function(app) {
     this._super.included(app);
 
@@ -10,11 +10,11 @@ module.exports = {
       app.options.sassOptions.includePaths || [];
 
     app.options.sassOptions.includePaths.push(
-      "node_modules/@indigoframework/mapexplorer-core/assets/stylesheets"
+      "node_modules/@indigocore/mapexplorer-core/assets/stylesheets"
     );
 
     this.import(
-      "node_modules/@indigoframework/mapexplorer-core/dist/mapexplorer-core.js"
+      "node_modules/@indigocore/mapexplorer-core/dist/mapexplorer-core.js"
     );
   }
 };

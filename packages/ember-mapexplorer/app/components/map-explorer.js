@@ -16,4 +16,4 @@
 
 export {
   default
-} from "@indigoframework/ember-mapexplorer/components/map-explorer";
+} from "@indigocore/ember-mapexplorer/components/map-explorer";

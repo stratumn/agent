@@ -2,12 +2,12 @@
 
 A block explorer for Indigo's Tendermint Store.
 
-[![npm](https://img.shields.io/npm/v/@indigoframework/tmpop-explorer.svg)](https://www.npmjs.com/package/@indigoframework/tmpop-explorer)
+[![npm](https://img.shields.io/npm/v/@indigocore/tmpop-explorer.svg)](https://www.npmjs.com/package/@indigocore/tmpop-explorer)
 
 ## Installation
 
 ```
-npm install --save @indigoframework/tmpop-explorer
+npm install --save @indigocore/tmpop-explorer
 ```
 
 
@@ -23,7 +23,7 @@ yarn start # runs rollup with watch flag
 
 # (in another tab, run the app)
 cd app
-yarn link @indigoframework/tmpop-explorer
+yarn link @indigocore/tmpop-explorer
 yarn
 yarn start # runs create-react-app hot-reload dev server
 ```
@@ -36,7 +36,7 @@ Now, anytime you make a change to your component in `src/` or to the application
 The easiest way to use tmpop-explorer is to install it from NPM and include it in your own React build process (using [Browserify](http://browserify.org), [Webpack](http://webpack.github.io/), etc).
 
 ```
-yarn install @indigoframework/tmpop-explorer
+yarn install @indigocore/tmpop-explorer
 ```
 
 
@@ -45,10 +45,10 @@ yarn install @indigoframework/tmpop-explorer
 Include the react component in your application:
 
 ```
-var TMPopExplorer = require('@indigoframework/tmpop-explorer');
+var TMPopExplorer = require('@indigocore/tmpop-explorer');
 
 // OR with ES6 import
-import TMPopExplorer from '@indigoframework/tmpop-mapexplorer';
+import TMPopExplorer from '@indigocore/tmpop-mapexplorer';
 
 <TMPopExplorer remote="localhost:46657"/>
 ```

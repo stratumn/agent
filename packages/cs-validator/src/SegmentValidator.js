@@ -17,7 +17,7 @@
 import { sign as nacl } from 'tweetnacl';
 import { stringify } from 'canonicaljson';
 import { search } from 'jmespath';
-import { encoding, signatureAlgorithms } from '@indigoframework/client';
+import { encoding, signatureAlgorithms } from '@indigocore/client';
 
 import httpplease from 'httpplease';
 import hashJson from './hashJson';

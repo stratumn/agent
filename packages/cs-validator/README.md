@@ -2,7 +2,7 @@
 
 Library for validating chainscript objects
 
-[![npm](https://img.shields.io/npm/v/@indigoframework/cs-validator.svg)](https://www.npmjs.com/package/@indigoframework/cs-validator)
+[![npm](https://img.shields.io/npm/v/@indigocore/cs-validator.svg)](https://www.npmjs.com/package/@indigocore/cs-validator)
 
 ## Installation
 
@@ -21,14 +21,14 @@ If you want a specific version, include `https://libs.stratumn.com/cs-validator{
 ### Node.js
 
 ```
-$ npm install @indigoframework/cs-validator
+$ npm install @indigocore/cs-validator
 ```
 
 ```javascript
-var StratumnCsValidator = require('@indigoframework/cs-validator');
+var StratumnCsValidator = require('@indigocore/cs-validator');
 
 // or using es6
-import { MapValidator, SegmentValidator } from '@indigoframework/cs-validator';
+import { MapValidator, SegmentValidator } from '@indigocore/cs-validator';
 ```
 
 ## Usage

@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { MerklePathTree } from '@indigoframework/mapexplorer-core';
+import { MerklePathTree } from '@indigocore/mapexplorer-core';
 import radium from 'radium';
 
 class MerklePathComponent extends Component {

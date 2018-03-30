@@ -1,3 +1,3 @@
 export {
   default
-} from "@indigoframework/ember-mapexplorer/components/tmpop-evidence";
+} from "@indigocore/ember-mapexplorer/components/tmpop-evidence";

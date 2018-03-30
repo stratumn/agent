@@ -1,6 +1,6 @@
 # Angular2Mapexplorer
 
-[![npm](https://img.shields.io/npm/v/@indigoframework/angular2-mapexplorer.svg)](https://www.npmjs.com/package/@indigoframework/angular2-mapexplorer)
+[![npm](https://img.shields.io/npm/v/@indigocore/angular2-mapexplorer.svg)](https://www.npmjs.com/package/@indigocore/angular2-mapexplorer)
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.14.
 

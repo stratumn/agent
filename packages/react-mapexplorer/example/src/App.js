@@ -1,6 +1,6 @@
 import React from "react";
 
-import { MapExplorer } from "@indigoframework/react-mapexplorer";
+import { MapExplorer } from "@indigocore/react-mapexplorer";
 
 import { chainscript } from "./chainscript";
 

@@ -1,5 +1,5 @@
 {
-  "name": "@indigoframework/agent-sample",
+  "name": "@indigocore/agent-sample",
   "version": "0.2.0",
   "description": "A sample Javascript agent.",
   "main": "index.js",
@@ -22,7 +22,7 @@
     "blockchain"
   ],
   "dependencies": {
-    "@indigoframework/agent": "^0.2.0",
+    "@indigocore/agent": "^0.2.0",
     "express": "^4.14.0"
   },
   "devDependencies": {

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { resolveLinks } from '@indigoframework/client';
+import { resolveLinks } from '@indigocore/client';
 import SegmentValidator from './SegmentValidator';
 import wrap from './wrap';
 import parseIfJson from './parseIfJson';

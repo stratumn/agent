@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ChainTreeBuilder } from '@indigoframework/mapexplorer-core';
+import { ChainTreeBuilder } from '@indigocore/mapexplorer-core';
 
 export default class ChainTreeBuilderService {
   constructor($q) {

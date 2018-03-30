@@ -14,4 +14,4 @@
   limitations under the License.
 */
 
-export { default, json } from "@indigoframework/ember-mapexplorer/helpers/json";
+export { default, json } from "@indigocore/ember-mapexplorer/helpers/json";

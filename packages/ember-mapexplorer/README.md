@@ -9,7 +9,7 @@ Ember addon that provides map-explorer, a component that displays a Chain Map
 Install the ember-cli addon in your ember-cli project:
 
 ```
-$ ember install @indigoframework/ember-mapexplorer
+$ ember install @indigocore/ember-mapexplorer
 ```
 
 This should automatically install ember-cli-sass.
@@ -17,8 +17,8 @@ This should automatically install ember-cli-sass.
 If you want to take advantage of default styles you may add:
 
 ```
-@import '@indigoframework/mapexplorer-core';
-@import '@indigoframework/ember-mapexplorer';
+@import '@indigocore/mapexplorer-core';
+@import '@indigocore/ember-mapexplorer';
 ```
 
 in your `app/styles/app.scss`.

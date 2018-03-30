@@ -1,4 +1,4 @@
 export {
   default,
   timestamp
-} from "@indigoframework/ember-mapexplorer/helpers/timestamp";
+} from "@indigocore/ember-mapexplorer/helpers/timestamp";

@@ -14,7 +14,7 @@ module.exports = function(defaults) {
     behave. You most likely want to be modifying `./index.js` or app's build file
   */
   app.options.sassOptions.includePaths.push(
-    "node_modules/@indigoframework/mapexplorer-core/assets/stylesheets"
+    "node_modules/@indigocore/mapexplorer-core/assets/stylesheets"
   );
 
   return app.toTree();

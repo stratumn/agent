@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapExplorer } from '@indigoframework/react-mapexplorer';
+import { MapExplorer } from '@indigocore/react-mapexplorer';
 
 import { shallow } from 'enzyme';
 import { expect } from 'chai';

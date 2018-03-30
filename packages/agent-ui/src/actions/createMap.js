@@ -1,4 +1,4 @@
-import { getAgent } from '@indigoframework/client';
+import { getAgent } from '@indigocore/client';
 import { getSegmentSuccess, clearRefs, clearSignature } from './';
 import * as actionTypes from '../constants/actionTypes';
 import history from '../store/history';
