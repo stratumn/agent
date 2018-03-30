@@ -5,7 +5,7 @@
   "private": true,
   "license": "Apache-2.0",
   "dependencies": {
-    "@indigocore/react-mapexplorer": "^0.2.0",
+    "@indigocore/react-mapexplorer": "^0.3.0-rc1",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
