@@ -2,12 +2,12 @@
 
 A react component used to display a Map Explorer from chainscript.
 
-[![npm](https://img.shields.io/npm/v/@indigoframework/react-mapexplorer.svg)](https://www.npmjs.com/package/@indigoframework/react-mapexplorer)
+[![npm](https://img.shields.io/npm/v/@indigocore/react-mapexplorer.svg)](https://www.npmjs.com/package/@indigocore/react-mapexplorer)
 
 ## Installation
 
 ```
-npm install @indigoframework/react-mapexplorer --save
+npm install @indigocore/react-mapexplorer --save
 ```
 
 #### Local Development
@@ -24,7 +24,7 @@ npm start # runs rollup with watch flag
 
 # (in another tab, run the example create-react-app)
 cd example
-npm link @indigoframework/react-mapexplorer
+npm link @indigocore/react-mapexplorer
 npm install
 npm start # runs create-react-app hot-reload dev server
 ```

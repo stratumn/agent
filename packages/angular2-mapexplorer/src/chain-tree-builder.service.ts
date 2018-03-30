@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import { Injectable } from "@angular/core";
-import { ChainTreeBuilder } from "@indigoframework/mapexplorer-core";
+import { Injectable } from '@angular/core';
+import { ChainTreeBuilder } from '@indigocore/mapexplorer-core';
 
 @Injectable()
 export class ChainTreeBuilderService {

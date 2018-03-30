@@ -15,7 +15,7 @@
 */
 
 import should from 'should';
-import { memoryStore, create } from '@indigoframework/agent';
+import { memoryStore, create } from '@indigocore/agent';
 import { findExtraLinks, findExtraNodes, loadRef } from '../../src/nodes';
 import parseChainscript from '../../src/parseChainscript';
 import validMapWithRefs from '../fixtures/fullMapWithRefs.json';

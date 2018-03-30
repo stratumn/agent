@@ -15,7 +15,7 @@
 */
 
 import { hierarchy } from 'd3-hierarchy';
-import { getAgent } from '@indigoframework/client';
+import { getAgent } from '@indigocore/client';
 
 function findNodeRefs(node) {
   let refs = [];

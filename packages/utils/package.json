@@ -1,5 +1,5 @@
 {
-  "name": "@indigoframework/utils",
+  "name": "@indigocore/utils",
   "version": "0.2.0",
   "description": "NodeJS module that exposes utils related to IndigoCore",
   "main": "lib/index.js",

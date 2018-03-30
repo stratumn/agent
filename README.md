@@ -4,7 +4,7 @@
 
 [Stratumn](https://stratumn.com)'s open-source JavaScript libraries to create Indigo applications and networks.
 
-[![npm](https://img.shields.io/npm/v/@indigoframework/agent.svg)](https://www.npmjs.com/package/@indigoframework/agent)
+[![npm](https://img.shields.io/npm/v/@indigocore/agent.svg)](https://www.npmjs.com/package/@indigocore/agent)
 [![Build Status](https://semaphoreci.com/api/v1/stratumn/js-indigocore/branches/master/badge.svg)](https://semaphoreci.com/stratumn/js-indigocore)
 [![codecov](https://codecov.io/gh/stratumn/js-indigocore/branch/master/graph/badge.svg)](https://codecov.io/gh/stratumn/js-indigocore)
 

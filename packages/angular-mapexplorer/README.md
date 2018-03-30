@@ -2,7 +2,7 @@
 
 AngularJS 1.6 directive to display an Indigo Map Explorer
 
-[![npm](https://img.shields.io/npm/v/@indigoframework/angular-mapexplorer.svg)](https://www.npmjs.com/package/@indigoframework/angular-mapexplorer)
+[![npm](https://img.shields.io/npm/v/@indigocore/angular-mapexplorer.svg)](https://www.npmjs.com/package/@indigocore/angular-mapexplorer)
 
 ## Demo
 http://stratumn.github.io/angular-mapexplorer/
@@ -12,7 +12,7 @@ http://stratumn.github.io/angular-mapexplorer/
 ### npm
 
 ```
-$ npm install @indigoframework/angular-mapexplorer
+$ npm install @indigocore/angular-mapexplorer
 ```
 
 You might also need `tinycolor.js` and `angular-drop`.

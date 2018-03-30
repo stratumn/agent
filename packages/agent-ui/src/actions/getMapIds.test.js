@@ -1,4 +1,4 @@
-import * as StratumnAgentClient from '@indigoframework/client';
+import * as StratumnAgentClient from '@indigocore/client';
 
 import chai, { expect } from 'chai';
 import sinon from 'sinon';

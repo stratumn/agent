@@ -15,7 +15,7 @@
 */
 
 import express from 'express';
-import Agent from '@indigoframework/agent';
+import Agent from '@indigocore/agent';
 
 import messageBoard from './lib/actions-message';
 import warehouseTracker from './lib/actions-warehouse';

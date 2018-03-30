@@ -16,4 +16,4 @@
 
 export {
   default
-} from "@indigoframework/ember-mapexplorer/components/merkle-path-tree";
+} from "@indigocore/ember-mapexplorer/components/merkle-path-tree";

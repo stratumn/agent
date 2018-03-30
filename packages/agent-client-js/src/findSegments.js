@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { promiseWhile } from '@indigoframework/utils';
+import { promiseWhile } from '@indigocore/utils';
 import segmentify from './segmentify';
 
 const DEFAULT_BATCH_SIZE = 20;

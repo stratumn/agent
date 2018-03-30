@@ -1,3 +1,3 @@
 export {
   default
-} from "@indigoframework/ember-mapexplorer/components/evidences-component";
+} from "@indigocore/ember-mapexplorer/components/evidences-component";

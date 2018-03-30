@@ -22,7 +22,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { ChainTreeBuilderService } from '../chain-tree-builder.service';
-import { ChainTreeBuilder } from '@indigoframework/mapexplorer-core';
+import { ChainTreeBuilder } from '@indigocore/mapexplorer-core';
 import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({

@@ -1,4 +1,4 @@
-import { parseKey } from '@indigoframework/client';
+import { parseKey } from '@indigocore/client';
 import * as actionTypes from '../constants/actionTypes';
 
 const uploadKeySuccessEvent = (parsedKey, rawKey) => ({

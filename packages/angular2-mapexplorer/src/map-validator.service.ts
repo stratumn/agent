@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import { Injectable } from "@angular/core";
-import { MapValidator } from "@indigoframework/cs-validator";
+import { Injectable } from '@angular/core';
+import { MapValidator } from '@indigocore/cs-validator';
 
 @Injectable()
 export class MapValidatorService {

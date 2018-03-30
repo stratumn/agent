@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import Agent from '@indigoframework/agent';
+import Agent from '@indigocore/agent';
 import warehouseTracker from '../lib/actions-warehouse';
 
 describe('warehouse tracker', () => {

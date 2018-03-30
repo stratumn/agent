@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { memoryStore, create, plugins } from '@indigoframework/agent';
+import { memoryStore, create, plugins } from '@indigocore/agent';
 
 // Test actions
 const actions = {
