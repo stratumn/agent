@@ -61,7 +61,8 @@ export default function processify(
   const methods = protoChain(
     {
       init(state) {
-        this.append(state);
+        this.state = state;
+        this.append();
       }
     },
     actions
@@ -75,11 +76,11 @@ export default function processify(
         state: JSON.parse(JSON.stringify(link.state || {})),
         meta: loadMeta(link.meta, refs),
         signatures: loadSignatures(signatures),
-        append(state, meta, type) {
+        append(type) {
           link = {
-            state: state || this.state,
+            state: this.state,
             meta: {
-              ...(meta || this.meta),
+              ...this.meta,
               type: type || action,
               action,
               inputs: args

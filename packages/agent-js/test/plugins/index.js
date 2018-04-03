@@ -31,7 +31,8 @@ export default function(plugin, assertions1) {
   const actions = {
     init(a, b, c) {
       assertions['#init()'](this);
-      this.append({ a, b, c });
+      this.state = { a, b, c };
+      this.append();
     },
     action(d) {
       assertions['#action()'](this);
