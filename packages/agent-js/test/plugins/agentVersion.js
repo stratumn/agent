@@ -19,7 +19,7 @@ import agentVersion from '../../src/plugins/agentVersion';
 import { version } from '../../package.json';
 
 function test(segment) {
-  segment.link.meta.agentVersion.should.equal(version);
+  segment.link.meta.data.agentVersion.should.equal(version);
 }
 
 pluginTest(agentVersion, {

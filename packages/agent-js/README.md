@@ -97,7 +97,6 @@ All methods are optional. They can either be synchronous or return a Promise.
 - `agentUrl`: Saves in segment meta the URL that can be used to retrieve a segment.
 - `encryptedState`: Encrypts the state before the segment is saved. Filters out segment that cannot be decrypted.
 - `localTime`: Saves the local timestamp in the link meta information.
-- `signedState`: Signs the state before the segment is saved. Filters out segments whose signature is invalid.
 - `stateHash`: Computes and adds the hash of the state in meta.
 
 ## Development

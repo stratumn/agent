@@ -21,6 +21,6 @@ export default {
   description: 'Saves the agent version in the link meta information.',
 
   didCreateLink(link) {
-    link.meta.agentVersion = version;
+    link.meta.data = { ...link.meta.data, agentVersion: version };
   }
 };

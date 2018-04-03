@@ -18,7 +18,7 @@ import pluginTest from '.';
 import localTime from '../../src/plugins/localTime';
 
 function test(segment) {
-  segment.link.meta.localTime.should.be.a.Number();
+  segment.link.meta.data.localTime.should.be.a.Number();
 }
 
 pluginTest(localTime, {
@@ -31,6 +31,6 @@ pluginTest(localTime, {
   },
 
   '#action()'(link) {
-    return (link.meta.localTime === null).should.be.true;
+    return (link.meta.data.localTime === null).should.be.true;
   }
 });

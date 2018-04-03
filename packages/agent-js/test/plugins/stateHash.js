@@ -20,13 +20,13 @@ import hashJson from '../../src/hashJson';
 
 pluginTest(stateHash, {
   '#createMap()'(segment) {
-    segment.link.meta.stateHash.should.be.exactly(
+    segment.link.meta.data.stateHash.should.be.exactly(
       hashJson({ a: 1, b: 2, c: 3 })
     );
   },
 
   '#createSegment()'(segment) {
-    segment.link.meta.stateHash.should.be.exactly(
+    segment.link.meta.data.stateHash.should.be.exactly(
       hashJson({ a: 1, b: 2, c: 3, d: 4 })
     );
   }

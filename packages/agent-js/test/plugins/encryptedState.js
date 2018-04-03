@@ -20,7 +20,7 @@ import hashJson from '../../src/hashJson';
 
 function test(segment) {
   segment.link.state.should.eql({ encrypted: 1 });
-  return segment.link.meta.encryptedState.should.be.ok;
+  return segment.link.meta.data.encryptedState.should.be.ok;
 }
 
 let state;
@@ -32,7 +32,7 @@ const dummyEncryption = {
   },
 
   decryptState(link) {
-    if (link.meta.encryptedState) {
+    if (link.meta.data.encryptedState) {
       return state;
     }
     return {};
@@ -49,7 +49,7 @@ pluginTest(encryptedState(dummyEncryption), {
   },
 
   '#action()'(l) {
-    return (l.meta.encryptedState === null).should.be.true;
+    return (l.meta.data.encryptedState === null).should.be.true;
   }
 });
 
@@ -61,10 +61,10 @@ describe('encryptedState', () => {
       const s1 = {
         link: {
           state: eState,
-          meta: { encryptedState: true, stateHash: hashJson(state) }
+          meta: { data: { encryptedState: true, stateHash: hashJson(state) } }
         }
       };
-      const s2 = { link: { state: {}, meta: {} } };
+      const s2 = { link: { state: {}, meta: { data: {} } } };
 
       encryptedState(dummyEncryption)
         .filterSegment(s1)
