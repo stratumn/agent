@@ -35,7 +35,7 @@ describe('processify', () => {
       this.append();
     },
     updateType() {
-      this.append(null, null, 'new');
+      this.append('new');
     },
     reject() {
       this.reject('error');

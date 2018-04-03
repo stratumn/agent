@@ -16,7 +16,8 @@
 
 export default {
   init(a, b, c) {
-    this.append({ a, b, c });
+    this.state = { a, b, c };
+    this.append();
   },
   action(d) {
     this.state.d = d;
