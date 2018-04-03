@@ -37,12 +37,15 @@ export default function({ encryptState, decryptState }) {
       'Filters out segment that cannot be decrypted.',
 
     didCreateLink(link) {
-      link.meta.stateHash = hashJson(link.state);
+      link.meta.data = {
+        ...link.meta.data,
+        stateHash: hashJson(link.state)
+      };
       return Promise.resolve(encryptState(link)).then(state => {
         link.state = {
           encrypted: state
         };
-        link.meta.encryptedState = true;
+        link.meta.data.encryptedState = true;
       });
     },
 
@@ -53,7 +56,7 @@ export default function({ encryptState, decryptState }) {
             `State could not be decrypted from link ${initialLink}`
           );
         }
-        delete initialLink.meta.stateHash;
+        delete initialLink.meta.data.stateHash;
       });
     },
 
@@ -62,13 +65,13 @@ export default function({ encryptState, decryptState }) {
     },
 
     decrypt(link) {
-      const expectedFingerpint = link.meta.stateHash;
+      const expectedFingerpint = link.meta.data.stateHash;
       return Promise.resolve(
         decryptState(link, expectedFingerpint)
       ).then(decryptedState => {
         if (decryptedState && expectedFingerpint === hashJson(decryptedState)) {
           link.state = decryptedState;
-          delete link.meta.encryptedState;
+          delete link.meta.data.encryptedState;
           return true;
         }
         return false;

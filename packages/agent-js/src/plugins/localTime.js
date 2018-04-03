@@ -20,10 +20,10 @@ export default {
   description: 'Saves the local timestamp in the link meta information.',
 
   didCreateLink(link) {
-    link.meta.localTime = Date.now();
+    link.meta.data = { ...link.meta.data, localTime: Date.now() };
   },
 
   willCreate(link) {
-    delete link.meta.localTime;
+    delete link.meta.data.localTime;
   }
 };

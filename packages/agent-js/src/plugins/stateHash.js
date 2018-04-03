@@ -22,10 +22,10 @@ export default {
   description: 'Computes and adds the hash of the state in meta.',
 
   didCreateLink(link) {
-    link.meta.stateHash = hashJson(link.state);
+    link.meta.data = { ...link.meta.data, stateHash: hashJson(link.state) };
   },
 
   willCreate(initialLink) {
-    delete initialLink.meta.stateHash;
+    delete initialLink.meta.data.stateHash;
   }
 };

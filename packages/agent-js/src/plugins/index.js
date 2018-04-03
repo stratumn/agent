@@ -17,7 +17,6 @@
 import agentUrl from './agentUrl';
 import encryptedState from './encryptedState';
 import localTime from './localTime';
-import signedState from './signedState';
 import stateHash from './stateHash';
 import agentVersion from './agentVersion';
 
@@ -26,6 +25,5 @@ module.exports = {
   agentVersion,
   encryptedState,
   localTime,
-  signedState,
   stateHash
 };
