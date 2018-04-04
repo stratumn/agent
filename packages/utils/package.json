@@ -1,6 +1,6 @@
 {
   "name": "@indigocore/utils",
-  "version": "0.2.0",
+  "version": "0.3.0-rc1",
   "description": "NodeJS module that exposes utils related to IndigoCore",
   "main": "lib/index.js",
   "scripts": {
