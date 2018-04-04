@@ -1,6 +1,6 @@
 {
   "name": "@indigocore/agent-ui",
-  "version": "0.2.0",
+  "version": "0.3.0-rc1",
   "description": "Stratumn agent user interface",
   "author": "Stratumn team",
   "license": "Apache-2.0",
@@ -25,8 +25,8 @@
   },
   "private": true,
   "dependencies": {
-    "@indigocore/client": "^0.2.0",
-    "@indigocore/react-mapexplorer": "^0.2.0",
+    "@indigocore/client": "^0.3.0-rc1",
+    "@indigocore/react-mapexplorer": "^0.3.0-rc1",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
     "history": "^4.7.2",
