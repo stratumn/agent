@@ -20,6 +20,8 @@ import { easeLinear } from 'd3-ease';
 import { select, selectAll, event } from 'd3-selection';
 import { zoom } from 'd3-zoom';
 import { max } from 'd3-array';
+import { getAgent } from '@indigocore/client';
+
 import { makeLink, finalLink, translate } from './treeUtils';
 import parseChainscript from './parseChainscript';
 import { findExtraLinks, findExtraNodes, loadRef } from './nodes';
@@ -87,16 +89,27 @@ export default class ChainTree {
   display(chainscript) {
     if (chainscript && chainscript.length) {
       const root = parseChainscript(chainscript);
-      this.update(root);
-    } else {
-      this.update(null);
+      return this.fetchAndUpdate(root);
     }
+    return this.fetchAndUpdate(null);
   }
 
-  update(root) {
+  fetchAndUpdate(root) {
+    if (!this.options.agentUrl) {
+      return findExtraLinks(root, null).then(extraLinks =>
+        this.update(root, extraLinks)
+      );
+    }
+    return getAgent(this.options.agentUrl)
+      .then(agent => findExtraLinks(root, agent))
+      .then(extraLinks => this.update(root, extraLinks));
+  }
+
+  update(root, extraLinks) {
     const self = this;
     const nodes = root ? root.descendants() : [];
-    this.links = (root ? root.links() : []).concat(findExtraLinks(root));
+
+    this.links = (root ? root.links() : []).concat(extraLinks);
     const extraNodes = findExtraNodes(this.links, nodes).map((n, index) =>
       Object.assign(n, {
         x:

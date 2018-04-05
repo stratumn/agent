@@ -35,58 +35,73 @@ function findNodeRefs(node) {
   return refs;
 }
 
-function findExtraLinks(root) {
+function fetchForeignLink(agent, ref) {
+  if (!agent) {
+    return Promise.resolve(
+      hierarchy(
+        {
+          link: { meta: { process: ref.source.process } },
+          meta: { linkHash: ref.source.linkHash }
+        },
+        () => null
+      )
+    );
+  }
+
+  if (!ref.source.process || !ref.source.linkHash) {
+    throw new Error(
+      `findExtraLinks: wrong reference format for linkHash '${ref.source
+        .linkHash}' (should have process, linkHash)`
+    );
+  }
+  return agent
+    .getProcess(ref.source.process)
+    .getSegment(ref.source.linkHash)
+    .then(reference => hierarchy(reference, () => null));
+}
+
+function findExtraLinks(root, agent) {
   const extraLinks = [];
   const nodes = root ? root.descendants() : [];
   const refs = findNodeRefs(root);
-  refs.forEach(ref => {
-    const source = nodes.find(e => e.id === ref.source.linkHash);
-    const target = nodes.find(e => e.id === ref.target.id);
-    if (
-      !extraLinks.find(
-        l => l.source.id === ref.source.linkHash && l.target.id === target.id
-      )
-    ) {
+  refs
+    .reduce((acc, val) => {
+      if (
+        !acc.find(
+          l =>
+            l.source.linkHash === val.source.linkHash &&
+            l.target.id === val.target.id
+        )
+      ) {
+        acc.push(val);
+      }
+      return acc;
+    }, [])
+    .forEach(ref => {
+      const source = nodes.find(e => e.id === ref.source.linkHash);
+      const target = nodes.find(e => e.id === ref.target.id);
+
       if (source && target) {
         extraLinks.push({ source, target, ref: true });
       } else if (!source && target) {
-        let newSourceNode = extraLinks
+        const fetchedRef = extraLinks
           .map(l => l.source)
+          .filter(Boolean)
           .find(n => n.data.meta.linkHash === ref.source.linkHash);
-        if (!newSourceNode) {
-          if (
-            !ref.source.mapId ||
-            !ref.source.process ||
-            !ref.source.linkHash
-          ) {
-            throw new Error(
-              `findExtraLinks: wrong reference format for linkHash '${ref.source
-                .linkHash}' (should have process, mapId, linkHash)`
-            );
-          }
-          newSourceNode = hierarchy(
-            {
-              link: {
-                meta: {
-                  mapId: ref.source.mapId,
-                  process: ref.source.process
-                }
-              },
-              meta: { linkHash: ref.source.linkHash }
-            },
-            () => null
-          );
+        let newSourceNode = Promise.resolve(fetchedRef);
+        if (!fetchedRef) {
+          newSourceNode = fetchForeignLink(agent, ref);
         }
-        extraLinks.push({
-          source: Object.assign(newSourceNode, { id: ref.source.linkHash }),
-          target,
-          ref: true
-        });
+        extraLinks.push(
+          newSourceNode.then(sourceNode => ({
+            source: Object.assign(sourceNode, { id: ref.source.linkHash }),
+            target,
+            ref: true
+          }))
+        );
       }
-    }
-  });
-
-  return extraLinks;
+    });
+  return Promise.all(extraLinks);
 }
 
 function findExtraNodes(links, nodes) {
@@ -104,7 +119,7 @@ function findExtraNodes(links, nodes) {
 }
 
 function loadRef(agentUrl, ref, links) {
-  if (agentUrl) {
+  if (agentUrl && ref.data.link.meta.mapId) {
     return getAgent(agentUrl)
       .then(agent => agent.getProcess(ref.data.link.meta.process))
       .then(process =>
@@ -134,7 +149,7 @@ function loadRef(agentUrl, ref, links) {
         return segments.concat(foreignChildren);
       });
   }
-  throw new Error('loadRef: unknown agent url');
+  throw new Error('loadRef: unknown agent url or reference mapID');
 }
 
 export { findExtraLinks, findExtraNodes, loadRef };

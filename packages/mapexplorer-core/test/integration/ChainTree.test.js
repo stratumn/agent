@@ -21,76 +21,80 @@ import validMapWithRefs from '../fixtures/fullMapWithRefs.json';
 
 describe('ChainTree', () => {
   let tree;
-  let svg;
+  let resolveSvg;
 
   describe('using an empty map', () => {
     beforeEach(() => {
-      tree = new ChainTree('body', defaultOptions);
-      tree.display(null);
+      tree = new ChainTree('body', defaultOptions).display(null);
 
-      svg = select('body').select('svg');
+      resolveSvg = tree.then(() => select('body').select('svg'));
     });
 
     afterEach(() => {
       selectAll('svg').remove();
     });
 
-    it('should draw an empty svg', () => {
-      svg
-        .selectAll('g.node')
-        .size()
-        .should.be.eql(0);
-    });
+    it('should draw an empty svg', () =>
+      resolveSvg.then(svg => {
+        svg
+          .selectAll('g.node')
+          .size()
+          .should.be.eql(0);
+      }));
   });
 
   describe('using a regular map', () => {
     beforeEach(() => {
-      tree = new ChainTree('body', defaultOptions);
-      tree.display(validMap);
+      tree = new ChainTree('body', defaultOptions).display(validMap);
 
-      svg = select('body').select('svg');
+      resolveSvg = tree.then(() => select('body').select('svg'));
     });
 
     afterEach(() => {
       selectAll('svg').remove();
     });
 
-    it('should draw a node by segment', () => {
-      svg
-        .selectAll('g.node')
-        .size()
-        .should.be.eql(validMap.length);
-    });
+    it('should draw a node by segment', () =>
+      resolveSvg.then(svg => {
+        svg
+          .selectAll('g.node')
+          .size()
+          .should.be.eql(validMap.length);
+      }));
 
-    it('should draw a link between segments', () => {
-      svg
-        .selectAll('path.link:not(.init)')
-        .size()
-        .should.be.eql(validMap.length - 1);
-    });
+    it('should draw a link between segments', () =>
+      resolveSvg.then(svg => {
+        svg
+          .selectAll('path.link:not(.init)')
+          .size()
+          .should.be.eql(validMap.length - 1);
+      }));
 
-    it('should draw an init link', () => {
-      svg
-        .selectAll('path.link')
-        .filter('.init')
-        .size()
-        .should.be.eql(1);
-    });
+    it('should draw an init link', () =>
+      resolveSvg.then(svg => {
+        svg
+          .selectAll('path.link')
+          .filter('.init')
+          .size()
+          .should.be.eql(1);
+      }));
 
-    it('should add a class to segments with tags', () => {
-      svg
-        .selectAll('g.node')
-        .filter('.win')
-        .size()
-        .should.be.eql(1);
-    });
+    it('should add a class to segments with tags', () =>
+      resolveSvg.then(svg => {
+        svg
+          .selectAll('g.node')
+          .filter('.win')
+          .size()
+          .should.be.eql(1);
+      }));
 
-    it('should display the action on links', () => {
-      svg
-        .selectAll('.textpath')
-        .text()
-        .should.be.eql('register');
-    });
+    it('should display the action on links', () =>
+      resolveSvg.then(svg => {
+        svg
+          .selectAll('.textpath')
+          .text()
+          .should.be.eql('register');
+      }));
   });
 
   describe('using a map containing references', () => {
@@ -99,8 +103,7 @@ describe('ChainTree', () => {
     let internalRefs;
 
     beforeEach(() => {
-      tree = new ChainTree('body', defaultOptions);
-      tree.display(validMapWithRefs);
+      tree = new ChainTree('body', defaultOptions).display(validMapWithRefs);
 
       refs = validMapWithRefs.reduce(
         (acc, val) => acc.concat(val.link.meta.refs || []),
@@ -130,80 +133,90 @@ describe('ChainTree', () => {
         }
         return iRefs;
       }, []);
-      svg = select('body').select('svg');
+      resolveSvg = tree.then(() => select('body').select('svg'));
     });
 
     afterEach(() => {
       selectAll('svg').remove();
     });
 
-    it('should draw a node by segment and external reference', () => {
-      svg
-        .selectAll('g.node')
-        .size()
-        .should.be.eql(validMapWithRefs.length + externalRefNodes.length);
-    });
+    it('should draw a node by segment and external reference', () =>
+      resolveSvg.then(svg => {
+        svg
+          .selectAll('g.node')
+          .size()
+          .should.be.eql(validMapWithRefs.length + externalRefNodes.length);
+      }));
 
-    it('should draw a link between segments', () => {
-      svg
-        .selectAll('path.link:not(.init)')
-        .size()
-        .should.be.eql(validMapWithRefs.length + internalRefs.length - 1);
-    });
+    it('should draw a link between segments', () =>
+      resolveSvg.then(svg => {
+        svg
+          .selectAll('path.link:not(.init)')
+          .size()
+          .should.be.eql(validMapWithRefs.length + internalRefs.length - 1);
+      }));
 
     it('should draw an init link', () => {
-      svg
-        .selectAll('path.link')
-        .filter('.init')
-        .size()
-        .should.be.eql(1);
+      resolveSvg.then(svg => {
+        svg
+          .selectAll('path.link')
+          .filter('.init')
+          .size()
+          .should.be.eql(1);
+      });
     });
 
     it('should display the action on links', () => {
-      svg
-        .selectAll('.actionLabel')
-        .size()
-        .should.be.eql(validMapWithRefs.length + internalRefs.length - 1);
+      resolveSvg.then(svg => {
+        svg
+          .selectAll('.actionLabel')
+          .size()
+          .should.be.eql(validMapWithRefs.length + internalRefs.length - 1);
+      });
     });
 
     it('displays ref node related links', () => {
       const e = document.createEvent('UIEvents');
       e.initUIEvent('click', true, true);
-      svg
-        .select('g.node.ref')
-        .node()
-        .dispatchEvent(e);
-      svg
-        .selectAll('path.link')
-        .size()
-        .should.be.eql(3);
-      svg
-        .selectAll('#ref-link')
-        .size()
-        .should.be.eql(1);
-      svg
-        .selectAll('.selected')
-        .size()
-        .should.be.eql(1);
+      resolveSvg.then(svg => {
+        svg
+          .select('g.node.ref')
+          .node()
+          .dispatchEvent(e);
+        svg
+          .selectAll('path.link')
+          .size()
+          .should.be.eql(3);
+        svg
+          .selectAll('#ref-link')
+          .size()
+          .should.be.eql(1);
+        svg
+          .selectAll('.selected')
+          .size()
+          .should.be.eql(1);
+      });
     });
 
     it('displays base node related links', () => {
       const e = document.createEvent('UIEvents');
       e.initUIEvent('click', true, true);
-      svg
-        .select(
-          'g .node.base#a6c12f3621882a44d2619d094056de6ccdc5b5726c344b1b4387417a6f1d268e'
-        )
-        .node()
-        .dispatchEvent(e);
-      svg
-        .selectAll('path.link')
-        .size()
-        .should.be.eql(4);
-      svg
-        .selectAll('#ref-link')
-        .size()
-        .should.be.eql(0);
+      resolveSvg.then(svg => {
+        svg
+          .select(
+            'g .node.base#a6c12f3621882a44d2619d094056de6ccdc5b5726c344b1b4387417a6f1d268e'
+          )
+          .node()
+          .dispatchEvent(e);
+        svg
+          .selectAll('path.link')
+          .size()
+          .should.be.eql(4);
+        svg
+          .selectAll('#ref-link')
+          .size()
+          .should.be.eql(0);
+      });
     });
   });
 
@@ -214,22 +227,23 @@ describe('ChainTree', () => {
 
     it('should disable withFocus', () => {
       const options = Object.assign(defaultOptions, { withFocus: false });
-      tree = new ChainTree('body', options);
-      tree.display(validMap);
+      tree = new ChainTree('body', options).display(validMap);
 
       const e = document.createEvent('UIEvents');
       e.initUIEvent('click', true, true);
 
-      svg = select('body').select('svg');
-      svg
-        .select('g.node')
-        .node()
-        .dispatchEvent(e);
+      tree.then(() => {
+        const svg = select('body').select('svg');
+        svg
+          .select('g.node')
+          .node()
+          .dispatchEvent(e);
 
-      svg
-        .selectAll('.selected')
-        .size()
-        .should.be.eql(0);
+        svg
+          .selectAll('.selected')
+          .size()
+          .should.be.eql(0);
+      });
     });
   });
 });
