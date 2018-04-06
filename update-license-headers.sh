@@ -10,11 +10,9 @@ directories="src test"
 extensions="js less"
 
 for d in $directories; do
-	if [ -d "$d" ]; then
-		for e in $extensions; do
-			for f in $(find packages -regex "packages/[^/]*/$d/.*\.$e"); do
-				update-license-header $f
-			done
+	for e in $extensions; do
+		for f in $(find packages -regex "packages/[^/]*/$d/.*\.$e"); do
+			update-license-header $f
 		done
-	fi
+	done
 done

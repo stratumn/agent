@@ -1,6 +1,6 @@
 # Stratumn Agent User Interface
 
-Copyright 2017 Stratumn SAS. All rights reserved.
+Copyright 2018 Stratumn SAS. All rights reserved.
 
 Unless otherwise noted, the Stratumn Agent Javascript Library source files are distributed under the Apache License 2.0 found in the LICENSE file.
 
