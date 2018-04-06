@@ -1,6 +1,6 @@
 {
   "name": "@indigocore/tmpop-explorer",
-  "version": "0.3.0-rc1",
+  "version": "0.3.0-rc2",
   "description": "Block Explorer for Indigo Tendermint Store",
   "main": "lib/index.js",
   "module": "lib/index.es.js",

@@ -1,6 +1,6 @@
 {
   "name": "@indigocore/angular2-mapexplorer",
-  "version": "0.3.0-rc1",
+  "version": "0.3.0-rc2",
   "author": "Stratumn team",
   "license": "Apache-2.0",
   "angular-cli": {},
@@ -30,8 +30,8 @@
     "@angular/platform-browser": "^5.0.4",
     "@angular/platform-browser-dynamic": "^5.0.4",
     "@angular/router": "^5.0.4",
-    "@indigocore/cs-validator": "^0.3.0-rc1",
-    "@indigocore/mapexplorer-core": "^0.3.0-rc1",
+    "@indigocore/cs-validator": "^0.3.0-rc2",
+    "@indigocore/mapexplorer-core": "^0.3.0-rc2",
     "core-js": "^2.4.1",
     "rxjs": "^5.5.2",
     "ts-helpers": "^1.1.1",

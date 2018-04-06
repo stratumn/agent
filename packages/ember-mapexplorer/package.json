@@ -1,6 +1,6 @@
 {
   "name": "@indigocore/ember-mapexplorer",
-  "version": " 0.3.0-rc1",
+  "version": "0.3.0-rc2",
   "description": "Ember addon that displays a Map Explorer",
   "keywords": [
     "ember-addon",
@@ -30,7 +30,7 @@
     "test:ci": "yarn build && yarn test && yarn lint:js"
   },
   "dependencies": {
-    "@indigocore/mapexplorer-core": "^0.3.0-rc1",
+    "@indigocore/mapexplorer-core": "^0.3.0-rc2",
     "ember-cli-babel": "^6.6.0",
     "ember-cli-htmlbars": "^2.0.1",
     "ember-cli-sass": "^7.0.0",
