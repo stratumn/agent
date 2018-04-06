@@ -80,6 +80,10 @@ $brand-primary: #ec714a !default;
     width: 100%;
   }
 
+  .pem {
+    white-space: pre-line;
+  }
+
   .ace-tm .ace_gutter,
   .ace_scroller {
     padding-top: 20px;

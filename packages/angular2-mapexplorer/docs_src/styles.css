@@ -1,49 +1,60 @@
 /* You can add global styles to this file, and also import other style files */
 
 .node {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .node polygon {
-    fill: #7BC0D2;
+  fill: #7bc0d2;
 }
 
 .node text {
-    font-family: 'RationalTWText-SemiBold', 'Roboto Mono', monospace;
-    font-size: 14px;
-    fill: #FFFFFF;
+  font-family: "RationalTWText-SemiBold", "Roboto Mono", monospace;
+  font-size: 14px;
+  fill: #ffffff;
 }
 
 .node rect {
-    fill: #459FB7;
+  fill: #459fb7;
 }
 
 .textpath {
-    font-family: 'Gibson-Regular', 'Montserrat', sans-serif;
-    font-size: 14px;
-    fill: #C1C1C1;
+  font-family: "Gibson-Regular", "Montserrat", sans-serif;
+  font-size: 14px;
+  fill: #c1c1c1;
 }
 
 .link {
-    stroke-width: 5px;
-    marker-end: url('#triangle');
-    fill: none;
-    stroke: #ccc;
+  stroke-width: 5px;
+  marker-end: url("#triangle");
+  fill: none;
+  stroke: #ccc;
 }
 
 .node.selected polygon {
-    fill: #3E3E3E;
+  fill: #3e3e3e;
 }
 
 .node.selected rect {
-    fill: #2E2E2E;
+  fill: #2e2e2e;
 }
 
 .merkle-path .node circle {
-    fill: #000;
+  fill: #000;
 }
 
 .merkle-path .link {
-    stroke: #000;
-    stroke-width: 2px;
+  stroke: #000;
+  stroke-width: 2px;
+}
+
+text#linkLabelRef {
+  cursor: pointer;
+  font-family: "RationalTWText-SemiBold", "Roboto Mono", monospace;
+  fill: white;
+}
+
+rect.refLinkBox {
+  cursor: pointer;
+  fill: #8b0000;
 }
