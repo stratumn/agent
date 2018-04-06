@@ -129,7 +129,7 @@ AgentNavigationLinks.propTypes = {
 
 let IndigoExternalLinks = ({ classes }) => (
   <List>
-    <ListItem button component="a" href="https://indigocore.com">
+    <ListItem button component="a" href="https://indigocore.org">
       <ListItemText
         primary="Documentation"
         classes={{ primary: classes.primary }}
@@ -147,7 +147,7 @@ let IndigoExternalLinks = ({ classes }) => (
     </ListItem>
     <ListItem button>
       <ListItemText
-        primary="©2017 Stratumn SAS"
+        primary="©2018 Stratumn SAS"
         classes={{ primary: classes.primary }}
       />
     </ListItem>
