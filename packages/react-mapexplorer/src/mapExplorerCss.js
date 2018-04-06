@@ -200,6 +200,10 @@ export function getRules() {
 
     '.evidence': {
       display: 'flex'
+    },
+
+    '.pem': {
+      whiteSpace: 'pre-line'
     }
   };
 }
@@ -227,10 +231,6 @@ export function getStyles() {
       overflowY: 'scroll',
       display: 'flex',
       flexDirection: 'row'
-    },
-
-    content: {
-      overflowY: 'scroll'
     },
 
     close: {

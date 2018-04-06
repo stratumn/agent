@@ -94,3 +94,14 @@
 .body {
   display: flex;
 }
+
+text#linkLabelRef {
+  cursor: pointer;
+  font-family: "RationalTWText-SemiBold", "Roboto Mono", monospace;
+  fill: white;
+}
+
+rect.refLinkBox {
+  cursor: pointer;
+  fill: #8b0000;
+}

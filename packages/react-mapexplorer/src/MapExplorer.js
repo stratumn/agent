@@ -142,10 +142,10 @@ class MapExplorer extends Component {
               <p>{segment.link.meta.type}</p>
 
               <h4>Signed by</h4>
-              <p>
+              <p className="pem">
                 {(segment.link.signatures || [])
                   .map(sig => sig.publicKey)
-                  .join(', ')}
+                  .join('\n')}
               </p>
 
               <h4>Metadata</h4>
@@ -198,7 +198,7 @@ class MapExplorer extends Component {
                 ))}
               </ul>
             </div>
-            <div style={styles.content}>{segmentContent}</div>
+            <div>{segmentContent}</div>
           </div>
         </div>
       );

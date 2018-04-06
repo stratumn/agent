@@ -57,7 +57,8 @@ export default class MerklePathTree {
     this.svg = select(element)
       .append('svg')
       .attr('width', width + margin.right + margin.left)
-      .attr('height', height + margin.top + margin.bottom);
+      .attr('height', height + margin.top + margin.bottom)
+      .style('overflow', 'initial');
     this.innerG = this.svg
       .append('g')
       .attr('transform', () => translate(margin.top, margin.left));
