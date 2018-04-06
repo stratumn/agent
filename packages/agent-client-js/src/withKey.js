@@ -13,6 +13,38 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+import { sign as nacl } from 'tweetnacl';
+
+import { decodeSKFromPEM, encodePKToPEM } from './encoding';
+
+const handledKeyFormats = ['ED25519 PRIVATE KEY'];
+
+/** 
+* checks if the key is well formatted and that the signature scheme is handled
+* @param {string} key - a PEM encoded string labeled with the type of the key and containing the DER serialization of the secret key
+ * @returns {string} the type of the key
+*/
+export function validateKey(key) {
+  if (!key) {
+    throw new Error('key object must comply to the PEM format');
+  }
+
+  const { secretKey, type } = decodeSKFromPEM(key);
+  if (secretKey.length !== nacl.secretKeyLength) {
+    throw new Error(
+      `secret key length must be ${nacl.secretKeyLength}, got ${secretKey.length}`
+    );
+  }
+  if (!handledKeyFormats.includes(type)) {
+    throw new Error('Could not parse key: unhandled key type');
+  }
+}
+
+/** 
+ *
+* @param {string} key - a PEM encoded string labeled with the type of the key and containing the DER serialization of the key
+*/
 export const parseKey = key => {
   validateKey(key);
 
