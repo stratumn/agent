@@ -23,10 +23,10 @@ const renderTopBarLinks = path => {
   }
 
   const parts = path.split('/').filter(p => p);
-  const partNames = new Map();
+  const partNames = {};
   // shorten the segment linkHash in the topbar breadcrumbs display
   if (parts.length === 4 && parts[2] === 'segments') {
-    partNames.set(parts[3], shortHash(parts[3]));
+    partNames[parts[3]] = shortHash(parts[3]);
   }
   let currentLink = '';
 
@@ -34,7 +34,7 @@ const renderTopBarLinks = path => {
   // us to escape html tags, hence the use of &nbsp;&gt;&nbsp to render " > "
   return parts.map(p => {
     currentLink += `/${p}`;
-    const name = partNames.get(p) || p;
+    const name = partNames[p] || p;
     return (
       <div style={{ display: 'flex' }} key={p}>
         <Typography variant="headline" style={{ color: 'gray' }}>
