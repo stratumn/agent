@@ -30,7 +30,7 @@ const validateMapIds = mapIds =>
   !mapIds ||
   (Array.isArray(mapIds) &&
     mapIds
-      .map(m => m === undefined || m === '' || validateUUID(m, 4))
+      .map(m => m === undefined || m === '' || validateUUID(m))
       .filter(Boolean).length === mapIds.length);
 
 export class SegmentsFilter extends Component {
