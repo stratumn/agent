@@ -41,7 +41,8 @@ function fetchForeignLink(agent, ref) {
       hierarchy(
         {
           link: { meta: { process: ref.source.process } },
-          meta: { linkHash: ref.source.linkHash }
+          meta: { linkHash: ref.source.linkHash },
+          foreignRef: true
         },
         () => null
       )
@@ -54,10 +55,13 @@ function fetchForeignLink(agent, ref) {
         .linkHash}' (should have process, linkHash)`
     );
   }
+
   return agent
     .getProcess(ref.source.process)
     .getSegment(ref.source.linkHash)
-    .then(reference => hierarchy(reference, () => null));
+    .then(reference =>
+      hierarchy(Object.assign(reference, { foreignRef: true }), () => null)
+    );
 }
 
 function findExtraLinks(root, agent) {

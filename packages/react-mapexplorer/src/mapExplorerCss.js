@@ -143,15 +143,17 @@ export function getRules() {
       markerEnd: 'url("#triangle")'
     },
 
-    '.link.references, .link.referencedBy': {
+    '.link.referencesBackward, .link.referencesForward, .link.referencedBy': {
       stroke: refLinkColor
     },
 
-    '.link.references': {
-      markerStart: 'url("#reverseTriangle")'
+    '.link.referencesBackward': {
+      markerStart: 'url("#reverseTriangle")',
+      markerEnd: 'none'
     },
 
-    '.link.referencedBy': {
+    '.link.referencesForward, .link.referencedBy': {
+      markerStart: 'none',
       markerEnd: 'url("#blackTriangle")'
     },
 

@@ -41,21 +41,21 @@
   marker-end: url("#triangle");
 }
 
-.link.references {
-  marker-end: none;
-}
-
-.link.references,
+.link.referencesBackward,
+.link.referencesForward,
 .link.referencedBy {
   stroke: $ref-link-color;
 }
 
-.link.references {
-  marker-start: url("#reverseTriangle");
+.link.referencesBackward {
+  marker-start: 'url("#reverseTriangle")';
+  marker-end: "none";
 }
 
+.link.referencesForward,
 .link.referencedBy {
-  marker-end: url("#blackTriangle");
+  marker-start: "none";
+  marker-end: 'url("#blackTriangle")';
 }
 
 path .link.ref:hover {
