@@ -6,11 +6,13 @@ import sinonChai from 'sinon-chai';
 
 import { SegmentsFilter } from './segmentsFilter';
 import * as hashUtils from '../utils/hashUtils';
+import * as validateUUID from '../utils/uuidUtils';
 
 chai.use(sinonChai);
 
 describe('<SegmentsFilter />', () => {
   let validateHashStub;
+  let validateUUIDStub;
   const submitSpy = sinon.spy();
   const requiredProps = {
     filters: {},
@@ -37,10 +39,14 @@ describe('<SegmentsFilter />', () => {
     submitSpy.reset();
     validateHashStub = sinon.stub(hashUtils, 'validateHash');
     validateHashStub.returns(true);
+
+    validateUUIDStub = sinon.stub(validateUUID, 'default');
+    validateUUIDStub.returns(true);
   });
 
   afterEach(() => {
     validateHashStub.restore();
+    validateUUIDStub.restore();
   });
 
   it('renders the filters correctly', () => {
@@ -51,14 +57,19 @@ describe('<SegmentsFilter />', () => {
 
   it('submit empty filters on clear', () => {
     const props = {
-      filters: { abc: 1 }
+      filters: { prevLinkHash: 'test' }
     };
     const segmentsFilter = renderComponent(props);
     const clearButton = segmentsFilter.find('Button[type="clear"]');
     expect(clearButton).to.have.lengthOf(1);
     clearButton.simulate('click');
     expect(submitSpy.callCount).to.equal(1);
-    expect(submitSpy.getCall(0).args[0]).to.deep.equal({ process: undefined });
+    expect(submitSpy.getCall(0).args[0]).to.deep.equal({
+      process: undefined,
+      mapIds: undefined,
+      prevLinkHash: undefined,
+      tags: undefined
+    });
   });
 
   it('clears the text fields on clear', () => {
@@ -113,35 +124,16 @@ describe('<SegmentsFilter />', () => {
     };
     const segmentsFilter = renderComponent(props);
 
-    expect(segmentsFilter.find('Button')).to.have.length(2);
+    expect(submitSpy.callCount).to.equal(0);
+
+    expect(segmentsFilter.find('Button')).to.have.length(1);
     expect(segmentsFilter.find('TextField')).to.have.length(3);
   });
 
-  it('pushes the pathname with querystring on submit', () => {
-    const props = {
-      filters: {
-        mapIds: ['aaa', 'bbb'],
-        prevLinkHash: 'xyz',
-        tags: ['foo', 'bar']
-      }
-    };
-    const segmentsFilter = renderComponent(props);
-
-    const submitButton = segmentsFilter.find('Button[type="filter"]');
-    expect(submitButton).to.have.lengthOf(1);
-    submitButton.simulate('click');
-    expect(submitSpy.callCount).to.equal(1);
-    expect(submitSpy.getCall(0).args[0]).to.deep.equal({
-      ...props.filters,
-      process: undefined
-    });
-  });
-
   it('handles change of input correctly', () => {
-    const segmentsFilter = renderComponent({});
+    const segmentsFilter = renderComponent({ filters: {} });
 
     const changes = ['  aa bb  ', '  xyz  ', '  foo bar  '];
-
     textFieldSelectors.forEach((selector, idx) =>
       segmentsFilter
         .find(selector)
@@ -149,8 +141,20 @@ describe('<SegmentsFilter />', () => {
         .simulate('change', { target: { value: changes[idx] } })
     );
 
-    segmentsFilter.find('Button[type="filter"]').simulate('click');
+    expect(submitSpy.callCount).to.equal(3);
     expect(submitSpy.getCall(0).args[0]).to.deep.equal({
+      mapIds: ['aa', 'bb'],
+      prevLinkHash: undefined,
+      tags: undefined,
+      process: undefined
+    });
+    expect(submitSpy.getCall(1).args[0]).to.deep.equal({
+      mapIds: ['aa', 'bb'],
+      prevLinkHash: 'xyz',
+      tags: undefined,
+      process: undefined
+    });
+    expect(submitSpy.getCall(2).args[0]).to.deep.equal({
       mapIds: ['aa', 'bb'],
       prevLinkHash: 'xyz',
       tags: ['foo', 'bar'],
@@ -166,13 +170,23 @@ describe('<SegmentsFilter />', () => {
       }
     };
     const segmentsFilter = renderComponent(props);
-    const filterBtn = segmentsFilter.find('Button[type="filter"]');
-    expect(filterBtn.props().disabled).to.be.true;
     const prevLinkHashFld = segmentsFilter.find('[label="Prev link hash"]');
     expect(prevLinkHashFld.props().error).to.be.true;
   });
 
-  it('does not clear filters after clicking on filter button', () => {
+  it('disable filter button and show error when mapID not valid', () => {
+    // validateUUIDStub.returns(false);
+    const props = {
+      filters: {
+        mapIds: 'xyz'
+      }
+    };
+    const segmentsFilter = renderComponent(props);
+    const mapIdsFld = segmentsFilter.find('[label="Map IDs"]');
+    expect(mapIdsFld.props().error).to.be.true;
+  });
+
+  it('does not clear filters after changing input values', () => {
     const segmentsFilter = renderComponent();
 
     const inputValues = ['  aa bb  ', '  xyz  ', '  foo bar  '];
@@ -183,8 +197,6 @@ describe('<SegmentsFilter />', () => {
         .find('input')
         .simulate('change', { target: { value: inputValues[idx] } })
     );
-
-    segmentsFilter.find('Button[type="filter"]').simulate('click');
 
     testTextFieldValues(inputValues, segmentsFilter);
   });
