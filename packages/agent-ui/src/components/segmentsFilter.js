@@ -10,6 +10,7 @@ import TextField from 'material-ui/TextField';
 import { withStyles } from 'material-ui/styles';
 import tableStyle from '../styles/tables';
 import { validateHash } from '../utils/hashUtils';
+import validateUUID from '../utils/uuidUtils';
 
 const checkAndJoin = o => {
   if (Array.isArray(o)) {
@@ -25,6 +26,13 @@ const checkTrimAndSplit = s => s && s.trim().split(' ');
 const validatePrevLinkHash = s =>
   s === undefined || s === '' || validateHash(s);
 
+const validateMapIds = mapIds =>
+  !mapIds ||
+  (Array.isArray(mapIds) &&
+    mapIds
+      .map(m => m === undefined || m === '' || validateUUID(m, 4))
+      .filter(Boolean).length === mapIds.length);
+
 export class SegmentsFilter extends Component {
   constructor(props) {
     super(props);
@@ -34,13 +42,13 @@ export class SegmentsFilter extends Component {
       mapIds: checkAndJoin(mapIds),
       tags: checkAndJoin(tags),
       prevLinkHash,
-      valid: validatePrevLinkHash(prevLinkHash),
+      validPrevLinkHash: validatePrevLinkHash(prevLinkHash),
+      validMapIds: validateMapIds(mapIds),
       process: currentProcess
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handlePrevLinkHashChange = this.handlePrevLinkHashChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClear = this.handleClear.bind(this);
     this.selectProcess = this.selectProcess.bind(this);
   }
@@ -54,8 +62,19 @@ export class SegmentsFilter extends Component {
         mapIds: checkAndJoin(mapIds),
         tags: checkAndJoin(tags),
         prevLinkHash,
-        valid: validatePrevLinkHash(prevLinkHash)
+        validPrevLinkHash: validatePrevLinkHash(prevLinkHash),
+        validMapIds: validateMapIds(mapIds)
       });
+    }
+  }
+
+  componentDidUpdate(props, state) {
+    if (
+      JSON.stringify(state) !== JSON.stringify(this.state) &&
+      this.state.validPrevLinkHash &&
+      this.state.validMapIds
+    ) {
+      this.updateResults();
     }
   }
 
@@ -70,13 +89,20 @@ export class SegmentsFilter extends Component {
   handlePrevLinkHashChange(value) {
     this.setState({
       ...this.state,
-      prevLinkHash: value,
-      valid: validatePrevLinkHash(value)
+      prevLinkHash: value || undefined,
+      validPrevLinkHash: validatePrevLinkHash(value)
     });
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
+  handleMapIDChange(value) {
+    this.setState({
+      ...this.state,
+      mapIds: value || undefined,
+      validMapIds: validateMapIds(checkTrimAndSplit(value))
+    });
+  }
+
+  updateResults() {
     const { mapIds, tags, prevLinkHash, process } = this.state;
     this.props.submitHandler({
       mapIds: checkTrimAndSplit(mapIds),
@@ -87,14 +113,14 @@ export class SegmentsFilter extends Component {
   }
 
   handleClear(e) {
-    const { process } = this.state;
     e.preventDefault();
     this.setState({
       mapIds: undefined,
       tags: undefined,
-      prevLinkHash: undefined
+      prevLinkHash: undefined,
+      validMapIds: true,
+      validPrevLinkHash: true
     });
-    this.props.submitHandler({ process });
   }
 
   renderProcessDropdown() {
@@ -126,8 +152,9 @@ export class SegmentsFilter extends Component {
               <TextField
                 label="Map IDs"
                 value={this.state.mapIds || ''}
+                error={!this.state.validMapIds}
                 type="text"
-                onChange={e => this.handleChange('mapIds', e.target.value)}
+                onChange={e => this.handleMapIDChange(e.target.value)}
               />
             </TableCell>
             <TableCell padding="dense">
@@ -135,7 +162,7 @@ export class SegmentsFilter extends Component {
                 label="Prev link hash"
                 value={this.state.prevLinkHash || ''}
                 type="text"
-                error={!this.state.valid}
+                error={!this.state.validPrevLinkHash}
                 onChange={e => this.handlePrevLinkHashChange(e.target.value)}
               />
             </TableCell>
@@ -146,15 +173,6 @@ export class SegmentsFilter extends Component {
                 type="text"
                 onChange={e => this.handleChange('tags', e.target.value)}
               />
-            </TableCell>
-            <TableCell padding="dense">
-              <Button
-                type="filter"
-                onClick={this.handleSubmit}
-                disabled={!this.state.valid}
-              >
-                Filter
-              </Button>
             </TableCell>
             <TableCell padding="dense">
               <Button type="clear" onClick={this.handleClear}>

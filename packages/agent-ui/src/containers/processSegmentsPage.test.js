@@ -12,19 +12,25 @@ import { SegmentsList } from '../components/segmentsList';
 import * as statusTypes from '../constants/status';
 import history from '../store/history';
 import * as hashUtils from '../utils/hashUtils';
+import * as validateUUID from '../utils/uuidUtils';
 
 chai.use(sinonChai);
 
 describe('<ProcessSegmentsPage />', () => {
   let validateHashStub;
+  let validateUUIDStub;
 
   beforeEach(() => {
     validateHashStub = sinon.stub(hashUtils, 'validateHash');
     validateHashStub.returns(true);
+
+    validateUUIDStub = sinon.stub(validateUUID, 'default');
+    validateUUIDStub.returns(true);
   });
 
   afterEach(() => {
     validateHashStub.restore();
+    validateUUIDStub.restore();
   });
 
   const requiredProps = {
@@ -110,7 +116,7 @@ describe('<ProcessSegmentsPage />', () => {
     expect(props.fetchSegments.callCount).to.equal(1);
   });
 
-  it('pushes to history on segment filters', () => {
+  it('pushes to history on filter change', () => {
     const props = {
       pathname: 'foo/bar',
       filters: {
@@ -123,12 +129,16 @@ describe('<ProcessSegmentsPage />', () => {
 
     const segmentsFilter = processSegmentsPage.find(SegmentsFilter);
     expect(segmentsFilter).to.have.lengthOf(1);
-    const submitButton = segmentsFilter.find('Button[type="filter"]');
-    expect(submitButton).to.have.lengthOf(1);
-    submitButton.simulate('click');
+
+    const mapIdsInput = processSegmentsPage.find('[label="Map IDs"]');
+    expect(mapIdsInput).to.have.lengthOf(1);
+    mapIdsInput.find('input').simulate('change', {
+      target: { value: [...props.filters.mapIds, 'ccc'].join(' ') }
+    });
+
     expect(historyStub.callCount).to.equal(1);
     expect(historyStub.getCall(0).args[0]).to.equal(
-      'foo/bar?mapIds%5B%5D=aaa&mapIds%5B%5D=bbb&tags%5B%5D=foo&tags%5B%5D=bar&prevLinkHash=xyz'
+      'foo/bar?mapIds%5B%5D=aaa&mapIds%5B%5D=bbb&mapIds%5B%5D=ccc&tags%5B%5D=foo&tags%5B%5D=bar&prevLinkHash=xyz'
     );
   });
 
