@@ -22,6 +22,7 @@ import { zoom } from 'd3-zoom';
 import { max } from 'd3-array';
 import { getAgent } from '@indigocore/client';
 
+import svgTriangles from './svgTriangles';
 import { makeLink, finalLink, translate } from './treeUtils';
 import parseChainscript from './parseChainscript';
 import { findExtraLinks, findExtraNodes, loadRef } from './nodes';
@@ -38,52 +39,15 @@ export default class ChainTree {
 
     select(element)
       .append('div')
-      .html(
-        `<svg width="0">
-        <marker
-          id="triangle"
-          viewBox="0 0 10 10"
-          refX="0"
-          refY="5"
-          markerUnits="strokeWidth"
-          markerWidth="4"
-          markerHeight="3"
-          orient="auto"
-        >
-          <path d="M 0 0 L 10 5 L 0 10 z" />
-        </marker>
-        <marker
-          id="reverseTriangle"
-          viewBox="0 0 10 10"
-          refX="10"
-          refY="5"
-          markerUnits="strokeWidth"
-          markerWidth="4"
-          markerHeight="3"
-          orient="auto"
-        >
-          <path d="M 0 5 L 10 0 L 10 10 z" />
-        </marker>
-        <marker
-          id="blackTriangle"
-          viewBox="0 0 10 10"
-          refX="0"
-          refY="5"
-          markerUnits="strokeWidth"
-          markerWidth="4"
-          markerHeight="3"
-          orient="auto"
-        >
-          <path fill="black" d="M 0 0 L 10 5 L 0 10 z" />
-        </marker>
-      </svg>`
-      );
+      .html(svgTriangles);
     this.innerG = this.svg.append('g');
     this.svg.on('click', () => {
       this.innerG.selectAll('g.node.selected').classed('selected', false);
       this.displayCurrentMapLinks();
     });
     this.zoomed = () => this.innerG.attr('transform', event.transform);
+
+    this.triangleWidth = 15;
   }
 
   display(chainscript) {
@@ -106,7 +70,6 @@ export default class ChainTree {
   }
 
   update(root, extraLinks) {
-    const self = this;
     const nodes = root ? root.descendants() : [];
 
     this.links = (root ? root.links() : []).concat(extraLinks);
@@ -144,24 +107,24 @@ export default class ChainTree {
         const origin = d.parent && d.parent.x0 ? d.parent : root;
         return translate(origin.x0, origin.y0);
       })
-      .on('click', function onClick(d) {
-        if (self.options.withFocus) {
+      .on('click', (d, idx, elements) => {
+        if (this.options.withFocus) {
           selectAll('g.node').classed('selected', false);
-          select(this).classed('selected', true);
+          select(elements[idx]).classed('selected', true);
           if (d.data.link.meta.refs) {
-            self.displayNodeLinks(d);
+            this.displayNodeLinks(d);
           } else {
-            self.displayCurrentMapLinks();
+            this.displayCurrentMapLinks();
           }
           if (d.data.parentRef != null) {
-            self.drawForeignChildRef(d);
+            this.drawForeignChildRef(d);
           }
         }
-        self.options.onclick(
+        this.options.onclick(
           d,
           () => {
-            self.displayCurrentMapLinks();
-            self.innerG.selectAll('g.node.selected').classed('selected', false);
+            this.displayCurrentMapLinks();
+            this.innerG.selectAll('g.node.selected').classed('selected', false);
           },
           this
         );
@@ -190,16 +153,16 @@ export default class ChainTree {
       .attr('class', 'node ref')
       .attr('id', d => d.id)
       .attr('transform', d => translate(d.x, d.y))
-      .on('click', function onClick(d) {
+      .on('click', (d, idx, elements) => {
         selectAll('g.node').classed('selected', false);
-        select(this).classed('selected', true);
-        self.displayNodeLinks(d);
-        self.drawAncestorsRef(d);
-        self.options.onclick(
+        select(elements[idx]).classed('selected', true);
+        this.displayNodeLinks(d);
+        this.drawAncestorsRef(d);
+        this.options.onclick(
           d,
           () => {
-            self.displayCurrentMapLinks();
-            self.innerG.selectAll('g.node.selected').classed('selected', false);
+            this.displayCurrentMapLinks();
+            this.innerG.selectAll('g.node.selected').classed('selected', false);
           },
           this
         );
@@ -289,7 +252,7 @@ export default class ChainTree {
       .append('path')
       .attr('class', 'link init')
       .attr('id', 'init-link')
-      .attr('d', makeLink({ x: root.x, y: root.y0 }, root, 15));
+      .attr('d', makeLink({ x: root.x, y: root.y0 }, root, this.triangleWidth));
 
     this.innerG
       .append('text')
@@ -336,6 +299,7 @@ export default class ChainTree {
 
   drawForeignChildRef(refNode) {
     const self = this;
+
     const foreignLink = makeLink(
       { x: refNode.x, y: refNode.y + this.options.polygonSize.width },
       {
@@ -360,7 +324,7 @@ export default class ChainTree {
       height: this.options.getBoxSize().height
     };
     const linkLabel = {
-      dx: refNode.y + this.options.getArrowLength() * 2 + 15,
+      dx: refNode.y + this.options.getArrowLength() * 2 + this.triangleWidth,
       dy: refNode.x + 2
     };
     this.drawForeignRef(refNode, onClick, foreignLink, rect, linkLabel);
@@ -370,7 +334,9 @@ export default class ChainTree {
 
   drawAncestorsRef(refNode) {
     const self = this;
+
     const foreignLink = makeLink(refNode, { x: refNode.x, y: refNode.y0 });
+
     const onClick = () =>
       loadRef(self.options.agentUrl, refNode, this.links).then(cs =>
         self.display(cs, self.options)
@@ -447,16 +413,22 @@ export default class ChainTree {
       .enter()
       .insert('path', 'g')
       .classed('link', true)
-      .classed('references', d => d.ref)
+      .classed(
+        'referencesBackward',
+        d =>
+          d.ref && (d.source.depth < d.target.depth || d.source.data.foreignRef)
+      )
+      .classed(
+        'referencesForward',
+        d =>
+          d.ref && d.source.depth >= d.target.depth && !d.source.data.foreignRef
+      )
       .classed(
         'referencedBy',
         d => d.target.data.parentRef === d.source.data.meta.linkHash
       )
       .attr('id', d => `link-${d.source.id}-${d.target.id}`)
-      .attr(
-        'd',
-        d => (d.ref ? finalLink(d, 0, 15 + polygon.width) : finalLink(d, 15))
-      );
+      .attr('d', this.linkAttr.bind(this));
 
     link.exit().remove();
 
@@ -472,6 +444,31 @@ export default class ChainTree {
       .attr('class', 'textpath')
       .attr('xlink:href', d => `#link-${d.source.id}-${d.target.id}`)
       .text(this.options.getLinkText);
+  }
+
+  linkAttr(d) {
+    if (d.ref) {
+      if (d.source.data.foreignRef) {
+        return finalLink(
+          d,
+          -this.triangleWidth,
+          this.options.polygonSize.width + this.triangleWidth
+        );
+      }
+      if (d.source.depth < d.target.depth) {
+        return finalLink(
+          d,
+          0,
+          this.triangleWidth + this.options.polygonSize.width
+        );
+      }
+      return finalLink(
+        { source: d.target, target: d.source },
+        this.triangleWidth,
+        this.options.polygonSize.width
+      );
+    }
+    return finalLink(d, this.triangleWidth);
   }
 
   displayNodeLinks(node) {
