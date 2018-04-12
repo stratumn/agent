@@ -32,21 +32,21 @@
             <p>{{segment.link.meta.prevLinkHash}}</p>
 
             <h4>Action</h4>
-            <p>{{segment.link.meta.action}} ({{join segment.link.meta.arguments delimiter=", "}})</p>
+            <p>{{segment.link.meta.action}} ({{join segment.link.meta.inputs delimiter=", "}})</p>
 
             <h4>Type</h4>
-            <p>{{me.segment.link.meta.type}}</p>
+            <p>{{segment.link.meta.type}}</p>
 
             <h4>Signed by</h4>
             <p class="pem">
-              {{ me.segment.link.signatures }}
+              {{ join segment.link.signatures attribute="publicKey" delimiter="\n"}}
             </p>
 
             <h4>Metadata</h4>
-            <pre>{{ json me.segment.link.meta.data }}</pre>
+            <pre>{{ json segment.link.meta.data }}</pre>
           </div>
         {{/if}}
-        {{#if evidenceShowed}} {{evidences-component evidences=segment.meta.evidences}} {{/if}}
+        {{#if evidenceShowed}} {{evidences-component evidencesObj=segment.meta.evidences}} {{/if}}
         {{#if jsonShowed}}
           <pre>{{json segment}}</pre> {{/if}}
       </div>

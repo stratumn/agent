@@ -13,9 +13,12 @@ export default Component.extend({
   didReceiveAttrs() {
     this.set(
       "evidences",
-      this.get("evidences").map(e =>
-        Object.assign(e, { component: evidenceComponents[e.backend] })
-      )
+      this.get("evidencesObj").map(e => ({
+        proof: e.proof,
+        provider: e.provider,
+        backend: e.backend,
+        component: evidenceComponents[e.backend]
+      }))
     );
   }
 });

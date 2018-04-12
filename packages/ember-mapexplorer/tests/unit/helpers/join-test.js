@@ -14,12 +14,20 @@
   limitations under the License.
 */
 
-import { join } from 'dummy/helpers/join';
-import { module, test } from 'qunit';
+import { join } from "dummy/helpers/join";
+import { module, test } from "qunit";
 
-module('Unit | Helper | join');
+module("Unit | Helper | join");
 
-test('it works', function(assert) {
-  let result = join([[42, 43]], { delimiter: ', ' });
-  assert.ok(result === '42, 43');
+test("it works", function(assert) {
+  let result = join([[42, 43]], { delimiter: ", " });
+  assert.ok(result === "42, 43");
+});
+
+test("it works with attribute", function(assert) {
+  let result = join([[{ test: 42 }, { test: 43 }]], {
+    attribute: "test",
+    delimiter: ", "
+  });
+  assert.ok(result === "42, 43");
 });

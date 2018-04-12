@@ -18,7 +18,10 @@ import { helper } from "@ember/component/helper";
 
 export function join(items, hash) {
   const delimiter = hash.delimiter || ",";
-  return items[0].join(delimiter);
+  const joinedItems = hash.attribute
+    ? items[0].map(i => i[hash.attribute])
+    : items[0];
+  return joinedItems.join(delimiter);
 }
 
 export default helper(join);
