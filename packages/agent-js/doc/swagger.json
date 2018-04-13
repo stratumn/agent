@@ -1,7 +1,7 @@
 {
   "info": {
     "title": "Agent",
-    "version": "0.3.0-rc1"
+    "version": "0.3.0"
   },
   "consumes": "application/json",
   "produces": "application/json",

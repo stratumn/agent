@@ -5,7 +5,7 @@
 ## Overview
 
 ### Version information
-*Version* : 0.3.0-rc1
+*Version* : 0.3.0
 
 
 
