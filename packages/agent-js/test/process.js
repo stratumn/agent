@@ -253,7 +253,7 @@ describe('Process', () => {
           )
           .then(segment2 => {
             segment2.link.state.nbSeg.should.be.exactly(1);
-            segment2.link.state.nbErr.should.be.exactly(2);
+            segment2.link.state.nbErr.should.be.exactly(1);
             segment2.link.state.nbNull.should.be.exactly(0);
           })
       ));
