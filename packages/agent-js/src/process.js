@@ -151,7 +151,6 @@ export default class Process {
    * @param {object[]} [refs] - the optional list of references of the new map
    * @param {string} [refs.process] - ref process name from the same store
    * @param {string} [refs.linkHash] - ref linkHash from the same store
-   * @param {object} [refs.segment] - ref linked segment from another store
    * @param {string} [refs.meta] - ref type of relation
    * @param {...} args - the arguments to pass to the init function
    * @returns {Promise} - a promise that resolve with the segment
@@ -187,7 +186,6 @@ export default class Process {
    * @param {object[]} [refs] - the optional list of references of the new segment
    * @param {string} [refs.process] - ref process name from the same store
    * @param {string} [refs.linkHash] - ref linkHash from the same store
-   * @param {object} [refs.segment] - ref linked segment from another store
    * @param {string} [refs.meta] - ref type of relation
    * @param {...} args - the arguments to pass to the transition function
    * @returns {Promise} - a promise that resolve with the segment

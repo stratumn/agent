@@ -37,7 +37,7 @@ const loadRefs = refs => {
   }
 
   refs.forEach(ref => {
-    if ((!ref.process || !ref.linkHash) && ref.segment == null) {
+    if (!ref.process || !ref.linkHash) {
       throw new Error(`missing segment or (process and linkHash)`);
     }
   });

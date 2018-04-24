@@ -24,33 +24,12 @@ export default {
       linkHash: l,
       meta: 'father'
     };
-    const goodSegment = {
-      segment: {
-        link: {
-          meta: {
-            mapId: '1cc3a5ee-54e4-4093-92f7-efa591f85382',
-            prevLinkHash:
-              '2f0d1bde3f163446d6f23e31bd0b43063ec07ea4128cf5a258208e9f80832735',
-            process: 'foobar',
-            stateHash:
-              '124c9b6c55def7bc177c81d98ba12898b018a534c3101961a4b683678fa2d679'
-          }
-        },
-        meta: {
-          linkHash:
-            'e312a9d43d1401eeb62af52810ee8b6b746b67835eb040755ccb1598a5c88411',
-          segmentUrl:
-            'http://localhost:3000/segments/e312a9d43d1401eeb62af52810ee8b6b746b67835eb040755ccb1598a5c88411'
-        }
-      },
-      meta: 'mother'
-    };
     const otherProcess = {
       process: 'foo',
       linkHash: l,
       meta: 'uncle'
     };
-    return [goodLink, goodSegment, otherProcess];
+    return [goodLink, otherProcess];
   },
 
   getInvalidRefs() {

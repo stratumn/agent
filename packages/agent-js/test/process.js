@@ -147,7 +147,7 @@ describe('Process', () => {
           segment.link.state.should.deepEqual({ a: 1, b: 2, c: 3 });
           segment.link.meta.mapId.should.be.a.String();
           segment.link.meta.refs.should.be.an.Array();
-          segment.link.meta.refs.length.should.be.exactly(3);
+          segment.link.meta.refs.length.should.be.exactly(2);
           segment.link.meta.process.should.be.exactly('basic');
           segment.meta.linkHash.should.be.exactly(hashJson(segment.link));
         }));
@@ -237,7 +237,7 @@ describe('Process', () => {
             );
             segment2.meta.linkHash.should.be.exactly(hashJson(segment2.link));
             segment2.link.meta.refs.should.be.an.Array();
-            segment2.link.meta.refs.length.should.be.exactly(3);
+            segment2.link.meta.refs.length.should.be.exactly(2);
           });
       });
     });
@@ -253,7 +253,7 @@ describe('Process', () => {
           )
           .then(segment2 => {
             segment2.link.state.nbSeg.should.be.exactly(1);
-            segment2.link.state.nbErr.should.be.exactly(2);
+            segment2.link.state.nbErr.should.be.exactly(1);
             segment2.link.state.nbNull.should.be.exactly(0);
           })
       ));
