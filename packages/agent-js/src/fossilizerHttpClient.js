@@ -86,7 +86,7 @@ export default function fossilizerHttpClient(url) {
     /**
      * Fossilizes data.
      * @param {Buffer} data - the data to fossilize
-     * @param {string} callback URL - a URL that will be called with the evidence
+     * @param {string} process - the name of the process from which the data is from
      * @returns {Promise} a promise that resolves with the response body
      */
     fossilize(data, process) {
