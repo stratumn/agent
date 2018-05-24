@@ -17,38 +17,12 @@
 import request from 'superagent';
 import mocker from 'superagent-mocker';
 import should from 'should';
-import storeHttpClient, {
-  getAvailableStores,
-  clearAvailableStores
-} from '../src/storeHttpClient';
+import storeHttpClient from '../src/storeHttpClient';
 import mockStoreHttpServer from './utils/mockStoreHttpServer';
 
 mockStoreHttpServer(mocker(request));
 
 describe('StoreHttpClient', () => {
-  describe('#getAvailableStores()', () => {
-    beforeEach(() => {
-      clearAvailableStores();
-    });
-
-    it('tracks store clients that are created', () => {
-      storeHttpClient('http://store1:5000');
-      storeHttpClient('http://store2:5001');
-
-      getAvailableStores().length.should.be.exactly(2);
-      getAvailableStores()[0].url.should.be.exactly('http://store1:5000');
-      getAvailableStores()[1].url.should.be.exactly('http://store2:5001');
-    });
-
-    it('does not create duplicate stores for the same url', () => {
-      const storeClient1 = storeHttpClient('http://store:5000');
-      const storeClient2 = storeHttpClient('http://store:5000');
-
-      getAvailableStores().length.should.be.exactly(1);
-      storeClient1.should.equal(storeClient2);
-    });
-  });
-
   describe('#getInfo()', () => {
     it('resolves with the store info', () =>
       storeHttpClient('http://localhost')

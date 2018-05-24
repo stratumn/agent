@@ -17,8 +17,7 @@
 import httpServer from './httpServer';
 import Process from './process';
 
-import { getAvailableFossilizers } from './fossilizerHttpClient';
-import { getAvailableStores } from './storeHttpClient';
+import { storeClientFactory, fossilizerClientFactory } from './clientFactory';
 import { FOSSILIZER_DID_FOSSILIZE_LINK, STORE_SAVED_LINKS } from './eventTypes';
 import { deepGet, base64ToHex, base64ToUnicode } from './utils';
 
@@ -191,8 +190,8 @@ export default function create(options) {
         )
         .then(map => ({
           processes: map,
-          stores: getAvailableStores(),
-          fossilizers: getAvailableFossilizers(),
+          stores: storeClientFactory.getAvailableClients(),
+          fossilizers: fossilizerClientFactory.getAvailableClients(),
           plugins: Object.keys(activePlugins).map(plugin => ({
             id: plugin,
             name: activePlugins[plugin].name,

@@ -16,10 +16,7 @@
 
 import request from 'superagent';
 import mocker from 'superagent-mocker';
-import fossilizerHttpClient, {
-  getAvailableFossilizers,
-  clearAvailableFossilizers
-} from '../src/fossilizerHttpClient';
+import fossilizerHttpClient from '../src/fossilizerHttpClient';
 import mockFossilizerHttpServer from './utils/mockFossilizerHttpServer';
 
 const fossilizerClient = fossilizerHttpClient('http://localhost');
@@ -27,33 +24,6 @@ const fossilizerClient = fossilizerHttpClient('http://localhost');
 mockFossilizerHttpServer(mocker(request));
 
 describe('FossilizerHttpClient', () => {
-  describe('#getAvailableFossilizers()', () => {
-    beforeEach(() => {
-      clearAvailableFossilizers();
-    });
-
-    it('tracks fossilizer clients that are created', () => {
-      fossilizerHttpClient('http://fossilizer1:6000');
-      fossilizerHttpClient('http://fossilizer2:6001');
-
-      getAvailableFossilizers().length.should.be.exactly(2);
-      getAvailableFossilizers()[0].url.should.be.exactly(
-        'http://fossilizer1:6000'
-      );
-      getAvailableFossilizers()[1].url.should.be.exactly(
-        'http://fossilizer2:6001'
-      );
-    });
-
-    it('does not create duplicate fossilizers for the same url', () => {
-      const fossilizerClient1 = fossilizerHttpClient('http://fossilizer:6000');
-      const fossilizerClient2 = fossilizerHttpClient('http://fossilizer:6000');
-
-      getAvailableFossilizers().length.should.be.exactly(1);
-      fossilizerClient1.should.equal(fossilizerClient2);
-    });
-  });
-
   describe('#getInfo()', () => {
     it('resolves with the fossilizer info', () =>
       fossilizerHttpClient('http://localhost')
