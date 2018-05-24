@@ -21,15 +21,18 @@ import memoryStore from './memoryStore';
 import plugins from './plugins';
 import storeHttpClient from './storeHttpClient';
 import websocketServer from './websocketServer';
+import { storeClientFactory, fossilizerClientFactory } from './clientFactory';
 import processify from './processify';
 
 module.exports = {
   create,
+  fossilizerClientFactory,
   fossilizerHttpClient,
   httpServer,
   memoryStore,
   plugins,
   processify,
+  storeClientFactory,
   storeHttpClient,
   websocketServer
 };

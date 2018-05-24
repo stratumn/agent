@@ -22,10 +22,12 @@ import plugins from '../src/plugins';
 import Process from '../src/process';
 import actions from './utils/basicActions';
 
-import fossilizerHttpClient, {
-  clearAvailableFossilizers
-} from '../src/fossilizerHttpClient';
-import storeHttpClient, { clearAvailableStores } from '../src/storeHttpClient';
+import fossilizerHttpClient from '../src/fossilizerHttpClient';
+import storeHttpClient from '../src/storeHttpClient';
+import {
+  storeClientFactory,
+  fossilizerClientFactory
+} from '../src/clientFactory';
 import { FOSSILIZER_DID_FOSSILIZE_LINK } from '../src/eventTypes';
 
 const dummyFossilizer = {
@@ -46,8 +48,8 @@ describe('Agent', () => {
 
   beforeEach(() => {
     agent = create({ agentUrl: 'http://localhost' });
-    clearAvailableFossilizers();
-    clearAvailableStores();
+    storeClientFactory.clearAvailableClients();
+    fossilizerClientFactory.clearAvailableClients();
   });
 
   afterEach(() => {
@@ -67,7 +69,10 @@ describe('Agent', () => {
     });
 
     it('returns a Promise resolving with information about the existing fossilizers', () => {
-      fossilizerHttpClient('http://fossilizer:6000');
+      fossilizerClientFactory.create(
+        fossilizerHttpClient,
+        'http://fossilizer:6000'
+      );
 
       return agent.getInfo().then(infos => {
         infos.fossilizers.should.be.an.Object();
@@ -77,7 +82,7 @@ describe('Agent', () => {
     });
 
     it('returns a Promise resolving with information about the existing stores', () => {
-      storeHttpClient('http://store:5000');
+      storeClientFactory.create(storeHttpClient, 'http://store:5000');
 
       return agent.getInfo().then(infos => {
         infos.stores.should.be.an.Object();

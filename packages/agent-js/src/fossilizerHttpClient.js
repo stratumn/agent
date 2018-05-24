@@ -22,16 +22,9 @@ import handleResponse from './handleResponse';
 /**
  * Creates a fossilizer HTTP client.
  * @param {string} url - the base URL of the fossilizer
- * @param {object} [opts] - options
- * @param {function} [opts.callbackUrl] - builds a URL that will be called with the evidence
  * @returns {Client} a fossilizer HTTP client
  */
 export default function fossilizerHttpClient(url) {
-  // If we already have an existing fossilizer for that url, re-use it
-  if (fossilizerHttpClient.availableFossilizers[url]) {
-    return fossilizerHttpClient.availableFossilizers[url];
-  }
-
   // Web socket URL.
   const wsUrl = `${url.replace(/^http/, 'ws')}/websocket`;
 
@@ -57,7 +50,7 @@ export default function fossilizerHttpClient(url) {
     });
   }
 
-  const fossilizerClient = Object.assign(emitter, {
+  return Object.assign(emitter, {
     /**
      * Gets information about the fossilizer.
      * @returns {Promise} a promise that resolve with the information
@@ -103,28 +96,4 @@ export default function fossilizerHttpClient(url) {
       });
     }
   });
-
-  fossilizerHttpClient.availableFossilizers[url] = fossilizerClient;
-
-  return fossilizerClient;
-}
-
-fossilizerHttpClient.availableFossilizers = {};
-
-/**
- * Returns basic information about the fossilizer HTTP clients that have been created.
- * @returns {Array} an array of fossilizer HTTP clients basic information (currently only url).
- */
-export function getAvailableFossilizers() {
-  return Object.keys(fossilizerHttpClient.availableFossilizers).map(url => ({
-    url
-  }));
-}
-
-/**
- * Clears information about the fossilizer HTTP clients created.
- * Should only be used for tests setup.
- */
-export function clearAvailableFossilizers() {
-  fossilizerHttpClient.availableFossilizers = {};
 }

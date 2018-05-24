@@ -35,11 +35,6 @@ import handleResponse from './handleResponse';
  * @returns {Client} a store HTTP client
  */
 export default function storeHttpClient(url) {
-  // If we already have an existing store for that url, re-use it
-  if (storeHttpClient.availableStores[url]) {
-    return storeHttpClient.availableStores[url];
-  }
-
   // Web socket URL.
   const wsUrl = `${url.replace(/^http/, 'ws')}/websocket`;
 
@@ -66,7 +61,7 @@ export default function storeHttpClient(url) {
     });
   }
 
-  const storeClient = Object.assign(emitter, {
+  return Object.assign(emitter, {
     /**
      * Gets information about the store.
      * @returns {Promise} a promise that resolve with the information
@@ -187,26 +182,4 @@ export default function storeHttpClient(url) {
       });
     }
   });
-
-  storeHttpClient.availableStores[url] = storeClient;
-
-  return storeClient;
-}
-
-storeHttpClient.availableStores = {};
-
-/**
- * Returns basic information about the store HTTP clients that have been created.
- * @returns {Array} an array of store HTTP clients basic information (currently only url).
- */
-export function getAvailableStores() {
-  return Object.keys(storeHttpClient.availableStores).map(url => ({ url }));
-}
-
-/**
- * Clears information about the store HTTP clients created.
- * Should only be used for tests setup.
- */
-export function clearAvailableStores() {
-  storeHttpClient.availableStores = {};
 }
