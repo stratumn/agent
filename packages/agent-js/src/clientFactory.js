@@ -25,16 +25,20 @@ function clientFactory(name) {
     return factories[name];
   }
 
-  let availableClients = {};
-
   const factory = {
+    availableClients: {},
+    /**
+     * Create a new client if it has not been created already.
+     * Assumes that there can only be one client for a given URL.
+     * @param {*} implementation a function that creates a client
+     * @param {*} url the URL parameter to be passed to the implementation function
+     */
     create(implementation, url) {
-      // If we already have an existing client for that url, re-use it
-      if (availableClients[url]) {
-        return availableClients[url];
+      if (this.availableClients[url]) {
+        return this.availableClients[url];
       }
       const client = implementation(url);
-      availableClients[url] = client;
+      this.availableClients[url] = client;
       return client;
     },
 
@@ -43,7 +47,7 @@ function clientFactory(name) {
      * @returns {Array} an array of clients basic information (currently only url).
      */
     getAvailableClients() {
-      return Object.keys(availableClients).map(url => ({
+      return Object.keys(this.availableClients).map(url => ({
         url
       }));
     },
@@ -53,7 +57,7 @@ function clientFactory(name) {
      * Should only be used for tests setup.
      */
     clearAvailableClients() {
-      availableClients = {};
+      this.availableClients = {};
     }
   };
   factories[name] = factory;
