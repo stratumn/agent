@@ -20,11 +20,20 @@ import Agent from '@indigocore/agent';
 import messageBoard from './lib/actions-message';
 import warehouseTracker from './lib/actions-warehouse';
 
-const { plugins } = Agent;
+const {
+  httpServer,
+  plugins,
+  storeHttpClient,
+  storeClientFactory,
+  fossilizerClientFactory,
+  fossilizerHttpClient,
+  websocketServer
+} = Agent;
 
 // Create an HTTP store client to save segments.
 // Assumes an HTTP store server is available on env.STRATUMN_STORE_URL or http://store:5000.
-const storeHttpClient = Agent.storeHttpClient(
+const storeClient = storeClientFactory.create(
+  storeHttpClient,
   process.env.STRATUMN_STORE_URL || 'http://store:5000'
 );
 
@@ -34,7 +43,9 @@ const fossilizerHttpClients = [];
 if (process.env.STRATUMN_FOSSILIZERS_URLS) {
   const urls = process.env.STRATUMN_FOSSILIZERS_URLS.split(',');
   for (let i = 0; i < urls.length; i += 1) {
-    fossilizerHttpClients.push(Agent.fossilizerHttpClient(urls[i]));
+    fossilizerHttpClients.push(
+      fossilizerClientFactory.create(fossilizerHttpClient, urls[i])
+    );
   }
 }
 
@@ -47,16 +58,10 @@ const agent = Agent.create({
 // Adds all processes from a name, its actions, the store client, and the fossilizer client.
 // As many processes as one needs can be added.
 // A different storeHttpClient and fossilizerHttpClient may be used.
-agent.addProcess(
-  'message',
-  messageBoard,
-  storeHttpClient,
-  fossilizerHttpClients,
-  {
-    // plugins you want to use
-    plugins: [plugins.agentUrl(agentUrl), plugins.stateHash]
-  }
-);
+agent.addProcess('message', messageBoard, storeClient, fossilizerHttpClients, {
+  // plugins you want to use
+  plugins: [plugins.agentUrl(agentUrl), plugins.stateHash]
+});
 
 agent.addProcess(
   'warehouse',
@@ -70,7 +75,7 @@ agent.addProcess(
 );
 
 // Creates an HTTP server for the agent with CORS enabled.
-const agentHttpServer = Agent.httpServer(agent, { cors: {} });
+const agentHttpServer = httpServer(agent, { cors: {} });
 
 // Create the Express server.
 const app = express();
@@ -81,7 +86,7 @@ app.disable('x-powered-by');
 app.use('/', agentHttpServer);
 
 // Create server by binding app and websocket connection
-const server = Agent.websocketServer(app, storeHttpClient);
+const server = websocketServer(app, storeHttpClient);
 
 // Start the server.
 server.listen(3000, () => {

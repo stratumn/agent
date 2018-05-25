@@ -21,11 +21,11 @@ var actions = require('./lib/actions');
 
 // Creates an HTTP store client to save segments.
 // Assumes an HTTP store server is available on env.STRATUMN_STORE_URL or http://store:5000.
-var storeHttpClient = Agent.storeClientFactory.create(storeHttpClient, process.env.STRATUMN_STORE_URL || 'http://store:5000');
+var storeHttpClient = Agent.storeClientFactory.create(Agent.storeHttpClient, process.env.STRATUMN_STORE_URL || 'http://store:5000');
 
 // Creates an HTTP fossilizer client to fossilize segments.
 // Assumes an HTTP fossilizer server is available on env.STRATUMN_FOSSILIZER_URL or http://fossilizer:6000.
-var fossilizerHttpClient = Agent.fossilizerClientFactory.create(fossilizerHttpClient, process.env.STRATUMN_FOSSILIZER_URL || 'http://fossilizer:6000');
+var fossilizerHttpClient = Agent.fossilizerClientFactory.create(Agent.fossilizerHttpClient, process.env.STRATUMN_FOSSILIZER_URL || 'http://fossilizer:6000');
 
 // Creates an agent
 var agent = Agent.create({
