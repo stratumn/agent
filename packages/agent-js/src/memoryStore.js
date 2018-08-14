@@ -40,7 +40,7 @@ const paginateResults = (results, opts) => {
   } else {
     res = res.slice(0, STORE_DEFAULT_LIMIT);
   }
-  return res;
+  return Promise.resolve(res);
 };
 
 /**
@@ -120,7 +120,7 @@ export default function memoryStore() {
      * @returns {Promise} a promise that resolve with the segments
      */
     findSegments(process, opts = {}) {
-      let a = [];
+      const a = [];
 
       Object.keys(segments).forEach(linkHash => {
         const segment = segments[linkHash];
@@ -181,8 +181,10 @@ export default function memoryStore() {
         return l.meta.linkHash.localeCompare(r.meta.linkHash);
       });
 
-      a = paginateResults(a, opts);
-      return Promise.resolve(a);
+      return paginateResults(a, opts).then(s => ({
+        segments: s,
+        totalCount: a.length
+      }));
     },
 
     /**

@@ -270,6 +270,7 @@ export default class Process {
    * @typedef {Object} FindSegmentsResult
    * @property {object[]} segments - an array of segments found
    * @property {boolean} hasMore - a boolean indicating if there are more segments to be fetched
+   * @property {number} totalCount - a number indicating the offset to use in the next search
    * @property {number} offset - a number indicating the offset to use in the next search
    */
 
@@ -300,15 +301,18 @@ export default class Process {
     const findSegmentsChunk = arg => {
       const options = { ...opts, offset: arg.offset, limit: arg.limit };
       let beforeFilter;
+      let totalCount;
       return this.storeClient
         .findSegments(this.name, options)
-        .then(s => {
+        .then(({ segments: s, totalCount: count }) => {
           beforeFilter = s.length;
+          totalCount = count;
           return this.filterSegments(s);
         })
         .then(filteredSegments => ({
           segments: [...arg.segments, ...filteredSegments],
           hasMore: beforeFilter === arg.limit,
+          totalCount,
           offset: arg.offset + arg.limit,
           limit: limit - arg.segments.length - filteredSegments.length
         }));
