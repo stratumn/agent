@@ -27,7 +27,7 @@ function load(map) {
       const process = agent.processes[map.process];
       return process.findSegments({ mapIds: [map.id], limit: -1 });
     })
-    .then(({ segments: { segments } }) => segments)
+    .then(({ segments }) => segments)
     .catch(res => console.log(res));
 }
 
