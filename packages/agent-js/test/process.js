@@ -386,7 +386,7 @@ describe('Process', () => {
       .then(() => process.findSegments({ offset: 0, limit: 3 }))
       .then(({ segments, ...rest }) => {
         segments.map(({ link: { state: { a } } }) => a).length.should.equal(3);
-        rest.should.be.deepEqual({ hasMore: true, offset: 4 });
+        rest.should.be.deepEqual({ hasMore: true, offset: 4, totalCount: 4 });
         findSegmentsSpy.callCount.should.be.eql(2);
       });
   });
