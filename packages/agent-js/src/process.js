@@ -270,7 +270,7 @@ export default class Process {
    * @typedef {Object} FindSegmentsResult
    * @property {object[]} segments - an array of segments found
    * @property {boolean} hasMore - a boolean indicating if there are more segments to be fetched
-   * @property {number} totalCount - a number indicating the offset to use in the next search
+   * @property {number} totalCount - a number indicating the total count of segments before pagination
    * @property {number} offset - a number indicating the offset to use in the next search
    */
 
