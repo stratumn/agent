@@ -35,7 +35,7 @@ const DummyEvidence = ({ evidence }) => {
 
 DummyEvidence.propTypes = {
   evidence: PropTypes.shape({
-    provider: PropTypes.String,
+    provider: PropTypes.string,
     backend: PropTypes.string,
     proof: PropTypes.object
   }).isRequired
