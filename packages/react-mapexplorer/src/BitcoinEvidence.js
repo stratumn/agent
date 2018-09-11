@@ -33,7 +33,7 @@ const BitcoinEvidence = ({ evidence }) => {
       <h4>Bitcoin Transaction</h4>
       <p>
         {tx}
-        <a target="_blank" href={url}>
+        <a target="_blank" rel="noopener noreferrer" href={url}>
           View transaction on a block explorer
         </a>
       </p>
@@ -67,7 +67,7 @@ const BitcoinEvidence = ({ evidence }) => {
 
 BitcoinEvidence.propTypes = {
   evidence: PropTypes.shape({
-    provider: PropTypes.String,
+    provider: PropTypes.string,
     backend: PropTypes.string,
     proof: PropTypes.object
   }).isRequired

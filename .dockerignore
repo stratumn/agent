@@ -1,5 +1,3 @@
 node_modules
 packages/*/node_modules
 packages/tmpop-explorer
-packages/angular-mapexplorer
-packages/angular2-mapexplorer
