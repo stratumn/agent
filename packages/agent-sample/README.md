@@ -14,6 +14,6 @@ This project provides two docker images:
 
 You can use environment variables to configure your agent:
 
-* STRATUMN_STORE_URL should contain the url of the store (usually http://store:5000)
-* STRATUMN_AGENT_URL should contain the url of the agent (usually http://localhost:3000)
+* STRATUMN_STORE_URL should contain the url of the store (usually <http://store:5000)>
+* STRATUMN_AGENT_URL should contain the url of the agent (usually <http://localhost:3000)>
 * If you want to use fossilizers, STRATUMN_FOSSILIZERS_URLS should contain a comma-separated list of fossilizer urls

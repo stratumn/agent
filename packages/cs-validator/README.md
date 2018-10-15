@@ -1,6 +1,6 @@
-# MapExplorer Core
+# ChainScript Validator
 
-Library for validating chainscript objects
+Library for validating chainscript objects client-side.
 
 [![npm](https://img.shields.io/npm/v/@stratumn/cs-validator.svg)](https://www.npmjs.com/package/@stratumn/cs-validator)
 
@@ -17,11 +17,10 @@ Library for validating chainscript objects
 
 If you want a specific version, include `https://libs.stratumn.com/cs-validator{version}.js` instead (for instance `https://libs.stratumn.com/cs-validator-0.1.0.js`).
 
-
 ### Node.js
 
-```
-$ npm install @stratumn/cs-validator
+```bash
+npm install @stratumn/cs-validator
 ```
 
 ```javascript
@@ -33,7 +32,7 @@ import { MapValidator, SegmentValidator } from '@stratumn/cs-validator';
 
 ## Usage
 
-### Validate a chainscript
+### Validate a chainscript segment
 
 ```javascript
 new StratumnCsValidator.MapValidator(JSON.parse(chainscript)).validate()
@@ -41,7 +40,7 @@ new StratumnCsValidator.MapValidator(JSON.parse(chainscript)).validate()
 
 Returns a Promise that resolves to an error object such as:
 
-```
+```javascript
 {
       linkHash: [Promise, ...],
       stateHash: [Promise, ...],
@@ -63,20 +62,20 @@ Promise.all(errors.linkHash).
 
 Install dependencies:
 
-```
-$ npm install
+```bash
+npm install
 ```
 
 Build:
 
-```
-$ npm run build
+```bash
+npm run build
 ```
 
 Test:
 
-```
-$ npm test
+```bash
+npm test
 ```
 
 The integration tests use a build version of the library. Make sure you've run `npm run build` if you want your changes to be taken into account.

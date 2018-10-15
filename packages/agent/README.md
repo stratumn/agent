@@ -4,8 +4,6 @@ This NodeJS module exposes functions to create Stratumn agents using Javascript.
 
 [![npm](https://img.shields.io/npm/v/@stratumn/agent.svg)](https://www.npmjs.com/package/@stratumn/agent)
 
-Copyright 2017 Stratumn SAS. All rights reserved.
-
 Unless otherwise noted, the Stratumn Agent Javascript Library source files are distributed under the Apache License 2.0 found in the LICENSE file.
 
 ## Creating an HTTP server for an agent
@@ -64,7 +62,7 @@ agent.addProcess("my_second_process", actions, storeHttpClient, fossilizerHttpCl
 
 The documentation for the HTTP API is available in [doc/swaggerDoc.md](doc/swaggerDoc.md). It uses [OpenAPI ver. 2](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md) (fka Swagger). You can also use [doc/swagger.json](doc/swagger.json) with [Swagger UI](https://swagger.io/swagger-ui/) for instance:
 
-```
+```bash
 docker run -p 8080:8080 -e SWAGGER_JSON=/opt/swagger.json -v $(pwd)/doc:/opt swaggerapi/swagger-ui
 ```
 
@@ -80,19 +78,15 @@ docker run -p 8080:8080 -e SWAGGER_JSON=/opt/swagger.json -v $(pwd)/doc:/opt swa
 
 An agent plugin enriches the content of a segment. It may implement four methods:
 
-- `willCreate(link)`
-is called right before a transition function from the agent's actions. It takes the existing link as an argument. It should be updated in-place.
+- `willCreate(link)` is called right before a transition function from the agent's actions. It takes the existing link as an argument. It should be updated in-place.
+- `didCreateLink(link)` is called whenever a link has been created by a transition function. It takes the new link as an argument. It should be updated in-place.
+- `filterSegment(segment)` is called when segments are retrieved by the agent from the underlying storage. It should return `true` if the plugins accepts the segment, `false` otherwise.
 
-- `didCreateLink(link)`
-is called whenever a link has been created by a transition function. It takes the new link as an argument. It should be updated in-place.
-
-- `filterSegment(segment)`
-is called when segments are retrieved by the agent from the underlying storage. It should return `true` if the plugins accepts the segment, `false` otherwise.
 Filters are applied sequentially in the reverse order they are defined.
 
 All methods are optional. They can either be synchronous or return a Promise.
 
-### Available plugins:
+### Available plugins
 
 - `agentUrl`: Saves in segment meta the URL that can be used to retrieve a segment.
 - `encryptedState`: Encrypts the state before the segment is saved. Filters out segment that cannot be decrypted.
@@ -103,6 +97,6 @@ All methods are optional. They can either be synchronous or return a Promise.
 
 To regenerate the HTTP API documentation, run:
 
-```
-$ npm run swagger:generate
+```bash
+npm run swagger:generate
 ```

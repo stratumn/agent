@@ -21,21 +21,20 @@ Lerna is configured to use [`yarn`](https://yarnpkg.com/en/) for dependency mana
 
 Install dependencies:
 
-```
+```bash
 yarn
 yarn bootstrap
 ```
 
 Run tests:
 
-```
+```bash
 yarn test
 yarn lint
 ```
 
 Publish dependencies:
 
-```
+```bash
 lerna publish
 ```
-

@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/@stratumn/mapexplorer-core.svg)](https://www.npmjs.com/package/@stratumn/mapexplorer-core)
 
-Core library for building Map Explorer components
+Core library for building Map Explorer components.
 
 ## Installation
 
@@ -17,11 +17,10 @@ Core library for building Map Explorer components
 
 If you want a specific version, include `https://libs.stratumn.com/mapexplorer-core-{version}.min.js` instead (for instance `https://libs.stratumn.com/mapexplorer-core-0.4.1.min.js`).
 
-
 ### Node.js
 
-```
-$ npm install @stratumn/mapexplorer-core
+```bash
+npm install @stratumn/mapexplorer-core
 ```
 
 ```javascript
@@ -57,30 +56,36 @@ builder.build({
   chainscript: myChainscript
 }), options;
 ```
+
 #### Available options
 
 ##### withArgs
-```
+
+```javascript
 Default: false
 ```
 
 Display action arguments on the paths between segments.
 
 ##### duration
-```
+
+```javascript
 Default: 750
 ```
 
 Transition duration
 
 ##### verticalSpacing
-```
+
+```javascript
 Default: 1.4
 ```
+
 Vertical space factor between segment polygon
 
 ##### polygonSize
-```
+
+```javascript
 Default:
     {
         width: 78,
@@ -92,14 +97,16 @@ Object with width and height properties that gives the size (in pixels) of the p
 a segment.
 
 ##### getArrowLength()
-```
+
+```javascript
 Default: () => this.polygonSize.width
 ```
 
 Function that returns the length (in pixels) of the transition arrow.
 
 #### box
-```
+
+```javascript
 Default:
     () => return {
         width: this.polygonSize.width,
@@ -111,16 +118,16 @@ Function that return an object with width and height properties that gives the s
 segment text.
 
 ##### getSegmentText(node)
-```
+
+```javascript
 Default:  node => compactHash(node.data.meta.linkHash)
 ```
 
 Function that returns the text displayed on a segment.
 
-
-
 ##### getLinkText(node)
-```
+
+```javascript
 Default:
   function(node) {
     return node.target.data.link.meta.action +
@@ -131,12 +138,14 @@ Default:
 Function that return the text displayed on a path between segments.
 
 ##### onclick(data)
-```
+
+```javascript
 Default: noop
 ```
 
 ##### onTag(tag)
-```
+
+```javascript
 Default: noop
 ```
 
@@ -153,7 +162,7 @@ merklePathTree.display(merklePath);
 
 where `merklePath` looks like:
 
-```
+```json
 [
     {
       "left": "14b9468d3b8ca51b45e27ecddc5875a48902a74d1182fed9693c1531dfcfd56c",
@@ -173,44 +182,44 @@ where `merklePath` looks like:
 
 Install dependencies:
 
-```
-$ npm install
+```bash
+npm install
 ```
 
 Build:
 
-```
-$ npm run build:all
+```bash
+npm run build:all
 ```
 
 Test:
 
-```
-$ npm test
+```bash
+npm test
 ```
 
 The integration tests use a build version of the library. Make sure you've run `npm run build` if you want your changes to be taken into account.
 
 Lint:
 
-```
-$ npm run lint
+```bash
+npm run lint
 ```
 
 Lint and test:
 
-```
-$ npm run check
+```bash
+npm run check
 ```
 
 Bump version:
 
-```
-$ npm version major|minor|patch
+```bash
+npm version major|minor|patch
 ```
 
 Publish:
 
-```
-$ npm publish
+```bash
+npm publish
 ```

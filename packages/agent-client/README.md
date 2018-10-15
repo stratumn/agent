@@ -17,8 +17,8 @@ If you want a specific version, include `https://libs.stratumn.com/stratumn-agen
 
 ### Node.js
 
-```
-$ npm install @stratumn/agent-client
+```bash
+npm install @stratumn/agent-client
 ```
 
 ```javascript
@@ -163,6 +163,7 @@ AgentClient
     // Handle errors
   });
 ```
+
 ### Process#withKey(...args)
 
 Attach a key to a process. This is needed whenever one wants to send signatures when creating a map or appending a segment.
@@ -171,7 +172,7 @@ Attach a key to a process. This is needed whenever one wants to send signatures 
 // the secret key must be stored in a secure location
 const key = {
   type: 'ed25519' // the signature scheme, 'ed25519' is currently the only option
-  secret: 'YOURBASE64ENCODEDPRIVATEKEY' // a 64-bytes private key encoded in base64 
+  secret: 'YOURBASE64ENCODEDPRIVATEKEY' // a 64-bytes private key encoded in base64
 }
 
 AgentClient
@@ -330,7 +331,7 @@ Specifies the properties of the segment that should be signed
 // the secret key must be stored in a secure location
 const key = {
   type: 'ed25519' // the signature scheme, 'ed25519' is currently the only option
-  secret: 'YOURBASE64ENCODEDPRIVATEKEY' // a 64-bytes private key encoded in base64 
+  secret: 'YOURBASE64ENCODEDPRIVATEKEY' // a 64-bytes private key encoded in base64
 }
 
 AgentClient
@@ -359,49 +360,49 @@ AgentClient
 
 Install dependencies:
 
-```
-$ npm install
+```bash
+npm install
 ```
 
 Build:
 
-```
-$ npm run build
+```bash
+npm run build
 ```
 
 Test:
 
-```
-$ npm test
+```bash
+npm test
 ```
 
 Test coverage:
 
-```
-$ npm run test:cov
-$ open coverage/lcov-report/index.html
+```bash
+npm run test:cov
+open coverage/lcov-report/index.html
 ```
 
 Lint:
 
-```
-$ npm run lint
+```bash
+npm run lint
 ```
 
 Lint and test:
 
-```
-$ npm run check
+```bash
+npm run check
 ```
 
 Bump version:
 
-```
-$ npm version major|minor|patch
+```bash
+npm version major|minor|patch
 ```
 
 Publish:
 
-```
-$ npm publish
+```bash
+npm publish
 ```

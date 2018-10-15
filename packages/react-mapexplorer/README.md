@@ -6,7 +6,7 @@ A react component used to display a Map Explorer from chainscript.
 
 ## Installation
 
-```
+```bash
 npm install @stratumn/react-mapexplorer --save
 ```
 
