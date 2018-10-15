@@ -1,5 +1,5 @@
 {
-  "name": "@stratumn/utils",
+  "name": "@stratumn/agent-utils",
   "version": "0.3.0",
   "description": "NodeJS module that exposes utilities for Stratumn agents",
   "main": "lib/index.js",

@@ -33,7 +33,7 @@
     "url": "https://github.com/stratumn/agent/issues"
   },
   "dependencies": {
-    "@stratumn/utils": "^0.3.0",
+    "@stratumn/agent-utils": "^0.3.0",
     "async-middleware": "^1.2.1",
     "babel-runtime": "^6.26.0",
     "body-parser": "^1.15.2",

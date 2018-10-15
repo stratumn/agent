@@ -61,7 +61,7 @@
     "should": "^8.2.2"
   },
   "dependencies": {
-    "@stratumn/utils": "^0.3.0",
+    "@stratumn/agent-utils": "^0.3.0",
     "asn1.js": "stratumn/asn1.js#master",
     "canonicaljson": "1.0.1",
     "deepmerge": "2.0.1",

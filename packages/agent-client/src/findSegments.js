@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { promiseWhile } from '@stratumn/utils';
+import { promiseWhile } from '@stratumn/agent-utils';
 import segmentify from './segmentify';
 
 const DEFAULT_BATCH_SIZE = 20;
