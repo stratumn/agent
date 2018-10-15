@@ -1,7 +1,7 @@
-# Indigo Agent Sample
+# Stratumn Agent Sample
 
-This project contains a sample [agent](https://github.com/stratumn/js-indigocore/tree/master/packages/agent-js)
-It can be used to test IndigoCore without coding anything yourself.
+This project contains a sample [agent](https://github.com/stratumn/agent/tree/master/packages/agent)
+It can be used to test Stratumn p2p networks without coding anything yourself.
 
 ## Docker images
 

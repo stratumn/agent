@@ -32,7 +32,7 @@ describe('<TopBar />', () => {
   it('renders a title on index page', () => {
     const topBarNoLinks = renderTopBarWithRoute('/');
     expect(
-      topBarNoLinks.find('Typography').contains('Welcome to the IndigoCore UI')
+      topBarNoLinks.find('Typography').contains('Welcome to the Stratumn Agent UI')
     ).to.be.true;
   });
 

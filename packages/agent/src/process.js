@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { promiseWhile } from '@indigocore/utils';
+import { promiseWhile } from '@stratumn/utils';
 import uuid from 'uuid';
 import processify from './processify';
 import getActionsInfo from './getActionsInfo';

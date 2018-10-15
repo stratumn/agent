@@ -1,6 +1,6 @@
 # MapExplorer Core
 
-[![npm](https://img.shields.io/npm/v/@indigocore/mapexplorer-core.svg)](https://www.npmjs.com/package/@indigocore/mapexplorer-core)
+[![npm](https://img.shields.io/npm/v/@stratumn/mapexplorer-core.svg)](https://www.npmjs.com/package/@stratumn/mapexplorer-core)
 
 Core library for building Map Explorer components
 
@@ -21,11 +21,11 @@ If you want a specific version, include `https://libs.stratumn.com/mapexplorer-c
 ### Node.js
 
 ```
-$ npm install @indigocore/mapexplorer-core
+$ npm install @stratumn/mapexplorer-core
 ```
 
 ```javascript
-var MapexplorerCore = require('@indigocore/mapexplorer-core');
+var MapexplorerCore = require('@stratumn/mapexplorer-core');
 
 // or using es6
 import {
@@ -35,7 +35,7 @@ import {
   MerklePathTree,
   compactHash,
   parseChainscript
-} from '@indigocore/mapexplorer-core
+} from '@stratumn/mapexplorer-core'
 ```
 
 ## Usage

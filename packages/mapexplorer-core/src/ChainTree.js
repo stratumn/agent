@@ -20,7 +20,7 @@ import { easeLinear } from 'd3-ease';
 import { select, selectAll, event } from 'd3-selection';
 import { zoom } from 'd3-zoom';
 import { max } from 'd3-array';
-import { getAgent } from '@indigocore/client';
+import { getAgent } from '@stratumn/agent-client';
 
 import svgTriangles from './svgTriangles';
 import { makeLink, finalLink, translate } from './treeUtils';

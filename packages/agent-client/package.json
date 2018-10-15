@@ -1,7 +1,7 @@
 {
-  "name": "@indigocore/client",
+  "name": "@stratumn/agent-client",
   "version": "0.3.0",
-  "description": "Stratumn Indigo agent client library",
+  "description": "Stratumn agent client library",
   "main": "lib/stratumn-agent-client.js",
   "module": "lib/stratumn-agent-client.mjs",
   "browser": "lib/stratumn-agent-client.js",
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stratumn/js-indigocore.git"
+    "url": "https://github.com/stratumn/agent.git"
   },
   "keywords": [
     "stratumn",
@@ -32,11 +32,11 @@
   "author": "Stratumn Team",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/stratumn/js-indigocore/issues"
+    "url": "https://github.com/stratumn/agent/issues"
   },
-  "homepage": "https://github.com/stratumn/js-indigocore",
+  "homepage": "https://github.com/stratumn/agent",
   "devDependencies": {
-    "@indigocore/agent": "^0.3.0",
+    "@stratumn/agent": "^0.3.0",
     "babel-cli": "^6.5.1",
     "babel-core": "^6.5.2",
     "babel-plugin-external-helpers": "^6.8.0",
@@ -61,7 +61,7 @@
     "should": "^8.2.2"
   },
   "dependencies": {
-    "@indigocore/utils": "^0.3.0",
+    "@stratumn/utils": "^0.3.0",
     "asn1.js": "stratumn/asn1.js#master",
     "canonicaljson": "1.0.1",
     "deepmerge": "2.0.1",

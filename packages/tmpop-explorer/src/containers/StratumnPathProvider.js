@@ -17,7 +17,7 @@
 import { Component, Children } from 'react';
 import PropTypes from 'prop-types';
 
-export default class IndigoPathProvider extends Component {
+export default class StratumnPathProvider extends Component {
   constructor(props, context) {
     super(props, context);
     this.path = props.path;
@@ -32,11 +32,11 @@ export default class IndigoPathProvider extends Component {
   }
 }
 
-IndigoPathProvider.propTypes = {
+StratumnPathProvider.propTypes = {
   children: PropTypes.element.isRequired,
   path: PropTypes.string.isRequired
 };
 
-IndigoPathProvider.childContextTypes = {
+StratumnPathProvider.childContextTypes = {
   path: PropTypes.string
 };

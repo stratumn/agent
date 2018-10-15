@@ -16,7 +16,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TMPopExplorer from '@indigocore/tmpop-explorer';
+import TMPopExplorer from '@stratumn/tmpop-explorer';
 
 import './index.css';
 

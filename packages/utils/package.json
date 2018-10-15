@@ -1,7 +1,7 @@
 {
-  "name": "@indigocore/utils",
+  "name": "@stratumn/utils",
   "version": "0.3.0",
-  "description": "NodeJS module that exposes utils related to IndigoCore",
+  "description": "NodeJS module that exposes utilities for Stratumn agents",
   "main": "lib/index.js",
   "scripts": {
     "test": "jest --watch",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stratumn/js-indigocore.git"
+    "url": "https://github.com/stratumn/agent.git"
   },
   "keywords": [
     "stratumn",
@@ -29,7 +29,7 @@
   "author": "Stratumn Team",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/stratumn/js-indigocore/issues"
+    "url": "https://github.com/stratumn/agent/issues"
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",

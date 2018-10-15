@@ -15,7 +15,7 @@
 */
 
 import { hierarchy } from 'd3-hierarchy';
-import { getAgent } from '@indigocore/client';
+import { getAgent } from '@stratumn/agent-client';
 
 function findNodeRefs(node) {
   let refs = [];

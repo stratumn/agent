@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ChainTreeBuilder } from '@indigocore/mapexplorer-core';
+import { ChainTreeBuilder } from '@stratumn/mapexplorer-core';
 import radium from 'radium';
 import { getStyles, getRules } from './mapExplorerCss';
 import BitcoinEvidence from './BitcoinEvidence';

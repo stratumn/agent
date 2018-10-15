@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { resolveLinks } from '@indigocore/client';
+import { resolveLinks } from '@stratumn/agent-client';
 import SegmentValidator from './SegmentValidator';
 import wrap from './wrap';
 import parseIfJson from './parseIfJson';

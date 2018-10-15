@@ -1,19 +1,19 @@
 {
-  "name": "@indigocore/tmpop-explorer",
+  "name": "@stratumn/tmpop-explorer",
   "version": "0.3.0",
-  "description": "Block Explorer for Indigo Tendermint Store",
+  "description": "Block Explorer for Stratumn Tendermint Store",
   "main": "lib/index.js",
   "module": "lib/index.es.js",
   "jsnext:main": "lib/index.es.js",
   "author": "Stratumn",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/stratumn/js-indigocore",
+  "homepage": "https://github.com/stratumn/agent",
   "repository": {
     "type": "git",
-    "url": "https://github.com/stratumn/js-indigocore.git"
+    "url": "https://github.com/stratumn/agent.git"
   },
   "bugs": {
-    "url": "https://github.com/stratumn/js-indigocore/issues"
+    "url": "https://github.com/stratumn/agent/issues"
   },
   "dependencies": {
     "classnames": "^2.1.2",

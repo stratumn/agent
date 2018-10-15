@@ -1,4 +1,4 @@
-import { getAgent } from '@indigocore/client';
+import { getAgent } from '@stratumn/agent-client';
 import * as statusTypes from '../constants/status';
 import * as actionTypes from '../constants/actionTypes';
 

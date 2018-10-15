@@ -22,7 +22,7 @@ import BlockContainer from './containers/BlockContainer';
 import Index from './containers/Index';
 import TMReader from './TMReader';
 import TMReaderProvider from './containers/TMReaderProvider';
-import IndigoPathProvider from './containers/IndigoPathProvider';
+import StratumnPathProvider from './containers/StratumnPathProvider';
 
 export default class TMPopExplorer extends Component {
   constructor(props) {
@@ -31,7 +31,7 @@ export default class TMPopExplorer extends Component {
     const { remote, secure } = isMounted ? this.props.route : this.props;
 
     if (!remote) {
-      throw new Error('Missing indigo remote definition');
+      throw new Error('Missing stratumn remote definition');
     }
 
     this.tmReader = new TMReader(remote, secure);
@@ -47,14 +47,14 @@ export default class TMPopExplorer extends Component {
   render() {
     const routes = (
       <TMReaderProvider reader={this.tmReader}>
-        <IndigoPathProvider path={this.linkPath}>
+        <StratumnPathProvider path={this.linkPath}>
           <Router history={browserHistory}>
             <Route path={this.rootPath} component={Layout}>
               <IndexRoute component={Index} />
               <Route path="blocks/:height" component={BlockContainer} />
             </Route>
           </Router>
-        </IndigoPathProvider>
+        </StratumnPathProvider>
       </TMReaderProvider>
     );
 

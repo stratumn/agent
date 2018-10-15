@@ -1,6 +1,6 @@
 # Agent client for Javascript
 
-[![npm](https://img.shields.io/npm/v/@indigocore/client.svg)](https://www.npmjs.com/package/@indigocore/client)
+[![npm](https://img.shields.io/npm/v/@stratumn/agent-client.svg)](https://www.npmjs.com/package/@stratumn/agent-client)
 
 ## Installation
 
@@ -18,7 +18,7 @@ If you want a specific version, include `https://libs.stratumn.com/stratumn-agen
 ### Node.js
 
 ```
-$ npm install @indigocore/client
+$ npm install @stratumn/agent-client
 ```
 
 ```javascript

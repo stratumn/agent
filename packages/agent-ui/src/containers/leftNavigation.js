@@ -68,7 +68,7 @@ const AgentNavigationLinks = withStyles(
     >
       <Avatar alt="Icon" src={logo} />
       <Button component={NavLink} to="/" color="secondary">
-        INDIGO AGENT UI
+        STRATUMN AGENT UI
       </Button>
     </ListSubheader>
     {agents.map(a => (
@@ -127,9 +127,9 @@ AgentNavigationLinks.propTypes = {
   process: PropTypes.string
 };
 
-let IndigoExternalLinks = ({ classes }) => (
+let StratumnExternalLinks = ({ classes }) => (
   <List>
-    <ListItem button component="a" href="https://indigocore.org">
+    <ListItem button component="a" href="https://developer.stratumn.com">
       <ListItemText
         primary="Documentation"
         classes={{ primary: classes.primary }}
@@ -138,7 +138,7 @@ let IndigoExternalLinks = ({ classes }) => (
     <ListItem
       button
       component="a"
-      href="https://github.com/stratumn/js-indigocore/issues/new"
+      href="https://github.com/stratumn/agent/issues/new"
     >
       <ListItemText
         primary="Report issue"
@@ -154,13 +154,13 @@ let IndigoExternalLinks = ({ classes }) => (
   </List>
 );
 
-IndigoExternalLinks.propTypes = {
+StratumnExternalLinks.propTypes = {
   classes: PropTypes.shape({
     primary: PropTypes.string.isRequired
   }).isRequired
 };
 
-IndigoExternalLinks = withStyles(layout)(IndigoExternalLinks);
+StratumnExternalLinks = withStyles(layout)(StratumnExternalLinks);
 
 export const LeftNavigation = ({ agents, agent, process, classes }) => {
   const agentsProps = { agents, agent, process };
@@ -171,7 +171,7 @@ export const LeftNavigation = ({ agents, agent, process, classes }) => {
       anchor="left"
     >
       <AgentNavigationLinks {...agentsProps} />
-      <IndigoExternalLinks />
+      <StratumnExternalLinks />
     </Drawer>
   );
 };

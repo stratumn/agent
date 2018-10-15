@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { memoryStore, create, plugins } from '@indigocore/agent';
+import { memoryStore, create, plugins } from '@stratumn/agent';
 
 // Test actions
 const actions = {
