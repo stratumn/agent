@@ -1,5 +1,5 @@
 /*
-  Copyright 2018 Stratumn SAS. All rights reserved.
+  Copyright 2016-2018 Stratumn SAS. All rights reserved.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { resolveLinks } from '@indigocore/client';
+import { resolveLinks } from '@stratumn/agent-client';
 import SegmentValidator from './SegmentValidator';
 import wrap from './wrap';
 import parseIfJson from './parseIfJson';

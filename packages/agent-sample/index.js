@@ -15,7 +15,7 @@
 */
 
 import express from 'express';
-import Agent from '@indigocore/agent';
+import Agent from '@stratumn/agent';
 
 import messageBoard from './lib/actions-message';
 import warehouseTracker from './lib/actions-warehouse';

@@ -1,5 +1,5 @@
 /*
-  Copyright 2018 Stratumn SAS. All rights reserved.
+  Copyright 2016-2018 Stratumn SAS. All rights reserved.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 */
 
 import should from 'should';
-import { memoryStore, create } from '@indigocore/agent';
+import { memoryStore, create } from '@stratumn/agent';
 import { findExtraLinks, findExtraNodes, loadRef } from '../../src/nodes';
 import parseChainscript from '../../src/parseChainscript';
 import validMapWithRefs from '../fixtures/fullMapWithRefs.json';

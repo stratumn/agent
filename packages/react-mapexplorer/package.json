@@ -1,12 +1,12 @@
 {
-  "name": "@indigocore/react-mapexplorer",
+  "name": "@stratumn/react-mapexplorer",
   "version": "0.3.0",
   "description": "React component that displays a Map Explorer",
   "author": "Stratumn",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/stratumn/js-indigocore.git"
+    "url": "https://github.com/stratumn/agent.git"
   },
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -20,7 +20,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@indigocore/mapexplorer-core": "^0.3.0",
+    "@stratumn/mapexplorer-core": "^0.3.0",
     "radium": "^0.19.5"
   },
   "peerDependencies": {
@@ -47,7 +47,7 @@
   "keywords": [
     "react",
     "react-component",
-    "indigo",
+    "chainscript",
     "Stratumn",
     "MapExplorer"
   ]

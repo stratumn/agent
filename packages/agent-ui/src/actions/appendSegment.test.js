@@ -2,7 +2,7 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import * as StratumnAgentClient from '@indigocore/client';
+import * as StratumnAgentClient from '@stratumn/agent-client';
 
 import {
   appendSegment,

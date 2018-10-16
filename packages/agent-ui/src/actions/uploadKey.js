@@ -1,4 +1,4 @@
-import { parseKey } from '@indigocore/client';
+import { parseKey } from '@stratumn/agent-client';
 import * as actionTypes from '../constants/actionTypes';
 
 const uploadKeySuccessEvent = (parsedKey, rawKey) => ({

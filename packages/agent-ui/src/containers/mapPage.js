@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { MapExplorer } from '@indigocore/react-mapexplorer';
+import { MapExplorer } from '@stratumn/react-mapexplorer';
 import { v4 as uuid } from 'uuid';
 
 import { selectMapSegment, removeNotifications } from '../actions';

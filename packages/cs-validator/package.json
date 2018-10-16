@@ -1,5 +1,5 @@
 {
-  "name": "@indigocore/cs-validator",
+  "name": "@stratumn/cs-validator",
   "version": "0.3.0",
   "description": "Core library for building Map Explorer components",
   "main": "lib/cs-validator.js",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stratumn/js-indigocore.git"
+    "url": "https://github.com/stratumn/agent.git"
   },
   "keywords": [
     "stratumn",
@@ -31,9 +31,9 @@
   "author": "Stratumn Team",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/stratumn/js-indigocore/issues"
+    "url": "https://github.com/stratumn/agent/issues"
   },
-  "homepage": "https://github.com/stratumn/js-indigocore",
+  "homepage": "https://github.com/stratumn/agent",
   "devDependencies": {
     "@metahub/karma-rollup-preprocessor": "^3.0.4",
     "babel-cli": "^6.5.1",
@@ -67,7 +67,7 @@
     "zock": "^0.2.6"
   },
   "dependencies": {
-    "@indigocore/client": "^0.3.0",
+    "@stratumn/agent-client": "^0.3.0",
     "canonicaljson": "^1.0.1",
     "deepmerge": "2.0.1",
     "httpplease": "^0.16.4",

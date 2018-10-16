@@ -2,15 +2,15 @@
 
 A react component used to display a Map Explorer from chainscript.
 
-[![npm](https://img.shields.io/npm/v/@indigocore/react-mapexplorer.svg)](https://www.npmjs.com/package/@indigocore/react-mapexplorer)
+[![npm](https://img.shields.io/npm/v/@stratumn/react-mapexplorer.svg)](https://www.npmjs.com/package/@stratumn/react-mapexplorer)
 
 ## Installation
 
-```
-npm install @indigocore/react-mapexplorer --save
+```bash
+npm install @stratumn/react-mapexplorer --save
 ```
 
-#### Local Development
+### Local Development
 
 Now you're ready to run a local version of rollup that will watch your `src/` component and automatically recompile it into `dist/` whenever you make changes.
 
@@ -24,7 +24,7 @@ npm start # runs rollup with watch flag
 
 # (in another tab, run the example create-react-app)
 cd example
-npm link @indigocore/react-mapexplorer
+npm link @stratumn/react-mapexplorer
 npm install
 npm start # runs create-react-app hot-reload dev server
 ```

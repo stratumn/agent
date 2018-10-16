@@ -1,5 +1,5 @@
 /*
-  Copyright 2018 Stratumn SAS. All rights reserved.
+  Copyright 2016-2018 Stratumn SAS. All rights reserved.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { MerklePathTree } from '@indigocore/mapexplorer-core';
+import { MerklePathTree } from '@stratumn/mapexplorer-core';
 import radium from 'radium';
 
 class MerklePathComponent extends Component {

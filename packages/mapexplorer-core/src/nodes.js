@@ -1,5 +1,5 @@
 /*
-  Copyright 2018 Stratumn SAS. All rights reserved.
+  Copyright 2016-2018 Stratumn SAS. All rights reserved.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 */
 
 import { hierarchy } from 'd3-hierarchy';
-import { getAgent } from '@indigocore/client';
+import { getAgent } from '@stratumn/agent-client';
 
 function findNodeRefs(node) {
   let refs = [];

@@ -1,5 +1,5 @@
 /*
-  Copyright 2018 Stratumn SAS. All rights reserved.
+  Copyright 2016-2018 Stratumn SAS. All rights reserved.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import { sign as nacl } from 'tweetnacl';
 import { stringify } from 'canonicaljson';
 import { search } from 'jmespath';
-import { encoding, signatureAlgorithms } from '@indigocore/client';
+import { encoding, signatureAlgorithms } from '@stratumn/agent-client';
 
 import httpplease from 'httpplease';
 import hashJson from './hashJson';

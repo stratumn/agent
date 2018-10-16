@@ -1,4 +1,4 @@
-import { getAgent } from '@indigocore/client';
+import { getAgent } from '@stratumn/agent-client';
 import * as actionTypes from '../constants/actionTypes';
 import { clearRefs, addNotifications, clearSignature } from './';
 import { makeNewSegmentNotification } from '../utils/notificationHelpers';

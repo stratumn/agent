@@ -17,7 +17,7 @@ const renderTopBarLinks = path => {
   if (!path || path === '/') {
     return (
       <Typography variant="headline" noWrap>
-        Welcome to the IndigoCore UI
+        Welcome to the Stratumn Agent UI
       </Typography>
     );
   }
