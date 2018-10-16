@@ -69,8 +69,8 @@ describe('StoreHttpClient', () => {
           throw new Error('should not resolve');
         })
         .catch(err => {
-          err.statusCode.should.be.exactly(404);
-          err.message.should.be.exactly('not found');
+          err.response.statusCode.should.be.exactly(404);
+          err.response.message.should.be.exactly('not found');
         }));
   });
 
