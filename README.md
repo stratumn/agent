@@ -1,5 +1,11 @@
 # Stratumn Agent
 
+**DEPRECATED**: we are moving away from this agent model and trying to push
+more utilities client-side (especially cryptographic schemes that require the
+user's private key). You should use [stratumn/js-core](https://github.com/stratumn/js-core)
+to build Proof-of-Process applications.
+We are working on tutorials on our [website](https://developer.stratumn.com).
+
 [Stratumn](https://stratumn.com)'s open-source JavaScript libraries to create p2p applications and networks.
 
 [![npm](https://img.shields.io/npm/v/@stratumn/agent.svg)](https://www.npmjs.com/package/@stratumn/agent)
