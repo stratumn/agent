@@ -40,6 +40,6 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "chai": "^4.1.2",
-    "jest": "^22.0.5"
+    "jest": "^23.6.0"
   }
 }
